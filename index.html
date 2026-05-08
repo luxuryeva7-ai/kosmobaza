@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>КосмоБаза — Учись играя</title>
+<link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600,700,800" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#050510;--bg2:#080820;--neon:#00f5ff;--pink:#ff00aa;
+  --gold:#ffd700;--green:#4ade80;--purple:#a855f7;--orange:#fb923c;--blue:#60a5fa;
+  --card:#0d1133;--border:rgba(255,255,255,.08);--text:#e2e8f0;--muted:#64748b;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+
+/* ── STARS ── */
+#stars-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:rgba(5,5,16,.85);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1100px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--neon),var(--pink));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-size:20px;font-weight:800;letter-spacing:-.3px;color:#fff}
+.logo-text span{color:var(--neon)}
+nav{display:flex;align-items:center;gap:8px}
+.nav-btn{padding:8px 18px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none}
+.nav-btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.nav-btn.ghost:hover{color:#fff;border-color:rgba(255,255,255,.2)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--neon),#0099cc);color:#000}
+.nav-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:72px 20px 56px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,245,255,.08);border:1px solid rgba(0,245,255,.25);color:var(--neon);padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;margin-bottom:24px;letter-spacing:.5px}
+.hero-badge .dot{width:6px;height:6px;background:var(--neon);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+h1{font-size:clamp(32px,6vw,64px);font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:20px}
+h1 .accent{background:linear-gradient(135deg,var(--neon),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:520px;margin:0 auto 36px;line-height:1.6}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-big{padding:14px 32px;border-radius:14px;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-big.primary{background:linear-gradient(135deg,var(--neon),#0099cc);color:#000;box-shadow:0 8px 30px rgba(0,245,255,.3)}
+.btn-big.primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,245,255,.4)}
+.btn-big.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-big.ghost:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+
+/* ── STATS ── */
+.stats-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:24px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:64px}
+.stat{text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:var(--neon)}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── SECTION ── */
+.section-label{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--neon);margin-bottom:12px}
+.section-title{font-size:clamp(22px,4vw,32px);font-weight:800;margin-bottom:8px}
+.section-sub{color:var(--muted);font-size:15px;margin-bottom:40px}
+
+/* ── SUBJECTS GRID ── */
+.subjects-section{padding:0 20px 80px}
+.subjects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+
+.subject-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.subject-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:20px}
+.subject-card:hover{transform:translateY(-4px)}
+.subject-card:hover::before{opacity:1}
+.subject-card.active{border-color:rgba(0,245,255,.3);cursor:pointer}
+.subject-card.active::before{background:radial-gradient(circle at 30% 30%,rgba(0,245,255,.06),transparent 70%)}
+.subject-card.active:hover{box-shadow:0 16px 48px rgba(0,245,255,.15)}
+.subject-card.soon{cursor:default;opacity:.7}
+.subject-card.soon:hover{transform:none}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.card-badge{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.badge-live{background:rgba(0,245,255,.12);color:var(--neon);border:1px solid rgba(0,245,255,.3)}
+.badge-soon{background:rgba(100,116,139,.12);color:var(--muted);border:1px solid rgba(100,116,139,.2)}
+.badge-hot{background:rgba(255,165,0,.12);color:#ffa500;border:1px solid rgba(255,165,0,.3)}
+
+.card-title{font-size:20px;font-weight:700;margin-bottom:6px}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+
+.card-meta{display:flex;align-items:center;gap:16px}
+.meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.meta-icon{font-size:14px}
+
+.progress-bar{height:4px;background:rgba(255,255,255,.08);border-radius:100px;margin-top:16px;overflow:hidden}
+.progress-fill{height:100%;border-radius:100px;background:var(--neon);width:0;transition:width 1s ease}
+
+/* ── SOON OVERLAY ── */
+.soon-tag{position:absolute;top:16px;right:16px;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.2);color:var(--muted);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:0 20px 80px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative}
+.step-num{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--neon),var(--pink));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#000;margin-bottom:16px}
+.step-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.step-text{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── PRICING ── */
+.pricing-section{padding:0 20px 80px}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:700px;margin:0 auto}
+.plan{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center}
+.plan.featured{border-color:rgba(0,245,255,.35);background:linear-gradient(135deg,rgba(0,245,255,.05),rgba(255,0,170,.03))}
+.plan-tag{display:inline-block;background:linear-gradient(135deg,var(--neon),var(--pink));color:#000;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:800;margin-bottom:16px;letter-spacing:.5px}
+.plan-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.plan-price{font-size:40px;font-weight:800;margin:12px 0 4px}
+.plan-price span{font-size:16px;font-weight:500;color:var(--muted)}
+.plan-period{font-size:13px;color:var(--muted);margin-bottom:20px}
+.plan-features{list-style:none;margin-bottom:24px;text-align:left}
+.plan-features li{display:flex;align-items:center;gap:8px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--border)}
+.plan-features li:last-child{border:none}
+.plan-features li::before{content:'✓';color:var(--neon);font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:13px;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.plan-btn.free{background:transparent;border:1px solid var(--border);color:var(--text)}
+.plan-btn.free:hover{border-color:rgba(255,255,255,.3)}
+.plan-btn.pro{background:linear-gradient(135deg,var(--neon),#0099cc);color:#000;box-shadow:0 4px 20px rgba(0,245,255,.25)}
+.plan-btn.pro:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,245,255,.35)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 20px;text-align:center}
+.footer-logo{font-size:18px;font-weight:800;margin-bottom:8px}
+.footer-logo span{color:var(--neon)}
+.footer-text{font-size:13px;color:var(--muted)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;display:none;flex-direction:column}
+.modal-overlay.open{display:flex}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(13,17,51,.9);border-bottom:1px solid var(--border);flex-shrink:0}
+.modal-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.modal-close{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.modal-close:hover{background:rgba(255,255,255,.15)}
+.modal-iframe{flex:1;border:none;width:100%;background:var(--bg)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:2000;transition:transform .3s ease;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .hero{padding:48px 20px 40px}
+  .stats-row{gap:24px}
+  .stat-num{font-size:22px}
+  .header-inner{padding:12px 16px}
+  .logo-text{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🚀</div>
+      <div class="logo-text">Космо<span>База</span></div>
+    </a>
+    <nav>
+      <button class="nav-btn ghost">Войти</button>
+      <button class="nav-btn primary" onclick="openSubject('ai')">Начать бесплатно</button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span>Бета — первый предмет уже открыт!</div>
+    <h1>Учись через<br><span class="accent">игры в космосе</span></h1>
+    <p class="hero-sub">Платформа где каждый школьный предмет — это приключение. Уровни, механики, награды — и никакой скуки.</p>
+    <div class="hero-cta">
+      <button class="btn-big primary" onclick="openSubject('ai')">🚀 Играть бесплатно</button>
+      <button class="btn-big ghost" onclick="document.querySelector('.subjects-section').scrollIntoView({behavior:'smooth'})">Все предметы →</button>
+    </div>
+  </section>
+</div>
+
+<!-- STATS -->
+<div class="wrap">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">уровней ИИ</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">предметов скоро</div></div>
+    <div class="stat"><div class="stat-num">7–14</div><div class="stat-lbl">лет аудитория</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">интереса к науке</div></div>
+  </div>
+</div>
+
+<!-- SUBJECTS -->
+<section class="subjects-section">
+  <div class="wrap">
+    <div class="section-label">Предметы</div>
+    <div class="section-title">Выбери что учить сегодня</div>
+    <p class="section-sub">Каждый предмет — набор уровней с уникальными механиками. Проходи в своём темпе.</p>
+
+    <div class="subjects-grid">
+
+      <!-- ИИ — АКТИВНЫЙ -->
+      <div class="subject-card active" onclick="openSubject('ai')" id="card-ai">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(0,245,255,.1)">🤖</div>
+          <div class="card-badge badge-live">● ОТКРЫТО</div>
+        </div>
+        <div class="card-title">Искусственный интеллект</div>
+        <div class="card-desc">Как работает ИИ, что такое нейросеть и почему ChatGPT не думает — всё через игры.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>9 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~40 мин</div>
+          <div class="meta-item"><span class="meta-icon">🆓</span>Бесплатно</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="ai-progress" style="width:0%"></div></div>
+      </div>
+
+      <!-- ХИМИЯ -->
+      <div class="subject-card soon" onclick="showSoon('Химия')">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(74,222,128,.1)">🧪</div>
+          <div class="card-badge badge-hot">🔥 СКОРО</div>
+        </div>
+        <div class="card-title">Химия</div>
+        <div class="card-desc">Элементы, реакции и молекулы — собирай формулы как пазлы и взрывай виртуальные колбы.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>8 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~35 мин</div>
+          <div class="meta-item"><span class="meta-icon">⭐</span>Подписка</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--green)"></div></div>
+      </div>
+
+      <!-- БИОЛОГИЯ -->
+      <div class="subject-card soon" onclick="showSoon('Биология')">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(16,185,129,.1)">🌿</div>
+          <div class="card-badge badge-soon">СКОРО</div>
+        </div>
+        <div class="card-title">Биология</div>
+        <div class="card-desc">Клетки, ДНК и эволюция — собирай организмы, выживай в экосистеме и изучай жизнь изнутри.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>8 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~35 мин</div>
+          <div class="meta-item"><span class="meta-icon">⭐</span>Подписка</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:#10b981"></div></div>
+      </div>
+
+      <!-- ГЕОГРАФИЯ -->
+      <div class="subject-card soon" onclick="showSoon('География')">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(96,165,250,.1)">🌍</div>
+          <div class="card-badge badge-soon">СКОРО</div>
+        </div>
+        <div class="card-title">География</div>
+        <div class="card-desc">Страны, континенты, климат — путешествуй по планете и открывай секреты Земли.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>7 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~30 мин</div>
+          <div class="meta-item"><span class="meta-icon">⭐</span>Подписка</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--blue)"></div></div>
+      </div>
+
+      <!-- МАТЕМАТИКА -->
+      <div class="subject-card soon" onclick="showSoon('Математика')">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(168,85,247,.1)">🔢</div>
+          <div class="card-badge badge-soon">СКОРО</div>
+        </div>
+        <div class="card-title">Математика</div>
+        <div class="card-desc">Числа, геометрия и логика без зубрёжки — решай головоломки и строй фигуры в космосе.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>10 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~45 мин</div>
+          <div class="meta-item"><span class="meta-icon">⭐</span>Подписка</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--purple)"></div></div>
+      </div>
+
+      <!-- ФИЗИКА -->
+      <div class="subject-card soon" onclick="showSoon('Физика')">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(251,146,60,.1)">⚡</div>
+          <div class="card-badge badge-soon">СКОРО</div>
+        </div>
+        <div class="card-title">Физика</div>
+        <div class="card-desc">Сила, скорость, электричество — управляй физическими законами и строй механизмы.</div>
+        <div class="card-meta">
+          <div class="meta-item"><span class="meta-icon">🎮</span>8 уровней</div>
+          <div class="meta-item"><span class="meta-icon">⏱</span>~35 мин</div>
+          <div class="meta-item"><span class="meta-icon">⭐</span>Подписка</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--orange)"></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="wrap">
+    <div class="section-label">Как это работает</div>
+    <div class="section-title">Три шага к знаниям</div>
+    <p class="section-sub">Никаких лекций. Только игра, практика и результат.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Выбери предмет</div>
+        <div class="step-text">Открой любой предмет — первый уровень всегда бесплатный. Почувствуй формат.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Играй и учись</div>
+        <div class="step-text">Каждый уровень — уникальная механика. Сортируй, строй, угадывай, программируй.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Получай XP и открывай новое</div>
+        <div class="step-text">За каждый уровень — опыт и прогресс. Открывай следующие предметы и уровни.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-label" style="text-align:center">Тарифы</div>
+      <div class="section-title">Начни бесплатно</div>
+      <p class="section-sub">Первый предмет всегда открыт. Подписка — для тех кто хочет всё.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Бесплатно</div>
+        <div class="plan-price">0 <span>₽</span></div>
+        <div class="plan-period">навсегда</div>
+        <ul class="plan-features">
+          <li>Полный курс ИИ (9 уровней)</li>
+          <li>Первые 4 уровня ИИ без ограничений</li>
+          <li>Сохранение прогресса</li>
+        </ul>
+        <button class="plan-btn free" onclick="openSubject('ai')">Начать играть →</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-tag">⭐ ВСЁ ВКЛЮЧЕНО</div>
+        <div class="plan-name">КосмоПро</div>
+        <div class="plan-price">990 <span>₽</span></div>
+        <div class="plan-period">в месяц</div>
+        <ul class="plan-features">
+          <li>Все 6 предметов без ограничений</li>
+          <li>Все уровни открыты сразу</li>
+          <li>Новые предметы автоматически</li>
+          <li>Без рекламы</li>
+        </ul>
+        <button class="plan-btn pro" onclick="showSoon('Подписка')">Оформить подписку</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Космо<span>База</span></div>
+  <div class="footer-text" style="margin-top:8px">Учись играя · 2026</div>
+</footer>
+
+<!-- MODAL с игрой -->
+<div class="modal-overlay" id="game-modal">
+  <div class="modal-header">
+    <div class="modal-title" id="modal-title">🤖 Искусственный интеллект</div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <iframe class="modal-iframe" id="game-iframe" src="" allow="autoplay"></iframe>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STARS ──────────────────────────────────────────────────
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  const n = Math.floor((canvas.width * canvas.height) / 6000);
+  for (let i = 0; i < n; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.2,
+      o: Math.random() * 0.6 + 0.1,
+      speed: Math.random() * 0.4 + 0.1,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(ts) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const o = s.o * (0.5 + 0.5 * Math.sin(ts / 1000 * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${o})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars();
+requestAnimationFrame(drawStars);
+
+// ── PROGRESS ──────────────────────────────────────────────
+function loadProgress() {
+  try {
+    const gs = JSON.parse(localStorage.getItem('aiq5_gs') || '{}');
+    const modules = gs.modules || [];
+    const total = 9;
+    const pct = Math.round(modules.length / total * 100);
+    const el = document.getElementById('ai-progress');
+    if (el) setTimeout(() => el.style.width = pct + '%', 300);
+  } catch(e) {}
+}
+loadProgress();
+
+// ── SUBJECTS ──────────────────────────────────────────────
+const SUBJECTS = {
+  ai: {
+    title: '🤖 Искусственный интеллект',
+    url: 'https://luxuryeva7-ai.github.io/na-prod/'
+  }
+};
+
+function openSubject(id) {
+  const s = SUBJECTS[id];
+  if (!s) return;
+  document.getElementById('modal-title').textContent = s.title;
+  document.getElementById('game-iframe').src = s.url;
+  document.getElementById('game-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('game-modal').classList.remove('open');
+  document.getElementById('game-iframe').src = '';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('game-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── TOAST ──────────────────────────────────────────────────
+function showSoon(name) {
+  const t = document.getElementById('toast');
+  t.textContent = `${name} — скоро открытие! 🚀`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
