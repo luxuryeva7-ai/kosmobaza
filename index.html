@@ -147,6 +147,20 @@ h1{font-size:clamp(42px,5.5vw,72px);font-weight:800;line-height:1.03;letter-spac
 .rev-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px}
 .rev-role{font-size:12px;color:var(--muted);margin-top:1px}
 
+/* MARKET DATA */
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:56px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--border)}
+.mkt-card{background:var(--bg1);padding:36px 32px}
+.mkt-num{font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:10px}
+.mkt-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:10px}
+.mkt-desc{font-size:13px;color:var(--muted);line-height:1.75}
+.mkt-insights{margin-top:24px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.mkt-ins-head{padding:20px 28px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.mkt-ins-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--border)}
+.mkt-ins-item{background:var(--bg1);padding:24px 22px;display:flex;flex-direction:column;gap:10px}
+.mkt-pct{font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,var(--blue),var(--indigo));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.mkt-ins-item span:last-child{font-size:12px;color:var(--muted);line-height:1.65}
+.mkt-source{padding:14px 28px;font-size:11px;color:var(--dim);border-top:1px solid var(--border);background:rgba(255,255,255,.015)}
+
 /* PRICING */
 .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:56px;max-width:740px;margin-left:auto;margin-right:auto}
 .price-box{background:var(--bg1);border:1px solid var(--border);border-radius:16px;padding:36px;position:relative}
@@ -468,11 +482,12 @@ footer{border-top:1px solid var(--border);padding:32px 0}
 <!-- METRICS -->
 <div class="metrics">
   <div class="met"><div class="met-n"><span>9</span></div><div class="met-l">Игровых миссий</div></div>
-  <div class="met"><div class="met-n"><span>6</span></div><div class="met-l">Предметов</div></div>
-  <div class="met"><div class="met-n"><span>7–14</span></div><div class="met-l">Лет аудитория</div></div>
-  <div class="met"><div class="met-n"><span>+31%</span></div><div class="met-l">Рост рынка / год</div></div>
-  <div class="met"><div class="met-n"><span>∞</span></div><div class="met-l">Интерес к науке</div></div>
+  <div class="met"><div class="met-n"><span>6</span></div><div class="met-l">Предметов в платформе</div></div>
+  <div class="met"><div class="met-n"><span>+30%</span></div><div class="met-l">Рост рынка детского edtech Q1 2025</div></div>
+  <div class="met"><div class="met-n"><span>80%</span></div><div class="met-l">Родителей — открыты к онлайну*</div></div>
+  <div class="met"><div class="met-n"><span>38%</span></div><div class="met-l">Доля детского образования в edtech</div></div>
 </div>
+<p style="font-size:11px;color:var(--dim);text-align:right;margin:-80px 0 80px;padding:0 4px">* по данным количественного исследования 90+ родителей</p>
 
 <!-- HOW IT WORKS -->
 <section class="sec">
@@ -538,6 +553,54 @@ footer{border-top:1px solid var(--border);padding:32px 0}
         <div><div class="rev-name">Ольга Н.</div><div class="rev-role">Мама, сын 12 лет · Казань</div></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- MARKET DATA -->
+<section class="sec" id="market">
+  <div class="sec-label">Для инвесторов · Данные рынка</div>
+  <h2 class="sec-h">Почему сейчас —<br><span class="hl">идеальный момент</span></h2>
+  <p class="sec-p">Данные на основе закрытого исследования Smart Ranking Q1 2025 и качественных интервью с 90+ родителями.</p>
+
+  <div class="mkt-grid">
+    <div class="mkt-card">
+      <div class="mkt-num" style="color:#22D3EE">+30%</div>
+      <div class="mkt-title">Рост рынка Y2Y</div>
+      <div class="mkt-desc">Детское онлайн-образование обогнало взрослое по выручке — рост более 30% в Q1 2025 по данным Smart Ranking (топ-100 edtech-компаний РФ).</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-num" style="color:#8B5CF6">38%</div>
+      <div class="mkt-title">Доля детского edtech</div>
+      <div class="mkt-desc">Детское образование уже занимает 38% совокупной выручки топ-100 edtech-компаний — и продолжает расти быстрее всех сегментов.</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-num" style="color:#10B981">80%</div>
+      <div class="mkt-title">Родителей — за онлайн</div>
+      <div class="mkt-desc">80% опрошенных родителей готовы рассматривать онлайн-формат дополнительного образования для ребёнка. Никто не ответил «нет».</div>
+    </div>
+  </div>
+
+  <div class="mkt-insights">
+    <div class="mkt-ins-head">Что говорят родители — 90+ интервью и опросов</div>
+    <div class="mkt-ins-grid">
+      <div class="mkt-ins-item">
+        <span class="mkt-pct">79%</span>
+        <span>Главный критерий — интересная программа плюс практика руками, а не теория</span>
+      </div>
+      <div class="mkt-ins-item">
+        <span class="mkt-pct">92%</span>
+        <span>Принимают решение о записи после пробного занятия — первый урок бесплатен</span>
+      </div>
+      <div class="mkt-ins-item">
+        <span class="mkt-pct">64%</span>
+        <span>Основная аудитория — дети 7–8 лет, ещё 29% — дети 9–10 лет</span>
+      </div>
+      <div class="mkt-ins-item">
+        <span class="mkt-pct">0</span>
+        <span>Крупных игроков в нише STEM / естественных наук — голубой океан</span>
+      </div>
+    </div>
+    <div class="mkt-source">Источник: количественное исследование (90+ родителей) + 16 глубинных интервью, Склад Ума / Инжинириум / KIBERone · 2025</div>
   </div>
 </section>
 
