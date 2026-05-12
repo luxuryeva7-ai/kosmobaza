@@ -100,24 +100,26 @@ h1 .line-coral{color:var(--coral);display:block}
 /* ── PLANETS ── */
 .planets-bg{background:var(--bg);padding:80px 40px}
 .planets-inner{max-width:1200px;margin:0 auto}
-.planets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:48px}
-.planet{border-radius:24px;padding:32px 28px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:space-between}
-.planet:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.12)}
-.pl-ai{background:#7B2FFF;color:#fff}
-.pl-chem{background:#111118;color:#fff}
-.pl-bio{background:#00C27C;color:#fff}
-.pl-geo{background:#FFE141;color:#111118}
-.pl-math{background:#FF5038;color:#fff}
-.pl-phys{background:#3B82F6;color:#fff}
-.p-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.p-icon-big{font-size:40px}
-.p-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:5px 12px;border-radius:40px;letter-spacing:.3px}
-.p-chip.open{background:rgba(255,255,255,.22);color:#fff}
-.p-chip.soon{background:rgba(0,0,0,.12);color:rgba(255,255,255,.6)}
-.p-chip.soon-dark{background:rgba(0,0,0,.1);color:rgba(17,17,24,.5)}
-.p-name{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-.4px}
-.p-subject{font-size:13px;font-weight:600;opacity:.65;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
-.p-desc{font-size:13px;line-height:1.65;opacity:.75}
+.planets{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px}
+.planet{border-radius:28px;overflow:hidden;cursor:pointer;transition:all .28s;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.planet:hover{transform:translateY(-7px);box-shadow:0 28px 64px rgba(0,0,0,.2)}
+.p-img-wrap{position:relative;height:260px;overflow:hidden;flex-shrink:0}
+.p-img{width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+.planet:hover .p-img{transform:scale(1.07)}
+.p-chip{position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:6px 14px;border-radius:40px;letter-spacing:.3px;backdrop-filter:blur(10px)}
+.p-chip.open{background:rgba(255,255,255,.92);color:#111118}
+.p-chip.soon{background:rgba(0,0,0,.52);color:rgba(255,255,255,.88)}
+.p-chip.soon-dark{background:rgba(0,0,0,.45);color:rgba(255,255,255,.82)}
+.p-body{padding:26px 30px 30px;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.pl-ai .p-body{background:#7B2FFF;color:#fff}
+.pl-chem .p-body{background:#111118;color:#fff}
+.pl-bio .p-body{background:#00C27C;color:#fff}
+.pl-geo .p-body{background:#FFE141;color:#111118}
+.pl-math .p-body{background:#FF5038;color:#fff}
+.pl-phys .p-body{background:#3B82F6;color:#fff}
+.p-name{font-size:26px;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}
+.p-subject{font-size:12px;font-weight:700;opacity:.6;margin-bottom:8px;text-transform:uppercase;letter-spacing:.9px}
+.p-desc{font-size:14px;line-height:1.7;opacity:.82}
 
 /* ── REVIEWS ── жёлтый фон */
 .reviews-wrap{background:var(--yellow);padding:80px 40px}
@@ -195,6 +197,7 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
   .hdr{padding:12px 20px}
   .hero{padding:48px 20px 40px}
   .steps,.planets{grid-template-columns:1fr}
+  .p-img-wrap{height:210px}
   .reviews{grid-template-columns:1fr}
   .pricing-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(3,1fr)}
@@ -415,12 +418,12 @@ const PLANET_COLORS = {
   phys: {bg:'pl-phys', chip:'soon',      chipClass:'soon'},
 };
 const PL=[
-  {key:'ai',  icon:'🤖',name:'Нейро Академия',subject:'Искусственный интеллект',desc:'Нейросети, промпты, BIPO-роботы и декодеры — 9 уровней реального погружения в ИИ.',active:true,levels:9,src:'https://luxuryeva7-ai.github.io/na-prod/'},
-  {key:'chem',icon:'🧪',name:'Хемо Лаб',subject:'Химия',desc:'Реакции, молекулы, взрывные опыты — погружение в мир атомов и соединений.',active:false,levels:8},
-  {key:'bio', icon:'🌿',name:'БиоМир',subject:'Биология',desc:'Клетки, ДНК, экосистемы — живой мир через игровые эксперименты.',active:false,levels:8},
-  {key:'geo', icon:'🌍',name:'ГеоАтлас',subject:'География',desc:'Материки, климаты, страны — исследование Земли через квесты и карты.',active:false,levels:7},
-  {key:'math',icon:'🔢',name:'МатрицаX',subject:'Математика',desc:'Числа, геометрия, логика — задачи реального мира в игровом формате.',active:false,levels:10},
-  {key:'phys',icon:'⚡',name:'КвантУм',subject:'Физика',desc:'Силы, энергия, свет — законы Вселенной через симуляции и эксперименты.',active:false,levels:9}
+  {key:'ai',  img:'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&q=85&fit=crop',name:'Нейро Академия',subject:'Искусственный интеллект',desc:'Нейросети, промпты, BIPO-роботы и декодеры — 9 уровней реального погружения в ИИ.',active:true,levels:9,src:'https://luxuryeva7-ai.github.io/na-prod/'},
+  {key:'chem',img:'https://images.unsplash.com/photo-1628863353691-0071c8c1874c?w=700&q=85&fit=crop',name:'Хемо Лаб',subject:'Химия',desc:'Реакции, молекулы, взрывные опыты — погружение в мир атомов и соединений.',active:false,levels:8},
+  {key:'bio', img:'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=700&q=85&fit=crop',name:'БиоМир',subject:'Биология',desc:'Клетки, ДНК, экосистемы — живой мир через игровые эксперименты.',active:false,levels:8},
+  {key:'geo', img:'https://images.unsplash.com/photo-1446776858070-70c3d5ed6758?w=700&q=85&fit=crop',name:'ГеоАтлас',subject:'География',desc:'Материки, климаты, страны — исследование Земли через квесты и карты.',active:false,levels:7},
+  {key:'math',img:'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=700&q=85&fit=crop',name:'МатрицаX',subject:'Математика',desc:'Числа, геометрия, логика — задачи реального мира в игровом формате.',active:false,levels:10},
+  {key:'phys',img:'https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=700&q=85&fit=crop',name:'КвантУм',subject:'Физика',desc:'Силы, энергия, свет — законы Вселенной через симуляции и эксперименты.',active:false,levels:9}
 ];
 const pg=document.getElementById('planetsGrid');
 PL.forEach(p=>{
@@ -429,12 +432,17 @@ PL.forEach(p=>{
   const d=document.createElement('div');
   d.className=`planet ${c.bg}`;
   d.innerHTML=`
-    <div>
-      <div class="p-top"><span class="p-icon-big">${p.icon}</span><span class="p-chip ${c.chipClass}">${chipLabel}</span></div>
-      <div class="p-name">${p.name}</div>
-      <div class="p-subject">${p.subject}</div>
+    <div class="p-img-wrap">
+      <img class="p-img" src="${p.img}" alt="${p.name}" loading="lazy">
+      <span class="p-chip ${c.chipClass}">${chipLabel}</span>
     </div>
-    <div class="p-desc">${p.desc}</div>`;
+    <div class="p-body">
+      <div>
+        <div class="p-subject">${p.subject}</div>
+        <div class="p-name">${p.name}</div>
+      </div>
+      <div class="p-desc">${p.desc}</div>
+    </div>`;
   d.onclick=p.active?()=>openModal(p.src):()=>showToast(`${p.name} — готовим. Следите за обновлениями.`);
   pg.appendChild(d);
 });
