@@ -75,9 +75,12 @@ h1 .line-coral{color:var(--coral);display:block}
 .cta-sec:hover{border-color:var(--black)}
 
 /* ── STATS BAR ── фиолетовый full-width */
-.stats-bar{background:var(--purple);padding:52px 40px;margin:0;text-align:center}
-.stats-tagline{max-width:780px;margin:0 auto;color:rgba(255,255,255,.95);font-size:clamp(17px,1.7vw,21px);line-height:1.85;font-weight:500}
-.stats-tagline strong{color:#fff;font-weight:800}
+.stats-bar{background:var(--purple);padding:72px 40px;margin:0;text-align:center}
+.stats-title{font-size:clamp(30px,3.2vw,48px);font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:24px}
+.stats-title em{font-style:normal;color:#FFE141}
+.stats-divider{width:56px;height:4px;background:rgba(255,255,255,.25);margin:0 auto 28px;border-radius:4px}
+.stats-desc{max-width:680px;margin:0 auto;color:rgba(255,255,255,.8);font-size:clamp(15px,1.4vw,18px);line-height:1.85;font-weight:400}
+.stats-desc strong{color:#fff;font-weight:700}
 
 /* ── HOW IT WORKS ── */
 .sec{padding:80px 40px;max-width:1200px;margin:0 auto}
@@ -246,8 +249,6 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
     <span class="line-coral">для детей от 4 лет</span>
   </h1>
 
-  <p class="hero-sub">Изучайте как устроен мир с помощью <strong>100+ игр!</strong></p>
-
   <div class="subjects-row">
     <span class="subj-tag st-ai">🤖 ИИ</span>
     <span class="subj-tag st-chem">🧪 Химия</span>
@@ -265,7 +266,9 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
 
 <!-- STATS BAR — фиолетовый -->
 <div class="stats-bar">
-  <div class="stats-tagline">
+  <div class="stats-title">Изучайте как устроен мир<br>с помощью <em>100+ игр!</em></div>
+  <div class="stats-divider"></div>
+  <div class="stats-desc">
     Мы создаём игры, которые вовлекают и являются отличным дополнением к учёбе.<br>
     Каждая игра разрабатывается с <strong>методистами и гейм-дизайнерами</strong> — каждую неделю выходит <strong>3 полноценных игры</strong>
   </div>
