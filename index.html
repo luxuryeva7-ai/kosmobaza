@@ -75,14 +75,9 @@ h1 .line-coral{color:var(--coral);display:block}
 .cta-sec:hover{border-color:var(--black)}
 
 /* ── STATS BAR ── фиолетовый full-width */
-.stats-bar{background:var(--purple);padding:48px 40px 40px;margin:0}
-.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0}
-.stats-tagline{max-width:1200px;margin:32px auto 0;padding:28px 0 0;border-top:1px solid rgba(255,255,255,.18);text-align:center;color:rgba(255,255,255,.88);font-size:16px;line-height:1.75;font-weight:500}
+.stats-bar{background:var(--purple);padding:52px 40px;margin:0;text-align:center}
+.stats-tagline{max-width:780px;margin:0 auto;color:rgba(255,255,255,.95);font-size:clamp(17px,1.7vw,21px);line-height:1.85;font-weight:500}
 .stats-tagline strong{color:#fff;font-weight:800}
-.stat{text-align:center;padding:0 16px;border-right:1px solid rgba(255,255,255,.15)}
-.stat:last-child{border-right:none}
-.stat-n{font-size:clamp(32px,3.5vw,52px);font-weight:800;color:#fff;letter-spacing:-2px;line-height:1}
-.stat-l{font-size:12px;color:rgba(255,255,255,.7);margin-top:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;line-height:1.4}
 
 /* ── HOW IT WORKS ── */
 .sec{padding:80px 40px;max-width:1200px;margin:0 auto}
@@ -204,8 +199,6 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
   .p-img-wrap{height:190px}
   .reviews{grid-template-columns:1fr}
   .pricing-grid{grid-template-columns:1fr}
-  .stats-inner{grid-template-columns:repeat(3,1fr)}
-  .stat:nth-child(4),.stat:nth-child(5){border-top:1px solid rgba(255,255,255,.15);margin-top:28px;padding-top:28px}
   .sec,.pricing-sec,.cta-wrap{padding-left:20px;padding-right:20px}
   .planets-bg,.reviews-wrap{padding-left:20px;padding-right:20px}
   .planets-inner,.reviews-inner{margin:0}
@@ -213,8 +206,6 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
 }
 @media(max-width:580px){
   h1{letter-spacing:-2px}
-  .stats-inner{grid-template-columns:1fr 1fr}
-  .stat:nth-child(5){grid-column:span 2;border-right:none}
   .subjects-row{gap:8px}
   .subj-tag{font-size:13px;padding:8px 14px}
   .hero-ctas{flex-direction:column;align-items:center}
@@ -274,13 +265,6 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
 
 <!-- STATS BAR — фиолетовый -->
 <div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat"><div class="stat-n">9</div><div class="stat-l">Игровых миссий</div></div>
-    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Предметов</div></div>
-    <div class="stat"><div class="stat-n">+30%</div><div class="stat-l">Рост рынка в год</div></div>
-    <div class="stat"><div class="stat-n">80%</div><div class="stat-l">Родителей за онлайн</div></div>
-    <div class="stat"><div class="stat-n">38%</div><div class="stat-l">Доля детского edtech</div></div>
-  </div>
   <div class="stats-tagline">
     Мы создаём игры, которые вовлекают и являются отличным дополнением к учёбе.<br>
     Каждая игра разрабатывается с <strong>методистами и гейм-дизайнерами</strong> — каждую неделю выходит <strong>3 полноценных игры</strong>
