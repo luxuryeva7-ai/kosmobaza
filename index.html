@@ -55,6 +55,8 @@ nav{display:flex;align-items:center;gap:10px}
 h1{font-size:clamp(52px,8vw,112px);font-weight:800;line-height:.95;letter-spacing:-4px;margin-bottom:32px;color:var(--black)}
 h1 .line-purple{color:var(--purple);display:block}
 h1 .line-coral{color:var(--coral);display:block}
+.hero-sub{font-size:clamp(18px,1.8vw,22px);color:var(--muted);margin-bottom:36px;font-weight:500;line-height:1.5;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-sub strong{color:var(--black)}
 
 .subjects-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:44px}
 .subj-tag{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:40px;font-size:15px;font-weight:700;border:2px solid transparent;transition:transform .2s}
@@ -73,8 +75,10 @@ h1 .line-coral{color:var(--coral);display:block}
 .cta-sec:hover{border-color:var(--black)}
 
 /* ── STATS BAR ── фиолетовый full-width */
-.stats-bar{background:var(--purple);padding:48px 40px;margin:0}
+.stats-bar{background:var(--purple);padding:48px 40px 40px;margin:0}
 .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+.stats-tagline{max-width:1200px;margin:32px auto 0;padding:28px 0 0;border-top:1px solid rgba(255,255,255,.18);text-align:center;color:rgba(255,255,255,.88);font-size:16px;line-height:1.75;font-weight:500}
+.stats-tagline strong{color:#fff;font-weight:800}
 .stat{text-align:center;padding:0 16px;border-right:1px solid rgba(255,255,255,.15)}
 .stat:last-child{border-right:none}
 .stat-n{font-size:clamp(32px,3.5vw,52px);font-weight:800;color:#fff;letter-spacing:-2px;line-height:1}
@@ -246,10 +250,12 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
   <div class="hero-badge"><span class="dot"></span>Бета · 9 миссий уже открыто</div>
 
   <h1>
-    Учёба —
-    <span class="line-purple">это игра</span>
-    <span class="line-coral">в реальной науке</span>
+    Игровая
+    <span class="line-purple">образовательная платформа</span>
+    <span class="line-coral">для детей от 4 лет</span>
   </h1>
+
+  <p class="hero-sub">Изучайте как устроен мир с помощью <strong>100+ игр!</strong></p>
 
   <div class="subjects-row">
     <span class="subj-tag st-ai">🤖 ИИ</span>
@@ -274,6 +280,10 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
     <div class="stat"><div class="stat-n">+30%</div><div class="stat-l">Рост рынка в год</div></div>
     <div class="stat"><div class="stat-n">80%</div><div class="stat-l">Родителей за онлайн</div></div>
     <div class="stat"><div class="stat-n">38%</div><div class="stat-l">Доля детского edtech</div></div>
+  </div>
+  <div class="stats-tagline">
+    Мы создаём игры, которые вовлекают и являются отличным дополнением к учёбе.<br>
+    Каждая игра разрабатывается с <strong>методистами и гейм-дизайнерами</strong> — каждую неделю выходит <strong>3 полноценных игры</strong>
   </div>
 </div>
 
