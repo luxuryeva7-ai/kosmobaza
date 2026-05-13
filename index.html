@@ -52,7 +52,7 @@ nav{display:flex;align-items:center;gap:10px}
 .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-h1{font-size:clamp(52px,8vw,112px);font-weight:800;line-height:.95;letter-spacing:-4px;margin-bottom:32px;color:var(--black)}
+h1{font-size:clamp(42px,6vw,88px);font-weight:800;line-height:.95;letter-spacing:-4px;margin-bottom:32px;color:var(--black)}
 h1 .line-purple{color:var(--purple);display:block}
 h1 .line-coral{color:var(--coral);display:block}
 .hero-sub{font-size:clamp(18px,1.8vw,22px);color:var(--muted);margin-bottom:36px;font-weight:500;line-height:1.5;max-width:600px;margin-left:auto;margin-right:auto}
@@ -80,9 +80,11 @@ h1 .line-coral{color:var(--coral);display:block}
 .stats-title em{font-style:normal;color:#FFE141}
 .stats-feats{display:flex;align-items:stretch;max-width:860px;margin:0 auto;background:rgba(255,255,255,.1);border-radius:22px;overflow:hidden;backdrop-filter:blur(4px)}
 .feat{flex:1;padding:30px 36px;display:flex;align-items:flex-start;gap:20px;text-align:left}
-.feat-ic{flex-shrink:0;width:48px;height:48px}
-.feat-t{color:#fff;font-size:18px;font-weight:800;margin-bottom:8px;letter-spacing:-.3px}
-.feat-d{color:rgba(255,255,255,.72);font-size:15px;line-height:1.7}
+.feat-ic{flex-shrink:0;width:52px;height:52px}
+.feat-t{font-size:22px;font-weight:800;margin-bottom:10px;letter-spacing:-.4px}
+.feat-1 .feat-t{color:#FFE141}
+.feat-2 .feat-t{color:#FF8A6A}
+.feat-d{color:rgba(255,255,255,.88);font-size:17px;line-height:1.7}
 .feat-sep{width:1px;background:rgba(255,255,255,.18);flex-shrink:0}
 @media(max-width:600px){.stats-feats{flex-direction:column}.feat-sep{width:100%;height:1px}}
 
@@ -272,16 +274,9 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
 <div class="stats-bar">
   <div class="stats-title">Изучайте как устроен мир<br>с помощью <em>100+ игр!</em></div>
   <div class="stats-feats">
-    <div class="feat">
-      <svg class="feat-ic" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="4" y="14" width="40" height="26" rx="8" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
-        <line x1="16" y1="27" x2="16" y2="19" stroke="#FFE141" stroke-width="3" stroke-linecap="round"/>
-        <line x1="12" y1="23" x2="20" y2="23" stroke="#FFE141" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="33" cy="21" r="2.5" fill="#FFE141"/>
-        <circle cx="39" cy="25" r="2.5" fill="#FFE141"/>
-        <circle cx="33" cy="29" r="2.5" fill="#FFE141"/>
-        <circle cx="27" cy="25" r="2.5" fill="#FFE141"/>
-        <path d="M11 8 L24 4 L37 8" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"/>
+    <div class="feat feat-1">
+      <svg class="feat-ic" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 4L10 30h14l-6 18L44 22H30L36 4z" fill="#FFE141"/>
       </svg>
       <div>
         <div class="feat-t">Вовлекающие игры</div>
@@ -289,15 +284,15 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
       </div>
     </div>
     <div class="feat-sep"></div>
-    <div class="feat">
-      <svg class="feat-ic" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 6 C24 6 34 12 34 26 C34 32 29 38 24 42 C19 38 14 32 14 26 C14 12 24 6 24 6Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
-        <circle cx="24" cy="25" r="5" fill="#FFE141"/>
-        <path d="M10 34 L16 30" stroke="#FFE141" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M38 34 L32 30" stroke="#FFE141" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M24 8 L24 14" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M18 10 L20 15" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M30 10 L28 15" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+    <div class="feat feat-2">
+      <svg class="feat-ic" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- большая звезда по центру -->
+        <path d="M26 8l3.5 10.5H41l-9 6.5 3.5 10.5-9-6.5-9 6.5 3.5-10.5-9-6.5h11.5z" fill="#FF8A6A"/>
+        <!-- малые звёзды -->
+        <circle cx="10" cy="10" r="3.5" fill="rgba(255,255,255,.5)"/>
+        <circle cx="43" cy="8" r="2.5" fill="rgba(255,255,255,.4)"/>
+        <circle cx="44" cy="40" r="3" fill="rgba(255,255,255,.35)"/>
+        <circle cx="8" cy="38" r="2" fill="rgba(255,255,255,.3)"/>
       </svg>
       <div>
         <div class="feat-t">3 новых игры каждую неделю</div>
