@@ -3,1149 +3,960 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Хемо Лаб — Химия для детей</title>
+<title>Химия — КосмоБаза</title>
 <link href="https://fonts.bunny.net/css?family=space-grotesk:400,700,800" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
-body {
-  background: #FFFDF7;
-  color: #1a1a2e;
-  font-family: 'Space Grotesk', sans-serif;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Space Grotesk',sans-serif;background:#FFFDF7;color:#1a1a2e;min-height:100vh;overflow-x:hidden;}
 
-/* ===== SCREENS ===== */
-.screen { display: none; height: 100vh; flex-direction: column; overflow: hidden; }
-.screen.active { display: flex; }
+/* NAV */
+.nav{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#fff;border-bottom:2px solid #f0ede6;position:sticky;top:0;z-index:50;}
+.nav-back{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 8px;}
+.nav-title{font-size:18px;font-weight:800;}
+.nav-badge{margin-left:auto;background:#FFE141;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;}
 
-/* ===== LEVEL SELECT ===== */
-#screen-menu {
-  background: linear-gradient(160deg, #e8fff4 0%, #fff8e8 60%, #FFFDF7 100%);
-  padding: 24px 20px;
-  gap: 16px;
-}
-.menu-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 800;
-  color: #1a1a2e;
-  line-height: 1.2;
-}
-.menu-sub {
-  text-align: center;
-  font-size: 15px;
-  color: #666;
-  margin-top: 6px;
-}
-.level-cards { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
-.level-card {
-  display: flex; align-items: center; gap: 18px;
-  padding: 0 20px; height: 100px; border-radius: 24px; border: none;
-  cursor: pointer; text-align: left;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
-  position: relative; overflow: hidden;
-}
-.level-card:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(0,0,0,0.10); }
-.level-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
-  background: linear-gradient(rgba(255,255,255,0.25), transparent);
-  pointer-events: none; border-radius: 24px 24px 0 0;
-}
-.lc-emoji { font-size: 56px; flex-shrink: 0; }
-.lc-info {}
-.lc-name { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; text-shadow: 0 1px 4px rgba(0,0,0,0.18); }
-.lc-desc { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; font-weight: 400; }
+/* SCREENS */
+.screen{display:none;}
+.screen.active{display:flex;flex-direction:column;min-height:calc(100vh - 56px);}
 
-/* ===== BACK BUTTON ===== */
-.back-btn {
-  position: absolute; top: 14px; left: 14px;
-  background: rgba(255,255,255,0.85); border: none; border-radius: 14px;
-  padding: 8px 16px; font-size: 15px; font-weight: 700;
-  cursor: pointer; color: #1a1a2e; z-index: 20;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
-  transition: transform 0.12s;
-}
-.back-btn:active { transform: scale(0.95); }
+/* INTRO */
+#intro{background:linear-gradient(160deg,#D1FAE5 0%,#A7F3D0 100%);align-items:center;justify-content:center;text-align:center;padding:32px 24px;min-height:100vh;}
+.intro-ico{font-size:96px;margin-bottom:16px;display:block;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.intro-title{font-size:32px;font-weight:800;margin-bottom:8px;}
+.intro-sub{font-size:16px;color:#047857;margin-bottom:32px;line-height:1.5;}
+.btn-start{background:#00C27C;color:#fff;border:none;padding:18px 48px;border-radius:50px;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(0,194,124,0.4);transition:transform .15s;}
+.btn-start:active{transform:scale(0.95);}
 
-/* ===== LEVEL 1 — LIQUIDS ===== */
-#screen-l1 { position: relative; }
-.l1-header {
-  text-align: center;
-  font-size: 44px; font-weight: 800;
-  padding: 14px 0 10px;
-  flex-shrink: 0;
-}
-.l1-body {
-  display: flex; flex: 1; gap: 14px;
-  padding: 0 14px 14px; align-items: center;
-  overflow: hidden;
-}
-.l1-bottles { display: flex; flex-direction: column; gap: 11px; flex: 1; }
-.bottle-btn {
-  width: 100%; height: 88px;
-  border-radius: 22px; border: none; cursor: pointer;
-  display: flex; align-items: center; gap: 14px; padding: 0 18px;
-  font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
-  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
-  position: relative; overflow: hidden;
-}
-.bottle-btn:active:not(.used) { transform: scale(0.95); }
-.bottle-btn.used { opacity: 0.33; pointer-events: none; }
-.bottle-btn::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
-  background: linear-gradient(rgba(255,255,255,0.28), transparent);
-  border-radius: 22px 22px 0 0; pointer-events: none;
-}
-.bottle-emoji { font-size: 34px; flex-shrink: 0; }
-.bottle-name { font-size: 17px; font-weight: 800; }
-.bottle-density { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+/* LEVEL SELECT */
+#levelSelect{padding:0;}
+#levelSelect .screen-inner{padding:20px 16px;display:flex;flex-direction:column;gap:14px;flex:1;}
+.ls-header{font-size:22px;font-weight:800;margin-bottom:2px;}
+.ls-sub{font-size:14px;color:#666;margin-bottom:8px;}
+.level-card{border-radius:20px;padding:20px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
+.level-card:active{transform:scale(0.97);}
+.lc1{background:linear-gradient(135deg,#E0F2FE,#BAE6FD);}
+.lc2{background:linear-gradient(135deg,#F3E8FF,#E9D5FF);}
+.lc3{background:linear-gradient(135deg,#FEF9C3,#FDE68A);}
+.lc-ico{font-size:52px;flex-shrink:0;}
+.lc-title{font-size:20px;font-weight:800;}
+.lc-sub{font-size:13px;color:#555;margin-top:2px;}
 
-.l1-glass-wrap {
-  width: 170px; flex-shrink: 0;
-  display: flex; flex-direction: column; align-items: center;
-  position: relative;
-}
-.l1-badge {
-  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  background: #fff; border-radius: 12px; padding: 6px 12px;
-  font-size: 12px; font-weight: 700; color: #1a1a2e;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12); white-space: nowrap;
-  opacity: 0; transition: opacity 0.3s, transform 0.3s;
-  text-align: center; max-width: 220px; pointer-events: none;
-  z-index: 10;
-}
-.l1-badge.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+/* TASK HEADER */
+.lvl-header{background:#fff;border-bottom:2px solid #f0ede6;padding:12px 16px;}
+.task-badge{display:inline-flex;align-items:center;gap:6px;background:#EEF2FF;border-radius:20px;padding:6px 14px;font-size:14px;font-weight:700;color:#4F46E5;}
+.task-badge.done{background:#D1FAE5;color:#047857;}
 
-/* Drop objects */
-.l1-objects {
-  display: flex; gap: 12px; justify-content: center; margin-top: 12px;
-}
-.obj-btn {
-  width: 64px; height: 64px; border-radius: 50%;
-  border: 3px solid rgba(0,0,0,0.08);
-  background: #fff; font-size: 36px;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1);
-  display: flex; align-items: center; justify-content: center;
-}
-.obj-btn:active { transform: scale(0.9); }
-.obj-btn.used { opacity: 0.3; pointer-events: none; }
+/* ══════ LEVEL 1 ══════ */
+#level1{padding:0;}
+.l1-body{display:flex;flex-direction:column;flex:1;}
+.l1-top{display:flex;justify-content:center;align-items:flex-end;gap:16px;padding:12px 16px 0;flex:1;}
 
-/* ===== LEVEL 2 — CHAIN ===== */
-#screen-l2 { position: relative; background: #FFFDF7; }
-.l2-scenario-title {
-  text-align: center; font-size: 24px; font-weight: 800;
-  padding: 54px 20px 8px; flex-shrink: 0;
-}
-.l2-slots-wrap {
-  padding: 0 8px; flex-shrink: 0;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-}
-.l2-slots {
-  display: flex; gap: 0; align-items: center;
-  min-width: max-content; padding: 0 10px;
-}
-.l2-slot {
-  width: 108px; height: 96px; border-radius: 18px;
-  border: 3px dashed #ccc; background: #f9f9f9;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 12px; color: #aaa; font-weight: 700;
-  transition: border-color 0.2s, background 0.2s, transform 0.18s cubic-bezier(.34,1.56,.64,1);
-  position: relative; flex-shrink: 0;
-}
-.l2-slot.filled { border-style: solid; background: #fff; color: #1a1a2e; }
-.l2-slot.correct { border-color: #00C27C; background: #e8fff4; }
-.l2-slot.wrong { border-color: #FF5038; background: #fff0ee; animation: shakeSlot 0.4s ease; }
-.l2-slot.active-glow { box-shadow: 0 0 0 4px rgba(255,200,0,0.5); transform: scale(1.06); }
-@keyframes shakeSlot {
-  0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} 80%{transform:translateX(-5px)}
-}
-.l2-slot-emoji { font-size: 32px; line-height: 1; }
-.l2-slot-label { font-size: 11px; font-weight: 700; text-align: center; margin-top: 3px; line-height: 1.2; }
-.l2-slot-check { position: absolute; top: -8px; right: -8px; font-size: 18px; display: none; }
-.l2-slot.correct .l2-slot-check { display: block; }
+.target-strip{display:flex;flex-direction:column;gap:3px;justify-content:flex-end;padding-bottom:8px;}
+.target-label{font-size:10px;font-weight:700;color:#888;text-align:center;margin-bottom:4px;}
+.target-slot{width:34px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;}
 
-.l2-arrow {
-  font-size: 20px; color: #ccc; flex-shrink: 0; padding: 0 3px;
-  transition: color 0.3s;
-}
-.l2-arrow.lit { color: #FFE141; }
+.cylinder-wrap{display:flex;flex-direction:column;align-items:center;}
 
-.l2-cards-wrap {
-  flex: 1; padding: 12px 14px; overflow-y: auto;
-}
-.l2-cards {
-  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-}
-.l2-card {
-  width: 108px; height: 90px; border-radius: 18px;
-  border: 3px solid transparent;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 30px; cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
-  position: relative; overflow: hidden;
-}
-.l2-card:active { transform: scale(0.93); }
-.l2-card.selected { transform: scale(1.08); border-color: #1a1a2e; box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
-.l2-card.placed { opacity: 0.28; pointer-events: none; }
-.l2-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48%;
-  background: linear-gradient(rgba(255,255,255,0.25), transparent);
-  pointer-events: none;
-}
-.l2-card-emoji { font-size: 32px; }
-.l2-card-label { font-size: 11px; font-weight: 700; text-align: center; margin-top: 3px; line-height: 1.2; }
+.l1-bottom{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 12px 14px;}
+.bottle{height:120px;border-radius:16px 16px 10px 10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;cursor:pointer;position:relative;overflow:visible;
+box-shadow:0 8px 24px rgba(0,0,0,0.2),inset 0 2px 4px rgba(255,255,255,0.4);
+transition:transform .2s cubic-bezier(.34,1.56,.64,1);border:2px solid rgba(255,255,255,0.35);}
+.bottle:active{transform:scale(0.9) rotate(-4deg);}
+.bottle.used{opacity:.3;pointer-events:none;filter:grayscale(.5);}
+.bottle.shaking{animation:shake .4s ease;}
+.bottle-neck{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:26px;height:14px;border-radius:4px 4px 0 0;border:2px solid rgba(255,255,255,.3);}
+.bottle-shine{position:absolute;top:8px;left:10px;width:14px;height:44px;background:linear-gradient(rgba(255,255,255,.45),transparent);border-radius:8px;pointer-events:none;}
+.bottle-emoji{font-size:28px;position:relative;z-index:1;}
+.bottle-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.4);position:relative;z-index:1;}
 
-.l2-run-btn {
-  margin: 10px 14px;
-  width: calc(100% - 28px); height: 56px;
-  background: #FFE141; border: none; border-radius: 20px;
-  font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800;
-  cursor: pointer; color: #1a1a2e;
-  box-shadow: 0 4px 16px rgba(255,225,65,0.5);
-  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
-  flex-shrink: 0;
-}
-.l2-run-btn:disabled { opacity: 0.45; pointer-events: none; }
-.l2-run-btn:active { transform: scale(0.97); }
+.l1-objects{display:flex;justify-content:center;gap:16px;padding:10px 16px;}
+.obj-chip{background:#fff;border-radius:16px;padding:10px 14px;text-align:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.12);border:2px solid #e5e7eb;transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
+.obj-chip:active{transform:scale(.93);}
+.obj-chip.dropped{opacity:.35;pointer-events:none;}
+.density-badge{font-size:11px;font-weight:700;color:#6366f1;background:#EEF2FF;border-radius:8px;padding:2px 6px;display:block;margin-bottom:4px;}
+.obj-ico{font-size:28px;display:block;}
+.obj-name{font-size:12px;font-weight:700;color:#374151;}
 
-.l2-hint {
-  text-align: center; font-size: 13px; color: #999; font-weight: 600;
-  padding: 0 20px 8px; flex-shrink: 0;
-}
+.l1-answers{display:flex;gap:8px;padding:0 14px 14px;}
+.ans-btn{flex:1;padding:14px 0;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+.ans-btn:active{transform:scale(.95);}
+.ans-btn.correct{background:#D1FAE5;border-color:#00C27C;color:#047857;}
+.ans-btn.wrong{background:#FEE2E2;border-color:#EF4444;color:#DC2626;animation:shake .3s ease;}
 
-/* ===== LEVEL 3 — PHOTOSYNTHESIS ===== */
-#screen-l3 { position: relative; }
-.l3-plant-zone {
-  height: 55vh; background: linear-gradient(180deg, #f0fff4 0%, #e8f5e9 80%, #a1887f 100%);
-  position: relative; overflow: hidden; flex-shrink: 0;
-}
-.l3-soil {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 44px;
-  background: linear-gradient(180deg, #8D6E63, #6D4C41);
-  border-radius: 0;
-}
-.l3-sun {
-  position: absolute; top: 14px; right: 18px;
-  font-size: 48px; transition: opacity 0.4s, filter 0.4s;
-}
-.l3-plant-svg { position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); }
-.l3-o2-container { position: absolute; top: 0; left: 0; right: 0; bottom: 44px; pointer-events: none; overflow: hidden; }
+/* ══════ LEVEL 2 ══════ */
+#level2{padding:0;}
+.l2-body{display:flex;flex-direction:column;flex:1;padding:10px;}
+.l2-arena{display:flex;gap:10px;align-items:flex-end;flex:1;}
+.l2-reagents{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:center;}
+.reagent-btn{border-radius:14px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:2px solid rgba(255,255,255,.35);box-shadow:0 6px 16px rgba(0,0,0,.15),inset 0 2px 4px rgba(255,255,255,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+.reagent-btn:active{transform:scale(.9) rotate(-3deg);}
+.reagent-btn.used-r{opacity:.3;pointer-events:none;filter:grayscale(.5);}
+.reagent-btn.shaking{animation:shake .4s ease;}
+.r-shine{position:absolute;top:6px;left:6px;width:12px;height:36px;background:linear-gradient(rgba(255,255,255,.45),transparent);border-radius:6px;}
+.r-emoji{font-size:26px;}
+.r-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 3px rgba(0,0,0,.4);text-align:center;}
+.l2-flask-col{display:flex;flex-direction:column;align-items:center;gap:8px;flex:0 0 auto;}
+.l2-target{text-align:center;font-size:13px;font-weight:700;color:#555;}
+.l2-target-ico{font-size:40px;display:block;}
+.mix-btn{background:#6366F1;color:#fff;border:none;padding:12px 16px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;width:100%;box-shadow:0 4px 14px rgba(99,102,241,.4);transition:all .2s;}
+.mix-btn:active{transform:scale(.95);}
+.mix-btn:disabled{opacity:.35;pointer-events:none;}
+.l2-added-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;min-height:28px;margin-bottom:4px;}
+.added-chip{background:#EEF2FF;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;color:#4F46E5;}
 
-.l3-missions {
-  display: flex; gap: 8px; padding: 8px 14px; overflow-x: auto;
-  -webkit-overflow-scrolling: touch; flex-shrink: 0;
-}
-.mission-chip {
-  flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
-  background: #f0f0f0; border: 2px solid transparent;
-  font-size: 13px; font-weight: 700; color: #666; cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  white-space: nowrap;
-}
-.mission-chip.done { background: #e8fff4; color: #00C27C; border-color: #00C27C; }
+/* ══════ LEVEL 3 ══════ */
+#level3{padding:0;}
+.l3-body{display:flex;flex-direction:column;flex:1;}
+.l3-camera{width:100%;height:200px;position:relative;overflow:hidden;}
+.l3-camera canvas{width:100%;height:100%;display:block;}
+.state-label{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border-radius:20px;padding:5px 16px;font-size:14px;font-weight:800;color:#1a1a2e;white-space:nowrap;}
+.l3-mid{display:flex;align-items:center;gap:16px;padding:12px 16px;}
+.thermo-wrap{flex-shrink:0;}
+.temp-display{font-size:40px;font-weight:800;min-width:90px;}
+.task-hint{font-size:13px;color:#666;margin-top:2px;}
+.l3-slider-wrap{padding:0 16px 10px;}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;border-radius:9px;background:linear-gradient(to right,#DBEAFE 0%,#60A5FA 25%,#3B82F6 40%,#F87171 60%,#EF4444 80%,#DC2626 100%);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:44px;height:44px;border-radius:50%;background:#fff;border:4px solid #3B82F6;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;}
+.l3-tasks-row{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;}
+.task-pill{flex-shrink:0;background:#fff;border:2px solid #e5e7eb;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;color:#888;transition:all .2s;}
+.task-pill.active-task{border-color:#6366F1;color:#4F46E5;background:#EEF2FF;}
+.task-pill.done-task{border-color:#00C27C;color:#047857;background:#D1FAE5;}
 
-.l3-sliders { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 16px 10px; gap: 6px; }
-.slider-row { display: flex; align-items: center; gap: 12px; }
-.slider-icon { font-size: 32px; flex-shrink: 0; width: 40px; text-align: center; }
-.slider-label { font-size: 13px; font-weight: 700; color: #666; flex-shrink: 0; width: 42px; }
-input[type=range] {
-  flex: 1; height: 12px; border-radius: 6px; appearance: none; -webkit-appearance: none;
-  outline: none; cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 34px; height: 34px; border-radius: 50%;
-  background: #fff; border: 3px solid #999;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18); cursor: pointer;
-}
-.slider-val { font-size: 13px; font-weight: 700; color: #444; flex-shrink: 0; width: 36px; text-align: right; }
+/* SHARED */
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.rainbow-glow{animation:rainbowGlow 1.2s ease forwards;}
+@keyframes rainbowGlow{0%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 18px rgba(255,200,0,.9))}100%{filter:drop-shadow(0 0 6px rgba(255,200,0,.4))}}
 
-/* ===== SUCCESS OVERLAY ===== */
-.success-ov {
-  position: fixed; inset: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-}
-.ov-bg {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.48); backdrop-filter: blur(6px);
-}
-.ov-card {
-  position: relative; background: #fff; border-radius: 28px;
-  padding: 32px 36px; text-align: center; max-width: 340px; width: 88%;
-  border: 3px solid #00C27C;
-  animation: cardPop 0.4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes cardPop { from{transform:scale(0.55);opacity:0} to{transform:scale(1);opacity:1} }
-.ov-sci { font-size: 64px; display: block; animation: sciBounce 0.55s cubic-bezier(.34,1.56,.64,1) 0.15s both; }
-@keyframes sciBounce { from{transform:translateY(-28px) scale(0.4)} to{transform:translateY(0) scale(1)} }
-.ov-title { font-size: 24px; font-weight: 800; color: #1a1a2e; margin: 12px 0 8px; }
-.ov-fact { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 22px; }
-.ov-btn {
-  background: #FFE141; color: #111; border: none;
-  padding: 15px 36px; border-radius: 40px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px; font-weight: 800; cursor: pointer; width: 100%;
-  transition: transform 0.12s cubic-bezier(.34,1.56,.64,1);
-}
-.ov-btn:active { transform: scale(0.96); }
-
-/* ===== PARTICLES ===== */
-.particle { position: fixed; pointer-events: none; z-index: 999; font-size: 24px; }
-
-/* ===== ANIMATIONS ===== */
-.pour-stream {
-  position: fixed; width: 10px; border-radius: 5px;
-  pointer-events: none; z-index: 50; transform-origin: top;
-}
-@keyframes streamFlow { from{height:0;opacity:1} to{height:110px;opacity:0.85} }
-
-.splash-drop {
-  position: fixed; width: 8px; height: 8px; border-radius: 50%;
-  pointer-events: none; z-index: 50;
-}
-
+/* SUCCESS OVERLAY */
+.success-ov{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.success-ov.show{opacity:1;pointer-events:all;}
+.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);}
+.ov-card{position:relative;background:#fff;border-radius:28px;padding:28px 32px;text-align:center;max-width:340px;width:90%;border:3px solid #00C27C;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.ov-ico{font-size:64px;display:block;margin-bottom:6px;}
+.ov-title{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:8px;}
+.ov-fact{font-size:14px;color:#555;line-height:1.65;margin-bottom:20px;}
+.ov-btn{background:#FFE141;color:#111;border:none;padding:15px;border-radius:40px;font-size:17px;font-weight:800;cursor:pointer;width:100%;}
+.ov-btn:active{transform:scale(.97);}
 </style>
 </head>
 <body>
 
-<!-- ===== MENU ===== -->
-<div id="screen-menu" class="screen active">
-  <div class="menu-title">🧪 Хемо Лаб</div>
-  <div class="menu-sub">Химия — это магия! Выбери опыт:</div>
-  <div class="level-cards">
-    <button class="level-card" style="background:linear-gradient(135deg,#FF9800,#F44336)" onclick="goLevel(1)">
-      <span class="lc-emoji">🌈</span>
-      <div class="lc-info">
-        <div class="lc-name">Слои жидкостей</div>
-        <div class="lc-desc">Почему мёд не смешивается с маслом?</div>
-      </div>
-    </button>
-    <button class="level-card" style="background:linear-gradient(135deg,#673AB7,#3F51B5)" onclick="goLevel(2)">
-      <span class="lc-emoji">⚗️</span>
-      <div class="lc-info">
-        <div class="lc-name">Химическая цепочка</div>
-        <div class="lc-desc">Собери реакцию по шагам!</div>
-      </div>
-    </button>
-    <button class="level-card" style="background:linear-gradient(135deg,#2E7D32,#43A047)" onclick="goLevel(3)">
-      <span class="lc-emoji">🌱</span>
-      <div class="lc-info">
-        <div class="lc-name">Фотосинтез</div>
-        <div class="lc-desc">Вырасти огромное растение!</div>
-      </div>
-    </button>
-  </div>
+<!-- INTRO -->
+<div id="intro" class="screen active">
+  <span class="intro-ico">🧪</span>
+  <div class="intro-title">КосмоБаза: Химия</div>
+  <div class="intro-sub">Смешивай, заливай, нагревай —<br>и узнай как устроена материя!</div>
+  <button class="btn-start" onclick="showScreen('levelSelect')">Начать ✨</button>
 </div>
 
-<!-- ===== LEVEL 1 ===== -->
-<div id="screen-l1" class="screen">
-  <button class="back-btn" onclick="goMenu()">← Назад</button>
-  <div class="l1-header">🌈 Слои жидкостей</div>
-  <div class="l1-body">
-    <div class="l1-bottles" id="l1-bottles"></div>
-    <div class="l1-glass-wrap">
-      <div class="l1-badge" id="l1-badge">Привет!</div>
-      <svg width="160" height="420" id="glass-svg">
-        <defs>
-          <clipPath id="liquidClip">
-            <rect x="18" y="20" width="124" height="360" rx="4"/>
-          </clipPath>
-          <linearGradient id="glassShine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
-            <stop offset="28%" stop-color="rgba(255,255,255,0)"/>
-            <stop offset="72%" stop-color="rgba(255,255,255,0)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0.28)"/>
-          </linearGradient>
-        </defs>
-        <!-- Body -->
-        <rect x="18" y="20" width="124" height="360" rx="7" fill="rgba(200,230,255,0.12)" stroke="rgba(100,180,255,0.55)" stroke-width="3"/>
-        <!-- Liquids (clipped) -->
-        <g id="liquids-group" clip-path="url(#liquidClip)"></g>
-        <!-- Shine overlay -->
-        <rect x="18" y="20" width="124" height="360" rx="7" fill="url(#glassShine)" pointer-events="none"/>
-        <!-- Rim top -->
-        <rect x="34" y="10" width="92" height="18" rx="5" fill="rgba(200,230,255,0.28)" stroke="rgba(100,180,255,0.45)" stroke-width="2"/>
-        <!-- Bottom ellipse -->
-        <ellipse cx="80" cy="381" rx="62" ry="7" fill="rgba(100,180,255,0.18)"/>
-      </svg>
-      <div class="l1-objects" id="l1-objects" style="display:none"></div>
+<!-- LEVEL SELECT -->
+<div id="levelSelect" class="screen">
+  <nav class="nav">
+    <button class="nav-back" onclick="showScreen('intro')">←</button>
+    <span class="nav-title">🧪 Химия</span>
+  </nav>
+  <div class="screen-inner">
+    <div class="ls-header">Выбери уровень</div>
+    <div class="ls-sub">Все открыты — исследуй в любом порядке!</div>
+    <div class="level-card lc1" onclick="startLevel(1)">
+      <span class="lc-ico">🌈</span>
+      <div><div class="lc-title">Башня плотности</div><div class="lc-sub">Заливай жидкости, строй радугу слоёв</div></div>
+    </div>
+    <div class="level-card lc2" onclick="startLevel(2)">
+      <span class="lc-ico">⚗️</span>
+      <div><div class="lc-title">Реакции в колбе</div><div class="lc-sub">Смешивай вещества, получай эффекты</div></div>
+    </div>
+    <div class="level-card lc3" onclick="startLevel(3)">
+      <span class="lc-ico">🌡️</span>
+      <div><div class="lc-title">Состояния воды</div><div class="lc-sub">Управляй температурой и наблюдай молекулы</div></div>
     </div>
   </div>
 </div>
 
-<!-- ===== LEVEL 2 ===== -->
-<div id="screen-l2" class="screen">
-  <button class="back-btn" onclick="goMenu()">← Назад</button>
-  <div class="l2-scenario-title" id="l2-title">🎈 Надуй шарик!</div>
-  <div class="l2-slots-wrap">
-    <div class="l2-slots" id="l2-slots"></div>
+<!-- LEVEL 1 -->
+<div id="level1" class="screen">
+  <nav class="nav">
+    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
+    <span class="nav-title">🌈 Башня плотности</span>
+    <span class="nav-badge" id="l1-badge">1/3</span>
+  </nav>
+  <div class="l1-body">
+    <div class="lvl-header">
+      <div id="l1-task-badge" class="task-badge">🌊 Залей от тяжёлой к лёгкой</div>
+    </div>
+    <div class="l1-top">
+      <div class="target-strip" id="l1-target"></div>
+      <div class="cylinder-wrap">
+        <svg id="l1-svg" width="110" height="260" viewBox="0 0 110 260" style="overflow:visible;">
+          <defs>
+            <clipPath id="cylClip">
+              <rect x="10" y="20" width="90" height="225" rx="6"/>
+            </clipPath>
+          </defs>
+          <g id="cyl-layers" clip-path="url(#cylClip)"></g>
+          <g id="cyl-objects" clip-path="url(#cylClip)"></g>
+          <rect x="10" y="20" width="90" height="225" rx="6" fill="rgba(200,230,255,0.08)" stroke="rgba(100,180,255,0.7)" stroke-width="3"/>
+          <rect x="38" y="4" width="34" height="20" rx="4" fill="rgba(200,230,255,0.1)" stroke="rgba(100,180,255,0.6)" stroke-width="2"/>
+          <rect x="14" y="22" width="18" height="220" rx="8" fill="rgba(255,255,255,0.18)" pointer-events="none"/>
+          <line x1="10" y1="76" x2="16" y2="76" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
+          <line x1="10" y1="132" x2="16" y2="132" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
+          <line x1="10" y1="188" x2="16" y2="188" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="l1-objects" id="l1-objects" style="display:none;"></div>
+    <div class="l1-answers" id="l1-answers" style="display:none;"></div>
+    <div id="l1-t3-obj" style="display:none;text-align:center;padding:6px 16px;font-size:13px;font-weight:700;color:#555;"></div>
+    <div class="l1-bottom" id="l1-bottles"></div>
   </div>
-  <div class="l2-hint" id="l2-hint">Нажми на карточку, потом на слот</div>
-  <div class="l2-cards-wrap">
-    <div class="l2-cards" id="l2-cards"></div>
-  </div>
-  <button class="l2-run-btn" id="l2-run" disabled onclick="runChain()">▶ Запустить!</button>
 </div>
 
-<!-- ===== LEVEL 3 ===== -->
-<div id="screen-l3" class="screen">
-  <button class="back-btn" onclick="goMenu()">← Назад</button>
-  <div class="l3-plant-zone" id="l3-zone">
-    <div class="l3-sun" id="l3-sun">☀️</div>
-    <svg class="l3-plant-svg" id="l3-plant" width="200" height="260" viewBox="0 0 200 260"></svg>
-    <div class="l3-o2-container" id="l3-o2"></div>
-    <div class="l3-soil"></div>
+<!-- LEVEL 2 -->
+<div id="level2" class="screen">
+  <nav class="nav">
+    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
+    <span class="nav-title">⚗️ Реакции в колбе</span>
+    <span class="nav-badge" id="l2-badge">1/4</span>
+  </nav>
+  <div class="l2-body">
+    <div class="lvl-header">
+      <div id="l2-task-badge" class="task-badge">Получи нужный результат!</div>
+    </div>
+    <div class="l2-added-row" id="l2-added"></div>
+    <div class="l2-arena">
+      <div class="l2-reagents" id="l2-reagents"></div>
+      <div class="l2-flask-col">
+        <div class="l2-target">Цель:<br><span class="l2-target-ico" id="l2-target-ico">?</span></div>
+        <svg id="l2-flask-svg" width="120" height="240" viewBox="0 0 160 300" style="overflow:visible;flex-shrink:0;">
+          <defs>
+            <clipPath id="flaskClip">
+              <path d="M55,0 L55,85 Q55,100 35,120 L8,210 Q0,240 0,265 L160,265 Q160,240 152,210 L125,120 Q105,100 105,85 L105,0 Z"/>
+            </clipPath>
+            <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+              <stop offset="25%" stop-color="rgba(255,255,255,0)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0.15)"/>
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#flaskClip)">
+            <rect id="flask-liq" x="0" y="265" width="160" height="0" fill="rgba(100,180,255,0.4)" style="transition:height .5s ease,fill .6s ease,y .5s ease;"/>
+            <rect id="flask-liq2" x="0" y="265" width="160" height="0" fill="rgba(255,255,0,0.35)"/>
+            <g id="flask-bubbles"></g>
+            <g id="flask-precipitate"></g>
+          </g>
+          <path d="M55,0 L55,85 Q55,100 35,120 L8,210 Q0,240 0,265 L160,265 Q160,240 152,210 L125,120 Q105,100 105,85 L105,0 Z"
+            fill="none" stroke="rgba(100,180,255,0.65)" stroke-width="3"/>
+          <g clip-path="url(#flaskClip)">
+            <rect x="0" y="0" width="160" height="300" fill="url(#glassGrad)" pointer-events="none"/>
+          </g>
+        </svg>
+        <div style="width:120px;">
+          <button class="mix-btn" id="mix-btn" onclick="doMix()" disabled>🌀 Смешать!</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="l3-missions" id="l3-missions"></div>
-  <div class="l3-sliders" id="l3-sliders"></div>
+</div>
+
+<!-- LEVEL 3 -->
+<div id="level3" class="screen">
+  <nav class="nav">
+    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
+    <span class="nav-title">🌡️ Состояния воды</span>
+    <span class="nav-badge" id="l3-badge">1/5</span>
+  </nav>
+  <div class="l3-body">
+    <div class="l3-camera">
+      <canvas id="mol-canvas"></canvas>
+      <div class="state-label" id="state-label">❄️ Лёд</div>
+    </div>
+    <div class="l3-mid">
+      <div class="thermo-wrap">
+        <svg id="thermo-svg" width="40" height="130" viewBox="0 0 40 130">
+          <rect x="14" y="4" width="8" height="100" rx="4" fill="#e5e7eb"/>
+          <rect id="thermo-fill" x="14" y="104" width="8" height="0" rx="4" fill="#3B82F6"/>
+          <circle cx="18" cy="116" r="12" fill="#3B82F6" id="thermo-bulb"/>
+          <line x1="22" y1="29" x2="30" y2="29" stroke="#aaa" stroke-width="1.5"/>
+          <line x1="22" y1="72" x2="30" y2="72" stroke="#aaa" stroke-width="1.5"/>
+          <text x="32" y="32" font-size="9" fill="#888" font-family="Space Grotesk,sans-serif">100°</text>
+          <text x="32" y="75" font-size="9" fill="#888" font-family="Space Grotesk,sans-serif">0°</text>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div class="temp-display" id="temp-display">-50°C</div>
+        <div id="l3-task-hint" class="task-hint">Задание: ❄️ Заморозь воду</div>
+      </div>
+    </div>
+    <div class="l3-slider-wrap">
+      <input type="range" id="temp-slider" min="-50" max="150" value="-50" oninput="onTempChange(this.value)">
+    </div>
+    <div class="l3-tasks-row" id="l3-tasks-row"></div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-ov" id="success-ov">
+  <div class="ov-bg" onclick="closeSuccess()"></div>
+  <div class="ov-card">
+    <span class="ov-ico" id="ov-ico">🎉</span>
+    <div class="ov-title" id="ov-title">Отлично!</div>
+    <div class="ov-fact" id="ov-fact"></div>
+    <button class="ov-btn" id="ov-btn" onclick="closeSuccess()">Дальше →</button>
+  </div>
 </div>
 
 <script>
-/* ===================================================
-   NAVIGATION
-   =================================================== */
+'use strict';
+/* ═══════════════════════════════════════
+   GLOBALS
+═══════════════════════════════════════ */
+let _successCb = null;
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-}
-function goMenu() { showScreen('menu'); }
-function goLevel(n) {
-  if (n === 1) initL1();
-  if (n === 2) initL2();
-  if (n === 3) initL3();
-  showScreen('l' + n);
+  document.getElementById(id).classList.add('active');
+  if (id === 'levelSelect') {
+    if (_l3Raf) { cancelAnimationFrame(_l3Raf); _l3Raf = null; }
+  }
 }
 
-/* ===================================================
-   PARTICLES
-   =================================================== */
+function startLevel(n) {
+  showScreen('level' + n);
+  if (n === 1) initL1();
+  else if (n === 2) initL2();
+  else if (n === 3) initL3();
+}
+
+function showSuccess(ico, title, fact, cb) {
+  document.getElementById('ov-ico').textContent = ico;
+  document.getElementById('ov-title').textContent = title;
+  document.getElementById('ov-fact').textContent = fact;
+  _successCb = cb || null;
+  document.getElementById('success-ov').classList.add('show');
+}
+
+function closeSuccess() {
+  document.getElementById('success-ov').classList.remove('show');
+  const cb = _successCb; _successCb = null;
+  if (cb) cb();
+}
+
 function burst(x, y, syms) {
   syms.forEach((s, i) => {
     const p = document.createElement('div');
-    p.className = 'particle';
-    const angle = (i / syms.length) * Math.PI * 2;
-    const dist = 55 + Math.random() * 60;
-    p.style.cssText = `left:${x}px;top:${y}px;font-size:${20 + Math.random() * 14}px;transition:all .72s cubic-bezier(.2,0,.8,1);`;
+    const a = (i / syms.length) * Math.PI * 2;
+    const d = 55 + Math.random() * 55;
+    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${20 + Math.random() * 14}px;pointer-events:none;z-index:999;transition:all .75s ease-out;`;
     p.textContent = s;
     document.body.appendChild(p);
     requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist - 55}px) rotate(${Math.random() * 360}deg)`;
+      p.style.transform = `translate(${Math.cos(a)*d}px,${Math.sin(a)*d-50}px)`;
       p.style.opacity = '0';
     });
-    setTimeout(() => p.remove(), 800);
+    setTimeout(() => p.remove(), 850);
   });
 }
-function bigBurst(x, y) {
-  const pool = ['🎉','✨','⭐','🌟','💥','🎊','🫧','💫','🔥','❄️','🍬','🎈'];
-  for (let i = 0; i < 22; i++) {
-    setTimeout(() => burst(x, y, [pool[Math.floor(Math.random() * pool.length)]]), i * 30);
-  }
+
+function shakeEl(el) {
+  el.classList.add('shaking');
+  setTimeout(() => el.classList.remove('shaking'), 460);
 }
 
-/* ===================================================
-   SUCCESS OVERLAY
-   =================================================== */
-function showSuccess(emoji, title, fact, btnLabel, onClose) {
-  const ov = document.createElement('div');
-  ov.className = 'success-ov';
-  ov.innerHTML = `<div class="ov-bg"></div>
-    <div class="ov-card">
-      <span class="ov-sci">${emoji}</span>
-      <div class="ov-title">${title}</div>
-      <div class="ov-fact">${fact}</div>
-      <button class="ov-btn">${btnLabel || 'Здорово!'}</button>
-    </div>`;
-  document.body.appendChild(ov);
-  ov.querySelector('.ov-btn').addEventListener('click', () => {
-    ov.remove();
-    if (onClose) onClose();
-  });
-  bigBurst(window.innerWidth / 2, window.innerHeight / 2);
-}
-
-/* ===================================================
-   LEVEL 1 — LIQUID LAYERS
-   =================================================== */
+/* ═══════════════════════════════════════
+   LEVEL 1 — DENSITY TOWER
+═══════════════════════════════════════ */
 const LIQUIDS = [
-  { id:'honey',   name:'Мёд',   emoji:'🍯', density:1.4, color:'#E8860A',
-    grad:'#FFB347,#E8860A,#C4700A', btnGrad:'linear-gradient(135deg,#FFB347,#E8860A)', textColor:'#fff',
-    fact:'🍯 Мёд — самый тяжёлый, тонет на самое дно!' },
-  { id:'water',   name:'Вода',  emoji:'💧', density:1.0, color:'#29B6F6',
-    grad:'#81D4FA,#29B6F6,#0277BD', btnGrad:'linear-gradient(135deg,#81D4FA,#0288D1)', textColor:'#fff',
-    fact:'💧 Вода в середине — ни лёгкая, ни тяжёлая!' },
-  { id:'oil',     name:'Масло', emoji:'🫙', density:0.8, color:'#FDD835',
-    grad:'#FFF176,#FDD835,#F9A825', btnGrad:'linear-gradient(135deg,#FFF176,#FDD835)', textColor:'#555',
-    fact:'🫙 Масло легче воды — плавает над ней!' },
-  { id:'alcohol', name:'Спирт', emoji:'🍾', density:0.79, color:'#CE93D8',
-    grad:'#E1BEE7,#CE93D8,#AB47BC', btnGrad:'linear-gradient(135deg,#E1BEE7,#AB47BC)', textColor:'#fff',
-    fact:'🍾 Спирт самый лёгкий — всегда наверху!' },
+  {id:'honey',   emoji:'🍯', label:'Мёд',   density:1.4,  color:'#E8860A', bg:'linear-gradient(180deg,#FFB347 0%,#E8860A 60%,#C47000 100%)'},
+  {id:'water',   emoji:'💧', label:'Вода',  density:1.0,  color:'#2196F3', bg:'linear-gradient(180deg,#64B5F6 0%,#2196F3 60%,#1565C0 100%)'},
+  {id:'oil',     emoji:'🫙', label:'Масло', density:0.8,  color:'#FDD835', bg:'linear-gradient(180deg,#FFF176 0%,#FDD835 60%,#F57F17 100%)'},
+  {id:'alcohol', emoji:'🍾', label:'Спирт', density:0.79, color:'#AB47BC', bg:'linear-gradient(180deg,#CE93D8 0%,#AB47BC 60%,#6A1B9A 100%)'},
 ];
+// Correct pour order: heaviest → lightest
+const CORRECT_ORDER = ['honey','water','oil','alcohol'];
 
-const DROP_OBJECTS = [
-  { emoji:'🍇', name:'Виноград', density:1.1, fact:'🍇 Виноград тяжелее воды — опустился в мёд!' },
-  { emoji:'🍋', name:'Лимон',    density:1.05, fact:'🍋 Лимон чуть тяжелее воды — лежит на дне воды!' },
-  { emoji:'🪨', name:'Камень',  density:2.5, fact:'🪨 Камень самый тяжёлый — сразу на дно!' },
-];
-
-let l1State = { poured: [], done: false };
+let _l1Task = 1, _l1Queue = [], _l1ObjCount = 0, _l1T3Idx = 0;
 
 function initL1() {
-  l1State = { poured: [], done: false };
-  document.getElementById('liquids-group').innerHTML = '';
-
-  const bottlesEl = document.getElementById('l1-bottles');
-  bottlesEl.innerHTML = '';
-  LIQUIDS.forEach(liq => {
-    const btn = document.createElement('button');
-    btn.className = 'bottle-btn';
-    btn.id = 'btn-' + liq.id;
-    btn.style.background = liq.btnGrad;
-    btn.style.color = liq.textColor;
-    btn.innerHTML = `<span class="bottle-emoji">${liq.emoji}</span>
-      <div><div class="bottle-name">${liq.name}</div><div class="bottle-density">плотность ${liq.density}</div></div>`;
-    btn.addEventListener('click', () => pourLiquid(liq, btn));
-    bottlesEl.appendChild(btn);
-  });
-
+  _l1Task = 1; _l1Queue = []; _l1ObjCount = 0; _l1T3Idx = 0;
+  document.getElementById('cyl-layers').innerHTML = '';
+  document.getElementById('cyl-objects').innerHTML = '';
   document.getElementById('l1-objects').style.display = 'none';
-  document.getElementById('l1-objects').innerHTML = '';
-  hideBadge();
+  document.getElementById('l1-answers').style.display = 'none';
+  document.getElementById('l1-t3-obj').style.display = 'none';
+  document.getElementById('l1-badge').textContent = '1/3';
+  document.getElementById('l1-task-badge').textContent = '🌊 Залей от тяжёлой к лёгкой';
+  document.getElementById('l1-task-badge').className = 'task-badge';
+  document.getElementById('l1-svg').classList.remove('rainbow-glow');
+  renderL1Target();
+  renderL1Bottles();
 }
 
-function pourLiquid(liq, btn) {
-  if (l1State.done) return;
-  btn.classList.add('used');
+function renderL1Target() {
+  const strip = document.getElementById('l1-target');
+  strip.innerHTML = '<div class="target-label">ПОРЯДОК</div>';
+  // Top = lightest, bottom = heaviest (visual order in filled cylinder)
+  ['alcohol','oil','water','honey'].forEach(id => {
+    const liq = LIQUIDS.find(l => l.id === id);
+    const div = document.createElement('div');
+    div.className = 'target-slot';
+    div.style.background = liq.bg;
+    div.textContent = liq.emoji;
+    strip.appendChild(div);
+  });
+}
 
+function renderL1Bottles() {
+  const row = document.getElementById('l1-bottles');
+  row.innerHTML = '';
+  const shuffled = [...LIQUIDS].sort(() => Math.random() - 0.5);
+  shuffled.forEach(liq => {
+    const div = document.createElement('div');
+    div.className = 'bottle';
+    div.id = 'bottle-' + liq.id;
+    div.style.background = liq.bg;
+    div.dataset.id = liq.id;
+    div.innerHTML = `<div class="bottle-neck" style="background:${liq.color};"></div><div class="bottle-shine"></div><span class="bottle-emoji">${liq.emoji}</span><span class="bottle-label">${liq.label}</span>`;
+    div.onclick = () => l1PourBottle(liq.id, div);
+    row.appendChild(div);
+  });
+}
+
+function l1PourBottle(id, el) {
+  if (_l1Task !== 1) return;
+  const expected = CORRECT_ORDER[_l1Queue.length];
+  if (id !== expected) {
+    shakeEl(el);
+    // Pulse expected slot in target strip
+    const slots = document.querySelectorAll('.target-slot');
+    const expIdx = ['alcohol','oil','water','honey'].indexOf(expected);
+    // reverse: honey=index3 visually from bottom, displayed idx from top
+    const dispIdx = 3 - CORRECT_ORDER.indexOf(expected); // honey=3→0 from bottom visually, top of strip=alcohol
+    // simpler: pulse the bottle that IS expected
+    const expBottle = document.getElementById('bottle-' + expected);
+    if (expBottle) {
+      expBottle.style.outline = '3px solid #6366F1';
+      setTimeout(() => { expBottle.style.outline = ''; }, 700);
+    }
+    return;
+  }
+  el.classList.add('used');
+  _l1Queue.push(id);
+  const liq = LIQUIDS.find(l => l.id === id);
   // Tilt animation
-  btn.style.transition = 'transform 0.25s cubic-bezier(.34,1.56,.64,1)';
-  btn.style.transform = 'rotate(-38deg) scale(1.08)';
-  setTimeout(() => { btn.style.transform = ''; }, 450);
+  el.style.transform = 'rotate(-35deg)';
+  setTimeout(() => { el.style.transform = ''; }, 700);
+  // Add layer
+  setTimeout(() => addCylLayer(liq), 400);
 
-  // Pour stream
-  const btnRect = btn.getBoundingClientRect();
-  const glassRect = document.getElementById('glass-svg').getBoundingClientRect();
-  const streamX = glassRect.left + 80 - 5;
-  const streamY = glassRect.top + 10;
-
-  const stream = document.createElement('div');
-  stream.className = 'pour-stream';
-  stream.style.cssText = `left:${streamX}px;top:${streamY}px;background:${liq.color};height:0;opacity:1;`;
-  document.body.appendChild(stream);
-  stream.style.animation = 'streamFlow 0.45s ease-out forwards';
-  setTimeout(() => stream.remove(), 500);
-
-  // Add to poured list
-  l1State.poured.push(liq);
-  setTimeout(() => renderLiquids(liq), 350);
-}
-
-function renderLiquids(justAdded) {
-  // Sort by density descending (heaviest at bottom)
-  const sorted = [...l1State.poured].sort((a, b) => b.density - a.density);
-  const svgH = 360; // clip height
-  const svgBottom = 20 + svgH; // 380
-  const layerH = svgH / 4; // 90px each slot
-
-  const group = document.getElementById('liquids-group');
-  group.innerHTML = '';
-
-  sorted.forEach((liq, i) => {
-    const svgNS = 'http://www.w3.org/2000/svg';
-    // Create gradient
-    const defs = document.getElementById('glass-svg').querySelector('defs');
-    const gradId = 'grad-' + liq.id;
-    if (!defs.querySelector('#' + gradId)) {
-      const lg = document.createElementNS(svgNS, 'linearGradient');
-      lg.setAttribute('id', gradId);
-      lg.setAttribute('x1', '0'); lg.setAttribute('y1', '0');
-      lg.setAttribute('x2', '0'); lg.setAttribute('y2', '1');
-      const colors = liq.grad.split(',');
-      colors.forEach((c, ci) => {
-        const stop = document.createElementNS(svgNS, 'stop');
-        stop.setAttribute('offset', (ci / (colors.length - 1) * 100) + '%');
-        stop.setAttribute('stop-color', c.trim());
-        lg.appendChild(stop);
-      });
-      defs.appendChild(lg);
-    }
-
-    const totalFilled = sorted.length;
-    // Y position: bottom layers first (index 0 = heaviest = bottom)
-    const yTop = svgBottom - (i + 1) * layerH;
-    const rect = document.createElementNS(svgNS, 'rect');
-    rect.setAttribute('x', '18');
-    rect.setAttribute('y', yTop);
-    rect.setAttribute('width', '124');
-    rect.setAttribute('height', layerH);
-    rect.setAttribute('fill', `url(#grad-${liq.id})`);
-    rect.style.transformOrigin = `80px ${yTop + layerH}px`;
-
-    if (liq.id === justAdded.id) {
-      rect.style.transform = 'scaleY(0)';
-      group.appendChild(rect);
-      requestAnimationFrame(() => {
-        rect.style.transition = 'transform 0.55s cubic-bezier(.34,1.56,.64,1)';
-        rect.style.transform = 'scaleY(1)';
-      });
-    } else {
-      group.appendChild(rect);
-    }
-
-    // Label inside layer
-    const txt = document.createElementNS(svgNS, 'text');
-    txt.setAttribute('x', '80');
-    txt.setAttribute('y', yTop + layerH / 2 + 5);
-    txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('font-size', '13');
-    txt.setAttribute('font-weight', '700');
-    txt.setAttribute('font-family', 'Space Grotesk, sans-serif');
-    txt.setAttribute('fill', liq.textColor || '#fff');
-    txt.setAttribute('opacity', '0.85');
-    txt.setAttribute('pointer-events', 'none');
-    txt.textContent = liq.emoji + ' ' + liq.name;
-    group.appendChild(txt);
-  });
-
-  // Show badge
-  showBadge(justAdded.fact);
-
-  // All 4 poured
-  if (l1State.poured.length === 4) {
-    l1State.done = true;
+  if (_l1Queue.length === LIQUIDS.length) {
     setTimeout(() => {
-      hideBadge();
-      bigBurst(window.innerWidth / 2, window.innerHeight / 2);
-      setTimeout(showDropObjects, 600);
-    }, 2200);
+      document.getElementById('l1-svg').classList.add('rainbow-glow');
+      burst(window.innerWidth/2, 200, ['🌈','✨','🎉','⭐','💫','🌟']);
+      setTimeout(() => {
+        showSuccess('🌈','Башня построена!','Мёд тяжелее воды в 1.4 раза! Жидкости с плотностью > 1 тонут в воде, с плотностью < 1 — плавают.', () => startL1Task2());
+      }, 600);
+    }, 700);
   }
 }
 
-function showBadge(text) {
-  const b = document.getElementById('l1-badge');
-  b.textContent = text;
-  b.classList.add('show');
-  clearTimeout(b._timeout);
-  b._timeout = setTimeout(() => b.classList.remove('show'), 2500);
-}
-function hideBadge() { document.getElementById('l1-badge').classList.remove('show'); }
-
-function showDropObjects() {
-  const wrap = document.getElementById('l1-objects');
-  wrap.style.display = 'flex';
-  wrap.innerHTML = '';
-  DROP_OBJECTS.forEach(obj => {
-    const btn = document.createElement('button');
-    btn.className = 'obj-btn';
-    btn.textContent = obj.emoji;
-    btn.title = obj.name;
-    btn.addEventListener('click', (e) => dropObject(obj, btn, e));
-    wrap.appendChild(btn);
-  });
-  showBadge('⬇️ Что утонет? Брось что-нибудь!');
+function addCylLayer(liq) {
+  const g = document.getElementById('cyl-layers');
+  const layerH = 56;
+  const idx = _l1Queue.length - 1; // 0=bottom=honey
+  // SVG cylinder: y=20 top, y=245 bottom (20+225)
+  const yBottom = 245;
+  const y = yBottom - (idx + 1) * layerH;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('id','cyl-layer-' + liq.id);
+  rect.setAttribute('x','10'); rect.setAttribute('width','90');
+  rect.setAttribute('fill', liq.color + 'CC');
+  rect.setAttribute('y', String(y + layerH));
+  rect.setAttribute('height','0');
+  rect.style.transition = 'y .5s ease, height .5s ease';
+  g.appendChild(rect);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    rect.setAttribute('y', String(y));
+    rect.setAttribute('height', String(layerH));
+  }));
 }
 
-function dropObject(obj, btn, e) {
-  btn.classList.add('used');
-
-  const glassRect = document.getElementById('glass-svg').getBoundingClientRect();
-  const startX = e.clientX;
-  const startY = e.clientY;
-
-  // Floating emoji that falls
-  const floater = document.createElement('div');
-  floater.style.cssText = `position:fixed;left:${startX - 20}px;top:${startY - 20}px;font-size:40px;z-index:100;pointer-events:none;transition:top 0.6s cubic-bezier(.6,0,.4,1.2),left 0.3s ease;`;
-  floater.textContent = obj.emoji;
-  document.body.appendChild(floater);
-
-  const targetX = glassRect.left + 80 - 20;
-  // Find layer where object settles (based on density)
-  const sorted = [...l1State.poured].sort((a, b) => b.density - a.density);
-  let settleLayerIdx = sorted.length - 1; // default: top
-  for (let i = 0; i < sorted.length; i++) {
-    if (obj.density > sorted[i].density) { settleLayerIdx = i; break; }
-  }
-  const layerH = 360 / 4;
-  const svgBottom = 20 + 360;
-  const settleY = glassRect.top + (svgBottom - (settleLayerIdx) * layerH - layerH / 2) - 20;
-
-  setTimeout(() => {
-    floater.style.left = targetX + 'px';
-    floater.style.top = settleY + 'px';
-  }, 50);
-
-  // Splash
-  setTimeout(() => {
-    splash(targetX + 20, glassRect.top + 20, obj.emoji);
-    showBadge(obj.fact);
-    floater.style.transition = 'opacity 0.4s';
-    floater.style.opacity = '0';
-    setTimeout(() => floater.remove(), 500);
-  }, 700);
-}
-
-function splash(x, y, emoji) {
-  const colors = ['#4FC3F7','#FDD835','#CE93D8'];
-  for (let i = 0; i < 5; i++) {
-    const d = document.createElement('div');
-    d.className = 'splash-drop';
-    const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
-    const dist = 20 + Math.random() * 20;
-    d.style.cssText = `left:${x}px;top:${y}px;background:${colors[i % colors.length]};transition:all 0.5s cubic-bezier(.2,0,.8,1);`;
-    document.body.appendChild(d);
-    requestAnimationFrame(() => {
-      d.style.transform = `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist - 25}px)`;
-      d.style.opacity = '0';
-    });
-    setTimeout(() => d.remove(), 600);
-  }
-  burst(x, y, [emoji, '💦', '✨']);
-}
-
-/* ===================================================
-   LEVEL 2 — CHAIN REACTION
-   =================================================== */
-const SCENARIOS = [
-  {
-    name: '🎈 Надуй шарик!',
-    cards: [
-      { id: 'vin_soda', label: 'Уксус\n+ Сода', emoji: '🫧', color: '#FDE68A' },
-      { id: 'co2',      label: 'CO₂\nгаз',      emoji: '💨', color: '#E0E7FF' },
-      { id: 'ball',     label: 'Шарик\nнадут',   emoji: '🎈', color: '#FCE7F3' },
-      { id: 'fly',      label: 'Летит!',          emoji: '🚀', color: '#DBEAFE' },
-      { id: 'party',    label: 'Ура!',             emoji: '🎉', color: '#D1FAE5' },
-    ],
-    correct: [0, 1, 2, 3, 4],
-    completeFact: 'Уксус и сода реагируют — выделяется углекислый газ CO₂! Он надувает шарик, и тот взлетает! 🎈',
-  },
-  {
-    name: '🌋 Лавовый вулкан!',
-    cards: [
-      { id: 'water',    label: 'Вода\n+ краска', emoji: '🪣', color: '#DBEAFE' },
-      { id: 'oil2',     label: 'Масло\nсверху',  emoji: '🫙', color: '#FEF9C3' },
-      { id: 'salt',     label: 'Соль\nбросаем',  emoji: '🧂', color: '#F1F5F9' },
-      { id: 'bubble',   label: 'Пузыри\nвзлетают', emoji: '🫧', color: '#E0E7FF' },
-      { id: 'volcano',  label: 'Вулкан!',         emoji: '🌋', color: '#FEE2E2' },
-    ],
-    correct: [0, 1, 2, 3, 4],
-    completeFact: 'Соль тонет сквозь масло, тянет за собой воду — вверх летят цветные пузыри. Домашний лавовый вулкан! 🌋',
-  },
-  {
-    name: '🔮 Невидимые чернила!',
-    cards: [
-      { id: 'lemon',    label: 'Сок\nлимона',   emoji: '🍋', color: '#FEF9C3' },
-      { id: 'write',    label: 'Пишем\nбумагу', emoji: '✏️', color: '#F1F5F9' },
-      { id: 'dry',      label: 'Сушим\nна солнце', emoji: '☀️', color: '#FEF3C7' },
-      { id: 'heat',     label: 'Греем\nсвечой',  emoji: '🕯️', color: '#FDE68A' },
-      { id: 'appear',   label: 'Текст\nпоявился!', emoji: '🔮', color: '#EDE9FE' },
-    ],
-    correct: [0, 1, 2, 3, 4],
-    completeFact: 'Лимонный сок невидим, но при нагреве окисляется — буквы проявляются коричневым! Это настоящее шпионское письмо! 🔮',
-  },
+/* Task 2: drop objects */
+const L1_OBJS = [
+  {emoji:'🪙', label:'Монета',   density:8.9,  targetId:'honey',   fact:'Плотность монеты 8.9 г/см³ > мёда (1.4). Тонет на самое дно!'},
+  {emoji:'🍇', label:'Виноград', density:1.1,  targetId:'water',   fact:'Плотность винограда 1.1 г/см³ — между водой и мёдом. Останавливается там!'},
+  {emoji:'🪵', label:'Пробка',   density:0.24, targetId:'alcohol', fact:'Пробка (0.24 г/см³) легче всех жидкостей — плывёт на самом верху!'},
 ];
 
-let l2State = {
-  scenario: null,
-  slotContents: [],
-  selectedCard: null,
-  animating: false,
+function startL1Task2() {
+  _l1Task = 2; _l1ObjCount = 0;
+  document.getElementById('l1-badge').textContent = '2/3';
+  document.getElementById('l1-task-badge').textContent = '🎯 Нажми предмет — куда он упадёт?';
+  document.querySelectorAll('.bottle').forEach(b => { b.onclick = null; b.style.cursor = 'default'; });
+  const row = document.getElementById('l1-objects');
+  row.style.display = 'flex';
+  row.innerHTML = '';
+  L1_OBJS.forEach((obj, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'obj-chip';
+    chip.id = 'obj-chip-' + i;
+    chip.innerHTML = `<span class="density-badge">${obj.density} г/см³</span><span class="obj-ico">${obj.emoji}</span><span class="obj-name">${obj.label}</span>`;
+    chip.onclick = () => l1DropObj(i, chip);
+    row.appendChild(chip);
+  });
+}
+
+function l1DropObj(idx, chip) {
+  chip.classList.add('dropped');
+  const obj = L1_OBJS[idx];
+  const g = document.getElementById('cyl-objects');
+  // Animate emoji falling in SVG
+  const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+  txt.setAttribute('x','55'); txt.setAttribute('y','22');
+  txt.setAttribute('font-size','20'); txt.setAttribute('text-anchor','middle');
+  txt.textContent = obj.emoji;
+  g.appendChild(txt);
+  // Target Y: layer index from bottom
+  const layerIdx = CORRECT_ORDER.indexOf(obj.targetId); // 0=honey bottom
+  const layerH = 56;
+  const targetY = 245 - layerIdx * layerH - layerH / 2;
+  let curY = 22;
+  function step() {
+    const diff = targetY - curY;
+    curY += diff > 30 ? 5 : 2;
+    txt.setAttribute('y', String(curY));
+    if (curY < targetY) requestAnimationFrame(step);
+    else {
+      txt.setAttribute('y', String(targetY));
+      burst(window.innerWidth/2, 220, ['💦','💧','✨']);
+      _l1ObjCount++;
+      setTimeout(() => {
+        showSuccess(obj.emoji, obj.label + '!', obj.fact, () => {
+          if (_l1ObjCount >= L1_OBJS.length) setTimeout(startL1Task3, 200);
+        });
+      }, 350);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+/* Task 3: guess layer */
+const L1_T3 = [
+  {emoji:'🥚', label:'Яйцо',       density:1.03, correct:1, fact:'Яйцо (1.03 г/см³) чуть плотнее воды — опускается к слою воды!'},
+  {emoji:'🍓', label:'Клубника',   density:0.92, correct:2, fact:'Клубника (0.92) легче воды, но тяжелее масла — плывёт между ними!'},
+  {emoji:'🧊', label:'Кубик льда', density:0.92, correct:2, fact:'Лёд (0.92) легче воды — поэтому айсберги плавают на поверхности!'},
+];
+const L1_T3_OPTS = ['Дно (мёд)', 'Вода', 'Верх (масло)'];
+
+function startL1Task3() {
+  _l1Task = 3; _l1T3Idx = 0;
+  document.getElementById('cyl-objects').innerHTML = '';
+  document.getElementById('l1-objects').style.display = 'none';
+  document.getElementById('l1-badge').textContent = '3/3';
+  document.getElementById('l1-task-badge').textContent = '🤔 В каком слое остановится?';
+  document.getElementById('l1-answers').style.display = 'flex';
+  document.getElementById('l1-t3-obj').style.display = 'block';
+  renderL1T3();
+}
+
+function renderL1T3() {
+  const obj = L1_T3[_l1T3Idx];
+  document.getElementById('l1-t3-obj').innerHTML = `${obj.emoji} <strong>${obj.label}</strong> — плотность ${obj.density} г/см³`;
+  const row = document.getElementById('l1-answers');
+  row.innerHTML = '';
+  L1_T3_OPTS.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = opt;
+    btn.onclick = () => l1AnswerT3(i, btn, obj);
+    row.appendChild(btn);
+  });
+}
+
+function l1AnswerT3(chosen, btn, obj) {
+  document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
+  if (chosen === obj.correct) {
+    btn.classList.add('correct');
+    burst(btn.getBoundingClientRect().left + btn.offsetWidth/2, btn.getBoundingClientRect().top, ['⭐','✨','🎉']);
+    setTimeout(() => {
+      showSuccess(obj.emoji,'Правильно!', obj.fact, () => {
+        _l1T3Idx++;
+        if (_l1T3Idx < L1_T3.length) renderL1T3();
+        else {
+          document.getElementById('l1-answers').style.display = 'none';
+          document.getElementById('l1-t3-obj').style.display = 'none';
+          document.getElementById('l1-task-badge').textContent = '🏆 Все задания выполнены!';
+          document.getElementById('l1-task-badge').className = 'task-badge done';
+          burst(window.innerWidth/2, 200, ['🌈','🏆','⭐','✨','🎊','💫']);
+        }
+      });
+    }, 300);
+  } else {
+    btn.classList.add('wrong');
+    setTimeout(() => {
+      showSuccess('❌','Не совсем...', obj.fact, () => {
+        btn.classList.remove('wrong');
+        document.querySelectorAll('.ans-btn').forEach((b, i) => b.onclick = () => l1AnswerT3(i, b, obj));
+      });
+    }, 400);
+  }
+}
+
+/* ═══════════════════════════════════════
+   LEVEL 2 — REACTIONS
+═══════════════════════════════════════ */
+const REACTIONS = [
+  {name:'Вулкан!',           reagents:['🍶 Уксус','🧂 Сода','🔴 Краситель','🫧 Мыло'],           correct:['🍶 Уксус','🧂 Сода'],              result:'volcano',     targetEmoji:'🌋', startColor:'rgba(220,50,50,0.5)',     fact:'CO₂ газ создаёт пену! Та же реакция в школьных огнетушителях.'},
+  {name:'Синий → фиолетовый',reagents:['🔵 Синий р-р','🔴 Красный р-р','🟡 Жёлтый р-р','🟢 Зелёный р-р'],correct:['🔵 Синий р-р','🔴 Красный р-р'],result:'mix_purple', targetEmoji:'🟣', startColor:'rgba(66,133,244,0.5)',    fact:'Синий + красный = фиолетовый. Так работает смешение цветов!'},
+  {name:'Масло и вода',       reagents:['💧 Вода','🫙 Масло','🧂 Соль','🍋 Лимон'],                correct:['💧 Вода','🫙 Масло'],               result:'layers',      targetEmoji:'🌊', startColor:'rgba(100,180,255,0.5)', fact:'Масло и вода не смешиваются — разная полярность молекул!'},
+  {name:'Голубой осадок',     reagents:['🔷 Купорос','⬜ Сода','🟨 Соляная к-та','💧 Вода'],        correct:['🔷 Купорос','⬜ Сода'],              result:'precipitate', targetEmoji:'💎', startColor:'rgba(33,150,243,0.5)',  fact:'Cu(OH)₂ — голубой осадок, признак ионов меди в растворе!'},
+];
+
+const R_COLORS = {
+  '🍶 Уксус':        'linear-gradient(180deg,#FFF9C4,#F9A825)',
+  '🧂 Сода':         'linear-gradient(180deg,#F5F5F5,#BDBDBD)',
+  '🔴 Краситель':    'linear-gradient(180deg,#EF9A9A,#E53935)',
+  '🫧 Мыло':         'linear-gradient(180deg,#E8F5E9,#66BB6A)',
+  '🔵 Синий р-р':    'linear-gradient(180deg,#90CAF9,#1565C0)',
+  '🔴 Красный р-р':  'linear-gradient(180deg,#EF9A9A,#C62828)',
+  '🟡 Жёлтый р-р':   'linear-gradient(180deg,#FFF59D,#F9A825)',
+  '🟢 Зелёный р-р':  'linear-gradient(180deg,#A5D6A7,#2E7D32)',
+  '💧 Вода':         'linear-gradient(180deg,#90CAF9,#1565C0)',
+  '🫙 Масло':        'linear-gradient(180deg,#FFF9C4,#F57F17)',
+  '🧂 Соль':         'linear-gradient(180deg,#F5F5F5,#9E9E9E)',
+  '🍋 Лимон':        'linear-gradient(180deg,#FFF59D,#FFD600)',
+  '🔷 Купорос':      'linear-gradient(180deg,#80DEEA,#00838F)',
+  '⬜ Сода':          'linear-gradient(180deg,#ECEFF1,#B0BEC5)',
+  '🟨 Соляная к-та': 'linear-gradient(180deg,#FFF59D,#F9A825)',
 };
 
-function initL2() {
-  l2State.scenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
-  l2State.slotContents = new Array(5).fill(null);
-  l2State.selectedCard = null;
-  l2State.animating = false;
+let _l2Idx = 0, _l2Added = [], _l2Mixing = false;
 
-  document.getElementById('l2-title').textContent = l2State.scenario.name;
-  document.getElementById('l2-run').disabled = true;
-  document.getElementById('l2-hint').textContent = 'Нажми на карточку, потом на слот ⬆️';
+function initL2() {
+  _l2Idx = 0;
   renderL2();
 }
 
 function renderL2() {
-  const sc = l2State.scenario;
-
-  // Slots
-  const slotsEl = document.getElementById('l2-slots');
-  slotsEl.innerHTML = '';
-  for (let i = 0; i < sc.cards.length; i++) {
-    const slot = document.createElement('div');
-    slot.className = 'l2-slot';
-    slot.id = 'l2-slot-' + i;
-    slot.innerHTML = `<span class="l2-slot-check">✅</span><span>${i + 1}</span>`;
-    slot.addEventListener('click', () => placeCard(i));
-    slotsEl.appendChild(slot);
-
-    if (i < sc.cards.length - 1) {
-      const arrow = document.createElement('div');
-      arrow.className = 'l2-arrow';
-      arrow.id = 'l2-arrow-' + i;
-      arrow.textContent = '→';
-      slotsEl.appendChild(arrow);
-    }
-  }
-
-  // Cards (shuffled)
-  const shuffled = [...sc.cards].sort(() => Math.random() - 0.5);
-  const cardsEl = document.getElementById('l2-cards');
-  cardsEl.innerHTML = '';
-  shuffled.forEach(card => {
-    const el = document.createElement('div');
-    el.className = 'l2-card';
-    el.id = 'l2-card-' + card.id;
-    el.style.background = card.color;
-    el.innerHTML = `<span class="l2-card-emoji">${card.emoji}</span>
-      <div class="l2-card-label">${card.label.replace('\n', '<br>')}</div>`;
-    el.addEventListener('click', () => selectCard(card.id));
-    cardsEl.appendChild(el);
+  const rx = REACTIONS[_l2Idx];
+  _l2Added = []; _l2Mixing = false;
+  document.getElementById('l2-badge').textContent = `${_l2Idx+1}/4`;
+  document.getElementById('l2-task-badge').textContent = `🎯 ${rx.name}`;
+  document.getElementById('l2-target-ico').textContent = rx.targetEmoji;
+  document.getElementById('l2-added').innerHTML = '';
+  // Reset flask
+  const liq = document.getElementById('flask-liq');
+  liq.setAttribute('y','265'); liq.setAttribute('height','0'); liq.style.fill = rx.startColor;
+  const liq2 = document.getElementById('flask-liq2');
+  liq2.setAttribute('y','265'); liq2.setAttribute('height','0');
+  document.getElementById('flask-bubbles').innerHTML = '';
+  document.getElementById('flask-precipitate').innerHTML = '';
+  document.getElementById('mix-btn').disabled = true;
+  // Render reagents
+  const grid = document.getElementById('l2-reagents');
+  grid.innerHTML = '';
+  [...rx.reagents].sort(() => Math.random()-0.5).forEach(r => {
+    const btn = document.createElement('div');
+    btn.className = 'reagent-btn';
+    btn.dataset.name = r;
+    btn.style.background = R_COLORS[r] || 'linear-gradient(180deg,#ccc,#999)';
+    const parts = r.split(' ');
+    const emoji = parts[0];
+    const label = parts.slice(1).join(' ');
+    btn.innerHTML = `<div class="r-shine"></div><span class="r-emoji">${emoji}</span><span class="r-label">${label}</span>`;
+    btn.onclick = () => l2AddReagent(r, btn);
+    grid.appendChild(btn);
   });
 }
 
-function selectCard(cardId) {
-  if (l2State.animating) return;
-  // Deselect previous
-  document.querySelectorAll('.l2-card').forEach(c => c.classList.remove('selected'));
-  if (l2State.selectedCard === cardId) {
-    l2State.selectedCard = null;
+function l2AddReagent(name, btn) {
+  if (_l2Mixing || _l2Added.includes(name) || _l2Added.length >= 2) return;
+  btn.classList.add('used-r');
+  _l2Added.push(name);
+  const chip = document.createElement('span');
+  chip.className = 'added-chip';
+  chip.textContent = name;
+  document.getElementById('l2-added').appendChild(chip);
+  // Raise liquid
+  const liq = document.getElementById('flask-liq');
+  const newH = _l2Added.length * 80;
+  liq.setAttribute('y', String(265 - newH));
+  liq.setAttribute('height', String(newH));
+  if (_l2Added.length >= 2) document.getElementById('mix-btn').disabled = false;
+}
+
+function doMix() {
+  if (_l2Mixing) return;
+  _l2Mixing = true;
+  const rx = REACTIONS[_l2Idx];
+  const ok = _l2Added.length === rx.correct.length && _l2Added.every(a => rx.correct.includes(a));
+  if (!ok) {
+    const svg = document.getElementById('l2-flask-svg');
+    shakeEl(svg);
+    document.getElementById('flask-liq').style.fill = 'rgba(150,150,150,0.5)';
+    setTimeout(() => renderL2(), 900);
     return;
   }
-  l2State.selectedCard = cardId;
-  const el = document.getElementById('l2-card-' + cardId);
-  if (el) el.classList.add('selected');
+  playReaction(rx);
 }
 
-function placeCard(slotIdx) {
-  if (l2State.animating) return;
-  if (!l2State.selectedCard) {
-    document.getElementById('l2-hint').textContent = '👆 Сначала выбери карточку внизу!';
-    return;
-  }
-
-  const sc = l2State.scenario;
-  const correctCardIdx = sc.correct[slotIdx];
-  const correctCardId = sc.cards[correctCardIdx].id;
-  const card = sc.cards.find(c => c.id === l2State.selectedCard);
-
-  const slotEl = document.getElementById('l2-slot-' + slotIdx);
-
-  if (l2State.selectedCard === correctCardId) {
-    // Correct!
-    l2State.slotContents[slotIdx] = card;
-    slotEl.classList.add('filled', 'correct');
-    slotEl.innerHTML = `<span class="l2-slot-check">✅</span>
-      <span class="l2-slot-emoji">${card.emoji}</span>
-      <div class="l2-slot-label">${card.label.replace('\n', '<br>')}</div>`;
-
-    const cardEl = document.getElementById('l2-card-' + card.id);
-    if (cardEl) cardEl.classList.add('placed');
-    document.querySelectorAll('.l2-card').forEach(c => c.classList.remove('selected'));
-    l2State.selectedCard = null;
-
-    burst(slotEl.getBoundingClientRect().left + 54, slotEl.getBoundingClientRect().top + 48, ['✅','⭐','✨']);
-
-    // Check if all done
-    if (l2State.slotContents.filter(Boolean).length === 5) {
-      document.getElementById('l2-run').disabled = false;
-      document.getElementById('l2-hint').textContent = '🎉 Цепочка готова — запускай!';
-    } else {
-      document.getElementById('l2-hint').textContent = 'Отлично! Продолжай 👇';
-    }
-  } else {
-    // Wrong
-    l2State.animating = true;
-    slotEl.classList.add('wrong');
-    document.getElementById('l2-hint').textContent = '❌ Не то! Попробуй ещё раз';
-    setTimeout(() => {
-      slotEl.classList.remove('wrong');
-      l2State.animating = false;
-    }, 500);
-  }
-}
-
-function runChain() {
-  if (l2State.animating) return;
-  l2State.animating = true;
-  document.getElementById('l2-run').disabled = true;
-
-  const sc = l2State.scenario;
-  let delay = 0;
-  for (let i = 0; i < sc.cards.length; i++) {
-    ((idx) => {
-      setTimeout(() => {
-        const slotEl = document.getElementById('l2-slot-' + idx);
-        slotEl.classList.add('active-glow');
-        burst(
-          slotEl.getBoundingClientRect().left + 54,
-          slotEl.getBoundingClientRect().top + 48,
-          [sc.cards[idx].emoji, '✨']
-        );
-        setTimeout(() => slotEl.classList.remove('active-glow'), 500);
-
-        if (idx < sc.cards.length - 1) {
-          const arrow = document.getElementById('l2-arrow-' + idx);
-          if (arrow) arrow.classList.add('lit');
-        }
-
-        if (idx === sc.cards.length - 1) {
-          setTimeout(() => {
-            showSuccess('🧪', 'Реакция запущена!', sc.completeFact, 'Ещё раз!', () => {
-              initL2();
-              l2State.animating = false;
-            });
-          }, 500);
-        }
-      }, delay);
-    })(i);
-    delay += 450;
+function playReaction(rx) {
+  const liq = document.getElementById('flask-liq');
+  const bub = document.getElementById('flask-bubbles');
+  const pre = document.getElementById('flask-precipitate');
+  switch(rx.result) {
+    case 'volcano':
+      liq.style.fill = 'rgba(220,50,50,0.7)';
+      liq.setAttribute('y','80'); liq.setAttribute('height','185');
+      for(let i=0;i<14;i++) setTimeout(()=>{
+        const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+        c.setAttribute('cx',String(20+Math.random()*120));
+        c.setAttribute('cy','260'); c.setAttribute('r',String(3+Math.random()*7));
+        c.setAttribute('fill','rgba(255,80,40,0.65)');
+        c.style.transition='cy 1.1s ease,opacity 1.1s ease';
+        bub.appendChild(c);
+        requestAnimationFrame(()=>{c.setAttribute('cy','60');c.style.opacity='0';});
+        setTimeout(()=>c.remove(),1200);
+      },i*80);
+      setTimeout(()=>finishRx(rx),1500);
+      break;
+    case 'mix_purple':
+      liq.style.transition='fill 1.2s ease';
+      liq.style.fill='rgba(156,39,176,0.75)';
+      setTimeout(()=>finishRx(rx),1400);
+      break;
+    case 'layers':
+      liq.style.fill='rgba(100,180,255,0.65)';
+      liq.setAttribute('y','185'); liq.setAttribute('height','80');
+      const liq2=document.getElementById('flask-liq2');
+      liq2.style.fill='rgba(253,216,53,0.7)';
+      liq2.setAttribute('y','105'); liq2.setAttribute('height','80');
+      setTimeout(()=>finishRx(rx),1200);
+      break;
+    case 'precipitate':
+      liq.style.fill='rgba(33,150,243,0.5)';
+      for(let i=0;i<16;i++) setTimeout(()=>{
+        const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+        r.setAttribute('x',String(15+Math.random()*130)); r.setAttribute('y','90');
+        r.setAttribute('width','7'); r.setAttribute('height','7');
+        r.setAttribute('fill','rgba(0,131,143,0.85)');
+        r.style.transition=`y ${0.7+Math.random()*0.6}s ease`;
+        pre.appendChild(r);
+        requestAnimationFrame(()=>r.setAttribute('y',String(242+Math.random()*15)));
+      },i*65);
+      setTimeout(()=>finishRx(rx),1700);
+      break;
   }
 }
 
-/* ===================================================
-   LEVEL 3 — PHOTOSYNTHESIS
-   =================================================== */
-const MISSIONS = [
-  { id: 'grow',    label: '🌿 Вырасти',       check: g => g >= 0.5 },
-  { id: 'flower',  label: '🌸 Зацвети',        check: g => g >= 0.85 },
-  { id: 'nolight', label: '🌑 Без света',      check: (g, v) => v.light <= 8 && g < 0.15 },
-  { id: 'nowater', label: '🏜️ Без воды',      check: (g, v) => v.water <= 8 && g < 0.15 },
-  { id: 'perfect', label: '🏆 Идеальный',      check: g => g >= 0.97 },
+function finishRx(rx) {
+  const rect = document.getElementById('l2-flask-svg').getBoundingClientRect();
+  burst(rect.left+rect.width/2, rect.top+rect.height/2, ['⭐','✨','🎉','💥','🌟']);
+  setTimeout(()=>{
+    showSuccess(rx.targetEmoji, rx.name, rx.fact, ()=>{
+      _l2Idx++;
+      if(_l2Idx < REACTIONS.length) renderL2();
+      else {
+        document.getElementById('l2-task-badge').textContent='🏆 Все реакции изучены!';
+        document.getElementById('l2-task-badge').className='task-badge done';
+        burst(window.innerWidth/2,200,['⚗️','🏆','✨','🎊','💫','⭐']);
+      }
+    });
+  },350);
+}
+
+/* ═══════════════════════════════════════
+   LEVEL 3 — STATES OF WATER
+═══════════════════════════════════════ */
+const L3_TASKS = [
+  {id:'freeze',emoji:'❄️',label:'Заморозь воду',     check:t=>t<0,          hint:'Опусти ниже 0°C',     fact:'При 0°C молекулы воды выстраиваются в кристаллическую решётку — лёд!'},
+  {id:'melt',  emoji:'💧',label:'Растопи лёд',       check:t=>t>0&&t<60,    hint:'Подними выше 0°C',    fact:'При 0°C решётка разрушается, молекулы начинают свободно двигаться.'},
+  {id:'boil',  emoji:'♨️',label:'Вскипяти воду',     check:t=>t>=100,       hint:'Нагрей до 100°C',     fact:'При 100°C молекулы вырываются из жидкости — рождается пар!'},
+  {id:'steam', emoji:'☁️',label:'Максимум пара',     check:t=>t>=140,       hint:'Выше 140°C',          fact:'Перегретый пар используется в турбинах — он невидим, но очень мощный!'},
+  {id:'range', emoji:'⚖️',label:'Ровно 0°C (±2°)',  check:t=>t>=-2&&t<=2,  hint:'Попади точно на 0°C', fact:'Точка замерзания воды — ровно 0°C. Это международный эталон температуры!'},
 ];
 
-let l3State = { light: 50, water: 50, co2: 50, doneMissions: new Set(), o2Timer: null, growth: 0 };
-
-function calcGrowth(light, water, co2) {
-  const lScore = light >= 60 && light <= 85 ? 1 : light < 60 ? light / 60 : (100 - light) / 15;
-  const wScore = water >= 45 && water <= 75 ? 1 : water < 45 ? water / 45 : (100 - water) / 25;
-  const cScore = co2 >= 35 && co2 <= 65 ? 1 : co2 < 35 ? co2 / 35 : (100 - co2) / 35;
-  return Math.max(0, Math.min(1, Math.min(lScore, wScore, cScore)));
-}
+let _l3TaskIdx=0, _l3Done=[], _l3Temp=-50, _l3Raf=null, _l3Mols=[], _l3Checked=false;
 
 function initL3() {
-  l3State = { light: 50, water: 50, co2: 50, doneMissions: new Set(), o2Timer: null, growth: 0 };
-  renderMissions();
-  renderSliders();
-  updatePlant();
+  _l3TaskIdx=0; _l3Done=[]; _l3Temp=-50; _l3Checked=false;
+  document.getElementById('temp-slider').value=-50;
+  if(_l3Raf){cancelAnimationFrame(_l3Raf);_l3Raf=null;}
+  renderL3Tasks();
+  initMols();
+  updateL3UI(-50);
 }
 
-function renderMissions() {
-  const el = document.getElementById('l3-missions');
-  el.innerHTML = '';
-  MISSIONS.forEach(m => {
-    const chip = document.createElement('div');
-    chip.className = 'mission-chip' + (l3State.doneMissions.has(m.id) ? ' done' : '');
-    chip.id = 'mission-' + m.id;
-    chip.textContent = m.label;
-    el.appendChild(chip);
+function renderL3Tasks() {
+  const row=document.getElementById('l3-tasks-row');
+  row.innerHTML='';
+  L3_TASKS.forEach((t,i)=>{
+    const pill=document.createElement('div');
+    const isDone=_l3Done.includes(t.id);
+    const isAct=i===_l3TaskIdx&&!isDone;
+    pill.className='task-pill'+(isAct?' active-task':'')+(isDone?' done-task':'');
+    pill.id='l3pill-'+t.id;
+    pill.textContent=t.emoji+' '+t.label;
+    row.appendChild(pill);
   });
+  document.getElementById('l3-badge').textContent=`${Math.min(_l3TaskIdx+1,5)}/5`;
+  if(_l3TaskIdx<L3_TASKS.length){
+    const t=L3_TASKS[_l3TaskIdx];
+    document.getElementById('l3-task-hint').textContent=`${t.emoji} ${t.label} — ${t.hint}`;
+  }
 }
 
-function renderSliders() {
-  const sliders = [
-    { key: 'light', icon: '☀️', label: 'Свет', color: '#FDD835', val: l3State.light },
-    { key: 'water', icon: '💧', label: 'Вода', color: '#29B6F6', val: l3State.water },
-    { key: 'co2',   icon: '💨', label: 'CO₂',  color: '#78909C', val: l3State.co2 },
-  ];
-  const el = document.getElementById('l3-sliders');
-  el.innerHTML = '';
-  sliders.forEach(s => {
-    const row = document.createElement('div');
-    row.className = 'slider-row';
-    const pct = s.val + '%';
-    row.innerHTML = `<span class="slider-icon">${s.icon}</span>
-      <input type="range" min="0" max="100" value="${s.val}" id="sl-${s.key}"
-        style="background:linear-gradient(to right,${s.color} ${pct},#e5e7eb ${pct})">
-      <span class="slider-val" id="slv-${s.key}">${s.val}%</span>`;
-    row.querySelector('input').addEventListener('input', function() {
-      l3State[s.key] = +this.value;
-      const pct2 = this.value + '%';
-      this.style.background = `linear-gradient(to right,${s.color} ${pct2},#e5e7eb ${pct2})`;
-      this.nextElementSibling.textContent = this.value + '%';
-      updatePlant();
+function initMols() {
+  const cv=document.getElementById('mol-canvas');
+  cv.width=cv.offsetWidth||360; cv.height=200;
+  _l3Mols=[];
+  for(let i=0;i<16;i++){
+    _l3Mols.push({
+      x:20+Math.random()*(cv.width-40),
+      y:20+Math.random()*160,
+      vx:(Math.random()-.5)*2,
+      vy:(Math.random()-.5)*2,
     });
-    row.querySelector('input').style.setProperty('--thumb-color', s.color);
-    // Thumb color via pseudo — apply via inline CSS trick
-    const styleId = 'sl-style-' + s.key;
-    if (!document.getElementById(styleId)) {
-      const st = document.createElement('style');
-      st.id = styleId;
-      st.textContent = `#sl-${s.key}::-webkit-slider-thumb { border-color: ${s.color}; }`;
-      document.head.appendChild(st);
-    }
-    el.appendChild(row);
-  });
+  }
+  drawMols();
 }
 
-let l3AnimFrame = null;
-function updatePlant() {
-  const g = calcGrowth(l3State.light, l3State.water, l3State.co2);
-  l3State.growth = g;
+function drawMols() {
+  const cv=document.getElementById('mol-canvas');
+  if(!cv||!document.getElementById('level3').classList.contains('active'))return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height,t=_l3Temp;
 
-  // Sun brightness
-  const sun = document.getElementById('l3-sun');
-  const lightFrac = l3State.light / 100;
-  sun.style.opacity = 0.3 + lightFrac * 0.7;
-  sun.style.filter = `brightness(${0.6 + lightFrac * 1.2})`;
+  // Background
+  let bg;
+  if(t<0) bg=`hsl(215,${65+Math.abs(t)*.3}%,${85-Math.abs(t)*.1}%)`;
+  else if(t<100) bg=`hsl(${205-t*.8},${50+t*.3}%,${90-t*.05}%)`;
+  else bg=`hsl(${15-Math.min(t-100,15)},70%,${82}%)`;
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  drawPlant(g);
-  checkMissions(g);
+  const speed=t<0?0:t<100?(t/100)*2.8:5;
+  const isIce=t<0, isSteam=t>=100;
 
-  // O2 bubbles
-  if (g > 0.5) {
-    if (!l3State.o2Timer) {
-      l3State.o2Timer = setInterval(() => spawnO2(), 700);
-    }
+  // Ice: grid
+  if(isIce){
+    const cols=4,rows=4;
+    const gapX=(W-cols*38)/2, gapY=(H-rows*38)/2;
+    _l3Mols.forEach((m,i)=>{
+      const gx=gapX+(i%cols)*38+19, gy=gapY+Math.floor(i/cols)*38+19;
+      m.x+=(gx-m.x)*.1; m.y+=(gy-m.y)*.1;
+    });
+    // Bonds
+    ctx.strokeStyle='rgba(100,180,255,0.28)'; ctx.lineWidth=1.5;
+    _l3Mols.forEach((m,i)=>{
+      if(i%4<3){const n=_l3Mols[i+1];ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(n.x,n.y);ctx.stroke();}
+      if(i+4<16){const n=_l3Mols[i+4];ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(n.x,n.y);ctx.stroke();}
+    });
+    // Snowflakes
+    ctx.fillStyle='rgba(150,200,255,0.55)'; ctx.font='16px serif';
+    [16,W-24,W/2-8].forEach((fx,i)=>ctx.fillText(['❄','❅','❆'][i],fx,18));
   } else {
-    if (l3State.o2Timer) { clearInterval(l3State.o2Timer); l3State.o2Timer = null; }
-  }
-}
-
-function drawPlant(g) {
-  const svg = document.getElementById('l3-plant');
-  svg.innerHTML = '';
-  const svgNS = 'http://www.w3.org/2000/svg';
-
-  const stemH = Math.max(0, Math.min(220, g * 240));
-  const stemW = 10 + g * 10;
-  const cx = 100;
-  const baseY = 255;
-
-  // Color based on growth
-  let stemColor, leafColor;
-  if (g < 0.15) { stemColor = '#9E9E9E'; leafColor = '#CDDC39'; }
-  else if (g < 0.5) { stemColor = '#66BB6A'; leafColor = '#81C784'; }
-  else if (g < 0.7) { stemColor = '#43A047'; leafColor = '#388E3C'; }
-  else { stemColor = '#2E7D32'; leafColor = '#1B5E20'; }
-
-  // Roots
-  if (stemH > 5) {
-    for (let r = 0; r < 4; r++) {
-      const angle = (r / 3) * Math.PI * 0.8 - Math.PI * 0.4 + Math.PI / 2;
-      const len = 18 + g * 22;
-      const path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', `M${cx},${baseY} Q${cx + Math.cos(angle) * len * 0.5},${baseY + 10} ${cx + Math.cos(angle) * len},${baseY + Math.sin(angle) * len * 0.5}`);
-      path.setAttribute('stroke', '#8D6E63'); path.setAttribute('stroke-width', '3');
-      path.setAttribute('fill', 'none'); path.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(path);
-    }
-  }
-
-  // Stem (wavy path)
-  const tilt = g < 0.15 ? 12 : 0;
-  const topX = cx + tilt;
-  const topY = baseY - stemH;
-  const stemPath = document.createElementNS(svgNS, 'path');
-  const cp1x = cx - 12; const cp1y = baseY - stemH * 0.4;
-  const cp2x = cx + 14; const cp2y = baseY - stemH * 0.7;
-  stemPath.setAttribute('d', `M${cx},${baseY} C${cp1x},${cp1y} ${cp2x},${cp2y} ${topX},${topY}`);
-  stemPath.setAttribute('stroke', stemColor);
-  stemPath.setAttribute('stroke-width', stemW);
-  stemPath.setAttribute('fill', 'none');
-  stemPath.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(stemPath);
-
-  // Leaves
-  if (g > 0.15) {
-    const leafCount = g > 0.7 ? 4 : 2;
-    for (let li = 0; li < leafCount; li++) {
-      const frac = (li + 1) / (leafCount + 1);
-      const lx = cx + (li % 2 === 0 ? -4 : 4);
-      const ly = baseY - stemH * frac;
-      const side = li % 2 === 0 ? -1 : 1;
-      const lw = 22 + g * 30;
-      const lh = 14 + g * 12;
-      const leaf = document.createElementNS(svgNS, 'ellipse');
-      leaf.setAttribute('cx', lx + side * lw * 0.55);
-      leaf.setAttribute('cy', ly - 6);
-      leaf.setAttribute('rx', lw * 0.7);
-      leaf.setAttribute('ry', lh * 0.45);
-      leaf.setAttribute('fill', leafColor);
-      leaf.setAttribute('transform', `rotate(${side * (15 + g * 12)},${lx},${ly})`);
-      leaf.setAttribute('opacity', '0.9');
-      svg.appendChild(leaf);
-
-      // Leaf vein
-      const vein = document.createElementNS(svgNS, 'line');
-      vein.setAttribute('x1', lx); vein.setAttribute('y1', ly);
-      vein.setAttribute('x2', lx + side * lw * 1.1); vein.setAttribute('y2', ly - 4);
-      vein.setAttribute('stroke', 'rgba(255,255,255,0.35)'); vein.setAttribute('stroke-width', '1.5');
-      svg.appendChild(vein);
-    }
-  }
-
-  // Flower
-  if (g > 0.85) {
-    const flower = document.createElementNS(svgNS, 'text');
-    flower.setAttribute('x', topX);
-    flower.setAttribute('y', topY - 10);
-    flower.setAttribute('text-anchor', 'middle');
-    flower.setAttribute('font-size', 28 + (g - 0.85) * 60);
-    flower.textContent = '🌸';
-    flower.style.transition = 'font-size 0.3s';
-    svg.appendChild(flower);
-  }
-}
-
-function spawnO2() {
-  const container = document.getElementById('l3-o2');
-  const zone = document.getElementById('l3-zone');
-  const zRect = zone.getBoundingClientRect();
-  const svgEl = document.getElementById('l3-plant');
-  const svgRect = svgEl.getBoundingClientRect();
-  const g = l3State.growth;
-
-  // Spawn near top of plant
-  const stemH = Math.max(0, Math.min(220, g * 240));
-  const startX = svgRect.left - zRect.left + 90 + (Math.random() - 0.5) * 30;
-  const startY = svgRect.top - zRect.top + (260 - stemH * 0.7) - 44;
-
-  const bubble = document.createElement('div');
-  bubble.style.cssText = `position:absolute;left:${startX}px;top:${startY}px;
-    font-size:${11 + Math.random() * 8}px;color:#43A047;font-weight:800;
-    opacity:0.85;pointer-events:none;
-    transition:top 1.8s linear,opacity 1.8s,left 1.8s;`;
-  bubble.textContent = 'O₂';
-  container.appendChild(bubble);
-
-  requestAnimationFrame(() => {
-    bubble.style.top = (startY - 80 - Math.random() * 40) + 'px';
-    bubble.style.left = (startX + (Math.random() - 0.5) * 30) + 'px';
-    bubble.style.opacity = '0';
-  });
-  setTimeout(() => bubble.remove(), 2000);
-}
-
-function checkMissions(g) {
-  const vals = { light: l3State.light, water: l3State.water, co2: l3State.co2 };
-  let newDone = false;
-  MISSIONS.forEach(m => {
-    if (l3State.doneMissions.has(m.id)) return;
-    if (m.check(g, vals)) {
-      l3State.doneMissions.add(m.id);
-      newDone = true;
-      const chip = document.getElementById('mission-' + m.id);
-      if (chip) {
-        chip.classList.add('done');
-        const rect = chip.getBoundingClientRect();
-        burst(rect.left + rect.width / 2, rect.top + rect.height / 2, ['⭐','✨','🌱']);
+    _l3Mols.forEach(m=>{
+      if(isSteam){m.vy-=0.06;m.vx+=(Math.random()-.5)*.3;}
+      else{m.vx+=(Math.random()-.5)*.18;m.vy+=(Math.random()-.5)*.18;}
+      const spd=Math.sqrt(m.vx*m.vx+m.vy*m.vy);
+      if(spd>speed+.1){m.vx=m.vx/spd*(speed+.1);m.vy=m.vy/spd*(speed+.1);}
+      m.x+=m.vx; m.y+=m.vy;
+      if(isSteam){
+        if(m.x<0||m.x>W||m.y<-40){m.x=20+Math.random()*(W-40);m.y=H;m.vx=(Math.random()-.5)*3;m.vy=-2-Math.random()*2;}
+      } else {
+        if(m.x<12){m.x=12;m.vx=Math.abs(m.vx);}
+        if(m.x>W-12){m.x=W-12;m.vx=-Math.abs(m.vx);}
+        if(m.y<12){m.y=12;m.vy=Math.abs(m.vy);}
+        if(m.y>H-12){m.y=H-12;m.vy=-Math.abs(m.vy);}
       }
+    });
+    // Steam clouds
+    if(isSteam){
+      ctx.globalAlpha=.35+Math.sin(Date.now()/280)*.07;
+      ctx.font='26px serif';
+      ['☁','☁','☁'].forEach((c,i)=>ctx.fillText(c,W/4*(i+.5)-13,22+Math.sin(Date.now()/380+i)*7));
+      ctx.globalAlpha=1;
     }
+  }
+
+  // Draw molecules
+  const r=11;
+  _l3Mols.forEach(m=>{
+    const alpha=isSteam?.35+Math.random()*.25:.85;
+    const g=ctx.createRadialGradient(m.x-3,m.y-3,2,m.x,m.y,r);
+    g.addColorStop(0,'rgba(255,255,255,0.9)');
+    g.addColorStop(.4,`rgba(100,180,255,${alpha})`);
+    g.addColorStop(1,`rgba(30,100,220,${alpha*.6})`);
+    ctx.beginPath(); ctx.arc(m.x,m.y,r,0,Math.PI*2);
+    ctx.fillStyle=g; ctx.fill();
+    // H atoms
+    [[r*.78,r*.58],[r*.78,-r*.58]].forEach(([dx,dy])=>{
+      ctx.beginPath(); ctx.arc(m.x+dx,m.y+dy,4,0,Math.PI*2);
+      ctx.fillStyle=`rgba(200,230,255,${alpha})`; ctx.fill();
+    });
   });
-  if (newDone && l3State.doneMissions.size === MISSIONS.size) {
-    setTimeout(() => showSuccess('🌸', 'Ты — ботаник!', 'Ты выполнил все миссии! Фотосинтез — это когда растение ест свет и пьёт воду, а выдыхает кислород O₂ для нас!', 'Круто!', () => {}), 400);
+
+  _l3Raf=requestAnimationFrame(drawMols);
+}
+
+function onTempChange(val) {
+  _l3Temp=parseInt(val);
+  updateL3UI(_l3Temp);
+  checkL3();
+}
+
+function updateL3UI(t) {
+  document.getElementById('temp-display').textContent=t+'°C';
+  let stateText,stateColor;
+  if(t<0){stateText='❄️ Лёд';stateColor='#1D4ED8';}
+  else if(t<100){stateText='💧 Вода';stateColor='#0369A1';}
+  else{stateText='☁️ Пар';stateColor='#B91C1C';}
+  const sl=document.getElementById('state-label');
+  sl.textContent=stateText; sl.style.color=stateColor;
+  // Thermometer: range -50..150 = 200 deg, tube height 100px
+  const pct=(t-(-50))/200;
+  const fillH=Math.round(pct*100);
+  const tf=document.getElementById('thermo-fill');
+  tf.setAttribute('y',String(104-fillH)); tf.setAttribute('height',String(fillH));
+  const hue=t<0?215:Math.max(0,215-t*2.2);
+  const col=`hsl(${hue},75%,50%)`;
+  tf.setAttribute('fill',col);
+  document.getElementById('thermo-bulb').setAttribute('fill',col);
+  // Slider thumb border color
+  document.querySelector('input[type=range]').style.setProperty('--c',col);
+}
+
+function checkL3() {
+  if(_l3TaskIdx>=L3_TASKS.length||_l3Checked)return;
+  const task=L3_TASKS[_l3TaskIdx];
+  if(task.check(_l3Temp)){
+    _l3Checked=true;
+    _l3Done.push(task.id);
+    const pill=document.getElementById('l3pill-'+task.id);
+    if(pill)pill.className='task-pill done-task';
+    burst(window.innerWidth/2,250,['⭐','✨','🎉',task.emoji,'💫']);
+    setTimeout(()=>{
+      showSuccess(task.emoji,'Выполнено!',task.fact,()=>{
+        _l3TaskIdx++;
+        _l3Checked=false;
+        if(_l3TaskIdx<L3_TASKS.length)renderL3Tasks();
+        else{
+          document.getElementById('l3-task-hint').textContent='🏆 Все задания выполнены!';
+          document.getElementById('l3-badge').textContent='5/5';
+          burst(window.innerWidth/2,200,['🌡️','🏆','✨','🎊','💫','⭐']);
+        }
+      });
+    },350);
   }
 }
 
-/* ===================================================
-   INIT
-   =================================================== */
-// Check webfont loaded or proceed anyway
-document.addEventListener('DOMContentLoaded', () => {
-  // nothing extra needed
+// Resize mol canvas
+window.addEventListener('resize',()=>{
+  const cv=document.getElementById('mol-canvas');
+  if(cv&&document.getElementById('level3').classList.contains('active')){
+    cv.width=cv.offsetWidth; cv.height=200;
+  }
 });
 </script>
 </body>
