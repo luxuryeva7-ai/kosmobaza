@@ -3,1000 +3,1187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Хемо Лаб · КосмоБаза</title>
+<title>Хемо Лаб — Химия для детей</title>
 <link href="https://fonts.bunny.net/css?family=space-grotesk:400,600,700,800" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#FFFDF7;--card:#fff;--dark:#111118;--mint:#00C27C;
-  --yellow:#FFE141;--coral:#FF5038;--blue:#3B82F6;--muted:#9997A8;
-  --border:rgba(0,0,0,.07);--bounce:cubic-bezier(.34,1.56,.64,1);
+:root {
+  --bg: #FFFDF7; --card: #FFFFFF; --mint: #00C27C;
+  --yellow: #FFE141; --coral: #FF5038; --blue: #3B82F6;
+  --text: #1a1a2e; --muted: rgba(26,26,46,.45);
 }
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;overflow-x:hidden;user-select:none}
-.screen{display:none;min-height:100vh;flex-direction:column}
-.screen.active{display:flex}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+}
 
-/* ── ANIMATIONS ── */
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
-@keyframes bounceIn{0%{transform:scale(0) rotate(-8deg);opacity:0}60%{transform:scale(1.15) rotate(2deg);opacity:1}80%{transform:scale(.95)}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes shake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-8px) rotate(-3deg)}60%{transform:translateX(8px) rotate(3deg)}}
-@keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
-@keyframes floatAtom{0%,100%{transform:translate(var(--fx0,0px),var(--fy0,0px))}33%{transform:translate(var(--fx1,8px),var(--fy1,-10px))}66%{transform:translate(var(--fx2,-6px),var(--fy2,6px))}}
-@keyframes moleculeWow{0%{transform:scale(1)}30%{transform:scale(1.3) rotate(5deg)}70%{transform:scale(.95) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
-@keyframes confettiFly{0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate(var(--cx,0px),var(--cy,-80px)) rotate(var(--cr,180deg)) scale(.3)}}
-@keyframes scientistBounce{0%{transform:scale(0) translateY(20px);opacity:0}60%{transform:scale(1.2) translateY(-5px);opacity:1}80%{transform:scale(.95) translateY(2px)}100%{transform:scale(1) translateY(0);opacity:1}}
-@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes thermFill{from{height:var(--from-h,20px)}to{height:var(--to-h,60px)}}
-@keyframes iceForm{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
-@keyframes steamRise{0%{opacity:.7;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.5)}}
-@keyframes badgePop{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.25) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(0,194,124,.3)}50%{box-shadow:0 0 40px rgba(0,194,124,.6)}}
+/* ===== SCREENS ===== */
+.screen { display: none; min-height: 100vh; padding: 20px; }
+.screen.active { display: flex; flex-direction: column; }
 
-.bounce-in{animation:bounceIn .5s var(--bounce) forwards}
-.shake{animation:shake .35s ease}
+/* ===== INTRO ===== */
+#intro {
+  background: linear-gradient(160deg, #e8fff4 0%, #f0fff8 50%, #FFFDF7 100%);
+  align-items: center; justify-content: center; text-align: center; gap: 20px;
+}
+.intro-icon { font-size: 72px; animation: floatBounce 3s ease-in-out infinite; }
+.intro-title { font-size: 38px; font-weight: 800; color: var(--mint); }
+.intro-sub { font-size: 18px; color: var(--muted); max-width: 320px; line-height: 1.5; }
+.intro-btn {
+  background: var(--mint); color: #fff; border: none; border-radius: 20px;
+  padding: 16px 48px; font-size: 20px; font-weight: 700; cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+  box-shadow: 0 6px 20px rgba(0,194,124,.35);
+}
+.intro-btn:hover { transform: scale(1.06); }
+.intro-btn:active { transform: scale(0.97); }
 
-/* ── BACK BUTTON ── */
-.back-btn{position:fixed;top:16px;left:16px;z-index:200;background:var(--card);border:1.5px solid var(--border);
-  border-radius:50px;padding:8px 18px;font-size:14px;font-weight:700;cursor:pointer;
-  transition:transform .2s var(--bounce),box-shadow .2s;box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.back-btn:hover{transform:scale(1.05)}
+/* ===== LEVEL SELECT ===== */
+#levelSelect {
+  align-items: center; justify-content: flex-start; padding-top: 30px;
+}
+.ls-header { text-align: center; margin-bottom: 24px; }
+.ls-title { font-size: 28px; font-weight: 800; }
+.ls-sub { font-size: 15px; color: var(--muted); margin-top: 4px; }
+.ls-grid { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 420px; }
+.ls-card {
+  background: var(--card); border-radius: 20px; padding: 20px 24px;
+  display: flex; align-items: center; gap: 16px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.07);
+  border: 2.5px solid transparent;
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.2s, box-shadow 0.2s;
+}
+.ls-card:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.ls-card:active { transform: scale(0.98); }
+.ls-card.done { border-color: var(--mint); }
+.ls-card-icon { font-size: 40px; flex-shrink: 0; }
+.ls-card-info { flex: 1; }
+.ls-card-name { font-size: 17px; font-weight: 700; }
+.ls-card-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.ls-card-badge { font-size: 22px; }
 
-/* ── INTRO ── */
-#intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(0,194,124,.1) 0%,transparent 65%),var(--bg)}
-.intro-emoji{font-size:88px;margin-bottom:24px;display:block;animation:bob 3s ease-in-out infinite}
-.intro-tag{display:inline-block;background:var(--yellow);color:#111;font-size:11px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:18px;
-  box-shadow:0 4px 16px rgba(255,225,65,.4)}
-.intro-h{font-size:clamp(38px,9vw,72px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:14px}
-.intro-h em{color:var(--mint);font-style:normal}
-.intro-sub{font-size:17px;color:var(--muted);max-width:360px;line-height:1.65;margin-bottom:40px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:18px 40px;border-radius:50px;
-  font-size:18px;font-weight:800;cursor:pointer;border:none;transition:transform .25s var(--bounce),box-shadow .2s;
-  text-decoration:none;letter-spacing:-.3px}
-.btn:hover{transform:scale(1.07)}
-.btn-dark{background:var(--dark);color:#fff;box-shadow:0 8px 32px rgba(17,17,24,.25)}
-.btn-dark:hover{box-shadow:0 12px 40px rgba(17,17,24,.35)}
-.btn-mint{background:var(--mint);color:#fff;box-shadow:0 8px 32px rgba(0,194,124,.35)}
-.btn-mint:hover{box-shadow:0 12px 40px rgba(0,194,124,.5)}
+/* ===== COMMON LEVEL UI ===== */
+.level-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.back-btn {
+  background: none; border: none; font-size: 26px; cursor: pointer;
+  transition: transform 0.2s; line-height: 1;
+}
+.back-btn:hover { transform: translateX(-3px); }
+.level-title { font-size: 20px; font-weight: 800; }
+.badge-strip {
+  background: var(--card); border-radius: 14px; padding: 10px 16px;
+  font-size: 14px; font-weight: 600; margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06); min-height: 42px;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+.badge-strip.pop { animation: badgePop 0.5s cubic-bezier(.34,1.56,.64,1); }
 
-/* ── LEVEL SELECT ── */
-#levelSelect{padding:60px 24px 40px;align-items:center}
-.ls-title{font-size:28px;font-weight:800;margin-bottom:8px;text-align:center}
-.ls-sub{font-size:15px;color:var(--muted);margin-bottom:32px;text-align:center}
-.levels-grid{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px}
-.level-card{background:var(--card);border:2px solid var(--border);border-radius:24px;padding:22px 24px;
-  cursor:pointer;transition:transform .25s var(--bounce),box-shadow .2s,border-color .2s;
-  display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.level-card:hover{transform:scale(1.03);box-shadow:0 8px 32px rgba(0,0,0,.12);border-color:var(--mint)}
-.level-card.done{border-color:var(--mint)}
-.lc-emoji{font-size:40px;flex-shrink:0}
-.lc-info{flex:1}
-.lc-num{font-size:11px;font-weight:700;color:var(--mint);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-.lc-name{font-size:18px;font-weight:800;margin-bottom:2px}
-.lc-desc{font-size:13px;color:var(--muted);line-height:1.45}
-.lc-badge{font-size:22px;flex-shrink:0}
+/* ===== LEVEL 1 ===== */
+#level1 { padding: 20px; }
+.l1-layout { display: flex; gap: 20px; align-items: flex-start; justify-content: center; }
+.l1-flasks { display: flex; flex-direction: column; gap: 12px; }
+.flask-btn {
+  background: var(--card); border: 2.5px solid transparent; border-radius: 16px;
+  padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  font-family: inherit; font-size: 15px; font-weight: 600; width: 140px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), border-color 0.2s;
+}
+.flask-btn:not(:disabled):hover { transform: scale(1.05); }
+.flask-btn:not(:disabled):active { transform: scale(0.97) rotate(-5deg); }
+.flask-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.flask-btn.added { border-color: var(--mint); }
+.flask-emoji { font-size: 20px; }
 
-/* ── SUCCESS OVERLAY ── */
-.success-ov{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:24px}
-.success-ov.active{display:flex}
-.ov-bg{position:absolute;inset:0;background:rgba(17,17,24,.6);backdrop-filter:blur(8px)}
-.ov-card{position:relative;background:var(--card);border:3px solid var(--mint);border-radius:32px;
-  padding:40px 32px;text-align:center;max-width:380px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3),0 0 0 8px rgba(0,194,124,.1);
-  animation:bounceIn .55s var(--bounce) forwards}
-.ov-scientist{font-size:56px;display:block;margin-bottom:8px;animation:scientistBounce .6s var(--bounce) forwards}
-.ov-emoji{font-size:40px;margin-bottom:16px}
-.ov-h{font-size:24px;font-weight:800;margin-bottom:12px}
-.ov-fact{font-size:15px;color:#444;line-height:1.6;margin-bottom:28px}
+.cylinder-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.cylinder-label { font-size: 12px; color: var(--muted); font-weight: 600; }
 
-/* ── LEVEL HEADER ── */
-.lv-header{padding:56px 24px 20px;display:flex;align-items:flex-start;gap:12px}
-.lv-num{font-size:11px;font-weight:700;color:var(--mint);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-.lv-title{font-size:22px;font-weight:800;line-height:1.2}
-.lv-emoji{font-size:36px;flex-shrink:0;margin-top:2px}
+.l1-objects { margin-top: 16px; }
+.l1-objects-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--muted); text-align: center; }
+.objects-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.obj-card {
+  background: var(--card); border-radius: 14px; padding: 12px 16px;
+  font-size: 28px; text-align: center; cursor: grab;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+}
+.obj-card:hover { transform: scale(1.1); }
+.obj-card.placed { opacity: 0.35; cursor: not-allowed; }
+.obj-card .obj-name { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 4px; }
 
-/* ══════════════ LEVEL 1 ══════════════ */
-#level1{padding:0 0 40px}
-.l1-items{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 24px;margin-bottom:24px}
-.item-card{background:var(--card);border:2px solid var(--border);border-radius:24px;
-  padding:24px 16px;text-align:center;cursor:pointer;position:relative;
-  transition:transform .25s var(--bounce),box-shadow .2s,border-color .2s;
-  box-shadow:0 4px 20px rgba(0,0,0,.06);animation:bounceIn .5s var(--bounce) both}
-.item-card:nth-child(1){animation-delay:.05s}
-.item-card:nth-child(2){animation-delay:.1s}
-.item-card:nth-child(3){animation-delay:.15s}
-.item-card:nth-child(4){animation-delay:.2s}
-.item-card:hover{transform:scale(1.04);box-shadow:0 8px 32px rgba(0,0,0,.12)}
-.item-card.done{border-color:var(--mint)}
-.item-emoji{font-size:52px;display:block;margin-bottom:10px;transition:transform .3s var(--bounce)}
-.item-name{font-size:15px;font-weight:700}
-.item-check{position:absolute;top:10px;right:10px;font-size:20px;opacity:0;transition:opacity .3s}
-.item-card.done .item-check{opacity:1}
+/* ===== LEVEL 2 ===== */
+#level2 { padding: 20px; }
+.scenario-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.scenario-tab {
+  flex: 1; background: var(--card); border: 2px solid transparent; border-radius: 12px;
+  padding: 8px 4px; font-size: 11px; font-weight: 700; cursor: pointer;
+  font-family: inherit; text-align: center;
+  transition: all 0.2s; color: var(--muted);
+}
+.scenario-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,.08); }
+.chain-slots { display: flex; align-items: center; gap: 0; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+.chain-slot {
+  min-width: 80px; max-width: 100px; flex: 1;
+  background: var(--card); border-radius: 14px; padding: 10px 6px;
+  border: 2.5px dashed rgba(26,26,46,.2); min-height: 76px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--muted); font-weight: 600; text-align: center;
+  transition: border-color 0.2s, background 0.2s; position: relative; cursor: pointer;
+}
+.chain-slot.filled { border-style: solid; border-color: var(--mint); }
+.chain-slot.wrong { animation: shake 0.4s; border-color: var(--coral) !important; }
+.chain-slot.playing { animation: slotPlay 0.5s; }
+.chain-slot-content { font-size: 22px; margin-bottom: 4px; }
+.chain-slot-text { font-size: 10px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.chain-arrow {
+  font-size: 18px; color: var(--muted); flex-shrink: 0; padding: 0 2px;
+  transition: color 0.3s;
+}
+.chain-arrow.lit { color: var(--mint); animation: arrowRun 0.4s; }
+.cards-pool { display: flex; gap: 10px; flex-wrap: wrap; min-height: 60px; margin-bottom: 16px; }
+.pool-card {
+  background: var(--card); border-radius: 14px; padding: 10px 14px;
+  border: 2.5px solid rgba(26,26,46,.1); cursor: grab;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; font-family: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  user-select: none; touch-action: none;
+}
+.pool-card:hover { transform: scale(1.05); }
+.pool-card.dragging { opacity: 0.4; }
+.pool-card-emoji { font-size: 20px; }
+.run-btn {
+  width: 100%; padding: 14px; border-radius: 16px; border: none;
+  background: linear-gradient(135deg, var(--blue), #6366f1);
+  color: #fff; font-size: 18px; font-weight: 800; font-family: inherit;
+  cursor: pointer; transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  box-shadow: 0 6px 20px rgba(59,130,246,.35);
+}
+.run-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.run-btn:not(:disabled):hover { transform: scale(1.03); }
+.run-btn:not(:disabled):active { transform: scale(0.98); }
 
-/* atom explosion panel */
-.atom-panel{background:var(--card);border:2px solid var(--border);border-radius:24px;
-  padding:20px;margin:0 24px;min-height:160px;display:flex;flex-direction:column;align-items:center;gap:12px;
-  box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.atom-panel-title{font-size:16px;font-weight:700;color:var(--muted);text-align:center}
-.atom-panel-title span{color:var(--dark)}
-.atoms-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-.atom-ball{width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-weight:800;color:#fff;position:relative;animation:popIn .4s var(--bounce) both;
-  box-shadow:inset 0 -4px 8px rgba(0,0,0,.25),0 6px 20px rgba(0,0,0,.15)}
-.atom-ball:nth-child(1){animation-delay:0s}
-.atom-ball:nth-child(2){animation-delay:.08s}
-.atom-ball:nth-child(3){animation-delay:.16s}
-.atom-sym{font-size:20px;line-height:1}
-.atom-name{font-size:9px;font-weight:600;opacity:.9;line-height:1}
-.atom-panel-fact{font-size:13px;color:#555;text-align:center;line-height:1.5;max-width:300px;
-  border-left:3px solid var(--mint);padding-left:10px;align-self:flex-start}
+/* ===== LEVEL 3 ===== */
+#level3 { padding: 20px; }
+.photo-card {
+  background: var(--card); border-radius: 24px; padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08); margin-bottom: 16px;
+}
+#plantCanvas { display: block; margin: 0 auto; }
+.photo-meter {
+  display: flex; align-items: center; gap: 10px; margin-top: 14px;
+}
+.photo-meter-label { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.photo-meter-bar { flex: 1; height: 12px; background: rgba(0,0,0,.08); border-radius: 6px; overflow: hidden; }
+.photo-meter-fill { height: 100%; border-radius: 6px; transition: width 0.4s, background 0.4s; background: var(--mint); }
+.sliders-wrap { display: flex; flex-direction: column; gap: 14px; }
+.slider-row { display: flex; align-items: center; gap: 12px; }
+.slider-icon { font-size: 22px; width: 30px; text-align: center; }
+.slider-label { font-size: 13px; font-weight: 700; width: 40px; color: var(--muted); }
+.slider-input {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 8px; border-radius: 4px; background: rgba(0,0,0,.1); outline: none;
+}
+.slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--mint); cursor: pointer; box-shadow: 0 2px 8px rgba(0,194,124,.4);
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1);
+}
+.slider-input::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.slider-val { font-size: 13px; font-weight: 700; width: 36px; text-align: right; }
+.missions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.mission-chip {
+  background: var(--card); border-radius: 12px; padding: 10px 12px;
+  font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06); border: 2px solid transparent;
+  transition: border-color 0.3s, background 0.3s;
+}
+.mission-chip.done { border-color: var(--mint); background: rgba(0,194,124,.06); }
+.mission-chip .m-icon { font-size: 18px; }
 
-/* ══════════════ LEVEL 2 ══════════════ */
-#level2{padding:0 0 40px}
-.l2-task-bar{margin:0 24px 16px;background:var(--card);border:2px solid var(--border);border-radius:20px;
-  padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.l2-task-emoji{font-size:28px}
-.l2-task-info{flex:1}
-.l2-task-label{font-size:11px;font-weight:700;color:var(--mint);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
-.l2-task-name{font-size:16px;font-weight:800}
-.l2-task-dots{display:flex;gap:6px}
-.l2-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
-.l2-dot.active{background:var(--mint)}
-/* drag field */
-.drag-field{position:relative;background:var(--card);border:2px solid var(--border);border-radius:24px;
-  margin:0 24px;height:340px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.drag-atom{width:64px;height:64px;border-radius:50%;position:absolute;cursor:grab;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-weight:800;color:#fff;font-size:18px;
-  box-shadow:inset 0 -4px 8px rgba(0,0,0,.2),0 4px 16px rgba(0,0,0,.15);
-  transition:transform .15s,box-shadow .15s;touch-action:none;z-index:10}
-.drag-atom:active{cursor:grabbing;transform:scale(1.15);box-shadow:inset 0 -4px 8px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.25);z-index:20}
-.drag-atom-name{font-size:8px;font-weight:600;opacity:.9}
-/* snap line */
-.snap-line{position:absolute;border:2px dashed var(--mint);border-radius:50%;opacity:0;pointer-events:none;
-  transition:opacity .2s;transform:translate(-50%,-50%)}
-/* molecule display */
-.molecule-display{background:rgba(0,194,124,.08);border:2px solid var(--mint);border-radius:20px;
-  margin:16px 24px 0;padding:16px 20px;display:flex;align-items:center;gap:12px;
-  animation:slideUp .4s var(--bounce) forwards;box-shadow:0 4px 20px rgba(0,194,124,.15)}
-.mol-formula{font-size:28px;font-weight:800;color:var(--mint)}
-.mol-name{font-size:16px;font-weight:700}
-.mol-fact{font-size:13px;color:#555;line-height:1.45;margin-top:2px}
-.mol-emoji-big{font-size:36px;flex-shrink:0}
+/* ===== SUCCESS OVERLAY ===== */
+#successOverlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(255,253,247,.95); align-items: center; justify-content: center;
+  flex-direction: column; text-align: center; padding: 30px;
+}
+#successOverlay.show { display: flex; }
+.success-icon { font-size: 72px; animation: bounceBig 0.7s cubic-bezier(.34,1.56,.64,1); }
+.success-title { font-size: 28px; font-weight: 800; color: var(--mint); margin-top: 16px; }
+.success-fact { font-size: 15px; color: var(--muted); max-width: 320px; line-height: 1.6; margin-top: 10px; }
+.success-btns { display: flex; gap: 12px; margin-top: 24px; }
+.success-btn {
+  padding: 14px 28px; border-radius: 16px; border: none;
+  font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer;
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+.success-btn:hover { transform: scale(1.05); }
+.success-btn.primary { background: var(--yellow); color: var(--text); }
+.success-btn.secondary { background: var(--card); color: var(--muted); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
 
-/* ══════════════ LEVEL 3 ══════════════ */
-#level3{padding:0 0 40px}
-.l3-container{padding:0 24px}
-.mission-bar{background:var(--card);border:2px solid var(--border);border-radius:20px;
-  padding:12px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;
-  box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.mission-label{font-size:11px;font-weight:700;color:var(--mint);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
-.mission-name{font-size:15px;font-weight:800}
-.mission-dots{display:flex;gap:6px;margin-left:auto;flex-shrink:0}
-.mission-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
-.mission-dot.done{background:var(--mint)}
-
-/* thermometer + aquarium row */
-.l3-row{display:flex;gap:16px;align-items:flex-start}
-.thermometer-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px}
-.therm-label{font-size:13px;font-weight:700;min-width:60px;text-align:center}
-.therm-svg-wrap{width:36px;height:200px;position:relative}
-.aquarium{flex:1;background:var(--card);border:2px solid var(--border);border-radius:24px;
-  height:200px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.aquarium-state-label{position:absolute;top:10px;left:50%;transform:translateX(-50%);
-  font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;opacity:.6;white-space:nowrap}
-
-.mol-particle{width:24px;height:24px;border-radius:50%;position:absolute;
-  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7),var(--mol-color,#3B82F6));
-  box-shadow:0 2px 8px rgba(0,0,0,.15)}
-
-/* temperature slider */
-.temp-control{margin-top:16px;background:var(--card);border:2px solid var(--border);border-radius:20px;
-  padding:16px 20px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.temp-display{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.temp-value{font-size:26px;font-weight:800}
-.temp-state-badge{font-size:13px;font-weight:700;padding:4px 14px;border-radius:40px;
-  background:var(--dark);color:#fff;transition:background .4s}
-input[type=range]{width:100%;height:8px;-webkit-appearance:none;appearance:none;
-  border-radius:4px;outline:none;cursor:pointer;transition:background .3s}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;
-  border-radius:50%;background:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.3);
-  cursor:grab;transition:transform .2s var(--bounce)}
-input[type=range]::-webkit-slider-thumb:active{transform:scale(1.2);cursor:grabbing}
-
-/* mission flash */
-.mission-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
-  background:var(--mint);color:#fff;border-radius:20px;padding:16px 28px;text-align:center;
-  font-size:20px;font-weight:800;z-index:400;pointer-events:none;
-  animation:none;box-shadow:0 8px 32px rgba(0,194,124,.5)}
-.mission-flash.show{animation:badgePop .4s var(--bounce) forwards}
-
+/* ===== ANIMATIONS ===== */
+@keyframes floatBounce {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+@keyframes badgePop {
+  0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); }
+}
+@keyframes bounceBig {
+  0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
+}
+@keyframes slotPlay {
+  0% { background: rgba(0,194,124,.15); transform: scale(1); }
+  40% { background: rgba(0,194,124,.25); transform: scale(1.04); }
+  100% { background: var(--card); transform: scale(1); }
+}
+@keyframes arrowRun {
+  0% { color: var(--muted); } 50% { color: var(--yellow); font-size: 22px; } 100% { color: var(--mint); }
+}
 </style>
 </head>
 <body>
 
-<!-- ══ INTRO ══ -->
-<div class="screen active" id="intro">
-  <span class="intro-emoji">🧪</span>
-  <div class="intro-tag">КосмоБаза · Химия</div>
-  <h1 class="intro-h">Хемо<br><em>Лаб</em></h1>
-  <p class="intro-sub">Узнай из чего сделан весь мир — атомы, молекулы и превращения!</p>
-  <button class="btn btn-dark" onclick="showScreen('levelSelect')">Начать →</button>
+<!-- ===== INTRO ===== -->
+<div id="intro" class="screen active">
+  <div class="intro-icon">🧪</div>
+  <div class="intro-title">Хемо Лаб</div>
+  <div class="intro-sub">Химия — это магия природы! Три опыта, которые тебя удивят.</div>
+  <button class="intro-btn" onclick="showScreen('levelSelect')">Начать опыты →</button>
 </div>
 
-<!-- ══ LEVEL SELECT ══ -->
-<div class="screen" id="levelSelect">
-  <button class="back-btn" onclick="showScreen('intro')">← Назад</button>
-  <div style="padding:60px 24px 20px;text-align:center">
-    <div class="ls-title">Выбери урок</div>
-    <div class="ls-sub">Все уровни открыты сразу!</div>
+<!-- ===== LEVEL SELECT ===== -->
+<div id="levelSelect" class="screen">
+  <div class="ls-header">
+    <div class="ls-title">🔬 Выбери опыт</div>
+    <div class="ls-sub">Все уровни открыты — исследуй в любом порядке</div>
   </div>
-  <div class="levels-grid" style="margin:0 auto;padding:0 24px">
-    <div class="level-card" onclick="startLevel(1)" id="lc1">
-      <span class="lc-emoji">🔍</span>
-      <div class="lc-info">
-        <div class="lc-num">Уровень 1</div>
-        <div class="lc-name">Из чего всё сделано?</div>
-        <div class="lc-desc">Тапни на предмет и увидишь его атомы!</div>
+  <div class="ls-grid">
+    <div class="ls-card" id="ls-card-1" onclick="startLevel(1)">
+      <div class="ls-card-icon">🌈</div>
+      <div class="ls-card-info">
+        <div class="ls-card-name">Слои жидкостей</div>
+        <div class="ls-card-desc">Почему мёд тяжелее масла?</div>
       </div>
-      <span class="lc-badge" id="badge1">▶</span>
+      <div class="ls-card-badge" id="ls-badge-1">🔓</div>
     </div>
-    <div class="level-card" onclick="startLevel(2)" id="lc2">
-      <span class="lc-emoji">🧲</span>
-      <div class="lc-info">
-        <div class="lc-num">Уровень 2</div>
-        <div class="lc-name">Атомы дружат</div>
-        <div class="lc-desc">Тяни атомы друг к другу — создавай молекулы!</div>
+    <div class="ls-card" id="ls-card-2" onclick="startLevel(2)">
+      <div class="ls-card-icon">⚗️</div>
+      <div class="ls-card-info">
+        <div class="ls-card-name">Химическая цепочка</div>
+        <div class="ls-card-desc">Собери реакцию шаг за шагом</div>
       </div>
-      <span class="lc-badge" id="badge2">▶</span>
+      <div class="ls-card-badge" id="ls-badge-2">🔓</div>
     </div>
-    <div class="level-card" onclick="startLevel(3)" id="lc3">
-      <span class="lc-emoji">🌡️</span>
-      <div class="lc-info">
-        <div class="lc-num">Уровень 3</div>
-        <div class="lc-name">Лёд, вода, пар</div>
-        <div class="lc-desc">Двигай ползунок температуры и смотри что происходит!</div>
+    <div class="ls-card" id="ls-card-3" onclick="startLevel(3)">
+      <div class="ls-card-icon">🌱</div>
+      <div class="ls-card-info">
+        <div class="ls-card-name">Фотосинтез</div>
+        <div class="ls-card-desc">Вырасти растение из света и воды</div>
       </div>
-      <span class="lc-badge" id="badge3">▶</span>
+      <div class="ls-card-badge" id="ls-badge-3">🔓</div>
     </div>
   </div>
 </div>
 
-<!-- ══ LEVEL 1 ══ -->
-<div class="screen" id="level1">
-  <button class="back-btn" onclick="showScreen('levelSelect')">← Назад</button>
-  <div class="lv-header">
-    <span class="lv-emoji">🔍</span>
-    <div>
-      <div class="lv-num">Уровень 1</div>
-      <div class="lv-title">Из чего всё сделано?</div>
+<!-- ===== LEVEL 1 ===== -->
+<div id="level1" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <div class="level-title">🌈 Слои жидкостей</div>
+  </div>
+  <div class="badge-strip" id="l1-badge">🧪 Лей жидкости в стакан — они сами встанут по плотности!</div>
+  <div class="l1-layout">
+    <div class="l1-flasks" id="l1-flasks"></div>
+    <div class="cylinder-wrap">
+      <canvas id="cylinderCanvas" width="110" height="300"></canvas>
+      <div class="cylinder-label">↑ лёгкие / тяжёлые ↓</div>
     </div>
   </div>
-  <div class="l1-items" id="l1items"></div>
-  <div class="atom-panel" id="atomPanel">
-    <div class="atom-panel-title" id="atomTitle">Тапни на любой предмет!</div>
-    <div class="atoms-row" id="atomsRow"></div>
-    <div class="atom-panel-fact" id="atomFact" style="display:none"></div>
+  <div class="l1-objects" id="l1-objects" style="display:none">
+    <div class="l1-objects-title">Нажми на предмет — где он остановится?</div>
+    <div class="objects-row" id="objects-row"></div>
   </div>
 </div>
 
-<!-- ══ LEVEL 2 ══ -->
-<div class="screen" id="level2">
-  <button class="back-btn" onclick="showScreen('levelSelect')">← Назад</button>
-  <div class="lv-header">
-    <span class="lv-emoji">🧲</span>
-    <div>
-      <div class="lv-num">Уровень 2</div>
-      <div class="lv-title">Атомы дружат</div>
-    </div>
+<!-- ===== LEVEL 2 ===== -->
+<div id="level2" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <div class="level-title">⚗️ Химическая цепочка</div>
   </div>
-  <div class="l2-task-bar">
-    <span class="l2-task-emoji" id="l2TaskEmoji">💧</span>
-    <div class="l2-task-info">
-      <div class="l2-task-label">Собери молекулу</div>
-      <div class="l2-task-name" id="l2TaskName">Вода H₂O</div>
-    </div>
-    <div class="l2-task-dots" id="l2Dots"></div>
-  </div>
-  <div class="drag-field" id="dragField">
-    <div class="snap-line" id="snapLine" style="width:96px;height:96px;position:absolute"></div>
-  </div>
-  <div id="molDisplay" style="display:none" class="molecule-display">
-    <span class="mol-emoji-big" id="molEmoji"></span>
-    <div>
-      <div class="mol-formula" id="molFormula"></div>
-      <div class="mol-name" id="molName"></div>
-      <div class="mol-fact" id="molFact"></div>
-    </div>
-  </div>
+  <div class="badge-strip" id="l2-badge">🔗 Расставь карточки в правильном порядке и запусти реакцию!</div>
+  <div class="scenario-tabs" id="scenario-tabs"></div>
+  <div class="chain-slots" id="chain-slots"></div>
+  <div class="cards-pool" id="cards-pool"></div>
+  <button class="run-btn" id="run-btn" onclick="runChain()" disabled>▶ Запустить реакцию!</button>
 </div>
 
-<!-- ══ LEVEL 3 ══ -->
-<div class="screen" id="level3">
-  <button class="back-btn" onclick="showScreen('levelSelect')">← Назад</button>
-  <div class="lv-header">
-    <span class="lv-emoji">🌡️</span>
-    <div>
-      <div class="lv-num">Уровень 3</div>
-      <div class="lv-title">Лёд, вода, пар</div>
+<!-- ===== LEVEL 3 ===== -->
+<div id="level3" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <div class="level-title">🌱 Фотосинтез</div>
+  </div>
+  <div class="badge-strip" id="l3-badge">☀️ Двигай ползунки и найди идеальный баланс!</div>
+  <div class="photo-card">
+    <canvas id="plantCanvas" width="280" height="200"></canvas>
+    <div class="photo-meter">
+      <div class="photo-meter-label">Фотосинтез</div>
+      <div class="photo-meter-bar"><div class="photo-meter-fill" id="photo-fill" style="width:0%"></div></div>
+      <div id="photo-pct" style="font-size:13px;font-weight:700;width:36px;text-align:right">0%</div>
     </div>
   </div>
-  <div class="l3-container">
-    <div class="mission-bar">
-      <div>
-        <div class="mission-label">Миссия</div>
-        <div class="mission-name" id="missionName">Заморозь воду ❄️</div>
-      </div>
-      <div class="mission-dots" id="missionDots"></div>
+  <div class="sliders-wrap">
+    <div class="slider-row">
+      <div class="slider-icon">☀️</div>
+      <div class="slider-label">Свет</div>
+      <input type="range" class="slider-input" id="sl-light" min="0" max="100" value="50">
+      <div class="slider-val" id="sv-light">50%</div>
     </div>
-    <div class="l3-row">
-      <div class="thermometer-wrap">
-        <div class="therm-label" id="thermLabel">20°C</div>
-        <div class="therm-svg-wrap">
-          <svg width="36" height="200" id="thermSVG" xmlns="http://www.w3.org/2000/svg"></svg>
-        </div>
-      </div>
-      <div class="aquarium" id="aquarium">
-        <div class="aquarium-state-label" id="aqLabel">ВОДА</div>
-      </div>
+    <div class="slider-row">
+      <div class="slider-icon">💧</div>
+      <div class="slider-label">Вода</div>
+      <input type="range" class="slider-input" id="sl-water" min="0" max="100" value="50">
+      <div class="slider-val" id="sv-water">50%</div>
     </div>
-    <div class="temp-control">
-      <div class="temp-display">
-        <div class="temp-value" id="tempValue">20°C</div>
-        <div class="temp-state-badge" id="tempBadge">💧 Вода</div>
-      </div>
-      <input type="range" id="tempSlider" min="-50" max="150" value="20">
+    <div class="slider-row">
+      <div class="slider-icon">💨</div>
+      <div class="slider-label">CO₂</div>
+      <input type="range" class="slider-input" id="sl-co2" min="0" max="100" value="50">
+      <div class="slider-val" id="sv-co2">50%</div>
     </div>
   </div>
+  <div class="missions-grid" id="missions-grid"></div>
 </div>
 
-<!-- ══ COMPLETE ══ -->
-<div class="screen" id="complete">
-  <button class="back-btn" onclick="showScreen('levelSelect')">← Уровни</button>
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px">
-    <span style="font-size:80px;display:block;margin-bottom:20px;animation:bob 2.5s ease-in-out infinite">🧑‍🔬</span>
-    <h2 style="font-size:28px;font-weight:800;margin-bottom:12px">Все уровни пройдены!</h2>
-    <p style="font-size:16px;color:var(--muted);max-width:340px;line-height:1.6;margin-bottom:32px">Ты теперь настоящий химик! Атомы, молекулы, состояния вещества — всё это ты знаешь.</p>
-    <button class="btn btn-mint" onclick="showScreen('levelSelect')">Повторить →</button>
+<!-- ===== SUCCESS ===== -->
+<div id="successOverlay">
+  <div class="success-icon" id="success-icon">🎉</div>
+  <div class="success-title" id="success-title">Отлично!</div>
+  <div class="success-fact" id="success-fact"></div>
+  <div class="success-btns">
+    <button class="success-btn secondary" onclick="hideSuccess()">Продолжить</button>
+    <button class="success-btn primary" onclick="showScreen('levelSelect')">Все уровни</button>
   </div>
 </div>
-
-<!-- ══ SUCCESS OVERLAY ══ -->
-<div class="success-ov" id="successOv">
-  <div class="ov-bg" onclick="closeSuccess()"></div>
-  <div class="ov-card">
-    <span class="ov-scientist">🧑‍🔬</span>
-    <div class="ov-emoji" id="ovEmoji"></div>
-    <h2 class="ov-h" id="ovTitle"></h2>
-    <p class="ov-fact" id="ovFact"></p>
-    <button class="btn btn-mint" id="ovBtn" onclick="closeSuccess()">Продолжить →</button>
-  </div>
-</div>
-
-<!-- ══ MISSION FLASH ══ -->
-<div class="mission-flash" id="missionFlash"></div>
 
 <script>
-/* ══════════════════════════════════════════════════════
-   SCREENS & PROGRESS
-══════════════════════════════════════════════════════ */
-const progress = JSON.parse(localStorage.getItem('chemLab') || '{}');
-
-function saveProgress(){localStorage.setItem('chemLab',JSON.stringify(progress))}
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+// ===== UTILS =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if(id==='levelSelect') updateLevelSelect();
+  if (id === 'levelSelect') updateLevelSelect();
 }
 
-function updateLevelSelect(){
-  [1,2,3].forEach(n=>{
-    const b=document.getElementById('badge'+n);
-    const c=document.getElementById('lc'+n);
-    if(progress['l'+n]){b.textContent='✓';c.classList.add('done')}
-    else{b.textContent='▶';c.classList.remove('done')}
-  });
-}
-
-function startLevel(n){
-  if(n===1) initLevel1();
-  else if(n===2) initLevel2();
-  else if(n===3) initLevel3();
-  showScreen('level'+n);
-}
-
-function showSuccess(emoji,title,fact,onContinue){
-  document.getElementById('ovEmoji').textContent=emoji;
-  document.getElementById('ovTitle').textContent=title;
-  document.getElementById('ovFact').textContent=fact;
-  document.getElementById('successOv').classList.add('active');
-  window._successCb=onContinue;
-}
-
-function closeSuccess(){
-  document.getElementById('successOv').classList.remove('active');
-  if(window._successCb){window._successCb();window._successCb=null;}
-}
-
-/* ══════════════════════════════════════════════════════
-   BURST CONFETTI
-══════════════════════════════════════════════════════ */
-function burst(x,y,syms){
-  syms.forEach((s,i)=>{
-    const el=document.createElement('div');
-    const angle=(i/syms.length)*Math.PI*2;
-    const dist=50+Math.random()*60;
-    const cx=Math.cos(angle)*dist;
-    const cy=Math.sin(angle)*dist-40;
-    const cr=Math.random()*360;
-    el.style.cssText=`position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*12}px;`+
-      `pointer-events:none;z-index:999;transition:all .7s ease-out;`+
-      `--cx:${cx}px;--cy:${cy}px;--cr:${cr}deg`;
-    el.textContent=s;
-    document.body.appendChild(el);
-    requestAnimationFrame(()=>{
-      el.style.transform=`translate(${cx}px,${cy}px)`;
-      el.style.opacity='0';
+function burst(x, y, syms) {
+  syms.forEach((s, i) => {
+    const p = document.createElement('div');
+    const angle = (i / syms.length) * Math.PI * 2;
+    const dist = 50 + Math.random() * 60;
+    p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;font-size:' + (18 + Math.random() * 14) + 'px;pointer-events:none;z-index:999;transition:all .7s ease-out;';
+    p.textContent = s;
+    document.body.appendChild(p);
+    requestAnimationFrame(function() {
+      p.style.transform = 'translate(' + (Math.cos(angle) * dist) + 'px,' + (Math.sin(angle) * dist - 40) + 'px)';
+      p.style.opacity = '0';
     });
-    setTimeout(()=>el.remove(),800);
+    setTimeout(function() { p.remove(); }, 800);
   });
 }
 
-/* ══════════════════════════════════════════════════════
-   LEVEL 1 — FROM WHAT IS EVERYTHING MADE
-══════════════════════════════════════════════════════ */
-const L1_ITEMS=[
-  {emoji:'🍎',name:'Яблоко',fact:'Яблоко — из углерода, водорода и кислорода. Как и всё живое вокруг!',
-   atoms:[{sym:'C',name:'Углерод',color:'#6366F1'},{sym:'H',name:'Водород',color:'#F59E0B'},{sym:'O',name:'Кислород',color:'#EF4444'}]},
-  {emoji:'💧',name:'Вода',fact:'H₂O — 2 атома водорода и 1 атом кислорода. Самая важная молекула на Земле!',
-   atoms:[{sym:'H',name:'Водород',color:'#F59E0B'},{sym:'H',name:'Водород',color:'#F59E0B'},{sym:'O',name:'Кислород',color:'#EF4444'}]},
-  {emoji:'💨',name:'Воздух',fact:'Воздух — смесь! 78% азота, 21% кислорода и немного аргона.',
-   atoms:[{sym:'N',name:'Азот',color:'#3B82F6'},{sym:'O',name:'Кислород',color:'#EF4444'},{sym:'Ar',name:'Аргон',color:'#8B5CF6'}]},
-  {emoji:'🪨',name:'Камень',fact:'Большинство камней — это кремний и кислород. SiO₂ называется кварц!',
-   atoms:[{sym:'Si',name:'Кремний',color:'#78716C'},{sym:'O',name:'Кислород',color:'#EF4444'}]},
-];
-
-let l1Done=new Set();
-let l1Animating=false;
-
-function initLevel1(){
-  l1Done=new Set();
-  l1Animating=false;
-  const grid=document.getElementById('l1items');
-  grid.innerHTML='';
-  L1_ITEMS.forEach((item,i)=>{
-    const card=document.createElement('div');
-    card.className='item-card';
-    card.id='l1card'+i;
-    card.innerHTML=`<span class="item-emoji">${item.emoji}</span><div class="item-name">${item.name}</div><span class="item-check">✓</span>`;
-    card.addEventListener('click',()=>tapItem(i,card));
-    grid.appendChild(card);
-  });
-  resetAtomPanel();
+function setBadge(id, text) {
+  var el = document.getElementById(id);
+  el.textContent = text;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
 }
 
-function resetAtomPanel(){
-  document.getElementById('atomTitle').innerHTML='Тапни на любой предмет!';
-  document.getElementById('atomsRow').innerHTML='';
-  document.getElementById('atomFact').style.display='none';
+function showSuccess(icon, title, fact) {
+  document.getElementById('success-icon').textContent = icon;
+  document.getElementById('success-title').textContent = title;
+  document.getElementById('success-fact').textContent = fact;
+  document.getElementById('successOverlay').classList.add('show');
 }
 
-function tapItem(idx,card){
-  if(l1Animating) return;
-  const item=L1_ITEMS[idx];
-  l1Animating=true;
-
-  // bounce the card
-  card.querySelector('.item-emoji').style.transform='scale(1.25)';
-  setTimeout(()=>card.querySelector('.item-emoji').style.transform='',300);
-
-  // show atom panel title
-  document.getElementById('atomTitle').innerHTML=`<span>${item.emoji} ${item.name}</span> состоит из:`;
-  document.getElementById('atomFact').style.display='none';
-
-  // render atoms
-  const row=document.getElementById('atomsRow');
-  row.innerHTML='';
-  item.atoms.forEach((a,i)=>{
-    const ball=document.createElement('div');
-    ball.className='atom-ball';
-    ball.style.cssText=`background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),${a.color});`;
-    ball.style.animationDelay=`${i*0.1}s`;
-    ball.innerHTML=`<span class="atom-sym">${a.sym}</span><span class="atom-name">${a.name}</span>`;
-    row.appendChild(ball);
-  });
-
-  // burst particles
-  const rect=card.getBoundingClientRect();
-  burst(rect.left+rect.width/2,rect.top+rect.height/2,
-    item.atoms.map(a=>a.sym).concat(['⚡','✨','💥']));
-
-  // show fact after delay
-  setTimeout(()=>{
-    const fact=document.getElementById('atomFact');
-    fact.textContent=item.fact;
-    fact.style.display='block';
-    l1Animating=false;
-    // mark done
-    if(!l1Done.has(idx)){
-      l1Done.add(idx);
-      const card2=document.getElementById('l1card'+idx);
-      card2.classList.add('done');
-      // check all done
-      if(l1Done.size===L1_ITEMS.length){
-        setTimeout(()=>{
-          progress.l1=true;saveProgress();
-          showSuccess('🔍','Всё из атомов!',
-            'Теперь ты знаешь — всё вокруг из атомов! Их сотни видов, и они соединяются в миллионы веществ.',
-            ()=>showScreen('levelSelect'));
-        },800);
-      }
-    }
-  },600);
+function hideSuccess() {
+  document.getElementById('successOverlay').classList.remove('show');
 }
 
-/* ══════════════════════════════════════════════════════
-   LEVEL 2 — ATOMS BOND (DRAG & SNAP)
-══════════════════════════════════════════════════════ */
-const L2_TASKS=[
-  {target:'H₂',emoji:'💨',name:'Водород H₂',
-   fact:'Водород — самый лёгкий газ! Им наполняли дирижабли.',
-   needed:['H','H'],decoys:['O']},
-  {target:'H₂O',emoji:'💧',name:'Вода H₂O',
-   fact:'Три атома создают воду — вещество без которого нет жизни!',
-   needed:['H','H','O'],decoys:['N']},
-  {target:'CO₂',emoji:'🌿',name:'Углекислый газ CO₂',
-   fact:'CO₂ — то что ты выдыхаешь! И то, что поглощают растения.',
-   needed:['C','O','O'],decoys:['H']},
-];
+// ===== PROGRESS =====
+var progress = JSON.parse(localStorage.getItem('hemolabProgress') || '{}');
 
-const ATOM_COLORS={H:'#F59E0B',O:'#EF4444',C:'#6366F1',N:'#3B82F6',Ar:'#8B5CF6',Si:'#78716C'};
-
-let l2TaskIdx=0;
-let l2Bonded=[];
-let l2DragAtoms=[];
-let l2SnapRadius=80;
-
-function initLevel2(){
-  l2TaskIdx=0;
-  l2Bonded=[];
-  renderL2Task();
+function saveProgress(key) {
+  progress[key] = true;
+  localStorage.setItem('hemolabProgress', JSON.stringify(progress));
 }
 
-function renderL2Task(){
-  const task=L2_TASKS[l2TaskIdx];
-  document.getElementById('l2TaskEmoji').textContent=task.emoji;
-  document.getElementById('l2TaskName').textContent=task.name;
-
-  // dots
-  const dots=document.getElementById('l2Dots');
-  dots.innerHTML='';
-  L2_TASKS.forEach((_,i)=>{
-    const d=document.createElement('div');
-    d.className='l2-dot'+(i<l2TaskIdx||progress['l2t'+i]?' active':'');
-    dots.appendChild(d);
-  });
-
-  // hide mol display
-  const md=document.getElementById('molDisplay');
-  md.style.display='none';
-
-  // create atoms on field
-  const field=document.getElementById('dragField');
-  // remove old atoms
-  field.querySelectorAll('.drag-atom').forEach(a=>a.remove());
-  l2Bonded=[];
-  l2DragAtoms=[];
-
-  const allAtoms=[...task.needed,...task.decoys];
-  shuffleArr(allAtoms);
-
-  const fieldW=field.clientWidth||320;
-  const fieldH=field.clientHeight||340;
-
-  allAtoms.forEach((sym,i)=>{
-    const col=ATOM_COLORS[sym]||'#888';
-    const el=document.createElement('div');
-    el.className='drag-atom';
-    el.dataset.sym=sym;
-    el.style.background=`radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),${col})`;
-    el.innerHTML=`${sym}<span class="drag-atom-name">${symToName(sym)}</span>`;
-
-    // random position, avoid edges
-    const x=40+Math.random()*(fieldW-120);
-    const y=40+Math.random()*(fieldH-120);
-    el.style.left=x+'px';
-    el.style.top=y+'px';
-    el.style.animation=`popIn .4s var(--bounce) ${i*0.06}s both`;
-
-    makeDraggable(el,field,task);
-    field.appendChild(el);
-    l2DragAtoms.push(el);
-  });
-}
-
-function symToName(sym){
-  return{H:'Водород',O:'Кислород',C:'Углерод',N:'Азот',Ar:'Аргон',Si:'Кремний'}[sym]||sym;
-}
-
-function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
-
-function makeDraggable(el,field,task){
-  let startX,startY,startLeft,startTop,dragging=false;
-  const snap=document.getElementById('snapLine');
-
-  function getPos(){return{x:parseFloat(el.style.left)+32,y:parseFloat(el.style.top)+32};}
-
-  function onStart(clientX,clientY){
-    dragging=true;
-    startX=clientX;startY=clientY;
-    startLeft=parseFloat(el.style.left);
-    startTop=parseFloat(el.style.top);
-    el.style.zIndex=20;
-  }
-  function onMove(clientX,clientY){
-    if(!dragging) return;
-    const dx=clientX-startX,dy=clientY-startY;
-    const rect=field.getBoundingClientRect();
-    let nx=startLeft+dx;
-    let ny=startTop+dy;
-    nx=Math.max(0,Math.min(rect.width-64,nx));
-    ny=Math.max(0,Math.min(rect.height-64,ny));
-    el.style.left=nx+'px';
-    el.style.top=ny+'px';
-    // check nearest atom
-    const pos=getPos();
-    let nearest=null,minD=99999;
-    l2DragAtoms.forEach(other=>{
-      if(other===el||other.dataset.bonded) return;
-      const op={x:parseFloat(other.style.left)+32,y:parseFloat(other.style.top)+32};
-      const d=Math.hypot(pos.x-op.x,pos.y-op.y);
-      if(d<minD){minD=d;nearest=other;}
-    });
-    if(nearest&&minD<l2SnapRadius){
-      const op={x:parseFloat(nearest.style.left)+32,y:parseFloat(nearest.style.top)+32};
-      snap.style.left=op.x+'px';snap.style.top=op.y+'px';
-      snap.style.opacity='1';snap.style.transform='translate(-50%,-50%)';
-    }else{snap.style.opacity='0';}
-  }
-  function onEnd(){
-    if(!dragging) return;
-    dragging=false;
-    el.style.zIndex=10;
-    snap.style.opacity='0';
-    const pos=getPos();
-    let nearest=null,minD=99999;
-    l2DragAtoms.forEach(other=>{
-      if(other===el||other.dataset.bonded) return;
-      const op={x:parseFloat(other.style.left)+32,y:parseFloat(other.style.top)+32};
-      const d=Math.hypot(pos.x-op.x,pos.y-op.y);
-      if(d<minD){minD=d;nearest=other;}
-    });
-    if(nearest&&minD<l2SnapRadius){
-      tryBond(el,nearest,task);
-    }
-  }
-
-  // mouse
-  el.addEventListener('mousedown',e=>{e.preventDefault();onStart(e.clientX,e.clientY);
-    const mm=e2=>onMove(e2.clientX,e2.clientY);
-    const mu=()=>{onEnd();document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};
-    document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);
-  });
-  // touch
-  el.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];onStart(t.clientX,t.clientY);},{passive:false});
-  el.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];onMove(t.clientX,t.clientY);},{passive:false});
-  el.addEventListener('touchend',e=>{e.preventDefault();onEnd();},{passive:false});
-}
-
-function tryBond(a,b,task){
-  l2Bonded.push(a.dataset.sym);
-  l2Bonded.push(b.dataset.sym);
-
-  // check if bonded so far fits "needed" prefix
-  const needed=task.needed;
-  const bondedSorted=[...l2Bonded].sort().join(',');
-  const neededSorted=[...needed].sort().join(',');
-
-  if(bondedSorted===neededSorted){
-    // SUCCESS — right molecule!
-    a.dataset.bonded='1';b.dataset.bonded='1';
-    playBeep(440,0.15);
-    const rect=document.getElementById('dragField').getBoundingClientRect();
-    burst(rect.left+rect.width/2,rect.top+rect.height/2,['⚗️','✨','💥','🎉','⚡','🌟']);
-    // move bonded atoms to center
-    const cX=rect.width/2-32;
-    const cY=rect.height/2-80;
-    [a,b].forEach(at=>{
-      at.style.transition='left .5s var(--bounce),top .5s var(--bounce),transform .5s var(--bounce)';
-      at.style.left=cX+'px';at.style.top=cY+'px';at.style.transform='scale(.7)';
-    });
-    // show molecule info
-    setTimeout(()=>{
-      const md=document.getElementById('molDisplay');
-      md.style.display='flex';
-      document.getElementById('molEmoji').textContent=task.emoji;
-      document.getElementById('molFormula').textContent=task.target;
-      document.getElementById('molName').textContent=task.name;
-      document.getElementById('molFact').textContent=task.fact;
-      progress['l2t'+l2TaskIdx]=true;saveProgress();
-    },500);
-    // next task after delay
-    setTimeout(()=>{
-      l2TaskIdx++;
-      if(l2TaskIdx>=L2_TASKS.length){
-        progress.l2=true;saveProgress();
-        showSuccess('🧲','Молекулы готовы!',
-          'Ты собрал водород, воду и углекислый газ! Так рождается химия — атомы притягиваются и создают новые вещества.',
-          ()=>showScreen('levelSelect'));
-      }else{
-        renderL2Task();
-      }
-    },2200);
-  } else {
-    // WRONG — check if partial bonding is ok (for 3-atom molecules, step by step)
-    // For simplicity: if we have more bonded than needed OR wrong atoms — reset
-    const wrongCount = l2Bonded.filter(s=>!needed.includes(s)).length;
-    const tooMany = l2Bonded.length > needed.length;
-    if(wrongCount>0||tooMany){
-      // wrong combo — shake and reset
-      a.classList.add('shake');b.classList.add('shake');
-      playBeep(220,0.1);
-      setTimeout(()=>{
-        a.classList.remove('shake');b.classList.remove('shake');
-        l2Bonded=[];
-      },400);
+function updateLevelSelect() {
+  ['1','2','3'].forEach(function(n) {
+    var card = document.getElementById('ls-card-' + n);
+    var badge = document.getElementById('ls-badge-' + n);
+    if (progress['level' + n]) {
+      card.classList.add('done');
+      badge.textContent = '✅';
     } else {
-      // partial correct — keep bonded, snap visually
-      a.dataset.bonded='1';b.dataset.bonded='1';
-      a.style.outline=`2px solid var(--mint)`;
-      b.style.outline=`2px solid var(--mint)`;
-      playBeep(330,0.1);
-      // if we still need more atoms, wait for next drag
+      card.classList.remove('done');
+      badge.textContent = '🔓';
     }
-  }
+  });
 }
 
-function playBeep(freq,vol){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.frequency.value=freq;
-    gain.gain.setValueAtTime(vol,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);
-    osc.start();osc.stop(ctx.currentTime+0.25);
-  }catch(e){}
+function startLevel(n) {
+  if (n === 1) initLevel1();
+  else if (n === 2) initLevel2();
+  else if (n === 3) initLevel3();
+  showScreen('level' + n);
 }
 
-/* ══════════════════════════════════════════════════════
-   LEVEL 3 — ICE WATER STEAM
-══════════════════════════════════════════════════════ */
-const L3_MISSIONS=[
-  {name:'Заморозь воду ❄️',check:t=>t<0},
-  {name:'Растопи лёд 💧',check:t=>t>0&&t<100},
-  {name:'Вскипяти воду ♨️',check:t=>t>=100},
-  {name:'Жидкость 3 секунды 💧',check:null,timer:true},
-  {name:'Максимальный пар ☁️',check:t=>t>120},
+// ==============================
+// ===== LEVEL 1 — LAYERS =======
+// ==============================
+var liquids = [
+  { name: 'Мёд',   emoji: '🍯', color: 'rgba(180,100,0,.85)',    density: 1.4 },
+  { name: 'Вода',  emoji: '💧', color: 'rgba(100,180,255,.75)',  density: 1.0 },
+  { name: 'Масло', emoji: '🫙', color: 'rgba(255,220,50,.8)',    density: 0.8 },
+  { name: 'Спирт', emoji: '🍾', color: 'rgba(200,220,255,.65)', density: 0.79 },
 ];
 
-let l3Temp=20;
-let l3MissionsDone=new Set();
-let l3LiquidTimer=null;
-let l3LiquidSeconds=0;
-let l3Particles=[];
-let l3AnimFrame=null;
-let l3LastState=null;
+var dropObjects = [
+  { emoji: '🍇', name: 'Виноград', density: 1.1 },
+  { emoji: '🍋', name: 'Лимон',    density: 0.85 },
+  { emoji: '🪨', name: 'Камешек',  density: 2.5 },
+];
 
-function initLevel3(){
-  l3Temp=20;
-  l3MissionsDone=new Set();
-  l3LiquidTimer=null;
-  l3LiquidSeconds=0;
-  l3Particles=[];
-  l3LastState=null;
-  document.getElementById('tempSlider').value=20;
-  renderMissionDots();
-  updateMissionBar();
-  buildAquariumParticles();
-  buildThermSVG();
-  updateL3(20);
-  // slider
-  document.getElementById('tempSlider').oninput=function(){
-    l3Temp=parseInt(this.value);
-    updateL3(l3Temp);
-    checkMissions(l3Temp);
-  };
-  // animation loop
-  if(l3AnimFrame) cancelAnimationFrame(l3AnimFrame);
-  animateAquarium();
+var l1 = { layers: [], addedCount: 0, animating: false, settleProgress: 1 };
+
+function initLevel1() {
+  l1 = { layers: [], addedCount: 0, animating: false, settleProgress: 1 };
+  document.getElementById('l1-objects').style.display = 'none';
+  setBadge('l1-badge', '🧪 Нажми на флакон — жидкость польётся в стакан!');
+
+  var flasksEl = document.getElementById('l1-flasks');
+  flasksEl.innerHTML = '';
+  liquids.forEach(function(liq, i) {
+    var btn = document.createElement('button');
+    btn.className = 'flask-btn';
+    btn.id = 'flask-btn-' + i;
+    btn.innerHTML = '<span class="flask-emoji">' + liq.emoji + '</span><span>' + liq.name + '</span>';
+    btn.onclick = function() { addLiquid(i, btn); };
+    flasksEl.appendChild(btn);
+  });
+  drawCylinder(1);
 }
 
-function renderMissionDots(){
-  const dots=document.getElementById('missionDots');
-  dots.innerHTML='';
-  L3_MISSIONS.forEach((_,i)=>{
-    const d=document.createElement('div');
-    d.className='mission-dot'+(l3MissionsDone.has(i)?' done':'');
-    d.id='md'+i;
-    dots.appendChild(d);
+function addLiquid(i, btn) {
+  if (l1.animating || btn.disabled) return;
+  l1.animating = true;
+  btn.disabled = true;
+  btn.classList.add('added');
+  var liq = liquids[i];
+
+  // Pour animation: find canvas position
+  var canvasRect = document.getElementById('cylinderCanvas').getBoundingClientRect();
+  var btnRect = btn.getBoundingClientRect();
+
+  var stream = document.createElement('div');
+  var streamTop = Math.min(btnRect.bottom, canvasRect.top);
+  var streamH = canvasRect.top - btnRect.top + 10;
+  stream.style.cssText = [
+    'position:fixed',
+    'left:' + (canvasRect.left + canvasRect.width / 2 - 4) + 'px',
+    'top:' + btnRect.top + 'px',
+    'width:8px',
+    'height:0px',
+    'background:' + liq.color,
+    'border-radius:4px',
+    'pointer-events:none',
+    'z-index:900',
+    'transition:height 0.5s ease-in, opacity 0.2s 0.5s'
+  ].join(';');
+  document.body.appendChild(stream);
+
+  requestAnimationFrame(function() {
+    stream.style.height = Math.max(10, streamH) + 'px';
+  });
+
+  setTimeout(function() {
+    stream.style.opacity = '0';
+    setTimeout(function() { stream.remove(); }, 300);
+
+    l1.layers.push(Object.assign({}, liq));
+    l1.layers.sort(function(a, b) { return b.density - a.density; });
+    l1.addedCount++;
+
+    animateSettle(liq.name);
+  }, 650);
+}
+
+function animateSettle(addedName) {
+  var step = 0;
+  var steps = 24;
+  var timer = setInterval(function() {
+    step++;
+    drawCylinder(step / steps);
+    if (step >= steps) {
+      clearInterval(timer);
+      l1.animating = false;
+
+      var msgs = {
+        'Мёд':   '🍯 Мёд самый тяжёлый — он всегда тонет на дно!',
+        'Вода':  '💧 Вода — средняя. Она между лёгкими и тяжёлыми.',
+        'Масло': '🫙 Масло легче воды — оно всплывает вверх!',
+        'Спирт': '🍾 Спирт чуть легче масла и тоже плавает наверху.',
+      };
+      setBadge('l1-badge', msgs[addedName] || '🌈 Каждое вещество заняло свой уровень!');
+
+      if (l1.addedCount === 4) {
+        setTimeout(function() {
+          setBadge('l1-badge', '🌈 Каждое вещество имеет свою плотность — поэтому они не смешиваются!');
+          showL1Objects();
+        }, 1000);
+      }
+    }
+  }, 25);
+}
+
+function drawCylinder(prog) {
+  var canvas = document.getElementById('cylinderCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  var cx = W / 2, cw = 72, ch = H - 24, cy = 8;
+  var innerX = cx - cw / 2 + 4, innerW = cw - 8;
+
+  // Background glass
+  ctx.fillStyle = 'rgba(220,240,255,.15)';
+  ctx.fillRect(innerX, cy, innerW, ch);
+
+  // Layers
+  if (l1.layers.length > 0) {
+    var layerH = ch / Math.max(l1.layers.length, 4);
+    l1.layers.forEach(function(layer, idx) {
+      var targetY = cy + idx * layerH;
+      var startY = cy; // settle from top
+      var y = prog >= 1 ? targetY : (startY + (targetY - startY) * prog);
+
+      ctx.fillStyle = layer.color;
+      ctx.fillRect(innerX, y, innerW, layerH + 1);
+
+      // Layer name
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.font = 'bold 11px Space Grotesk, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(layer.name, cx, y + layerH / 2 + 4);
+    });
+  }
+
+  // Glass borders
+  ctx.strokeStyle = 'rgba(100,160,220,.65)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(cx - cw / 2 + 2, cy);
+  ctx.lineTo(cx - cw / 2 + 2, cy + ch);
+  ctx.lineTo(cx + cw / 2 - 2, cy + ch);
+  ctx.lineTo(cx + cw / 2 - 2, cy);
+  ctx.stroke();
+
+  // Shine
+  ctx.strokeStyle = 'rgba(255,255,255,.5)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - cw / 2 + 8, cy + 6);
+  ctx.lineTo(cx - cw / 2 + 8, cy + ch - 6);
+  ctx.stroke();
+
+  ctx.textAlign = 'left';
+}
+
+function showL1Objects() {
+  document.getElementById('l1-objects').style.display = 'block';
+  var row = document.getElementById('objects-row');
+  row.innerHTML = '';
+  dropObjects.forEach(function(obj, i) {
+    var card = document.createElement('div');
+    card.className = 'obj-card';
+    card.id = 'obj-' + i;
+    card.innerHTML = obj.emoji + '<div class="obj-name">' + obj.name + '</div>';
+    card.onclick = function() { dropObject(i); };
+    row.appendChild(card);
   });
 }
 
-function updateMissionBar(){
-  const nextIdx=L3_MISSIONS.findIndex((_,i)=>!l3MissionsDone.has(i));
-  if(nextIdx===-1){
-    document.getElementById('missionName').textContent='Все миссии выполнены! 🎉';
-  }else{
-    document.getElementById('missionName').textContent=L3_MISSIONS[nextIdx].name;
+function dropObject(i) {
+  var obj = dropObjects[i];
+  var card = document.getElementById('obj-' + i);
+  if (card.classList.contains('placed')) return;
+  card.classList.add('placed');
+
+  // Find which layer it lands in
+  var sorted = l1.layers.slice().sort(function(a, b) { return b.density - a.density; });
+  var targetIdx = sorted.length; // sinks past everything
+  for (var j = 0; j < sorted.length; j++) {
+    if (obj.density > sorted[j].density) { targetIdx = j; break; }
   }
-}
 
-function buildThermSVG(){
-  const svg=document.getElementById('thermSVG');
-  svg.innerHTML=`
-    <rect x="14" y="10" width="8" height="170" rx="4" fill="#eee" stroke="#ddd" stroke-width="1"/>
-    <rect id="thermFill" x="14" y="10" width="8" height="100" rx="4" fill="#3B82F6"/>
-    <circle cx="18" cy="185" r="9" id="thermBulb" fill="#3B82F6"/>
-  `;
-}
+  var canvas = document.getElementById('cylinderCanvas');
+  var rect = canvas.getBoundingClientRect();
+  var layerH = (canvas.height - 24) / Math.max(sorted.length, 4);
+  var targetFrac = (8 + targetIdx * layerH + layerH / 2) / canvas.height;
+  var targetY = rect.top + targetFrac * rect.height;
+  var cx = rect.left + rect.width / 2;
 
-function updateThermometer(temp){
-  const pct=(temp+50)/200; // -50..150 → 0..1
-  const maxH=170;
-  const h=Math.max(6,pct*maxH);
-  const fill=document.getElementById('thermFill');
-  if(!fill) return;
-  fill.setAttribute('y',10+(maxH-h));
-  fill.setAttribute('height',h);
-  // color
-  let color;
-  if(temp<0) color='#3B82F6'; // blue
-  else if(temp<100) color='#6366F1'; // purple
-  else color='#EF4444'; // red
-  fill.setAttribute('fill',color);
-  document.getElementById('thermBulb').setAttribute('fill',color);
-  document.getElementById('thermLabel').textContent=temp+'°C';
-}
+  var ghost = document.createElement('div');
+  ghost.textContent = obj.emoji;
+  ghost.style.cssText = 'position:fixed;left:' + (cx - 16) + 'px;top:' + (rect.top - 30) + 'px;font-size:28px;pointer-events:none;z-index:950;transition:top 0.85s cubic-bezier(.34,1.56,.64,1),opacity 0.3s 1s;';
+  document.body.appendChild(ghost);
 
-function getState(temp){
-  if(temp<0) return'ice';
-  if(temp>=100) return'steam';
-  return'water';
-}
+  requestAnimationFrame(function() { ghost.style.top = targetY + 'px'; });
+  setTimeout(function() {
+    ghost.style.opacity = '0';
+    setTimeout(function() { ghost.remove(); }, 400);
+    burst(cx, targetY, ['💥', '✨', '⭐', '🔬']);
 
-function buildAquariumParticles(){
-  const aq=document.getElementById('aquarium');
-  // remove old particles
-  aq.querySelectorAll('.mol-particle').forEach(p=>p.remove());
-  l3Particles=[];
-  const w=aq.clientWidth||260;
-  const h=aq.clientHeight||200;
-  for(let i=0;i<12;i++){
-    const el=document.createElement('div');
-    el.className='mol-particle';
-    const x=16+Math.random()*(w-48);
-    const y=16+Math.random()*(h-48);
-    el.style.left=x+'px';el.style.top=y+'px';
-    el.style.setProperty('--mol-color','#3B82F6');
-    aq.appendChild(el);
-    l3Particles.push({el,x,y,vx:(Math.random()-.5)*1.5,vy:(Math.random()-.5)*1.5});
-  }
-}
+    var facts = {
+      '🍇': '🍇 Виноград тяжелее воды но легче мёда — остановился между ними!',
+      '🍋': '🍋 Лимон легче воды! В кожуре много воздуха.',
+      '🪨': '🪨 Камень тяжелее всех — тонет прямо на дно к мёду!',
+    };
+    setBadge('l1-badge', facts[obj.emoji] || '✨ Предмет нашёл свой уровень!');
 
-function updateL3(temp){
-  document.getElementById('tempValue').textContent=temp+'°C';
-  updateThermometer(temp);
-  const state=getState(temp);
-  let badgeText,badgeBg;
-  if(state==='ice'){badgeText='❄️ Лёд';badgeBg='#3B82F6';}
-  else if(state==='steam'){badgeText='☁️ Пар';badgeBg='#EF4444';}
-  else{badgeText='💧 Вода';badgeBg='#6366F1';}
-  const badge=document.getElementById('tempBadge');
-  badge.textContent=badgeText;badge.style.background=badgeBg;
-  document.getElementById('aqLabel').textContent=badgeText.split(' ')[1];
-  l3LastState=state;
-}
-
-function animateAquarium(){
-  l3AnimFrame=requestAnimationFrame(animateAquarium);
-  const aq=document.getElementById('aquarium');
-  if(!aq) return;
-  const w=aq.clientWidth||260;
-  const h=aq.clientHeight||200;
-  const state=l3LastState||'water';
-  let speed, opacity, color;
-  if(state==='ice'){speed=0.08;opacity=0.9;color='#93C5FD';}
-  else if(state==='steam'){speed=2.5;opacity=0.35;color='#CBD5E1';}
-  else{speed=0.8;opacity=0.85;color='#3B82F6';}
-
-  if(state==='ice'){
-    // grid layout — animate to positions
-    l3Particles.forEach((p,i)=>{
-      const cols=4;
-      const gx=20+(i%cols)*(w/cols-4);
-      const gy=20+Math.floor(i/cols)*44;
-      p.x+=(gx-p.x)*0.04;
-      p.y+=(gy-p.y)*0.04;
-      p.el.style.left=p.x+'px';p.el.style.top=p.y+'px';
-      p.el.style.opacity=opacity;
-      p.el.style.setProperty('--mol-color',color);
+    var allPlaced = dropObjects.every(function(_, j) {
+      var c = document.getElementById('obj-' + j);
+      return c && c.classList.contains('placed');
     });
-  }else{
-    l3Particles.forEach(p=>{
-      p.x+=p.vx*speed;p.y+=p.vy*speed;
-      if(p.x<0||p.x>w-24){p.vx*=-1;p.x=Math.max(0,Math.min(w-24,p.x));}
-      if(p.y<0||p.y>h-24){p.vy*=-1;p.y=Math.max(0,Math.min(h-24,p.y));}
-      p.el.style.left=p.x+'px';p.el.style.top=p.y+'px';
-      p.el.style.opacity=opacity;
-      p.el.style.setProperty('--mol-color',color);
-    });
+    if (allPlaced) {
+      saveProgress('level1');
+      updateLevelSelect();
+      setTimeout(function() {
+        showSuccess('🌈', 'Плотность освоена!',
+          'Плотность — это сколько вещества умещается в одном объёме. Мёд тяжелее воды в 1.4 раза — поэтому он всегда на дне!');
+      }, 1000);
+    }
+  }, 950);
+}
+
+// ==============================
+// ===== LEVEL 2 — CHAIN ========
+// ==============================
+var scenarios = [
+  {
+    id: 's1', emoji: '🎈', title: '🎈 Надуй шарик',
+    steps: [
+      { emoji: '🍶', text: 'Уксус + Сода' },
+      { emoji: '💨', text: 'CO₂ газ' },
+      { emoji: '🎈', text: 'Шарик надувается' },
+      { emoji: '🚀', text: 'Шарик летит' },
+      { emoji: '🎉', text: 'Готово!' },
+    ],
+    fact: 'Уксус и сода выделяют CO₂ — тот самый газ, что в газировке и огнетушителях!',
+  },
+  {
+    id: 's2', emoji: '🔥', title: '🔥 Потуши огонь',
+    steps: [
+      { emoji: '🧂', text: 'Сода + Вода' },
+      { emoji: '🫧', text: 'Раствор соды' },
+      { emoji: '💨', text: 'CO₂ на огонь' },
+      { emoji: '🚒', text: 'Огонь гаснет' },
+      { emoji: '✅', text: 'Потушили!' },
+    ],
+    fact: 'CO₂ тяжелее воздуха и не горит — накрывает огонь как одеяло. Именно так работают огнетушители!',
+  },
+  {
+    id: 's3', emoji: '💎', title: '💎 Кристалл',
+    steps: [
+      { emoji: '🧂', text: 'Соль + вода' },
+      { emoji: '🌡️', text: 'Нагреть' },
+      { emoji: '💧', text: 'Раствор готов' },
+      { emoji: '❄️', text: 'Охладить' },
+      { emoji: '💎', text: 'Кристаллы!' },
+    ],
+    fact: 'В горячей воде растворяется больше соли. При охлаждении лишняя соль "выпадает" и растёт в красивые кристаллы!',
+  },
+];
+
+var l2 = { scenario: 0, slots: [], running: false };
+
+function initLevel2() {
+  l2 = { scenario: 0, slots: new Array(5).fill(null), running: false };
+  renderScenarioTabs();
+  loadScenario(0);
+}
+
+function renderScenarioTabs() {
+  var tabs = document.getElementById('scenario-tabs');
+  tabs.innerHTML = '';
+  scenarios.forEach(function(sc, i) {
+    var tab = document.createElement('button');
+    tab.className = 'scenario-tab' + (i === l2.scenario ? ' active' : '');
+    tab.textContent = sc.emoji + ' ' + sc.title.replace(sc.emoji + ' ', '');
+    tab.onclick = function() { l2.scenario = i; loadScenario(i); renderScenarioTabs(); };
+    tabs.appendChild(tab);
+  });
+}
+
+function loadScenario(si) {
+  var sc = scenarios[si];
+  l2.slots = new Array(5).fill(null);
+  l2.running = false;
+  // Shuffle cards
+  var order = [0,1,2,3,4].sort(function() { return Math.random() - 0.5; });
+  l2._shuffled = order;
+  renderSlots();
+  renderPool();
+  document.getElementById('run-btn').disabled = true;
+  setBadge('l2-badge', '🔗 Расставь карточки в правильном порядке!');
+}
+
+function renderSlots() {
+  var sc = scenarios[l2.scenario];
+  var container = document.getElementById('chain-slots');
+  container.innerHTML = '';
+
+  for (var si = 0; si < 5; si++) {
+    var slot = l2.slots[si];
+    var slotEl = document.createElement('div');
+    slotEl.className = 'chain-slot' + (slot !== null ? ' filled' : '');
+    slotEl.id = 'slot-' + si;
+
+    if (slot !== null) {
+      slotEl.innerHTML = '<div class="chain-slot-content">' + sc.steps[slot].emoji + '</div>' +
+        '<div class="chain-slot-text">' + sc.steps[slot].text + '</div>';
+      (function(idx) {
+        slotEl.onclick = function() { if (!l2.running) returnToPool(idx); };
+      })(si);
+    } else {
+      slotEl.innerHTML = '<div style="font-size:22px;opacity:.25">' + (si + 1) + '</div>';
+    }
+
+    // Drop target (desktop)
+    (function(idx) {
+      slotEl.addEventListener('dragover', function(e) { e.preventDefault(); });
+      slotEl.addEventListener('drop', function(e) {
+        e.preventDefault();
+        var cardIdx = parseInt(e.dataTransfer.getData('cardIdx'));
+        placeCard(cardIdx, idx);
+      });
+    })(si);
+
+    container.appendChild(slotEl);
+
+    if (si < 4) {
+      var arrow = document.createElement('div');
+      arrow.className = 'chain-arrow';
+      arrow.id = 'arrow-' + si;
+      arrow.textContent = '→';
+      container.appendChild(arrow);
+    }
   }
 }
 
-function checkMissions(temp){
-  const state=getState(temp);
-  L3_MISSIONS.forEach((m,i)=>{
-    if(l3MissionsDone.has(i)) return;
-    if(m.timer){
-      // liquid timer mission
-      if(state==='water'){
-        if(!l3LiquidTimer){
-          l3LiquidSeconds=0;
-          l3LiquidTimer=setInterval(()=>{
-            l3LiquidSeconds++;
-            if(l3LiquidSeconds>=3){
-              clearInterval(l3LiquidTimer);l3LiquidTimer=null;
-              completeMission(i);
-            }
-          },1000);
-        }
-      }else{
-        if(l3LiquidTimer){clearInterval(l3LiquidTimer);l3LiquidTimer=null;l3LiquidSeconds=0;}
-      }
-    }else if(m.check&&m.check(temp)){
-      completeMission(i);
+function renderPool() {
+  var sc = scenarios[l2.scenario];
+  var pool = document.getElementById('cards-pool');
+  pool.innerHTML = '';
+
+  for (var ci = 0; ci < 5; ci++) {
+    if (l2.slots.indexOf(ci) !== -1) continue;
+    var card = document.createElement('div');
+    card.className = 'pool-card';
+    card.id = 'pool-card-' + ci;
+    card.draggable = true;
+    card.innerHTML = '<span class="pool-card-emoji">' + sc.steps[ci].emoji + '</span><span>' + sc.steps[ci].text + '</span>';
+
+    (function(cardIdx) {
+      card.addEventListener('dragstart', function(e) {
+        e.dataTransfer.setData('cardIdx', String(cardIdx));
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', function() { card.classList.remove('dragging'); });
+      card.onclick = function() {
+        var first = l2.slots.indexOf(null);
+        if (first !== -1) placeCard(cardIdx, first);
+      };
+      // Touch
+      card.addEventListener('touchstart', function(e) { touchStart(e, cardIdx); }, { passive: true });
+      card.addEventListener('touchmove', touchMove, { passive: false });
+      card.addEventListener('touchend', function(e) { touchEnd(e, cardIdx); });
+    })(ci);
+
+    pool.appendChild(card);
+  }
+}
+
+// Touch DnD
+var _touchGhost = null, _touchCardIdx = -1;
+
+function touchStart(e, cardIdx) {
+  _touchCardIdx = cardIdx;
+  var touch = e.touches[0];
+  var card = e.currentTarget;
+  var rect = card.getBoundingClientRect();
+  _touchGhost = card.cloneNode(true);
+  _touchGhost.style.cssText = 'position:fixed;left:' + rect.left + 'px;top:' + rect.top + 'px;width:' + rect.width + 'px;opacity:.8;pointer-events:none;z-index:999;';
+  document.body.appendChild(_touchGhost);
+}
+
+function touchMove(e) {
+  e.preventDefault();
+  if (!_touchGhost) return;
+  var touch = e.touches[0];
+  _touchGhost.style.left = (touch.clientX - 60) + 'px';
+  _touchGhost.style.top = (touch.clientY - 25) + 'px';
+}
+
+function touchEnd(e, cardIdx) {
+  if (_touchGhost) { _touchGhost.remove(); _touchGhost = null; }
+  var touch = e.changedTouches[0];
+  document.querySelectorAll('.chain-slot').forEach(function(slotEl, si) {
+    var rect = slotEl.getBoundingClientRect();
+    if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+      placeCard(cardIdx, si);
     }
   });
 }
 
-function completeMission(idx){
-  if(l3MissionsDone.has(idx)) return;
-  l3MissionsDone.add(idx);
-  // flash
-  const flash=document.getElementById('missionFlash');
-  flash.textContent=L3_MISSIONS[idx].name+' ✓';
-  flash.style.animation='none';
-  flash.offsetWidth; // reflow
-  flash.style.animation='badgePop .4s var(--bounce) forwards';
-  setTimeout(()=>{flash.style.animation='none';flash.style.transform='scale(0)';},1800);
-  // burst
-  const aq=document.getElementById('aquarium');
-  const rect=aq.getBoundingClientRect();
-  burst(rect.left+rect.width/2,rect.top+rect.height/2,['❄️','💧','☁️','✨','🎉','⚗️']);
-  playBeep(523,0.15);
-  // update dots
-  const d=document.getElementById('md'+idx);
-  if(d) d.classList.add('done');
-  renderMissionDots();
-  updateMissionBar();
-  // check all done
-  if(l3MissionsDone.size>=L3_MISSIONS.length){
-    setTimeout(()=>{
-      progress.l3=true;saveProgress();
-      if(l3AnimFrame) cancelAnimationFrame(l3AnimFrame);
-      showSuccess('🌡️','Состояния вещества!',
-        'Одна и та же вода — лёд, жидкость и пар. Всё зависит только от температуры! Это фазовые переходы.',
-        ()=>showScreen('levelSelect'));
-    },1000);
+function placeCard(cardIdx, slotIdx) {
+  if (l2.running) return;
+  // Correct card for this slot = cardIdx same as slotIdx (steps are in order 0-4)
+  var correct = slotIdx; // step[0] in slot[0], step[1] in slot[1] etc.
+
+  if (cardIdx !== correct) {
+    var slotEl = document.getElementById('slot-' + slotIdx);
+    slotEl.classList.add('wrong');
+    setTimeout(function() { slotEl.classList.remove('wrong'); }, 500);
+    setBadge('l2-badge', '🤔 Не то — попробуй другой шаг!');
+    return;
+  }
+
+  // If slot already filled, free it
+  if (l2.slots[slotIdx] !== null) l2.slots[slotIdx] = null;
+  l2.slots[slotIdx] = cardIdx;
+  renderSlots();
+  renderPool();
+
+  var filled = l2.slots.filter(function(s) { return s !== null; }).length;
+  if (filled === 5) {
+    document.getElementById('run-btn').disabled = false;
+    setBadge('l2-badge', '🚀 Все шаги на месте — запускай реакцию!');
+  } else {
+    setBadge('l2-badge', '✅ ' + filled + '/5 шагов расставлено!');
   }
 }
 
-/* ══════════════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════════════ */
+function returnToPool(slotIdx) {
+  l2.slots[slotIdx] = null;
+  renderSlots();
+  renderPool();
+  document.getElementById('run-btn').disabled = true;
+  setBadge('l2-badge', '🔗 Расставь все 5 карточек!');
+}
+
+function runChain() {
+  if (l2.running) return;
+  l2.running = true;
+  document.getElementById('run-btn').disabled = true;
+
+  var sc = scenarios[l2.scenario];
+  var step = 0;
+
+  function nextStep() {
+    if (step >= 5) {
+      var mid = document.getElementById('chain-slots').getBoundingClientRect();
+      burst(mid.left + mid.width / 2, mid.top + 40, ['🎉','⭐','✨','💥','🌟','🎊','🔬','💡']);
+      saveProgress('level2');
+      updateLevelSelect();
+      l2.running = false;
+      setTimeout(function() { showSuccess('⚗️', 'Реакция прошла!', sc.fact); }, 500);
+      return;
+    }
+    var slotEl = document.getElementById('slot-' + step);
+    slotEl.classList.add('playing');
+    var content = slotEl.querySelector('.chain-slot-content');
+    if (content) {
+      content.style.transition = 'transform 0.3s';
+      content.style.transform = 'scale(1.35)';
+      setTimeout(function() { content.style.transform = 'scale(1)'; }, 350);
+    }
+    if (step < 4) {
+      setTimeout(function() {
+        var arrow = document.getElementById('arrow-' + step);
+        if (arrow) { arrow.classList.add('lit'); }
+        step++;
+        setTimeout(nextStep, 350);
+      }, 550);
+    } else {
+      step++;
+      setTimeout(nextStep, 600);
+    }
+  }
+  nextStep();
+}
+
+// ================================
+// ===== LEVEL 3 — PHOTOSYNTHESIS =
+// ================================
+var missions3 = [
+  { id: 'grow',    check: function(g,l,w,c) { return g > 0.5; },   emoji: '🌿', title: 'Вырасти растение' },
+  { id: 'bloom',   check: function(g,l,w,c) { return g > 0.85; },  emoji: '🌸', title: 'Заставь зацвести' },
+  { id: 'nolight', check: function(g,l,w,c) { return l < 10; },    emoji: '🌑', title: 'Что без света?' },
+  { id: 'nowater', check: function(g,l,w,c) { return w < 10; },    emoji: '🏜️', title: 'Что без воды?' },
+  { id: 'perfect', check: function(g,l,w,c) { return g > 0.95; },  emoji: '🏆', title: 'Идеальный баланс' },
+];
+
+var l3 = { light: 50, water: 50, co2: 50, done: {}, bubbles: [], raf: null, growth: 0 };
+
+function initLevel3() {
+  l3 = { light: 50, water: 50, co2: 50, done: {}, bubbles: [], raf: null, growth: 0 };
+  if (l3.raf) cancelAnimationFrame(l3.raf);
+
+  ['light','water','co2'].forEach(function(k) {
+    var sl = document.getElementById('sl-' + k);
+    var sv = document.getElementById('sv-' + k);
+    sl.value = 50; sv.textContent = '50%';
+    sl.oninput = function() {
+      l3[k] = parseInt(sl.value);
+      sv.textContent = l3[k] + '%';
+      updatePlant();
+    };
+  });
+
+  renderMissions3();
+  updatePlant();
+  startBubbleLoop();
+}
+
+function calcGrowth(light, water, co2) {
+  var ls = light  >= 60 && light  <= 80 ? 1 : light  < 60 ? light / 60  : (100 - light) / 20;
+  var ws = water  >= 50 && water  <= 70 ? 1 : water  < 50 ? water / 50  : (100 - water) / 30;
+  var cs = co2    >= 40 && co2    <= 60 ? 1 : co2    < 40 ? co2   / 40  : (100 - co2)   / 40;
+  ls = Math.max(0, Math.min(1, ls));
+  ws = Math.max(0, Math.min(1, ws));
+  cs = Math.max(0, Math.min(1, cs));
+  return ls * ws * cs; // limiting factor law
+}
+
+function updatePlant() {
+  var g = calcGrowth(l3.light, l3.water, l3.co2);
+  l3.growth = g;
+  var pct = Math.round(g * 100);
+  var fill = document.getElementById('photo-fill');
+  fill.style.width = pct + '%';
+  fill.style.background = g > 0.7 ? 'var(--mint)' : g > 0.35 ? '#FFE141' : '#FF5038';
+  document.getElementById('photo-pct').textContent = pct + '%';
+  drawPlant();
+  checkMissions3();
+}
+
+function drawPlant() {
+  var canvas = document.getElementById('plantCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var g = l3.growth, light = l3.light, water = l3.water;
+  ctx.clearRect(0, 0, W, H);
+
+  var cx = W / 2, groundY = H - 18;
+  var stemH = Math.max(15, g * 135);
+
+  // Sky
+  var grd = ctx.createLinearGradient(0, 0, 0, H * 0.7);
+  grd.addColorStop(0, 'rgba(173,216,255,' + (light / 180) + ')');
+  grd.addColorStop(1, 'rgba(255,253,247,0)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, W, H);
+
+  // Sun
+  if (light > 8) {
+    var sunR = 16 + (light / 100) * 10;
+    ctx.fillStyle = 'rgba(255,210,30,' + (0.3 + light / 140) + ')';
+    ctx.beginPath();
+    ctx.arc(W - 38, 34, sunR, 0, Math.PI * 2);
+    ctx.fill();
+    if (light > 88) {
+      ctx.font = '16px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🔥', W - 38, 34 + sunR + 14);
+    }
+  }
+
+  // Ground
+  var groundColor = water < 12 ? 'rgba(200,165,110,.45)' : water > 85 ? 'rgba(80,50,20,.35)' : 'rgba(110,72,24,.22)';
+  ctx.fillStyle = groundColor;
+  ctx.beginPath();
+  ctx.ellipse(cx, groundY + 5, 58, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Roots
+  ctx.strokeStyle = water > 80 ? 'rgba(100,50,15,.6)' : 'rgba(130,80,30,.45)';
+  ctx.lineWidth = 2;
+  [[-18, 16], [0, 22], [18, 16]].forEach(function(pt) {
+    ctx.beginPath();
+    ctx.moveTo(cx, groundY);
+    ctx.quadraticCurveTo(cx + pt[0] * 0.4, groundY + pt[1] * 0.5, cx + pt[0], groundY + pt[1]);
+    ctx.stroke();
+  });
+  if (water > 85) {
+    ctx.font = '13px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('💀', cx - 38, groundY + 20);
+  }
+
+  // Stem
+  var wilt = g < 0.2;
+  var stemHue = 110 + (g > 0.5 ? 15 : 0);
+  var stemSat = 45 + g * 30;
+  var stemLit = 25 + g * 18;
+  ctx.strokeStyle = g < 0.15 ? '#aaa87a' : 'hsl(' + stemHue + ',' + stemSat + '%,' + stemLit + '%)';
+  ctx.lineWidth = 4 + g * 5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx, groundY);
+  if (wilt) {
+    ctx.bezierCurveTo(cx + 10, groundY - stemH * 0.3, cx + 35, groundY - stemH * 0.7, cx + 32, groundY - stemH);
+  } else {
+    ctx.lineTo(cx, groundY - stemH);
+  }
+  ctx.stroke();
+
+  var tipX = wilt ? cx + 32 : cx;
+  var tipY = groundY - stemH;
+
+  // Leaves
+  if (g > 0.12) {
+    var leafH = 110 + g * 20;
+    var leafSat = 40 + g * 35;
+    ctx.fillStyle = light > 85 ? 'hsl(65,' + leafSat + '%,' + (30 + g*10) + '%)' :
+                    'hsl(' + leafH + ',' + leafSat + '%,' + (28 + g*14) + '%)';
+    var ls = Math.max(5, g * 28);
+    [[1, 0.28], [-1, 0.52], [1, 0.68]].forEach(function(pair) {
+      var side = pair[0], pos = pair[1];
+      var lx = wilt ? cx + 32 * pos : cx;
+      var ly = groundY - stemH * pos;
+      ctx.beginPath();
+      ctx.ellipse(lx + side * ls, ly, ls, ls * 0.48, side * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  // Flower
+  if (g > 0.85) {
+    ctx.font = (14 + g * 10) + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🌸', tipX, tipY - 10);
+  }
+
+  // O2 bubbles
+  l3.bubbles.forEach(function(b) {
+    ctx.globalAlpha = b.opacity;
+    ctx.fillStyle = 'rgba(0,194,124,1)';
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold ' + (7 + b.r) + 'px Space Grotesk, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('O₂', b.x, b.y + 4);
+    ctx.globalAlpha = 1;
+  });
+
+  ctx.textAlign = 'left';
+}
+
+var _lastBubbleTime = 0;
+
+function startBubbleLoop() {
+  function loop(ts) {
+    var g = l3.growth;
+    var interval = 1400 - g * 900;
+    if (g > 0.5 && ts - _lastBubbleTime > interval) {
+      var canvas = document.getElementById('plantCanvas');
+      l3.bubbles.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 45,
+        y: 95 + Math.random() * 55,
+        r: 4 + Math.random() * 4,
+        opacity: 0.85,
+        vy: -(0.5 + Math.random() * 0.6),
+      });
+      _lastBubbleTime = ts;
+    }
+    l3.bubbles = l3.bubbles.filter(function(b) { return b.opacity > 0.04; });
+    l3.bubbles.forEach(function(b) { b.y += b.vy; b.opacity -= 0.009; });
+    if (l3.bubbles.length > 0 || g > 0.5) drawPlant();
+    l3.raf = requestAnimationFrame(loop);
+  }
+  l3.raf = requestAnimationFrame(loop);
+}
+
+function renderMissions3() {
+  var grid = document.getElementById('missions-grid');
+  grid.innerHTML = '';
+  missions3.forEach(function(m) {
+    var chip = document.createElement('div');
+    chip.className = 'mission-chip' + (l3.done[m.id] ? ' done' : '');
+    chip.id = 'mchip-' + m.id;
+    chip.innerHTML = '<span class="m-icon">' + (l3.done[m.id] ? '✅' : m.emoji) + '</span><span>' + m.title + '</span>';
+    grid.appendChild(chip);
+  });
+}
+
+function checkMissions3() {
+  var g = l3.growth, light = l3.light, water = l3.water, co2 = l3.co2;
+  missions3.forEach(function(m) {
+    if (l3.done[m.id]) return;
+    if (m.check(g, light, water, co2)) {
+      l3.done[m.id] = true;
+      renderMissions3();
+
+      var facts = {
+        grow:    '🌿 Растение растёт! Ему нужны свет, вода и CO₂ одновременно.',
+        bloom:   '🌸 Цветение! Только при идеальных условиях растение тратит энергию на цветок.',
+        nolight: '🌑 Без света фотосинтез невозможен — растение не может делать еду из темноты!',
+        nowater: '🏜️ Без воды растение вянет — вода переносит питательные вещества по стеблю.',
+        perfect: '🏆 Закон Либиха: рост ограничивает самый дефицитный ресурс. Идеальный баланс найден!',
+      };
+
+      setBadge('l3-badge', m.emoji + ' Задание "' + m.title + '" выполнено!');
+
+      var canvas = document.getElementById('plantCanvas');
+      var rect = canvas.getBoundingClientRect();
+      burst(rect.left + rect.width / 2, rect.top + 60, ['🌿','✨','💚','🌱','⭐','🔬']);
+
+      var doneCount = Object.keys(l3.done).length;
+      if (doneCount === missions3.length) {
+        saveProgress('level3');
+        updateLevelSelect();
+        setTimeout(function() {
+          showSuccess('🏆', 'Фотосинтез освоен!',
+            'Фотосинтез — процесс без которого жизнь на Земле невозможна. Растения превращают свет в еду и дают нам кислород!');
+        }, 800);
+      } else {
+        setTimeout(function() { setBadge('l3-badge', facts[m.id]); }, 1800);
+      }
+    }
+  });
+}
+
+// ===== BOOT =====
 updateLevelSelect();
 </script>
 </body>
