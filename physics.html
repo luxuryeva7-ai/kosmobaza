@@ -3,212 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Физ Лаб · КосмоБаза</title>
+<title>КвантУм · Физ Лаб · КосмоБаза</title>
 <link href="https://fonts.bunny.net/css?family=space-grotesk:400,600,700,800" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0a0a18;--card:#14142a;--purple:#7B2FFF;--yellow:#FFE141;
-  --coral:#FF5038;--mint:#00C27C;--blue:#3B82F6;--muted:rgba(255,255,255,.5);
+  --bg:#FFFDF7;--card:#fff;--blue:#3B82F6;--yellow:#FFE141;
+  --coral:#FF5038;--mint:#00C27C;--purple:#7B2FFF;--text:#1a1a2e;
+  --muted:rgba(26,26,46,.45);--border:rgba(0,0,0,.07);--surface:#EEF4FF;
 }
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden;user-select:none}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;user-select:none}
 
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
 
-/* ── INTRO ── */
+/* ANIMATIONS */
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}80%{transform:scale(.97)}100%{transform:scale(1) rotate(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
+@keyframes starPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.5);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes sciIn{0%{transform:scale(0) translateY(20px);opacity:0}60%{transform:scale(1.2) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(255,225,65,.4)}50%{box-shadow:0 0 28px rgba(255,225,65,.9)}}
+
+.bounce-in{animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1) forwards}
+
+/* INTRO */
 #intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(123,47,255,.35) 0%,transparent 65%),var(--bg)}
-.intro-emoji{font-size:88px;margin-bottom:24px;display:block;animation:bob 3s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+  background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,.12) 0%,transparent 65%),var(--bg)}
+.intro-emoji{font-size:96px;margin-bottom:20px;display:block;animation:bob 3s ease-in-out infinite}
 .intro-tag{display:inline-block;background:var(--yellow);color:#111;font-size:11px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:18px}
-.intro-h{font-size:clamp(38px,9vw,72px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:14px}
-.intro-h em{color:var(--purple);font-style:normal}
-.intro-sub{font-size:17px;color:var(--muted);max-width:360px;line-height:1.65;margin-bottom:40px}
+  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:16px;
+  box-shadow:0 4px 16px rgba(255,225,65,.4)}
+.intro-h{font-size:clamp(34px,9vw,64px);font-weight:800;letter-spacing:-2px;line-height:.95;margin-bottom:12px}
+.intro-h em{color:var(--blue);font-style:normal}
+.intro-sub{font-size:16px;color:var(--muted);max-width:340px;line-height:1.6;margin-bottom:36px}
 
-/* ── LEVEL SELECT ── */
+/* LEVEL SELECT */
 #levelSelect{align-items:center;justify-content:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 10%,rgba(123,47,255,.18) 0%,transparent 60%),var(--bg)}
-.ls-h{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
-.ls-sub{color:var(--muted);font-size:15px;margin-bottom:32px}
-.levels-list{display:flex;flex-direction:column;gap:14px;width:100%;max-width:440px}
-.lvl-card{background:var(--card);border-radius:22px;padding:20px 24px;display:flex;align-items:center;
-  gap:18px;cursor:pointer;border:2px solid transparent;transition:all .22s;position:relative;overflow:hidden}
-.lvl-card:hover:not(.locked){border-color:var(--purple);transform:translateX(5px)}
-.lvl-card.locked{opacity:.45;cursor:not-allowed}
-.lvl-card.done{border-color:var(--mint)}
-.lc-ico{font-size:44px;flex-shrink:0}
+  background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,.08) 0%,transparent 60%),var(--bg)}
+.ls-h{font-size:26px;font-weight:800;letter-spacing:-.8px;margin-bottom:4px}
+.ls-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
+.levels-list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px}
+.lvl-card{background:var(--card);border-radius:22px;padding:18px 22px;display:flex;align-items:center;
+  gap:16px;cursor:pointer;border:2px solid transparent;
+  box-shadow:0 4px 20px rgba(0,0,0,.07);
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);position:relative}
+.lvl-card:hover:not(.locked){border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 36px rgba(59,130,246,.15)}
+.lvl-card.locked{opacity:.4;cursor:not-allowed}
+.lvl-card.done{border-color:var(--mint);box-shadow:0 4px 20px rgba(0,194,124,.15)}
+.lc-ico{font-size:40px;flex-shrink:0}
 .lc-info{flex:1}
-.lc-num{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
-.lc-name{font-size:19px;font-weight:800;letter-spacing:-.4px}
-.lc-desc{font-size:13px;color:var(--muted);margin-top:3px}
-.lc-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:22px}
+.lc-num{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.lc-name{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.lc-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.lc-badge{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px}
 
-/* ── GAME HEADER ── */
-.g-hdr{display:flex;align-items:center;gap:14px;padding:14px 20px;
-  border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
-.back-btn{background:rgba(255,255,255,.08);border:none;color:#fff;width:38px;height:38px;
-  border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s}
-.back-btn:hover{background:rgba(255,255,255,.16)}
-.g-title{font-size:17px;font-weight:800;letter-spacing:-.3px}
-.g-progress{margin-left:auto;display:flex;align-items:center;gap:10px}
-.g-step{font-size:13px;font-weight:700;color:var(--muted)}
-.prog-track{width:90px;height:7px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),#B45FFF);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+/* GAME HEADER */
+.g-hdr{display:flex;align-items:center;gap:12px;padding:12px 18px;
+  border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card);
+  box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.back-btn{background:var(--surface);border:none;color:var(--text);width:36px;height:36px;
+  border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .18s}
+.back-btn:hover{background:#d0e0ff}
+.g-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
+.g-progress{margin-left:auto;display:flex;align-items:center;gap:6px}
+.star-dot{font-size:18px;opacity:.2;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
+.star-dot.lit{opacity:1;animation:starPop .5s cubic-bezier(.34,1.56,.64,1)}
 
-.task-box{background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.35);border-radius:16px;
-  padding:13px 18px;margin:16px 20px;font-size:15px;font-weight:600;text-align:center;flex-shrink:0;line-height:1.5}
-.task-box strong{color:var(--yellow)}
+/* BUTTONS */
+.btn{border:none;border-radius:16px;font-family:'Space Grotesk',sans-serif;
+  font-weight:800;font-size:17px;cursor:pointer;padding:16px 36px;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);letter-spacing:-.3px}
+.btn:active{transform:scale(.97)}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 6px 24px rgba(59,130,246,.4)}
+.btn-yellow{background:var(--yellow);color:#111;box-shadow:0 6px 24px rgba(255,225,65,.4)}
+.btn-mint{background:var(--mint);color:#fff;box-shadow:0 6px 24px rgba(0,194,124,.35)}
 
-.btn{padding:15px 38px;border-radius:40px;font-family:'Space Grotesk',sans-serif;font-size:16px;
-  font-weight:800;cursor:pointer;border:none;transition:all .2s;letter-spacing:-.2px}
-.btn-yellow{background:var(--yellow);color:#111}
-.btn-yellow:hover{background:#FFD60A;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,225,65,.3)}
-.btn-ghost{background:rgba(255,255,255,.09);color:#fff}
-.btn-ghost:hover{background:rgba(255,255,255,.16)}
+/* CANVAS WRAPPER */
+.canvas-wrap{flex:1;position:relative;overflow:hidden}
+.canvas-wrap canvas{display:block;width:100%;height:100%}
+.hint-bar{text-align:center;font-size:13px;color:var(--muted);padding:6px 16px;flex-shrink:0;
+  background:var(--bg);border-bottom:1px solid var(--border)}
 
-/* ── SUCCESS OVERLAY ── */
-.success-ov{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .3s}
-.success-ov.show{opacity:1;pointer-events:all}
-.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px)}
-.ov-card{position:relative;background:var(--card);border-radius:28px;padding:36px 44px;text-align:center;
-  max-width:360px;width:90%;border:2px solid var(--mint);transform:scale(.9);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.success-ov.show .ov-card{transform:scale(1)}
-.ov-emoji{font-size:64px;margin-bottom:14px;display:block}
-.ov-h{font-size:26px;font-weight:800;color:var(--mint);margin-bottom:8px}
-.ov-fact{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px}
+/* ELECTRO LEVEL */
+#level2 .game-area{flex:1;position:relative;overflow:hidden;background:var(--surface)}
+.el-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.components-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2}
+.comp-card{position:absolute;background:#fff;border-radius:16px;padding:10px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);border:2px solid transparent;
+  transition:border-color .3s,box-shadow .3s,transform .2s;min-width:68px}
+.comp-card.powered{border-color:var(--yellow);box-shadow:0 0 24px rgba(255,225,65,.6),0 4px 20px rgba(0,0,0,.1);animation:glow 1.2s ease-in-out infinite}
+.comp-emoji{font-size:30px;line-height:1}
+.comp-name{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.terminal{position:absolute;width:16px;height:16px;border-radius:50%;background:#888;
+  border:2.5px solid #fff;cursor:crosshair;box-shadow:0 1px 6px rgba(0,0,0,.25);
+  transition:background .2s,transform .2s;z-index:3}
+.terminal:hover{background:var(--blue);transform:scale(1.35)}
+.terminal.active{background:var(--blue);transform:scale(1.25)}
+.el-task-badge{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  border-radius:14px;padding:8px 18px;font-size:13px;font-weight:700;
+  color:var(--text);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:4}
 
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}60%{transform:translateX(10px)}}
-.shake{animation:shake .35s ease}
+/* SUCCESS OVERLAY */
+.success-ov{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center}
+.success-ov.visible{display:flex}
+.ov-bg{position:absolute;inset:0;background:rgba(26,26,46,.55);backdrop-filter:blur(6px)}
+.ov-card{position:relative;background:#fff;border-radius:28px;padding:36px 32px;text-align:center;
+  max-width:340px;width:calc(100% - 40px);border:3px solid var(--mint);
+  box-shadow:0 20px 80px rgba(0,0,0,.2);animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1)}
+.ov-scientist{font-size:52px;display:block;margin-bottom:6px;animation:sciIn .6s .1s both}
+.ov-emoji{font-size:36px;display:block;margin-bottom:8px}
+.ov-h{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
+.ov-fact{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:20px}
 
-.ptcl{position:fixed;pointer-events:none;z-index:300;font-size:22px;
-  animation:ptclFly 1.2s ease-out forwards}
-@keyframes ptclFly{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
-  100%{opacity:0;transform:translateY(-120px) scale(.3) rotate(60deg)}}
-
-/* ════════════════════════════════
-   LEVEL 1 — ПУШКА НЬЮТОНА
-════════════════════════════════ */
-#level1{padding:0}
-.cannon-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:14px;overflow:hidden}
-
-#cannonCanvas{width:100%;height:250px;border-radius:20px;background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);display:block;touch-action:none}
-
-.controls-row{display:flex;gap:16px;width:100%;max-width:440px}
-.ctrl-group{flex:1;display:flex;flex-direction:column;gap:6px}
-.ctrl-label{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
-.ctrl-value{font-size:22px;font-weight:800;color:var(--yellow);letter-spacing:-.5px}
-
-input[type=range]{
-  width:100%;height:10px;border-radius:5px;appearance:none;cursor:pointer;
-  background:linear-gradient(to right,#3B82F6,#7B2FFF,#FF5038);outline:none}
-input[type=range]::-webkit-slider-thumb{
-  appearance:none;width:28px;height:28px;border-radius:50%;
-  background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.4);cursor:grab;
-  border:3px solid var(--purple)}
-
-.hint-box{width:100%;max-width:440px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);
-  border-radius:14px;padding:11px 16px;font-size:13px;color:rgba(255,255,255,.7);text-align:center;line-height:1.5}
-.hint-box b{color:var(--blue)}
-
-/* ════════════════════════════════
-   LEVEL 2 — ЭЛЕКТРОЛАБ
-════════════════════════════════ */
-#level2{padding:0}
-.circuit-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 20px;gap:14px;overflow:hidden}
-
-#circuitGrid{display:grid;gap:3px;width:100%;max-width:380px;border-radius:18px;
-  background:rgba(255,255,255,.03);padding:12px;border:1px solid rgba(255,255,255,.06)}
-
-.cell{
-  width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;
-  font-size:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.cell:hover{border-color:rgba(123,47,255,.5);background:rgba(123,47,255,.1)}
-.cell.has-comp{border-color:rgba(123,47,255,.4);background:rgba(123,47,255,.08)}
-.cell.powered{border-color:var(--yellow)!important;background:rgba(255,225,65,.1)!important}
-.cell.has-comp.powered .comp-label{filter:drop-shadow(0 0 8px var(--yellow))}
-
-.comp-shelf{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;max-width:380px}
-.comp-item{
-  display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
-  background:var(--card);border-radius:14px;padding:10px 14px;border:2px solid transparent;
-  transition:all .2s;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.comp-item:hover{border-color:var(--purple);color:#fff}
-.comp-item.selected{border-color:var(--yellow);background:rgba(255,225,65,.08);color:var(--yellow)}
-.comp-item.depleted{opacity:.35;cursor:not-allowed}
-.comp-emoji{font-size:28px}
-
-.circuit-hint{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;
-  background:rgba(255,255,255,.04);border-radius:12px;padding:10px 14px;width:100%;max-width:380px}
-
-/* ════════════════════════════════
-   LEVEL 3 — ЛАЗЕРНАЯ ЛАБОРАТОРИЯ
-════════════════════════════════ */
-#level3{padding:0}
-.laser-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 20px;gap:14px;overflow:hidden}
-
-#laserCanvas{display:block;border-radius:20px;background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);touch-action:none;max-width:100%}
-
-.mirror-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;width:100%;max-width:380px}
-.ml-item{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted)}
-.ml-dot{width:28px;height:28px;border-radius:8px;background:rgba(123,47,255,.3);
-  display:flex;align-items:center;justify-content:center;font-size:16px}
-
-.laser-hint{font-size:13px;color:var(--muted);text-align:center;padding:10px 16px;
-  background:rgba(255,80,56,.08);border:1px solid rgba(255,80,56,.2);border-radius:12px;
-  width:100%;max-width:380px;line-height:1.5}
-
-/* ── COMPLETE ── */
+/* COMPLETE */
 #complete{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 20%,rgba(0,194,124,.25) 0%,transparent 65%),var(--bg)}
-.cpl-stars{font-size:64px;margin-bottom:16px;display:block;animation:starSpin 3s ease-in-out infinite}
-@keyframes starSpin{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.08)}}
-.cpl-h{font-size:clamp(32px,8vw,60px);font-weight:800;letter-spacing:-2px;margin-bottom:12px}
-.cpl-h em{color:var(--mint);font-style:normal}
-.cpl-sub{font-size:16px;color:var(--muted);max-width:340px;line-height:1.7;margin-bottom:36px}
-.cpl-badges{display:flex;gap:14px;justify-content:center;margin-bottom:36px;flex-wrap:wrap}
-.badge{background:var(--card);border-radius:18px;padding:14px 20px;font-size:14px;font-weight:800;
-  border:2px solid;display:flex;flex-direction:column;gap:4px;align-items:center}
-.badge-ico{font-size:32px}
+  background:radial-gradient(ellipse at 50% 30%,rgba(0,194,124,.12) 0%,transparent 65%),var(--bg)}
+.complete-emoji{font-size:96px;display:block;margin-bottom:16px;animation:bob 2.5s ease-in-out infinite}
+.complete-h{font-size:clamp(30px,8vw,52px);font-weight:800;letter-spacing:-1.5px;margin-bottom:10px}
+.complete-h em{color:var(--mint)}
+.complete-sub{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.6}
+.stars-final{font-size:30px;margin-bottom:24px;letter-spacing:4px}
+
+canvas{touch-action:none}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════ INTRO ═══════════════════════════ -->
+<!-- INTRO -->
 <div id="intro" class="screen active">
-  <span class="intro-emoji">⚡</span>
-  <span class="intro-tag">КосмоБаза · Физика</span>
-  <h1 class="intro-h">Законы<br><em>Вселенной</em></h1>
-  <p class="intro-sub">Запускай снаряды, собирай электрические цепи и отражай лазерный луч — изучай физику как настоящий учёный!</p>
-  <button class="btn btn-yellow" onclick="showScreen('levelSelect')">Начать →</button>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
+    <span class="intro-emoji">⚡</span>
+    <div class="intro-tag">КосмоБаза · Физика</div>
+    <h1 class="intro-h">Квант<em>Ум</em><br>Физ Лаб</h1>
+    <p class="intro-sub">Тяни, крути, соединяй — физика оживёт прямо в руках</p>
+    <button class="btn btn-blue" onclick="showScreen('levelSelect')">Начать →</button>
+  </div>
 </div>
 
-<!-- ═══════════════════════════ LEVEL SELECT ═══════════════════════════ -->
+<!-- LEVEL SELECT -->
 <div id="levelSelect" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(ellipse at 50% 10%,rgba(123,47,255,.18) 0%,transparent 60%),var(--bg)">
-    <p class="ls-h">Выбери уровень</p>
-    <p class="ls-sub">3 эксперимента, 3 открытия</p>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
+    <h2 class="ls-h">Выбери уровень</h2>
+    <p class="ls-sub">Открывай один за другим</p>
     <div class="levels-list">
       <div class="lvl-card" id="card1" onclick="startLevel(1)">
-        <span class="lc-ico">💣</span>
+        <span class="lc-ico">🪃</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 1</div>
-          <div class="lc-name">Пушка Ньютона</div>
-          <div class="lc-desc">Баллистика и гравитация</div>
+          <div class="lc-name">Рогатка Ньютона</div>
+          <div class="lc-desc">Тяни — лети — попадай по мишеням</div>
         </div>
         <span class="lc-badge" id="badge1">▶</span>
       </div>
       <div class="lvl-card locked" id="card2" onclick="startLevel(2)">
-        <span class="lc-ico">🔋</span>
+        <span class="lc-ico">🔌</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 2</div>
-          <div class="lc-name">Электролаб</div>
-          <div class="lc-desc">Электрические цепи и ток</div>
+          <div class="lc-name">ЭлектроЛаб</div>
+          <div class="lc-desc">Тяни провода, зажигай лампочки</div>
         </div>
         <span class="lc-badge" id="badge2">🔒</span>
       </div>
@@ -216,8 +172,8 @@ input[type=range]::-webkit-slider-thumb{
         <span class="lc-ico">🔴</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 3</div>
-          <div class="lc-name">Лазерная лаборатория</div>
-          <div class="lc-desc">Отражение света</div>
+          <div class="lc-name">Лазер и Зеркала</div>
+          <div class="lc-desc">Поворачивай зеркала — направляй луч</div>
         </div>
         <span class="lc-badge" id="badge3">🔒</span>
       </div>
@@ -225,767 +181,977 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- ═══════════════════════════ LEVEL 1 — ПУШКА ═══════════════════════════ -->
+<!-- LEVEL 1 — SLINGSHOT -->
 <div id="level1" class="screen">
   <div class="g-hdr">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <span class="g-title">💣 Пушка Ньютона</span>
-    <div class="g-progress">
-      <span class="g-step" id="l1step">1 / 4</span>
-      <div class="prog-track"><div class="prog-fill" id="l1prog" style="width:0%"></div></div>
+    <button class="back-btn" onclick="goBack(1)">←</button>
+    <span class="g-title">🪃 Рогатка Ньютона</span>
+    <div class="g-progress" id="stars1">
+      <span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
     </div>
   </div>
-  <div class="task-box" id="l1task">Попади в <strong>звезду ⭐</strong> — выбери угол и силу</div>
-  <div class="cannon-arena">
-    <canvas id="cannonCanvas" height="250"></canvas>
-    <div class="controls-row">
-      <div class="ctrl-group">
-        <div class="ctrl-label">Угол</div>
-        <div class="ctrl-value" id="angleVal">45°</div>
-        <input type="range" id="angleSlider" min="10" max="80" value="45" oninput="updateAngle(this.value)">
-      </div>
-      <div class="ctrl-group">
-        <div class="ctrl-label">Сила</div>
-        <div class="ctrl-value" id="powerVal">5</div>
-        <input type="range" id="powerSlider" min="1" max="10" value="5" oninput="updatePower(this.value)">
-      </div>
-    </div>
-    <div class="hint-box" id="l1hint">💡 При угле <b>45°</b> снаряд летит дальше всего!</div>
-    <button class="btn btn-yellow" id="fireBtn" onclick="firecannon()">💥 Выстрелить!</button>
+  <div class="hint-bar">Тяни 🟠 назад и отпускай!</div>
+  <div class="canvas-wrap" id="wrap1">
+    <canvas id="c1"></canvas>
   </div>
 </div>
 
-<!-- ═══════════════════════════ LEVEL 2 — ЦЕПЬ ═══════════════════════════ -->
+<!-- LEVEL 2 — ELECTRO -->
 <div id="level2" class="screen">
   <div class="g-hdr">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <span class="g-title">🔋 Электролаб</span>
+    <button class="back-btn" onclick="goBack(2)">←</button>
+    <span class="g-title">🔌 ЭлектроЛаб</span>
     <div class="g-progress">
-      <span class="g-step" id="l2step">1 / 3</span>
-      <div class="prog-track"><div class="prog-fill" id="l2prog" style="width:0%"></div></div>
+      <span id="elStepInfo" style="font-size:12px;color:var(--muted);font-weight:700">Задание 1/3</span>
     </div>
   </div>
-  <div class="task-box" id="l2task">Задание: <strong>собери простую цепь — батарейка → провод → лампочка</strong></div>
-  <div class="circuit-arena">
-    <div class="comp-shelf" id="compShelf"></div>
-    <div id="circuitGrid"></div>
-    <div class="circuit-hint" id="circuitHint">Выбери компонент снизу, затем кликай на ячейки сетки. Создай замкнутую цепь!</div>
-    <button class="btn btn-yellow" id="checkCircuitBtn" onclick="checkCircuit()" style="margin-top:4px">🔌 Проверить цепь</button>
+  <div class="hint-bar">Тяни от клеммы ● к клемме ● другого компонента</div>
+  <div class="game-area" id="elArea">
+    <canvas class="el-canvas" id="c2"></canvas>
+    <div class="components-layer" id="compLayer"></div>
+    <div class="el-task-badge" id="elTask">Соедини батарею с лампочкой</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════ LEVEL 3 — ЛАЗЕР ═══════════════════════════ -->
+<!-- LEVEL 3 — LASER -->
 <div id="level3" class="screen">
   <div class="g-hdr">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <span class="g-title">🔴 Лазерная лаборатория</span>
+    <button class="back-btn" onclick="goBack(3)">←</button>
+    <span class="g-title">🔴 Лазер и Зеркала</span>
     <div class="g-progress">
-      <span class="g-step" id="l3step">1 / 4</span>
-      <div class="prog-track"><div class="prog-fill" id="l3prog" style="width:0%"></div></div>
+      <span id="laserStepInfo" style="font-size:12px;color:var(--muted);font-weight:700">Задача 1/3</span>
     </div>
   </div>
-  <div class="task-box" id="l3task">Кликай по зеркалам чтобы повернуть их — направь луч лазера в <strong>цель 🎯</strong></div>
-  <div class="laser-arena">
-    <canvas id="laserCanvas" width="340" height="260"></canvas>
-    <div class="mirror-legend">
-      <div class="ml-item"><div class="ml-dot">↗</div>Кликни зеркало — повернуть</div>
-    </div>
-    <div class="laser-hint" id="l3hint">🔴 Луч отражается: угол падения = угол отражения</div>
+  <div class="hint-bar">Тап по зеркалу = поворот на 45°</div>
+  <div class="canvas-wrap" id="wrap3">
+    <canvas id="c3"></canvas>
   </div>
 </div>
 
-<!-- ═══════════════════════════ COMPLETE ═══════════════════════════ -->
+<!-- COMPLETE -->
 <div id="complete" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(ellipse at 50% 20%,rgba(0,194,124,.25) 0%,transparent 65%),var(--bg);text-align:center">
-    <span class="cpl-stars">🏆</span>
-    <h2 class="cpl-h">Физик<br><em>года!</em></h2>
-    <p class="cpl-sub">Ты освоил баллистику, электрические цепи и оптику. Теперь ты знаешь три фундаментальных закона природы!</p>
-    <div class="cpl-badges">
-      <div class="badge" style="border-color:var(--coral)"><span class="badge-ico">💣</span>Баллистика</div>
-      <div class="badge" style="border-color:var(--yellow)"><span class="badge-ico">⚡</span>Электрик</div>
-      <div class="badge" style="border-color:var(--purple)"><span class="badge-ico">🔴</span>Оптик</div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
+    <span class="complete-emoji">🎓</span>
+    <h2 class="complete-h">Ты <em>физик!</em> 🎉</h2>
+    <p class="complete-sub">Рогатки, электричество, лазеры —<br>всё подчиняется твоим рукам!</p>
+    <div class="stars-final">⭐⭐⭐⭐⭐</div>
+    <button class="btn btn-blue" onclick="resetAll()">Пройти ещё раз ↩</button>
+    <div style="margin-top:20px">
+      <a href="index.html" style="font-size:14px;color:var(--muted);text-decoration:none;font-weight:600">← КосмоБаза</a>
     </div>
-    <button class="btn btn-yellow" onclick="showScreen('levelSelect')">Играть снова</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════ SUCCESS OVERLAY ═══════════════════════════ -->
+<!-- SUCCESS OVERLAY -->
 <div class="success-ov" id="successOv">
-  <div class="ov-bg"></div>
+  <div class="ov-bg" onclick="closeSuccess()"></div>
   <div class="ov-card">
-    <span class="ov-emoji" id="ovEmoji">🎉</span>
-    <div class="ov-h" id="ovH">Отлично!</div>
+    <span class="ov-scientist">🧑‍🔬</span>
+    <span class="ov-emoji" id="ovEmoji"></span>
+    <h2 class="ov-h" id="ovTitle"></h2>
     <p class="ov-fact" id="ovFact"></p>
-    <button class="btn btn-yellow" id="ovBtn" onclick="nextStep()">Дальше →</button>
+    <button class="btn btn-yellow" id="ovBtn" onclick="closeSuccess()">Продолжить →</button>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  GLOBAL STATE
-// ═══════════════════════════════════════════════════════════
-const progress = {lvl1:false, lvl2:false, lvl3:false};
-let currentLevel = 0;
-let ovCallback = null;
+/* ════════════════════════════════════
+   GLOBAL UTILS
+════════════════════════════════════ */
+let _successCb = null;
+let _currentScreen = 'intro';
+let _sl_raf = null;
+let _el_raf = null;
+let _ls_raf = null;
 
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+function showScreen(id) {
+  // Stop animation loops when leaving
+  if (_currentScreen === 'level1' && _sl_raf) { cancelAnimationFrame(_sl_raf); _sl_raf = null; }
+  if (_currentScreen === 'level2' && _el_raf) { cancelAnimationFrame(_el_raf); _el_raf = null; }
+  if (_currentScreen === 'level3' && _ls_raf) { cancelAnimationFrame(_ls_raf); _ls_raf = null; }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if(id==='levelSelect') updateLevelCards();
-  if(id==='level1') initCannon();
-  if(id==='level2') initCircuit();
-  if(id==='level3') initLaser();
+  _currentScreen = id;
+  if (id === 'level1') initSlingshot();
+  if (id === 'level2') initElectro();
+  if (id === 'level3') initLaser();
 }
 
-function updateLevelCards(){
-  const c2=document.getElementById('card2'), c3=document.getElementById('card3');
-  const b1=document.getElementById('badge1'), b2=document.getElementById('badge2'), b3=document.getElementById('badge3');
-  if(progress.lvl1){b1.textContent='✅';document.getElementById('card1').classList.add('done')}
-  if(progress.lvl1){c2.classList.remove('locked');b2.textContent='▶'}
-  if(progress.lvl2){b2.textContent='✅';document.getElementById('card2').classList.add('done')}
-  if(progress.lvl2){c3.classList.remove('locked');b3.textContent='▶'}
-  if(progress.lvl3){b3.textContent='✅';document.getElementById('card3').classList.add('done')}
+function goBack(lvl) {
+  showScreen('levelSelect');
 }
 
-function startLevel(n){
-  const card = document.getElementById('card'+n);
-  if(card.classList.contains('locked')) return;
-  currentLevel = n;
-  showScreen('level'+n);
+function startLevel(n) {
+  if (n === 2 && document.getElementById('card2').classList.contains('locked')) return;
+  if (n === 3 && document.getElementById('card3').classList.contains('locked')) return;
+  showScreen('level' + n);
 }
 
-function showSuccess(emoji, title, fact, cb){
-  document.getElementById('ovEmoji').textContent = emoji;
-  document.getElementById('ovH').textContent = title;
-  document.getElementById('ovFact').textContent = fact;
-  ovCallback = cb;
-  document.getElementById('successOv').classList.add('show');
-}
-
-function nextStep(){
-  document.getElementById('successOv').classList.remove('show');
-  if(ovCallback) { const cb=ovCallback; ovCallback=null; cb(); }
-}
-
-function spawnParticles(x, y){
-  const emojis = ['⭐','✨','💫','🌟','🎆'];
-  for(let i=0;i<8;i++){
+function burst(x, y, syms) {
+  syms.forEach((s, i) => {
     const p = document.createElement('div');
-    p.className='ptcl';
-    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-    p.style.left = (x + (Math.random()-0.5)*80)+'px';
-    p.style.top = (y + (Math.random()-0.5)*60)+'px';
-    p.style.animationDelay = (Math.random()*0.3)+'s';
+    const angle = (i / syms.length) * Math.PI * 2;
+    const dist = 50 + Math.random() * 60;
+    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:9999;transition:all .7s ease-out;`;
+    p.textContent = s;
     document.body.appendChild(p);
-    setTimeout(()=>p.remove(), 1500);
+    requestAnimationFrame(() => {
+      p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-50}px)`;
+      p.style.opacity = '0';
+    });
+    setTimeout(() => p.remove(), 800);
+  });
+}
+
+function showSuccess(emoji, title, fact, cb) {
+  document.getElementById('ovEmoji').textContent = emoji;
+  document.getElementById('ovTitle').textContent = title;
+  document.getElementById('ovFact').textContent = fact;
+  _successCb = cb || null;
+  document.getElementById('successOv').classList.add('visible');
+}
+function closeSuccess() {
+  document.getElementById('successOv').classList.remove('visible');
+  if (_successCb) { const f = _successCb; _successCb = null; f(); }
+}
+
+// Progress
+const progress = { lvl1: false, lvl2: false, lvl3: false };
+function saveProgress() {
+  try { localStorage.setItem('kosmobaza_physics', JSON.stringify(progress)); } catch(e) {}
+}
+function loadProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('kosmobaza_physics') || '{}');
+    if (d.lvl1) progress.lvl1 = true;
+    if (d.lvl2) progress.lvl2 = true;
+    if (d.lvl3) progress.lvl3 = true;
+  } catch(e) {}
+  applyProgress();
+}
+function applyProgress() {
+  if (progress.lvl1) {
+    document.getElementById('badge1').textContent = '✅';
+    document.getElementById('card1').classList.add('done');
+    document.getElementById('card2').classList.remove('locked');
+    document.getElementById('badge2').textContent = '▶';
+  }
+  if (progress.lvl2) {
+    document.getElementById('badge2').textContent = '✅';
+    document.getElementById('card2').classList.add('done');
+    document.getElementById('card3').classList.remove('locked');
+    document.getElementById('badge3').textContent = '▶';
+  }
+  if (progress.lvl3) {
+    document.getElementById('badge3').textContent = '✅';
+    document.getElementById('card3').classList.add('done');
   }
 }
-
-// ═══════════════════════════════════════════════════════════
-//  LEVEL 1 — CANNON (BALLISTICS)
-// ═══════════════════════════════════════════════════════════
-let cannonAngle = 45;
-let cannonPower = 5;
-let l1Step = 0;
-let animId = null;
-let cannonAnimating = false;
-
-const l1Missions = [
-  {tx:0.75, ty:0.35, label:'Попади в звезду ⭐ — она близко!'},
-  {tx:0.82, ty:0.55, label:'Цель переместилась — она ниже!'},
-  {tx:0.87, ty:0.2,  label:'Высоко и далеко — увеличь угол!'},
-  {tx:0.90, ty:0.45, label:'Последний выстрел — прицелься точнее!'},
-];
-
-const l1Facts = [
-  'При угле 45° снаряд летит дальше всего. Это доказал Галилей в 1638 году!',
-  'Гравитация тянет снаряд вниз с ускорением 9,8 м/с² — это ускорение свободного падения.',
-  'Вертикальная и горизонтальная составляющие скорости независимы друг от друга.',
-  'Ньютон объяснил, что Луна тоже "падает" на Землю — просто очень быстро летит вбок!',
-];
-
-function updateAngle(v){ cannonAngle=+v; document.getElementById('angleVal').textContent=v+'°'; drawCannon(); }
-function updatePower(v){ cannonPower=+v; document.getElementById('powerVal').textContent=v; drawCannon(); }
-
-function initCannon(){
-  l1Step = 0; cannonAnimating = false;
-  if(animId){ cancelAnimationFrame(animId); animId=null; }
-  updateL1UI();
-  drawCannon();
-  document.getElementById('l1hint').textContent = '💡 При угле 45° снаряд летит дальше всего!';
-  document.getElementById('angleSlider').value = 45; cannonAngle=45;
-  document.getElementById('powerSlider').value = 5; cannonPower=5;
-  document.getElementById('angleVal').textContent='45°';
-  document.getElementById('powerVal').textContent='5';
+function resetAll() {
+  progress.lvl1 = false; progress.lvl2 = false; progress.lvl3 = false;
+  saveProgress();
+  ['badge1','badge2','badge3'].forEach((id,i) => document.getElementById(id).textContent = i===0?'▶':'🔒');
+  document.getElementById('card1').classList.remove('done');
+  ['card2','card3'].forEach(id => {
+    document.getElementById(id).classList.remove('done');
+    document.getElementById(id).classList.add('locked');
+  });
+  document.querySelectorAll('.star-dot').forEach(s => s.classList.remove('lit'));
+  showScreen('levelSelect');
 }
 
-function updateL1UI(){
-  const m = l1Missions[l1Step];
-  document.getElementById('l1step').textContent = (l1Step+1)+' / 4';
-  document.getElementById('l1prog').style.width = (l1Step/4*100)+'%';
-  document.getElementById('l1task').innerHTML = 'Попади в <strong>звезду ⭐</strong> — '+m.label;
-}
+/* ════════════════════════════════════
+   LEVEL 1 — SLINGSHOT
+════════════════════════════════════ */
+function initSlingshot() {
+  const canvas = document.getElementById('c1');
+  const wrap = document.getElementById('wrap1');
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
 
-function getCanvasRect(){
-  const cv = document.getElementById('cannonCanvas');
-  return {w: cv.offsetWidth||cv.width, h: cv.offsetHeight||cv.height};
-}
+  const FORK = { x: W * 0.17, y: H * 0.60 };
+  const ARM = 28;
+  const BALL_REST = { x: FORK.x, y: FORK.y - 8 };
+  const BALL_R = 18;
+  const GRAVITY = 0.32;
+  const POWER = 0.14;
+  const MAX_PULL = 88;
 
-function drawCannon(projectile, trailPts, miss){
-  const cv = document.getElementById('cannonCanvas');
-  if(!cv) return;
-  const W = cv.clientWidth||cv.width;
-  const H = 250;
-  cv.width = W; cv.height = H;
-  const ctx = cv.getContext('2d');
+  const TARGET_DATA = [
+    { xf: 0.38, yf: 0.50, emoji: '🎯', color: '#FF5038' },
+    { xf: 0.52, yf: 0.36, emoji: '🎪', color: '#7B2FFF' },
+    { xf: 0.63, yf: 0.52, emoji: '🌟', color: '#FFB800' },
+    { xf: 0.76, yf: 0.38, emoji: '💎', color: '#3B82F6' },
+    { xf: 0.88, yf: 0.54, emoji: '🎁', color: '#00C27C' },
+  ];
 
-  // bg
-  ctx.fillStyle = '#0a0a18';
-  ctx.fillRect(0,0,W,H);
-
-  // ground
-  ctx.fillStyle = 'rgba(123,47,255,.15)';
-  ctx.fillRect(0, H-30, W, 30);
-  ctx.strokeStyle = 'rgba(123,47,255,.4)';
-  ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,H-30); ctx.lineTo(W,H-30); ctx.stroke();
-
-  // cannon base
-  const cx=38, cy=H-30;
-  ctx.save();
-  ctx.translate(cx, cy);
-  // wheel
-  ctx.fillStyle='#7B2FFF'; ctx.beginPath(); ctx.arc(0,0,16,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#5a1fd6'; ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2); ctx.fill();
-  // barrel
-  const rad = (-cannonAngle)*Math.PI/180;
-  ctx.rotate(rad);
-  ctx.fillStyle='#B45FFF';
-  ctx.beginPath(); ctx.roundRect(-6,-42,18,38,4); ctx.fill();
-  ctx.restore();
-
-  // target star
-  const mission = l1Missions[l1Step];
-  const tx = mission.tx * W;
-  const ty = (H-30) - mission.ty*(H-30);
-  ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  const glow = ctx.createRadialGradient(tx,ty,5,tx,ty,28);
-  glow.addColorStop(0,'rgba(255,225,65,.3)'); glow.addColorStop(1,'transparent');
-  ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(tx,ty,28,0,Math.PI*2); ctx.fill();
-  ctx.fillText('⭐',tx,ty);
-
-  // trail
-  if(trailPts && trailPts.length>1){
-    ctx.strokeStyle='rgba(255,225,65,.35)'; ctx.lineWidth=1.5;
-    ctx.setLineDash([4,6]);
-    ctx.beginPath(); ctx.moveTo(trailPts[0].x, trailPts[0].y);
-    for(let i=1;i<trailPts.length;i++) ctx.lineTo(trailPts[i].x, trailPts[i].y);
-    ctx.stroke(); ctx.setLineDash([]);
+  function makeTargets() {
+    return TARGET_DATA.map(t => ({
+      x: W * t.xf, y: H * t.yf, r: 26,
+      emoji: t.emoji, color: t.color, hit: false
+    }));
   }
 
-  // projectile
-  if(projectile){
-    const gp = ctx.createRadialGradient(projectile.x,projectile.y,2,projectile.x,projectile.y,10);
-    gp.addColorStop(0,'#FFE141'); gp.addColorStop(1,'rgba(255,80,56,.0)');
-    ctx.fillStyle=gp; ctx.beginPath(); ctx.arc(projectile.x,projectile.y,12,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(projectile.x,projectile.y,5,0,Math.PI*2); ctx.fill();
-  }
+  const starDots = document.querySelectorAll('#stars1 .star-dot');
+  starDots.forEach(s => s.classList.remove('lit'));
 
-  // miss marker
-  if(miss){
-    ctx.font='24px serif'; ctx.fillText('💨',miss.x-12,miss.y);
-  }
-}
+  let targets = makeTargets();
+  let hits = 0;
+  let ball = { x: BALL_REST.x, y: BALL_REST.y, vx: 0, vy: 0, flying: false, returning: false };
+  let drag = false;
+  let pullX = 0, pullY = 0;
+  let level1Done = false;
 
-function fireannon(){fireBtn_handler();}
-function fireBtn_handler(){
-  if(cannonAnimating) return;
-  cannonAnimating = true;
-  document.getElementById('fireBtn').disabled = true;
+  let clouds = [
+    { x: W * 0.20, y: H * 0.10, s: 1.0 },
+    { x: W * 0.58, y: H * 0.07, s: 0.80 },
+    { x: W * 0.82, y: H * 0.16, s: 0.90 },
+  ];
 
-  const cv = document.getElementById('cannonCanvas');
-  const W = cv.clientWidth||cv.width;
-  const H = 250;
+  function dist2(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
-  const mission = l1Missions[l1Step];
-  const tx = mission.tx * W;
-  const ty = (H-30) - mission.ty*(H-30);
-
-  const speed = cannonPower * 28;
-  const rad = cannonAngle * Math.PI / 180;
-  const vx = speed * Math.cos(rad);
-  const vy = -speed * Math.sin(rad);
-  const g = 0.45;
-
-  let px = 38, py = H-30;
-  let pvx = vx, pvy = vy;
-  let t = 0;
-  const trail = [];
-  let hit = false;
-
-  function step(){
-    if(!cannonAnimating){ cancelAnimationFrame(animId); return; }
-    py += pvy; pvy += g; px += pvx;
-    trail.push({x:px, y:py});
-    if(trail.length > 60) trail.shift();
-
-    const dist = Math.sqrt((px-tx)**2+(py-ty)**2);
-    if(dist < 30){
-      hit = true;
-      drawCannon({x:px,y:py}, trail, null);
-      spawnParticles(tx, ty+cv.getBoundingClientRect().top - window.scrollY);
-      cannonAnimating = false;
-      document.getElementById('fireBtn').disabled = false;
-      setTimeout(()=>{
-        l1Step++;
-        const fact = l1Facts[l1Step-1];
-        if(l1Step >= 4){
-          progress.lvl1 = true;
-          showSuccess('🎯','Уровень пройден!',fact, ()=>showScreen('levelSelect'));
-        } else {
-          showSuccess('💥','Попал!',fact,()=>{updateL1UI();drawCannon();});
-        }
-      },400);
-      return;
+  function predictPath(bx, by, vx, vy) {
+    const pts = [];
+    let x = bx, y = by, dvx = vx, dvy = vy;
+    for (let i = 0; i < 50; i++) {
+      x += dvx; y += dvy; dvy += GRAVITY;
+      pts.push({ x, y });
+      if (y > H + 20) break;
     }
-
-    if(py > H || px > W){
-      drawCannon(null, trail, {x:Math.min(px,W-20),y:Math.min(py,H-40)});
-      cannonAnimating = false;
-      document.getElementById('fireBtn').disabled = false;
-      const hintEl = document.getElementById('l1hint');
-      hintEl.classList.add('shake');
-      setTimeout(()=>hintEl.classList.remove('shake'),400);
-      const angle = cannonAngle;
-      if(angle < 30) hintEl.innerHTML='↑ Попробуй <b>увеличить угол</b> — снаряд полетит выше';
-      else if(angle > 65) hintEl.innerHTML='↓ Попробуй <b>уменьшить угол</b> — он слишком задирается';
-      else hintEl.innerHTML='⚡ Попробуй изменить <b>силу выстрела</b>';
-      return;
-    }
-
-    drawCannon({x:px,y:py}, trail, null);
-    animId = requestAnimationFrame(step);
-  }
-  animId = requestAnimationFrame(step);
-}
-
-function fireannon(){
-  if(cannonAnimating) return;
-  fireBtn_handler();
-}
-document.getElementById('fireBtn').addEventListener('click', function(e){
-  e.preventDefault();
-  fireBtn_handler();
-});
-
-// ═══════════════════════════════════════════════════════════
-//  LEVEL 2 — CIRCUIT
-// ═══════════════════════════════════════════════════════════
-const COLS=5, ROWS=4;
-let grid = [];
-let selectedComp = null;
-let l2Step = 0;
-
-const compDefs = {
-  battery:  {emoji:'🔋', label:'Батарейка', key:'battery'},
-  wire:     {emoji:'━', label:'Провод', key:'wire'},
-  corner:   {emoji:'┐', label:'Угол', key:'corner'},
-  bulb:     {emoji:'💡', label:'Лампочка', key:'bulb'},
-  switch:   {emoji:'⚙️', label:'Рубильник', key:'switch'},
-};
-
-const l2Missions = [
-  {
-    desc:'Создай простую цепь: <strong>батарейка → провод → лампочка</strong>',
-    solution: [[0,0,'battery'],[1,0,'wire'],[2,0,'wire'],[3,0,'wire'],[4,0,'bulb']],
-    fact:'Электрический ток течёт только по замкнутой цепи — как вода по трубе!',
-    availComps:{battery:1, wire:5, corner:3, bulb:1},
-  },
-  {
-    desc:'Добавь <strong>рубильник</strong> в цепь — лампочка должна включиться',
-    solution: [[0,1,'battery'],[1,1,'wire'],[2,1,'switch'],[3,1,'wire'],[4,1,'bulb']],
-    fact:'Выключатель размыкает цепь — прерывает путь тока. Именно так работает любой выключатель у тебя дома!',
-    availComps:{battery:1, wire:4, corner:2, bulb:1, switch:1},
-  },
-  {
-    desc:'Подключи <strong>две лампочки параллельно</strong> — каждая должна гореть',
-    solution: [
-      [0,1,'battery'],
-      [1,1,'wire'],[2,1,'wire'],[3,1,'bulb'],
-      [1,2,'wire'],[2,2,'wire'],[3,2,'bulb'],
-      [0,0,'corner'],[4,0,'corner'],[4,1,'wire'],[4,2,'wire'],
-    ],
-    fact:'При параллельном подключении каждая лампочка получает полное напряжение. Именно так устроена электропроводка в домах!',
-    availComps:{battery:1, wire:6, corner:4, bulb:2},
-  },
-];
-
-function initCircuit(){
-  l2Step = 0; selectedComp = null; grid=[];
-  for(let r=0;r<ROWS;r++){grid.push(new Array(COLS).fill(null));}
-  renderCircuit();
-  updateL2UI();
-}
-
-function updateL2UI(){
-  const m = l2Missions[l2Step];
-  document.getElementById('l2step').textContent=(l2Step+1)+' / 3';
-  document.getElementById('l2prog').style.width=(l2Step/3*100)+'%';
-  document.getElementById('l2task').innerHTML='Задание: <strong>'+m.desc+'</strong>';
-  // reset grid
-  for(let r=0;r<ROWS;r++) grid[r] = new Array(COLS).fill(null);
-  selectedComp = null;
-  renderCircuit();
-}
-
-function renderCircuit(){
-  const m = l2Missions[l2Step];
-  const shelf = document.getElementById('compShelf');
-  shelf.innerHTML='';
-  const counts={};
-  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) counts[grid[r][c]]=(counts[grid[r][c]]||0)+1;
-
-  for(const [key, avail] of Object.entries(m.availComps)){
-    const used = counts[key]||0;
-    const remaining = avail - used;
-    const d = compDefs[key];
-    const el = document.createElement('div');
-    el.className='comp-item'+(selectedComp===key?' selected':'')+(remaining<=0?' depleted':'');
-    el.innerHTML=`<span class="comp-emoji">${d.emoji}</span>${d.label} (${remaining})`;
-    if(remaining>0) el.onclick=()=>selectComp(key);
-    shelf.appendChild(el);
+    return pts;
   }
 
-  const gridEl = document.getElementById('circuitGrid');
-  gridEl.style.gridTemplateColumns='repeat('+COLS+',1fr)';
-  gridEl.innerHTML='';
-
-  // check powered (simplified: check if solution pattern exists)
-  const powered = checkCircuitSilent();
-
-  for(let r=0;r<ROWS;r++){
-    for(let c=0;c<COLS;c++){
-      const cell=document.createElement('div');
-      cell.className='cell';
-      const comp = grid[r][c];
-      if(comp){
-        cell.classList.add('has-comp');
-        if(powered) cell.classList.add('powered');
-        cell.innerHTML='<span class="comp-label" style="font-size:22px">'+compDefs[comp].emoji+'</span>';
-        cell.onclick=()=>{grid[r][c]=null; renderCircuit();}; // right-click to remove
-      } else {
-        cell.onclick=()=>placeComp(r,c);
-      }
-      gridEl.appendChild(cell);
-    }
-  }
-}
-
-function selectComp(key){ selectedComp=key; renderCircuit(); }
-
-function placeComp(r,c){
-  if(!selectedComp) return;
-  const m = l2Missions[l2Step];
-  const counts={};
-  for(let rr=0;rr<ROWS;rr++) for(let cc=0;cc<COLS;cc++) if(grid[rr][cc]) counts[grid[rr][cc]]=(counts[grid[rr][cc]]||0)+1;
-  const avail = m.availComps[selectedComp]||0;
-  const used = counts[selectedComp]||0;
-  if(used>=avail) return;
-  grid[r][c]=selectedComp;
-  renderCircuit();
-}
-
-function checkCircuitSilent(){
-  // Check if grid contains battery and bulb and some wires
-  const flat=[];
-  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) flat.push(grid[r][c]);
-  return flat.includes('battery') && flat.includes('bulb');
-}
-
-function checkCircuit(){
-  const flat=[];
-  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) flat.push(grid[r][c]);
-
-  if(!flat.includes('battery')){
-    document.getElementById('circuitHint').textContent='❌ Нет батарейки! Добавь источник питания.';
-    document.getElementById('circuitGrid').classList.add('shake');
-    setTimeout(()=>document.getElementById('circuitGrid').classList.remove('shake'),400);
-    return;
-  }
-  if(!flat.includes('bulb')){
-    document.getElementById('circuitHint').textContent='❌ Нет лампочки! Добавь потребитель.';
-    return;
-  }
-  const m=l2Missions[l2Step];
-  if(l2Step===1 && !flat.includes('switch')){
-    document.getElementById('circuitHint').textContent='❌ Добавь рубильник в цепь!';
-    return;
-  }
-  if(l2Step===2 && flat.filter(x=>x==='bulb').length < 2){
-    document.getElementById('circuitHint').textContent='❌ Нужны ДВЕ лампочки! Добавь ещё одну.';
-    return;
-  }
-
-  // Success!
-  renderCircuit();
-  l2Step++;
-  const fact = l2Missions[l2Step-1].fact;
-  if(l2Step>=3){
-    progress.lvl2=true;
-    showSuccess('⚡','Все цепи собраны!',fact,()=>showScreen('levelSelect'));
-  } else {
-    showSuccess('💡','Цепь замкнута!',fact,()=>{updateL2UI();});
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  LEVEL 3 — LASER
-// ═══════════════════════════════════════════════════════════
-let l3Step = 0;
-let mirrors = [];
-
-// Mirror angles: 0=/  1=\  2=-  3=|
-const l3Puzzles = [
-  {
-    laser:{x:20, y:20, dir:[1,0]}, // shoots right
-    target:{x:300, y:220},
-    mirrors:[
-      {x:180, y:20, angle:1},  // \ : redirects right→down
-      {x:180, y:220, angle:0}, // / : redirects down→left — actually right→up
-    ],
-    hint:'Два зеркала: сначала вниз, потом к цели!'
-  },
-  {
-    laser:{x:20, y:130, dir:[1,0]},
-    target:{x:300, y:30},
-    mirrors:[
-      {x:150, y:130, angle:0}, // /
-      {x:150, y:30, angle:1},  // \
-    ],
-    hint:'Отрази вверх, затем вправо!'
-  },
-  {
-    laser:{x:20, y:220, dir:[0,-1]},
-    target:{x:300, y:30},
-    mirrors:[
-      {x:20, y:80, angle:0},   // /
-      {x:200, y:80, angle:1},  // \
-    ],
-    hint:'Вверх → вправо → вправо к цели!'
-  },
-  {
-    laser:{x:170, y:20, dir:[0,1]},
-    target:{x:20, y:220},
-    mirrors:[
-      {x:170, y:150, angle:0},  // /
-      {x:20, y:150, angle:2},   // -
-    ],
-    hint:'Вниз → влево → к цели!'
-  },
-];
-
-const l3Facts=[
-  'Угол падения луча равен углу отражения — это закон геометрической оптики!',
-  'Зеркала отражают свет изменяя направление, но не скорость фотонов.',
-  'Лазер — это усиленный когерентный свет. Все фотоны летят в одном направлении!',
-  'Принцип отражения открыл Евклид ещё в 300 году до нашей эры!'
-];
-
-function initLaser(){
-  l3Step=0;
-  loadPuzzle();
-}
-
-function loadPuzzle(){
-  const p=l3Puzzles[l3Step];
-  mirrors=p.mirrors.map(m=>({...m}));
-  document.getElementById('l3step').textContent=(l3Step+1)+' / 4';
-  document.getElementById('l3prog').style.width=(l3Step/4*100)+'%';
-  document.getElementById('l3task').innerHTML='Кликай по зеркалам — направь луч лазера в <strong>цель 🎯</strong>';
-  document.getElementById('l3hint').textContent='🔴 '+p.hint;
-  drawLaser();
-}
-
-function drawLaser(){
-  const cv=document.getElementById('laserCanvas');
-  if(!cv) return;
-  const W=340, H=260;
-  cv.width=W; cv.height=H;
-  const ctx=cv.getContext('2d');
-
-  ctx.fillStyle='#0a0a18'; ctx.fillRect(0,0,W,H);
-  // grid dots
-  ctx.fillStyle='rgba(255,255,255,.06)';
-  for(let x=20;x<W;x+=20) for(let y=20;y<H;y+=20){
-    ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
-  }
-
-  const p=l3Puzzles[l3Step];
-
-  // trace laser beam
-  let bx=p.laser.x, by=p.laser.y;
-  let dx=p.laser.dir[0], dy=p.laser.dir[1];
-  const beamPts=[{x:bx,y:by}];
-  let hit=false;
-  for(let step=0;step<200;step++){
-    bx+=dx*4; by+=dy*4;
-    if(bx<0||bx>W||by<0||by>H) break;
-
-    // check mirror collision
-    let reflected=false;
-    for(const m of mirrors){
-      if(Math.abs(bx-m.x)<18 && Math.abs(by-m.y)<18){
-        // reflect based on angle
-        if(m.angle===0){// /: (dx,dy)→(-dy,-dx)
-          [dx,dy]=[-dy,-dx];
-        } else if(m.angle===1){// \: (dx,dy)→(dy,dx)
-          [dx,dy]=[dy,dx];
-        } else if(m.angle===2){// -: reflect vertical
-          dy=-dy;
-        } else {// |: reflect horizontal
-          dx=-dx;
-        }
-        reflected=true;
-        break;
-      }
-    }
-    beamPts.push({x:bx,y:by});
-
-    // check target
-    if(Math.sqrt((bx-p.target.x)**2+(by-p.target.y)**2)<22){
-      hit=true; break;
+  function drawBG() {
+    ctx.fillStyle = '#EEF4FF';
+    ctx.fillRect(0, 0, W, H);
+    // Clouds
+    clouds.forEach(c => {
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 28*c.s, 0, Math.PI*2);
+      ctx.arc(c.x+22*c.s, c.y-8*c.s, 22*c.s, 0, Math.PI*2);
+      ctx.arc(c.x+44*c.s, c.y, 26*c.s, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+      c.x -= 0.25;
+      if (c.x < -80) c.x = W + 80;
+    });
+    // Ground gradient
+    const gy = H * 0.80;
+    const grd = ctx.createLinearGradient(0, gy, 0, H);
+    grd.addColorStop(0, '#5DB85D');
+    grd.addColorStop(0.3, '#48A448');
+    grd.addColorStop(1, '#2D8A2D');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, gy, W, H - gy);
+    // Grass tufts
+    ctx.fillStyle = '#6CC96C';
+    for (let ix = 0; ix < W; ix += 28) {
+      ctx.fillRect(ix, gy-3, 3, 5);
+      ctx.fillRect(ix+10, gy-2, 2, 4);
     }
   }
 
-  // draw beam
-  if(beamPts.length>1){
+  function drawSlingshot(bx, by) {
+    // Handle
     ctx.save();
-    ctx.shadowBlur=10; ctx.shadowColor='#FF5038';
-    ctx.strokeStyle='rgba(255,80,56,.9)'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(beamPts[0].x,beamPts[0].y);
-    for(let i=1;i<beamPts.length;i++) ctx.lineTo(beamPts[i].x,beamPts[i].y);
-    ctx.stroke(); ctx.restore();
-  }
-
-  // draw mirrors
-  for(const m of mirrors){
-    ctx.save(); ctx.translate(m.x,m.y);
-    const symbols=['/',String.fromCharCode(92),'─','│'];
-    const col=['#7B2FFF','#3B82F6','#00C27C','#FFE141'];
-    ctx.fillStyle=col[m.angle%4];
-    ctx.beginPath(); ctx.roundRect(-16,-16,32,32,8); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='bold 18px monospace';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(symbols[m.angle%4],0,0);
+    ctx.strokeStyle = '#8B5E3C'; ctx.lineWidth = 13; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x, FORK.y+90); ctx.stroke();
+    // Branches
+    ctx.strokeStyle = '#6B4226'; ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x-ARM, FORK.y-ARM); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x+ARM, FORK.y-ARM); ctx.stroke();
+    // Rubber
+    ctx.strokeStyle = '#C0392B'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(FORK.x-ARM, FORK.y-ARM); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(FORK.x+ARM, FORK.y-ARM); ctx.lineTo(bx, by); ctx.stroke();
     ctx.restore();
   }
 
-  // draw laser source
-  ctx.save();
-  ctx.shadowBlur=15; ctx.shadowColor='#FF5038';
-  ctx.fillStyle='#FF5038';
-  ctx.beginPath(); ctx.arc(p.laser.x,p.laser.y,10,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font='14px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('⚡',p.laser.x,p.laser.y);
-  ctx.restore();
-
-  // draw target
-  ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  if(hit){
-    const glow=ctx.createRadialGradient(p.target.x,p.target.y,5,p.target.x,p.target.y,30);
-    glow.addColorStop(0,'rgba(0,194,124,.5)'); glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(p.target.x,p.target.y,30,0,Math.PI*2); ctx.fill();
+  function drawBall(x, y) {
+    ctx.save();
+    const grd = ctx.createRadialGradient(x-BALL_R*.3, y-BALL_R*.3, BALL_R*.1, x, y, BALL_R);
+    grd.addColorStop(0, '#FFF5E0');
+    grd.addColorStop(0.35, '#FF8C00');
+    grd.addColorStop(1, '#E65C00');
+    ctx.beginPath(); ctx.arc(x, y, BALL_R, 0, Math.PI*2);
+    ctx.fillStyle = grd; ctx.fill();
+    ctx.beginPath(); ctx.arc(x-BALL_R*.3, y-BALL_R*.3, BALL_R*.22, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fill();
+    ctx.restore();
   }
-  ctx.fillText('🎯',p.target.x,p.target.y);
 
-  if(hit) return true;
-  return false;
-}
+  function drawTargets() {
+    targets.forEach(t => {
+      if (t.hit) return;
+      ctx.save();
+      // Shadow
+      ctx.beginPath();
+      ctx.ellipse(t.x, t.y+t.r+3, t.r*.75, 5, 0, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fill();
+      // Body
+      const grd = ctx.createRadialGradient(t.x-5, t.y-5, 3, t.x, t.y, t.r);
+      grd.addColorStop(0, t.color+'ee');
+      grd.addColorStop(1, t.color+'88');
+      ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2);
+      ctx.fillStyle = grd; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.font = `${t.r*1.05}px serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(t.emoji, t.x, t.y+1);
+      ctx.restore();
+    });
+  }
 
-function handleLaserClick(e){
-  const cv=document.getElementById('laserCanvas');
-  const rect=cv.getBoundingClientRect();
-  const scaleX=340/rect.width, scaleY=260/rect.height;
-  const cx=(e.clientX-rect.left)*scaleX;
-  const cy=(e.clientY-rect.top)*scaleY;
+  function drawPrediction(bx, by) {
+    if (!drag || ball.flying) return;
+    const vx = -pullX * POWER, vy = -pullY * POWER;
+    const pts = predictPath(bx, by, vx, vy);
+    ctx.save();
+    ctx.setLineDash([6, 8]);
+    ctx.strokeStyle = 'rgba(59,130,246,0.4)';
+    ctx.lineWidth = 2; ctx.lineCap = 'round';
+    ctx.beginPath();
+    pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 
-  let clicked=false;
-  for(const m of mirrors){
-    if(Math.abs(cx-m.x)<22 && Math.abs(cy-m.y)<22){
-      m.angle=(m.angle+1)%4;
-      clicked=true;
-      break;
+  function loop() {
+    const bx = drag ? ball.x : BALL_REST.x;
+    const by = drag ? ball.y : BALL_REST.y;
+
+    drawBG();
+    drawTargets();
+    drawSlingshot(ball.flying || ball.returning ? ball.x : bx, ball.flying || ball.returning ? ball.y : by);
+    drawPrediction(bx, by);
+
+    if (ball.flying) {
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+      ball.vy += GRAVITY;
+      // Hit detection
+      for (const t of targets) {
+        if (!t.hit && dist2(ball, t) < t.r + BALL_R) {
+          t.hit = true;
+          const rect = canvas.getBoundingClientRect();
+          burst(rect.left + t.x, rect.top + t.y, ['💥', '⭐', '✨', '🎊', '🌟']);
+          hits++;
+          if (hits <= 5) starDots[hits-1].classList.add('lit');
+          if (hits === 5 && !level1Done) {
+            level1Done = true;
+            setTimeout(() => {
+              showSuccess('🏆', 'Ньютон гордится!',
+                'Шар летит по параболе — кривой, которую Ньютон описал 350 лет назад. Та же физика!',
+                () => { progress.lvl1 = true; saveProgress(); applyProgress(); showScreen('levelSelect'); });
+            }, 600);
+          }
+        }
+      }
+      if (ball.y > H + 40 || ball.x > W + 40 || ball.x < -80) {
+        ball.flying = false; ball.returning = true;
+      }
+    } else if (ball.returning) {
+      ball.x += (BALL_REST.x - ball.x) * 0.12;
+      ball.y += (BALL_REST.y - ball.y) * 0.12;
+      if (dist2(ball, BALL_REST) < 2) {
+        ball.x = BALL_REST.x; ball.y = BALL_REST.y;
+        ball.returning = false;
+      }
+    }
+
+    const drawX = (ball.flying || ball.returning) ? ball.x : bx;
+    const drawY = (ball.flying || ball.returning) ? ball.y : by;
+    drawBall(drawX, drawY);
+    _sl_raf = requestAnimationFrame(loop);
+  }
+
+  // Input
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  }
+  function onDown(e) {
+    if (ball.flying || ball.returning) return;
+    const p = getPos(e);
+    const bx = BALL_REST.x, by = BALL_REST.y;
+    if (Math.hypot(p.x - bx, p.y - by) < 52) {
+      drag = true;
+      ball.x = bx; ball.y = by;
+      e.preventDefault();
     }
   }
-  if(!clicked) return;
+  function onMove(e) {
+    if (!drag) return;
+    e.preventDefault();
+    const p = getPos(e);
+    let dx = p.x - FORK.x, dy = p.y - FORK.y;
+    if (dx > 0) dx = dx * 0.12; // limit right pull
+    const len = Math.hypot(dx, dy);
+    if (len > MAX_PULL) { dx = dx/len*MAX_PULL; dy = dy/len*MAX_PULL; }
+    pullX = dx; pullY = dy;
+    ball.x = FORK.x + dx;
+    ball.y = FORK.y + dy;
+  }
+  function onUp(e) {
+    if (!drag) return;
+    drag = false;
+    if (Math.abs(pullX) > 4 || Math.abs(pullY) > 4) {
+      ball.vx = -pullX * POWER;
+      ball.vy = -pullY * POWER;
+      ball.flying = true;
+    } else {
+      ball.returning = true;
+    }
+    pullX = 0; pullY = 0;
+  }
+  canvas.addEventListener('mousedown', onDown);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  canvas.addEventListener('touchmove', onMove, { passive: false });
+  canvas.addEventListener('touchend', onUp, { passive: false });
 
-  const hit=drawLaser();
-  if(hit){
-    const p=l3Puzzles[l3Step];
-    const rect2=cv.getBoundingClientRect();
-    spawnParticles(rect2.left+p.target.x/340*rect2.width, rect2.top+p.target.y/260*rect2.height);
-    setTimeout(()=>{
-      l3Step++;
-      const fact=l3Facts[l3Step-1];
-      if(l3Step>=4){
-        progress.lvl3=true;
-        showSuccess('🔴','Ты Мастер оптики!',fact,()=>showScreen('complete'));
-      } else {
-        showSuccess('🎯','Луч в цели!',fact,()=>loadPuzzle());
+  if (_sl_raf) cancelAnimationFrame(_sl_raf);
+  loop();
+}
+
+/* ════════════════════════════════════
+   LEVEL 2 — ELECTRO
+════════════════════════════════════ */
+let _elStep = 0;
+let _elWires = [];
+let _elDragging = null;
+let _elLevel2Done = false;
+
+const EL_STEPS = [
+  {
+    task: 'Соедини батарею с лампочкой',
+    comps: [
+      { id: 'bat',  emoji: '🔋', name: 'Батарея',      xf: 0.12, yf: 0.38, terms: [{ side: 'r' }] },
+      { id: 'bulb', emoji: '💡', name: 'Лампочка',     xf: 0.70, yf: 0.38, terms: [{ side: 'l' }] },
+    ],
+    required: [{ from: 'bat', ft: 0, to: 'bulb', tt: 0 }]
+  },
+  {
+    task: 'Добавь выключатель в цепь',
+    comps: [
+      { id: 'bat',  emoji: '🔋', name: 'Батарея',       xf: 0.10, yf: 0.38, terms: [{ side: 'r' }] },
+      { id: 'sw',   emoji: '🔘', name: 'Выключатель',   xf: 0.44, yf: 0.38, terms: [{ side: 'l' }, { side: 'r' }] },
+      { id: 'bulb', emoji: '💡', name: 'Лампочка',      xf: 0.78, yf: 0.38, terms: [{ side: 'l' }] },
+    ],
+    required: [
+      { from: 'bat', ft: 0, to: 'sw',   tt: 0 },
+      { from: 'sw',  ft: 1, to: 'bulb', tt: 0 }
+    ]
+  },
+  {
+    task: 'Параллельно: две лампочки!',
+    comps: [
+      { id: 'bat',   emoji: '🔋', name: 'Батарея',    xf: 0.12, yf: 0.44, terms: [{ side: 'r' }] },
+      { id: 'bulb1', emoji: '💡', name: 'Лампочка 1', xf: 0.70, yf: 0.22, terms: [{ side: 'l' }] },
+      { id: 'bulb2', emoji: '💡', name: 'Лампочка 2', xf: 0.70, yf: 0.66, terms: [{ side: 'l' }] },
+    ],
+    required: [
+      { from: 'bat', ft: 0, to: 'bulb1', tt: 0 },
+      { from: 'bat', ft: 0, to: 'bulb2', tt: 0 }
+    ]
+  }
+];
+
+function initElectro() {
+  const area = document.getElementById('elArea');
+  const W = area.clientWidth, H = area.clientHeight;
+  const canvas = document.getElementById('c2');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const compLayer = document.getElementById('compLayer');
+
+  _elStep = 0; _elWires = []; _elDragging = null; _elLevel2Done = false;
+
+  function getTermPos(compId, ti) {
+    const el = document.getElementById(`term_${compId}_${ti}`);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const ar = area.getBoundingClientRect();
+    return { x: r.left - ar.left + 8, y: r.top - ar.top + 8 };
+  }
+
+  function renderStep() {
+    compLayer.innerHTML = '';
+    _elWires = []; _elDragging = null;
+    const def = EL_STEPS[_elStep];
+    document.getElementById('elTask').textContent = def.task;
+    document.getElementById('elStepInfo').textContent = `Задание ${_elStep+1}/3`;
+
+    def.comps.forEach(c => {
+      const cx = Math.round(c.xf * W);
+      const cy = Math.round(c.yf * H);
+      const card = document.createElement('div');
+      card.className = 'comp-card';
+      card.id = 'comp_' + c.id;
+      card.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);`;
+      card.innerHTML = `<span class="comp-emoji">${c.emoji}</span><span class="comp-name">${c.name}</span>`;
+      compLayer.appendChild(card);
+
+      c.terms.forEach((t, ti) => {
+        const term = document.createElement('div');
+        term.className = 'terminal';
+        term.id = `term_${c.id}_${ti}`;
+        const ox = t.side === 'l' ? -42 : 42;
+        term.style.cssText = `left:${cx+ox-8}px;top:${cy-8}px;position:absolute;`;
+        term.dataset.comp = c.id;
+        term.dataset.ti = ti;
+        compLayer.appendChild(term);
+        term.addEventListener('mousedown', termDown);
+        term.addEventListener('touchstart', termDown, { passive: false });
+      });
+    });
+  }
+
+  function drawGrid() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#EEF4FF'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(59,130,246,0.12)';
+    for (let x = 30; x < W; x += 30)
+      for (let y = 30; y < H; y += 30) {
+        ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI*2); ctx.fill();
       }
-    },500);
+  }
+
+  function drawWires() {
+    _elWires.forEach(w => {
+      const from = getTermPos(w.from, w.ft);
+      const to   = getTermPos(w.to,   w.tt);
+      if (!from || !to) return;
+      ctx.save();
+      const mx = (from.x + to.x) / 2;
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.bezierCurveTo(mx, from.y, mx, to.y, to.x, to.y);
+      ctx.strokeStyle = w.powered ? '#FF8C00' : '#666';
+      ctx.lineWidth = w.powered ? 5 : 3;
+      ctx.lineCap = 'round';
+      if (w.powered) { ctx.shadowBlur = 10; ctx.shadowColor = '#FFE141'; }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    });
+    if (_elDragging) {
+      const from = getTermPos(_elDragging.comp, _elDragging.ti);
+      if (from) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(_elDragging.x, _elDragging.y);
+        ctx.strokeStyle = 'rgba(59,130,246,0.55)';
+        ctx.lineWidth = 3; ctx.setLineDash([8,6]); ctx.lineCap = 'round';
+        ctx.stroke(); ctx.setLineDash([]);
+        ctx.restore();
+      }
+    }
+  }
+
+  function redraw() { drawGrid(); drawWires(); }
+
+  function loop() {
+    redraw();
+    _el_raf = requestAnimationFrame(loop);
+  }
+  if (_el_raf) cancelAnimationFrame(_el_raf);
+  renderStep();
+  loop();
+
+  function getAreaPos(e) {
+    const r = area.getBoundingClientRect();
+    const src = e.changedTouches ? e.changedTouches[0] : (e.touches ? e.touches[0] : e);
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  }
+
+  function termDown(e) {
+    e.preventDefault(); e.stopPropagation();
+    const comp = e.currentTarget.dataset.comp;
+    const ti   = parseInt(e.currentTarget.dataset.ti);
+    const p = getAreaPos(e);
+    _elDragging = { comp, ti, x: p.x, y: p.y };
+    e.currentTarget.classList.add('active');
+  }
+
+  function onElMove(e) {
+    if (!_elDragging) return;
+    e.preventDefault();
+    const p = getAreaPos(e);
+    _elDragging.x = p.x; _elDragging.y = p.y;
+  }
+  function onElUp(e) {
+    if (!_elDragging) return;
+    const p = getAreaPos(e);
+    let best = null, bestD = Infinity;
+    document.querySelectorAll('.terminal').forEach(term => {
+      const r = term.getBoundingClientRect();
+      const ar = area.getBoundingClientRect();
+      const tx = r.left - ar.left + 8, ty = r.top - ar.top + 8;
+      const d = Math.hypot(tx - p.x, ty - p.y);
+      if (d < 44 && d < bestD) { bestD = d; best = term; }
+    });
+
+    if (best && best.dataset.comp !== _elDragging.comp) {
+      addWire(_elDragging.comp, _elDragging.ti, best.dataset.comp, parseInt(best.dataset.ti));
+    } else if (best && best.dataset.comp === _elDragging.comp) {
+      // Same component — spark
+      const ar = area.getBoundingClientRect();
+      burst(ar.left + p.x, ar.top + p.y, ['⚡','✨','💫']);
+    }
+    document.querySelectorAll('.terminal.active').forEach(t => t.classList.remove('active'));
+    _elDragging = null;
+  }
+
+  area.addEventListener('mousemove', onElMove);
+  area.addEventListener('mouseup',   onElUp);
+  area.addEventListener('touchmove', onElMove, { passive: false });
+  area.addEventListener('touchend',  onElUp,   { passive: false });
+
+  function addWire(fc, ft, tc, tt) {
+    const dup = _elWires.find(w =>
+      (w.from===fc && w.ft===ft && w.to===tc && w.tt===tt) ||
+      (w.from===tc && w.ft===tt && w.to===fc && w.tt===ft)
+    );
+    if (dup) return;
+    _elWires.push({ from: fc, ft, to: tc, tt, powered: false });
+    checkCircuit();
+  }
+
+  function checkCircuit() {
+    const def = EL_STEPS[_elStep];
+    const allMet = def.required.every(req =>
+      _elWires.find(w =>
+        (w.from===req.from && w.ft===req.ft && w.to===req.to && w.tt===req.tt) ||
+        (w.from===req.to   && w.ft===req.tt  && w.to===req.from && w.tt===req.ft)
+      )
+    );
+    if (!allMet) return;
+
+    _elWires.forEach(w => w.powered = true);
+    def.comps.filter(c => c.emoji === '💡').forEach(c => {
+      const card = document.getElementById('comp_' + c.id);
+      if (card) card.classList.add('powered');
+    });
+
+    const facts = [
+      'Электричество течёт по замкнутой цепи — как вода по кольцу трубы!',
+      'Выключатель разрывает цепь — ток остановился, лампочка гаснет',
+      'Параллельная цепь: если одна лампочка сгорит — другая горит!'
+    ];
+    const titles  = ['Цепь замкнута! ⚡', 'Выключатель работает! 🔘', 'Параллель — сила! 💪'];
+    const emojis  = ['💡', '🔘', '⚡'];
+    const stepNow = _elStep;
+
+    setTimeout(() => {
+      const ar = area.getBoundingClientRect();
+      burst(ar.left + ar.width/2, ar.top + ar.height/2, ['💡','⚡','✨','🌟','💫']);
+      showSuccess(emojis[stepNow], titles[stepNow], facts[stepNow], () => {
+        if (stepNow < 2) {
+          _elStep = stepNow + 1;
+          renderStep();
+        } else if (!_elLevel2Done) {
+          _elLevel2Done = true;
+          progress.lvl2 = true; saveProgress(); applyProgress();
+          showScreen('levelSelect');
+        }
+      });
+    }, 500);
   }
 }
 
-// touch support for laser
-function initLaserEvents(){
-  const cv=document.getElementById('laserCanvas');
-  if(!cv) return;
-  cv.removeEventListener('click',handleLaserClick);
-  cv.addEventListener('click',handleLaserClick);
-  cv.addEventListener('touchend',function(e){
-    e.preventDefault();
-    const t=e.changedTouches[0];
-    handleLaserClick({clientX:t.clientX,clientY:t.clientY});
-  },{passive:false});
-}
+/* ════════════════════════════════════
+   LEVEL 3 — LASER
+════════════════════════════════════ */
+let _lsStep = 0;
+let _lsMirrors = [];
+let _lsLevel3Done = false;
+let _lsTargetGlowing = false;
 
-// Override initLaser to also bind events
-const _initLaser = initLaser;
-function initLaser(){
-  l3Step=0;
-  loadPuzzle();
-  setTimeout(initLaserEvents,50);
-}
-
-// cannon fire button touch
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('fireBtn').addEventListener('touchend',function(e){
-    e.preventDefault();
-    fireBtn_handler();
-  },{passive:false});
-  showScreen('intro');
-});
-
-// ═══════════════════════════════════════════════════════════
-//  Handle complete screen
-// ═══════════════════════════════════════════════════════════
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const scr=document.getElementById(id);
-  scr.classList.add('active');
-  if(id==='levelSelect') updateLevelCards();
-  if(id==='level1') initCannon();
-  if(id==='level2') initCircuit();
-  if(id==='level3') initLaser();
-  if(id==='complete'){
-    // already handled
+const LS_STEPS = [
+  {
+    task: '1 зеркало: направь луч в цель!',
+    srcYf: 0.38,
+    tgt: { xf: 0.82, yf: 0.70, r: 26 },
+    mirrors: [{ xf: 0.48, yf: 0.38, angle: 45, len: 52 }]
+  },
+  {
+    task: '2 зеркала: два отражения!',
+    srcYf: 0.28,
+    tgt: { xf: 0.78, yf: 0.72, r: 26 },
+    mirrors: [
+      { xf: 0.42, yf: 0.28, angle: 45,  len: 48 },
+      { xf: 0.42, yf: 0.72, angle: -45, len: 48 }
+    ]
+  },
+  {
+    task: '3 зеркала: доведи луч!',
+    srcYf: 0.22,
+    tgt: { xf: 0.16, yf: 0.76, r: 26 },
+    mirrors: [
+      { xf: 0.60, yf: 0.22, angle: 45,  len: 46 },
+      { xf: 0.60, yf: 0.76, angle: -45, len: 46 },
+      { xf: 0.16, yf: 0.76, angle: 90,  len: 46 }
+    ]
   }
+];
+
+function initLaser() {
+  const canvas = document.getElementById('c3');
+  const wrap   = document.getElementById('wrap3');
+  canvas.width  = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+
+  _lsStep = 0; _lsLevel3Done = false; _lsTargetGlowing = false;
+
+  let sparks = [];
+
+  function buildStep() {
+    const s = LS_STEPS[_lsStep];
+    _lsMirrors = s.mirrors.map(m => ({
+      x: Math.round(m.xf * W),
+      y: Math.round(m.yf * H),
+      angle: m.angle,
+      len: m.len
+    }));
+    document.getElementById('laserStepInfo').textContent = `Задача ${_lsStep+1}/3`;
+  }
+
+  function getSrc()  { const s=LS_STEPS[_lsStep]; return { x:42, y:Math.round(s.srcYf*H) }; }
+  function getTgt()  { const s=LS_STEPS[_lsStep]; return { x:Math.round(s.tgt.xf*W), y:Math.round(s.tgt.yf*H), r:s.tgt.r }; }
+
+  function mirrorSeg(m) {
+    const rad = m.angle * Math.PI / 180;
+    const dx = Math.cos(rad)*m.len/2, dy = Math.sin(rad)*m.len/2;
+    return { x1:m.x-dx, y1:m.y-dy, x2:m.x+dx, y2:m.y+dy };
+  }
+
+  function segIntersect(ox,oy,dx,dy, x1,y1,x2,y2) {
+    const ex=x2-x1, ey=y2-y1;
+    const denom = dx*ey - dy*ex;
+    if (Math.abs(denom)<1e-9) return null;
+    const t = ((x1-ox)*ey-(y1-oy)*ex)/denom;
+    const u = ((x1-ox)*dy-(y1-oy)*dx)/denom;
+    if (t>0.001 && u>=0 && u<=1) return { t, x:ox+dx*t, y:oy+dy*t, nx:ey, ny:-ex };
+    return null;
+  }
+
+  function reflectDir(dx,dy,nx,ny) {
+    const l=Math.hypot(nx,ny); const nnx=nx/l,nny=ny/l;
+    const d=dx*nnx+dy*nny;
+    return { dx:dx-2*d*nnx, dy:dy-2*d*nny };
+  }
+
+  function lineCircle(ox,oy,dx,dy,cx,cy,r) {
+    const fx=ox-cx, fy=oy-cy;
+    const a=dx*dx+dy*dy, b=2*(fx*dx+fy*dy), c=fx*fx+fy*fy-r*r;
+    const disc=b*b-4*a*c;
+    if(disc<0) return null;
+    const t=(-b-Math.sqrt(disc))/(2*a);
+    return t>0.001?t:null;
+  }
+
+  function wallT(ox,oy,dx,dy) {
+    const ts=[];
+    if(Math.abs(dx)>1e-9){ts.push((W-ox)/dx);ts.push(-ox/dx);}
+    if(Math.abs(dy)>1e-9){ts.push((H-oy)/dy);ts.push(-oy/dy);}
+    const pos=ts.filter(t=>t>0.001);
+    return pos.length?Math.min(...pos):400;
+  }
+
+  function castRay(ox,oy,dx,dy,bounces,segs,tgt) {
+    if(bounces>8) return false;
+    const len=Math.hypot(dx,dy);
+    const ndx=dx/len, ndy=dy/len;
+    let nearM=null, nearHit=null;
+    for(const m of _lsMirrors) {
+      const seg=mirrorSeg(m);
+      const h=segIntersect(ox,oy,ndx,ndy,seg.x1,seg.y1,seg.x2,seg.y2);
+      if(h && (!nearHit||h.t<nearHit.t)){nearHit=h;nearM=m;}
+    }
+    const tHit=lineCircle(ox,oy,ndx,ndy,tgt.x,tgt.y,tgt.r);
+    if(nearHit && (!tHit||nearHit.t<tHit)){
+      segs.push({x1:ox,y1:oy,x2:nearHit.x,y2:nearHit.y});
+      const r=reflectDir(ndx,ndy,nearHit.nx,nearHit.ny);
+      return castRay(nearHit.x,nearHit.y,r.dx,r.dy,bounces+1,segs,tgt);
+    } else if(tHit) {
+      segs.push({x1:ox,y1:oy,x2:ox+ndx*tHit,y2:oy+ndy*tHit});
+      return true;
+    } else {
+      const wt=wallT(ox,oy,ndx,ndy);
+      segs.push({x1:ox,y1:oy,x2:ox+ndx*wt,y2:oy+ndy*wt});
+      return false;
+    }
+  }
+
+  function drawMirror(m) {
+    const seg=mirrorSeg(m);
+    ctx.save();
+    const grd=ctx.createLinearGradient(seg.x1,seg.y1,seg.x2,seg.y2);
+    grd.addColorStop(0,'#AAAAAA'); grd.addColorStop(0.4,'#EEEEEE'); grd.addColorStop(1,'#999999');
+    ctx.shadowBlur=6; ctx.shadowColor='rgba(0,0,0,0.18)';
+    ctx.beginPath(); ctx.moveTo(seg.x1,seg.y1); ctx.lineTo(seg.x2,seg.y2);
+    ctx.strokeStyle=grd; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.beginPath(); ctx.moveTo(seg.x1,seg.y1); ctx.lineTo(seg.x2,seg.y2);
+    ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2; ctx.stroke();
+    // Pivot dot
+    ctx.beginPath(); ctx.arc(m.x,m.y,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(59,130,246,0.45)'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSource(s) {
+    ctx.save();
+    const grd=ctx.createRadialGradient(s.x,s.y,2,s.x,s.y,24);
+    grd.addColorStop(0,'#fff'); grd.addColorStop(0.3,'#FF6B6B'); grd.addColorStop(1,'rgba(255,0,0,0)');
+    ctx.beginPath(); ctx.arc(s.x,s.y,24,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+    ctx.beginPath(); ctx.arc(s.x,s.y,11,0,Math.PI*2);
+    ctx.fillStyle='#FF2222'; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='rgba(26,26,46,0.45)'; ctx.font='bold 9px Space Grotesk';
+    ctx.textAlign='center'; ctx.fillText('LASER',s.x,s.y+32);
+    ctx.restore();
+  }
+
+  function drawTarget(tgt, hit) {
+    const pulse = hit ? (1+0.14*Math.sin(Date.now()*0.009)) : 1;
+    const r = tgt.r * pulse;
+    ctx.save();
+    const grd=ctx.createRadialGradient(tgt.x,tgt.y,2,tgt.x,tgt.y,r);
+    if(hit){
+      grd.addColorStop(0,'#fff'); grd.addColorStop(0.4,'#FFE141'); grd.addColorStop(1,'rgba(255,225,65,0)');
+      ctx.shadowBlur=28; ctx.shadowColor='#FFE141';
+    } else {
+      grd.addColorStop(0,'#FFD700'); grd.addColorStop(0.55,'#FFA500'); grd.addColorStop(1,'rgba(255,165,0,.15)');
+    }
+    ctx.beginPath(); ctx.arc(tgt.x,tgt.y,r,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+    ctx.strokeStyle='#FF8C00'; ctx.lineWidth=2; ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.font=`${Math.round(tgt.r*.95)}px serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🎯',tgt.x,tgt.y+1);
+    ctx.restore();
+  }
+
+  function drawSparks() {
+    sparks = sparks.filter(p => {
+      p.life-=2; p.x+=p.vx; p.y+=p.vy; p.vy+=0.12;
+      if(p.life<=0)return false;
+      ctx.save();
+      ctx.globalAlpha=p.life/80;
+      ctx.fillStyle='#FFD700';
+      ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+      return true;
+    });
+  }
+
+  function loop() {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#EEF4FF'; ctx.fillRect(0,0,W,H);
+    // Grid
+    ctx.fillStyle='rgba(59,130,246,0.08)';
+    for(let x=40;x<W;x+=40) for(let y=40;y<H;y+=40){
+      ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
+    }
+
+    const src=getSrc(), tgt=getTgt();
+    const segs=[]; const hit=castRay(src.x,src.y,1,0,0,segs,tgt);
+
+    // Draw ray
+    ctx.save();
+    ctx.strokeStyle='#FF3333'; ctx.lineWidth=3; ctx.lineCap='round';
+    ctx.shadowBlur=14; ctx.shadowColor='#FF0000';
+    segs.forEach(s=>{
+      ctx.beginPath(); ctx.moveTo(s.x1,s.y1); ctx.lineTo(s.x2,s.y2); ctx.stroke();
+    });
+    ctx.shadowBlur=0; ctx.restore();
+
+    _lsMirrors.forEach(m => drawMirror(m));
+    drawSource(src);
+    drawTarget(tgt, hit);
+    drawSparks();
+
+    if(hit && !_lsTargetGlowing) {
+      _lsTargetGlowing = true;
+      const rect=canvas.getBoundingClientRect();
+      burst(rect.left+tgt.x, rect.top+tgt.y, ['⭐','✨','🎯','💫','🌟']);
+      const facts=[
+        'Угол падения = угол отражения — луч ведёт себя как мяч от стены!',
+        'Именно так работает перископ подводной лодки — два зеркала под 45°',
+        'Лазеры с зеркалами используют в гироскопах самолётов и GPS-спутниках!'
+      ];
+      const stepNow=_lsStep;
+      setTimeout(()=>{
+        showSuccess('🎯', `Попадание! ${stepNow+1}/3`,facts[stepNow],()=>{
+          _lsTargetGlowing=false;
+          if(stepNow<2){
+            _lsStep=stepNow+1;
+            buildStep();
+          } else if(!_lsLevel3Done){
+            _lsLevel3Done=true;
+            progress.lvl3=true; saveProgress(); applyProgress();
+            showSuccess('🎓','Ты физик!',
+              'Рогатка, электричество, лазеры — физика везде вокруг нас!',
+              ()=>showScreen('complete'));
+          }
+        });
+      },700);
+    } else if(!hit) {
+      _lsTargetGlowing=false;
+    }
+
+    _ls_raf=requestAnimationFrame(loop);
+  }
+
+  // Tap mirrors
+  function tapAt(tx,ty){
+    let best=null, bestD=Infinity;
+    _lsMirrors.forEach(m=>{
+      const d=Math.hypot(m.x-tx,m.y-ty);
+      if(d<44&&d<bestD){bestD=d;best=m;}
+    });
+    if(best){
+      best.angle=(best.angle+45)%180;
+      for(let i=0;i<14;i++){
+        const a=Math.random()*Math.PI*2;
+        sparks.push({x:best.x,y:best.y,vx:Math.cos(a)*3.5,vy:Math.sin(a)*3.5-2,life:80});
+      }
+    }
+  }
+  canvas.addEventListener('click',e=>{
+    const r=canvas.getBoundingClientRect();
+    tapAt(e.clientX-r.left, e.clientY-r.top);
+  });
+  canvas.addEventListener('touchend',e=>{
+    e.preventDefault();
+    const r=canvas.getBoundingClientRect();
+    tapAt(e.changedTouches[0].clientX-r.left, e.changedTouches[0].clientY-r.top);
+  },{passive:false});
+
+  if(_ls_raf) cancelAnimationFrame(_ls_raf);
+  buildStep();
+  loop();
 }
 
-// Resize cannon canvas on window resize
-window.addEventListener('resize',()=>{
-  if(document.getElementById('level1').classList.contains('active')) drawCannon();
-});
+/* INIT */
+loadProgress();
 </script>
 </body>
 </html>
