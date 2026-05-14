@@ -3,1169 +3,1014 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>КвантУм · Физ Лаб · КосмоБаза</title>
+<title>КвантУм · КосмоБаза</title>
 <link href="https://fonts.bunny.net/css?family=space-grotesk:400,600,700,800" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#FFFDF7;--card:#fff;--blue:#3B82F6;--yellow:#FFE141;
-  --coral:#FF5038;--mint:#00C27C;--text:#1a1a2e;
-  --muted:rgba(26,26,46,.45);--border:rgba(0,0,0,.07);--surface:#EEF4FF;
+  --bg:#FFFDF7;--card:#FFFFFF;--blue:#3B82F6;
+  --yellow:#FFE141;--coral:#FF5038;--mint:#00C27C;
+  --text:#1a1a2e;--muted:rgba(26,26,46,.45);
+  --bounce:cubic-bezier(.34,1.56,.64,1);
+  --border:rgba(0,0,0,.07);
 }
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;user-select:none}
-
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
 
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
-@keyframes bounceIn{0%{transform:scale(0) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}80%{transform:scale(.97)}100%{transform:scale(1) rotate(0)}}
-@keyframes starPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.5);opacity:1}100%{transform:scale(1);opacity:1}}
-@keyframes sciIn{0%{transform:scale(0) translateY(20px);opacity:0}60%{transform:scale(1.2) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
-@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(59,130,246,.3)}50%{box-shadow:0 0 32px rgba(59,130,246,.8)}}
-@keyframes bloom{0%{transform:scale(1)}40%{transform:scale(1.45)}70%{transform:scale(0.95)}100%{transform:scale(1.2)}}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-8deg);opacity:0}60%{transform:scale(1.15) rotate(2deg);opacity:1}80%{transform:scale(.95)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes spinBadge{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.15) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(3);opacity:0}}
 
-/* INTRO */
-#intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,.12) 0%,transparent 65%),var(--bg)}
-.intro-emoji{font-size:96px;margin-bottom:20px;display:block;animation:bob 3s ease-in-out infinite}
-.intro-tag{display:inline-block;background:var(--yellow);color:#111;font-size:11px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:16px;
-  box-shadow:0 4px 16px rgba(255,225,65,.4)}
-.intro-h{font-size:clamp(34px,9vw,64px);font-weight:800;letter-spacing:-2px;line-height:.95;margin-bottom:12px}
-.intro-h em{color:var(--blue);font-style:normal}
-.intro-sub{font-size:16px;color:var(--muted);max-width:340px;line-height:1.6;margin-bottom:36px}
+/* ─── NAV ─── */
+.top-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;flex-shrink:0}
+.nav-back{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .2s}
+.nav-back:hover{background:rgba(0,0,0,.06)}
+.nav-title{font-size:15px;font-weight:700;color:var(--text)}
 
-/* LEVEL SELECT */
-#levelSelect{align-items:center;justify-content:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,.08) 0%,transparent 60%),var(--bg)}
-.ls-h{font-size:26px;font-weight:800;letter-spacing:-.8px;margin-bottom:4px}
-.ls-sub{color:var(--muted);font-size:14px;margin-bottom:28px}
-.levels-list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px}
-.lvl-card{background:var(--card);border-radius:22px;padding:18px 22px;display:flex;align-items:center;
-  gap:16px;cursor:pointer;border:2px solid transparent;
-  box-shadow:0 4px 20px rgba(0,0,0,.07);
-  transition:all .22s cubic-bezier(.34,1.56,.64,1);position:relative}
-.lvl-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 36px rgba(59,130,246,.15)}
-.lvl-card.done{border-color:var(--mint);box-shadow:0 4px 20px rgba(0,194,124,.15)}
-.lc-ico{font-size:40px;flex-shrink:0}
+/* ─── INTRO ─── */
+#intro{background:linear-gradient(160deg,#1a1a6e 0%,#1e3a8a 60%,#1e4bb8 100%);align-items:center;justify-content:center;text-align:center;padding:32px 24px;gap:24px;position:relative;overflow:hidden}
+.intro-badge{font-size:72px;animation:bob 2.4s ease-in-out infinite}
+.intro-title{font-size:42px;font-weight:800;color:#fff;line-height:1.1}
+.intro-title span{color:var(--yellow)}
+.intro-sub{font-size:17px;color:rgba(255,255,255,.75);max-width:280px;line-height:1.5}
+.intro-btn{background:var(--yellow);color:var(--text);border:none;padding:16px 40px;border-radius:24px;font-size:18px;font-weight:800;cursor:pointer;transition:transform .2s var(--bounce),box-shadow .2s;margin-top:8px;box-shadow:0 6px 24px rgba(255,225,65,.4)}
+.intro-btn:active{transform:scale(.94)}
+.intro-btn:hover{transform:scale(1.06) translateY(-2px);box-shadow:0 10px 32px rgba(255,225,65,.5)}
+.stars-wrap{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+
+/* ─── LEVEL SELECT ─── */
+#levelSelect{padding:0 0 32px}
+.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:20px 16px 8px}
+.level-cards{display:flex;flex-direction:column;gap:12px;padding:0 16px}
+.level-card{background:#fff;border-radius:20px;padding:20px;display:flex;align-items:center;gap:16px;cursor:pointer;border:2px solid var(--border);transition:transform .25s var(--bounce),box-shadow .2s,border-color .2s;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.level-card:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 28px rgba(0,0,0,.1)}
+.level-card:active{transform:scale(.97)}
+.level-card.blue{border-color:rgba(59,130,246,.25)}
+.level-card.purple{border-color:rgba(147,51,234,.25)}
+.level-card.teal{border-color:rgba(0,194,124,.25)}
+.lc-icon{font-size:44px;flex-shrink:0}
 .lc-info{flex:1}
-.lc-num{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
-.lc-name{font-size:18px;font-weight:800;letter-spacing:-.3px}
-.lc-desc{font-size:12px;color:var(--muted);margin-top:2px}
-.lc-badge{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px}
+.lc-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+.lc-name{font-size:19px;font-weight:800;color:var(--text);margin-bottom:4px}
+.lc-desc{font-size:13px;color:var(--muted);line-height:1.4}
+.lc-arrow{font-size:20px;color:var(--muted)}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px}
+.tag.blue{background:rgba(59,130,246,.12);color:#2563eb}
+.tag.purple{background:rgba(147,51,234,.12);color:#7c3aed}
+.tag.teal{background:rgba(0,194,124,.12);color:#047857}
 
-/* GAME HEADER */
-.g-hdr{display:flex;align-items:center;gap:12px;padding:12px 18px;
-  border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card);
-  box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.back-btn{background:var(--surface);border:none;color:var(--text);width:36px;height:36px;
-  border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background .18s}
-.back-btn:hover{background:#d0e0ff}
-.g-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
-.g-progress{margin-left:auto;display:flex;align-items:center;gap:6px}
-.star-dot{font-size:18px;opacity:.2;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
-.star-dot.lit{opacity:1;animation:starPop .5s cubic-bezier(.34,1.56,.64,1)}
+/* ─── CANVAS CONTAINER ─── */
+.canvas-wrap{position:relative;width:100%;overflow:hidden;flex-shrink:0}
+canvas{display:block;width:100%;touch-action:none}
 
-/* BUTTONS */
-.btn{border:none;border-radius:16px;font-family:'Space Grotesk',sans-serif;
-  font-weight:800;font-size:17px;cursor:pointer;padding:16px 36px;
-  transition:all .2s cubic-bezier(.34,1.56,.64,1);letter-spacing:-.3px}
-.btn:active{transform:scale(.97)}
-.btn-blue{background:var(--blue);color:#fff;box-shadow:0 6px 24px rgba(59,130,246,.4)}
-.btn-yellow{background:var(--yellow);color:#111;box-shadow:0 6px 24px rgba(255,225,65,.4)}
-.btn-mint{background:var(--mint);color:#fff;box-shadow:0 6px 24px rgba(0,194,124,.35)}
+/* ─── GOLDBERG TOOLBAR ─── */
+#toolbarWrap{padding:10px 12px;background:#fff;border-top:1px solid var(--border);flex-shrink:0}
+.toolbar-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.toolbar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.toolbar::-webkit-scrollbar{height:0}
+.tool-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;border-radius:14px;border:2px solid var(--border);background:#f8f8fc;cursor:pointer;transition:all .2s var(--bounce);min-width:62px}
+.tool-btn.active{border-color:var(--blue);background:rgba(59,130,246,.08);transform:scale(1.06)}
+.tool-btn:active{transform:scale(.93)}
+.tool-emoji{font-size:22px}
+.tool-label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
+.goldberg-controls{display:flex;gap:8px;padding:10px 12px 0;flex-shrink:0}
+.ctrl-btn{flex:1;padding:12px;border-radius:14px;border:none;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s var(--bounce),opacity .2s}
+.ctrl-btn:active{transform:scale(.95)}
+.ctrl-btn.run{background:var(--blue);color:#fff}
+.ctrl-btn.reset{background:#f0f0f8;color:var(--text)}
 
-/* CANVAS WRAPPER */
-.canvas-wrap{flex:1;position:relative;overflow:hidden}
-.canvas-wrap canvas{display:block;width:100%;height:100%}
-.hint-bar{text-align:center;font-size:13px;color:var(--muted);padding:6px 16px;flex-shrink:0;
-  background:var(--bg);border-bottom:1px solid var(--border)}
+/* ─── SCENARIO SELECTOR ─── */
+.scenario-tabs{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;flex-shrink:0}
+.scenario-tabs::-webkit-scrollbar{height:0}
+.scenario-tab{flex-shrink:0;padding:8px 14px;border-radius:12px;border:2px solid var(--border);background:#f8f8fc;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);transition:all .2s var(--bounce)}
+.scenario-tab.active{border-color:var(--blue);background:var(--blue);color:#fff}
+.scenario-tab:active{transform:scale(.94)}
 
-/* DISCOVERY BADGE */
-.discovery-badge{
-  position:absolute;bottom:80px;left:50%;transform:translateX(-50%) translateY(30px);
-  background:linear-gradient(135deg,var(--yellow) 0%,#FFB800 100%);
-  color:#111;padding:12px 20px;border-radius:18px;font-size:13px;font-weight:800;
-  max-width:300px;text-align:center;line-height:1.4;
-  box-shadow:0 8px 30px rgba(255,225,65,.5);
-  opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;
-  white-space:nowrap}
-.discovery-badge.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ─── PENDULUM CONTROLS ─── */
+.pend-controls{padding:12px 16px;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.pend-btn{background:var(--blue);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s var(--bounce)}
+.pend-btn:active{transform:scale(.95)}
+.pend-slider-wrap{background:#fff;border-radius:16px;padding:14px 16px;border:2px solid var(--border)}
+.pend-slider-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.pend-slider-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+input[type=range]{width:100%;accent-color:var(--blue);cursor:pointer;height:6px}
+.pend-goal-info{font-size:12px;font-weight:600;color:var(--blue);margin-top:8px}
 
-/* SUCCESS OVERLAY */
-.success-ov{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center}
-.success-ov.visible{display:flex}
-.ov-bg{position:absolute;inset:0;background:rgba(26,26,46,.55);backdrop-filter:blur(6px)}
-.ov-card{position:relative;background:#fff;border-radius:28px;padding:36px 32px;text-align:center;
-  max-width:340px;width:calc(100% - 40px);border:3px solid var(--blue);
-  box-shadow:0 20px 80px rgba(0,0,0,.2);animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1)}
-.ov-scientist{font-size:52px;display:block;margin-bottom:6px;animation:sciIn .6s .1s both}
-.ov-emoji{font-size:36px;display:block;margin-bottom:8px}
-.ov-h{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
-.ov-fact{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:20px}
+/* ─── ARCHIMEDES ─── */
+.archi-section{padding:12px 16px;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.objects-shelf{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.objects-shelf::-webkit-scrollbar{height:0}
+.obj-item{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 12px;background:#fff;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:all .2s var(--bounce)}
+.obj-item:active{transform:scale(.93)}
+.obj-item.done{opacity:.35;pointer-events:none}
+.obj-emoji{font-size:26px}
+.obj-name{font-size:10px;font-weight:700;color:var(--muted);text-align:center;max-width:64px;line-height:1.2}
+.raft-section{background:#fff;border-radius:16px;padding:14px 16px;border:2px solid var(--border)}
+.raft-title{font-size:14px;font-weight:800;margin-bottom:10px;color:var(--text)}
+.raft-picks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.raft-pick{padding:8px 14px;border-radius:10px;border:2px solid var(--border);background:#f8f8fc;cursor:pointer;font-size:13px;font-weight:700;transition:all .2s var(--bounce);line-height:1.4}
+.raft-pick.selected{border-color:var(--blue);background:rgba(59,130,246,.12);color:var(--blue)}
+.raft-pick:active{transform:scale(.93)}
+.raft-btn{width:100%;background:var(--coral);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s var(--bounce)}
+.raft-btn:active{transform:scale(.95)}
 
-/* COMPLETE */
-#complete{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 30%,rgba(0,194,124,.12) 0%,transparent 65%),var(--bg)}
-.complete-emoji{font-size:96px;display:block;margin-bottom:16px;animation:bob 2.5s ease-in-out infinite}
-.complete-h{font-size:clamp(30px,8vw,52px);font-weight:800;letter-spacing:-1.5px;margin-bottom:10px}
-.complete-h em{color:var(--mint)}
-.complete-sub{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.6}
-.stars-final{font-size:30px;margin-bottom:24px;letter-spacing:4px}
+/* ─── INFO BADGE ─── */
+.info-badge{margin:0 16px;padding:12px 14px;background:#fff;border-radius:14px;border-left:4px solid var(--blue);font-size:13px;font-weight:600;color:var(--text);animation:slideUp .4s ease;display:none;flex-shrink:0}
+.info-badge.show{display:block}
+.info-badge.discovery{border-left-color:var(--yellow);background:rgba(255,225,65,.08)}
+.info-badge.success{border-left-color:var(--mint);background:rgba(0,194,124,.08)}
+.info-badge.fail{border-left-color:var(--coral);background:rgba(255,80,56,.08)}
 
-canvas{touch-action:none}
+/* ─── SUCCESS OVERLAY ─── */
+.success-overlay{position:fixed;inset:0;background:rgba(255,253,247,.97);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:32px;text-align:center;gap:16px}
+.success-overlay.show{display:flex}
+.success-emoji{font-size:80px;animation:bounceIn .7s var(--bounce)}
+.success-title{font-size:28px;font-weight:800;color:var(--text)}
+.success-fact{font-size:15px;color:var(--muted);max-width:290px;line-height:1.6;background:#fff;padding:16px;border-radius:16px;border:1px solid var(--border)}
+.success-btn{background:var(--yellow);color:var(--text);border:none;padding:14px 36px;border-radius:20px;font-size:17px;font-weight:800;cursor:pointer;transition:transform .2s var(--bounce);box-shadow:0 4px 20px rgba(255,225,65,.4)}
+.success-btn:hover{transform:scale(1.06) translateY(-2px)}
+.success-btn:active{transform:scale(.96)}
+
+/* ─── HINT ─── */
+.hint-chip{margin:8px 16px 0;padding:9px 14px;background:rgba(59,130,246,.08);border-radius:12px;font-size:12px;font-weight:600;color:var(--blue);flex-shrink:0}
+
+/* ─── DISCOVERY BANNER ─── */
+.discovery-banner{margin:0 16px;padding:14px 16px;background:linear-gradient(135deg,rgba(255,225,65,.2),rgba(59,130,246,.1));border-radius:16px;border:2px solid var(--yellow);text-align:center;display:none;flex-shrink:0}
+.discovery-banner.show{display:block;animation:spinBadge .6s var(--bounce)}
+.discovery-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.5}
 </style>
 </head>
 <body>
 
-<!-- INTRO -->
-<div id="intro" class="screen active">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
-    <span class="intro-emoji">⚡</span>
-    <div class="intro-tag">КосмоБаза · Физика</div>
-    <h1 class="intro-h">Квант<em>Ум</em><br>Физ Лаб</h1>
-    <p class="intro-sub">Тяни, роняй, отражай — физика оживёт прямо в руках</p>
-    <button class="btn btn-blue" onclick="showScreen('levelSelect')">Начать →</button>
-  </div>
+<!-- ══════════════════════════════════════════ INTRO -->
+<div class="screen active" id="intro">
+  <div class="stars-wrap" id="starsWrap"></div>
+  <div class="intro-badge">⚡</div>
+  <div class="intro-title">Кван<span>Тум</span></div>
+  <div class="intro-sub">Физика — это весело! Трогай, запускай, открывай.</div>
+  <button class="intro-btn" onclick="showScreen('levelSelect')">Начать ▶</button>
 </div>
 
-<!-- LEVEL SELECT -->
-<div id="levelSelect" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
-    <h2 class="ls-h">Выбери уровень</h2>
-    <p class="ls-sub">Все открыты — исследуй!</p>
-    <div class="levels-list">
-      <div class="lvl-card" id="card1" onclick="startLevel(1)">
-        <span class="lc-ico">🍎</span>
-        <div class="lc-info">
-          <div class="lc-num">Уровень 1</div>
-          <div class="lc-name">Всё падает вниз</div>
-          <div class="lc-desc">Тапай на предметы — открой закон гравитации!</div>
-        </div>
-        <span class="lc-badge" id="badge1">▶</span>
+<!-- ══════════════════════════════════════════ LEVEL SELECT -->
+<div class="screen" id="levelSelect">
+  <div class="top-nav">
+    <button class="nav-back" onclick="showScreen('intro')">←</button>
+    <span class="nav-title">Выбери уровень</span>
+    <div style="width:40px"></div>
+  </div>
+  <div class="section-title">⚡ Все уровни открыты</div>
+  <div class="level-cards">
+    <div class="level-card blue" onclick="startLevel(1)">
+      <div class="lc-icon">⚙️</div>
+      <div class="lc-info">
+        <div class="lc-num">Уровень 1</div>
+        <div class="lc-name">Машина Голдберга</div>
+        <div class="lc-desc">Строй цепочки из шаров, горок и рычагов — передавай энергию!</div>
+        <span class="tag blue">Причина и следствие</span>
       </div>
-      <div class="lvl-card" id="card2" onclick="startLevel(2)">
-        <span class="lc-ico">🪃</span>
-        <div class="lc-info">
-          <div class="lc-num">Уровень 2</div>
-          <div class="lc-name">Чем сильнее — тем дальше</div>
-          <div class="lc-desc">Тяни рогатку назад и сбивай мишени!</div>
-        </div>
-        <span class="lc-badge" id="badge2">▶</span>
+      <div class="lc-arrow">›</div>
+    </div>
+    <div class="level-card purple" onclick="startLevel(2)">
+      <div class="lc-icon">🕰️</div>
+      <div class="lc-info">
+        <div class="lc-num">Уровень 2</div>
+        <div class="lc-name">Маятник Галилея</div>
+        <div class="lc-desc">Узнай секрет маятников — длина важна, масса нет!</div>
+        <span class="tag purple">Открытие 1583 года</span>
       </div>
-      <div class="lvl-card" id="card3" onclick="startLevel(3)">
-        <span class="lc-ico">💡</span>
-        <div class="lc-info">
-          <div class="lc-num">Уровень 3</div>
-          <div class="lc-name">Свет отражается</div>
-          <div class="lc-desc">Поворачивай зеркало — направляй луч к цветку!</div>
-        </div>
-        <span class="lc-badge" id="badge3">▶</span>
+      <div class="lc-arrow">›</div>
+    </div>
+    <div class="level-card teal" onclick="startLevel(3)">
+      <div class="lc-icon">🌊</div>
+      <div class="lc-info">
+        <div class="lc-num">Уровень 3</div>
+        <div class="lc-name">Архимед</div>
+        <div class="lc-desc">Кидай предметы в воду и строй плот — кто тонет, кто плавает?</div>
+        <span class="tag teal">Плотность и плавучесть</span>
+      </div>
+      <div class="lc-arrow">›</div>
+    </div>
+  </div>
+  <div style="padding:20px 16px;text-align:center;color:var(--muted);font-size:12px">КосмоБаза · Физика 6–14 лет</div>
+</div>
+
+<!-- ══════════════════════════════════════════ LEVEL 1: GOLDBERG -->
+<div class="screen" id="level1">
+  <div class="top-nav">
+    <button class="nav-back" onclick="stopGoldberg();showScreen('levelSelect')">←</button>
+    <span class="nav-title">⚙️ Машина Голдберга</span>
+    <div style="width:40px"></div>
+  </div>
+  <div class="scenario-tabs" id="scenarioTabs">
+    <div class="scenario-tab active" onclick="selectScenario(0)">😺 Кот</div>
+    <div class="scenario-tab" onclick="selectScenario(1)">🌸 Цветок</div>
+    <div class="scenario-tab" onclick="selectScenario(2)">🔔 Колокол</div>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="goldCanvas" height="300"></canvas>
+  </div>
+  <div class="hint-chip" id="goldHint">💡 Подсказка: поставь горку и шар</div>
+  <div class="info-badge" id="goldBadge"></div>
+  <div id="toolbarWrap">
+    <div class="toolbar-label">Выбери элемент → кликни на поле</div>
+    <div class="toolbar">
+      <div class="tool-btn active" data-tool="ball" onclick="selectTool(this)">
+        <span class="tool-emoji">🔵</span><span class="tool-label">Шар</span>
+      </div>
+      <div class="tool-btn" data-tool="domino" onclick="selectTool(this)">
+        <span class="tool-emoji">🟫</span><span class="tool-label">Домино</span>
+      </div>
+      <div class="tool-btn" data-tool="ramp" onclick="selectTool(this)">
+        <span class="tool-emoji">📐</span><span class="tool-label">Горка</span>
+      </div>
+      <div class="tool-btn" data-tool="lever" onclick="selectTool(this)">
+        <span class="tool-emoji">⚖️</span><span class="tool-label">Рычаг</span>
+      </div>
+      <div class="tool-btn" data-tool="spring" onclick="selectTool(this)">
+        <span class="tool-emoji">🌀</span><span class="tool-label">Пружина</span>
       </div>
     </div>
   </div>
+  <div class="goldberg-controls">
+    <button class="ctrl-btn run" id="goldRunBtn" onclick="runGoldberg()">▶ Пуск</button>
+    <button class="ctrl-btn reset" onclick="resetGoldberg()">↺ Сбросить</button>
+  </div>
+  <div style="height:16px"></div>
 </div>
 
-<!-- LEVEL 1 — GRAVITY -->
-<div id="level1" class="screen">
-  <div class="g-hdr">
-    <button class="back-btn" onclick="goBack(1)">←</button>
-    <span class="g-title">🍎 Всё падает вниз</span>
-    <div class="g-progress" id="stars1">
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+<!-- ══════════════════════════════════════════ LEVEL 2: PENDULUM -->
+<div class="screen" id="level2">
+  <div class="top-nav">
+    <button class="nav-back" onclick="stopPendulums();showScreen('levelSelect')">←</button>
+    <span class="nav-title">🕰️ Маятник Галилея</span>
+    <div style="width:40px"></div>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="pendCanvas" height="280"></canvas>
+  </div>
+  <div class="discovery-banner" id="discoveryBanner">
+    <div style="font-size:28px;margin-bottom:6px">⚡</div>
+    <div class="discovery-text">Открытие Галилея: одинаковая длина = одинаковый ритм!<br>Масса не имеет значения!</div>
+  </div>
+  <div class="pend-controls">
+    <button class="pend-btn" onclick="launchAllPendulums()">🌀 Запустить все маятники</button>
+    <div class="pend-slider-wrap" id="pendSlider" style="display:none">
+      <div class="pend-slider-title">🎯 Настрой свой маятник</div>
+      <div class="pend-slider-sub">Задание: ровно 3 качания за 6 секунд</div>
+      <input type="range" id="lengthSlider" min="50" max="200" value="100" oninput="updateCustomPend(this.value)">
+      <div class="pend-goal-info" id="pendGoalInfo">Двигай ползунок ↔</div>
     </div>
   </div>
-  <div class="hint-bar" id="hint1">👇 Тапай на любой предмет!</div>
-  <div class="canvas-wrap" id="wrap1">
-    <canvas id="c1"></canvas>
-    <div class="discovery-badge" id="disc1">⚡ Галилей открыл: всё падает одинаково быстро!</div>
-  </div>
+  <div class="info-badge" id="pendBadge"></div>
 </div>
 
-<!-- LEVEL 2 — SLINGSHOT -->
-<div id="level2" class="screen">
-  <div class="g-hdr">
-    <button class="back-btn" onclick="goBack(2)">←</button>
-    <span class="g-title">🪃 Рогатка</span>
-    <div class="g-progress" id="stars2">
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
-    </div>
+<!-- ══════════════════════════════════════════ LEVEL 3: ARCHIMEDES -->
+<div class="screen" id="level3">
+  <div class="top-nav">
+    <button class="nav-back" onclick="stopArchimedes();showScreen('levelSelect')">←</button>
+    <span class="nav-title">🌊 Архимед</span>
+    <div style="width:40px"></div>
   </div>
-  <div class="hint-bar" id="hint2">👈 Тяни шар назад и отпускай!</div>
-  <div class="canvas-wrap" id="wrap2">
-    <canvas id="c2"></canvas>
+  <div class="canvas-wrap">
+    <canvas id="archiCanvas" height="240"></canvas>
   </div>
-</div>
-
-<!-- LEVEL 3 — MIRROR LIGHT -->
-<div id="level3" class="screen">
-  <div class="g-hdr">
-    <button class="back-btn" onclick="goBack(3)">←</button>
-    <span class="g-title">💡 Свет и зеркало</span>
-    <div class="g-progress" id="stars3">
-      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
-    </div>
-  </div>
-  <div class="hint-bar" id="hint3">👆 Тапай на зеркало — оно повернётся!</div>
-  <div class="canvas-wrap" id="wrap3">
-    <canvas id="c3"></canvas>
-  </div>
-</div>
-
-<!-- SUCCESS OVERLAY -->
-<div class="success-ov" id="successOv">
-  <div class="ov-bg" onclick="closeSuccess()"></div>
-  <div class="ov-card">
-    <span class="ov-scientist">🧑‍🔬</span>
-    <span class="ov-emoji" id="ovEmoji">🍎</span>
-    <h2 class="ov-h" id="ovTitle">Отлично!</h2>
-    <p class="ov-fact" id="ovFact">Интересный факт появится здесь.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-mint" id="ovNext" onclick="nextLevel()">Следующий →</button>
-      <button class="btn" style="background:var(--surface);color:var(--text)" onclick="showScreen('levelSelect')">Все уровни</button>
+  <div class="archi-section">
+    <div style="font-size:13px;font-weight:700;color:var(--muted)" id="archiPhaseLabel">Часть 1 — Тонет или плавает? Нажимай на предметы!</div>
+    <div class="objects-shelf" id="objectsShelf"></div>
+    <div class="info-badge" id="archiBadge"></div>
+    <div class="raft-section" id="raftSection" style="display:none">
+      <div class="raft-title">🏗️ Построй плот для 💎 Сокровища (3 кг)</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Выбери 2–3 материала и испытай плот!</div>
+      <div class="raft-picks" id="raftPicks"></div>
+      <button class="raft-btn" onclick="testRaft()">🌊 Испытать плот!</button>
     </div>
   </div>
 </div>
 
-<!-- COMPLETE -->
-<div id="complete" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
-    <span class="complete-emoji">🏆</span>
-    <h2 class="complete-h">Ты настоящий<br><em>Физик!</em></h2>
-    <p class="complete-sub">Прошёл все 3 уровня физики.<br>Ньютон, Галилей и Снеллиус гордятся тобой!</p>
-    <div class="stars-final">⭐⭐⭐⭐⭐⭐</div>
-    <button class="btn btn-blue" onclick="showScreen('levelSelect')">Ещё раз!</button>
-  </div>
+<!-- ══════════════════════════════════════════ SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-emoji" id="successEmoji">🧑‍🔬</div>
+  <div class="success-title" id="successTitle">Отлично!</div>
+  <div class="success-fact" id="successFact"></div>
+  <button class="success-btn" onclick="closeSuccess()">Продолжить →</button>
 </div>
 
 <script>
-// ─── UTILS ───────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  $(id).classList.add('active');
+// ══════════════════ UTILS ══════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='level1') initGoldberg();
+  if(id==='level2') initPendulum();
+  if(id==='level3') initArchimedes();
+  if(id==='intro') createStars();
 }
+function startLevel(n){showScreen('level'+n)}
 
-function goBack(lvl) {
-  stopAllAnimations();
-  showScreen('levelSelect');
-}
-
-function burst(x, y, syms) {
-  syms.forEach((s, i) => {
-    const p = document.createElement('div');
-    const angle = (i / syms.length) * Math.PI * 2;
-    const dist = 50 + Math.random() * 60;
-    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:999;transition:all .7s ease-out;`;
-    p.textContent = s;
-    document.body.appendChild(p);
-    requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-40}px)`;
-      p.style.opacity = '0';
+function burst(x,y,syms){
+  syms.forEach((s,i)=>{
+    const p=document.createElement('div');
+    const angle=(i/syms.length)*Math.PI*2,dist=50+Math.random()*60;
+    p.style.cssText=`position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:999;transition:all .7s ease-out;`;
+    p.textContent=s;document.body.appendChild(p);
+    requestAnimationFrame(()=>{
+      p.style.transform=`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-40}px)`;
+      p.style.opacity='0';
     });
-    setTimeout(() => p.remove(), 800);
+    setTimeout(()=>p.remove(),800);
   });
 }
 
-let currentLevel = 0;
-let rafId = null;
-let rafId2 = null;
-let rafId3 = null;
-
-function stopAllAnimations() {
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  if (rafId2) { cancelAnimationFrame(rafId2); rafId2 = null; }
-  if (rafId3) { cancelAnimationFrame(rafId3); rafId3 = null; }
+let _successNext='levelSelect';
+function showSuccess(emoji,title,fact,next){
+  document.getElementById('successEmoji').textContent=emoji;
+  document.getElementById('successTitle').textContent=title;
+  document.getElementById('successFact').textContent=fact;
+  _successNext=next||'levelSelect';
+  document.getElementById('successOverlay').classList.add('show');
+  burst(window.innerWidth/2,window.innerHeight/2,['⭐','✨','🎉','🌟','💫','🎊','⚡']);
+  setTimeout(()=>burst(window.innerWidth/2,window.innerHeight/2,['🔵','🟡','🟢','🔴','🟣']),300);
+}
+function closeSuccess(){
+  document.getElementById('successOverlay').classList.remove('show');
+  showScreen(_successNext);
 }
 
-// ─── PROGRESS ────────────────────────────────────────────────────
-const progress = JSON.parse(localStorage.getItem('phys_progress') || '{}');
-
-function markDone(lvl) {
-  progress['lvl' + lvl] = true;
-  localStorage.setItem('phys_progress', JSON.stringify(progress));
-  const card = $('card' + lvl);
-  if (card) card.classList.add('done');
-  const badge = $('badge' + lvl);
-  if (badge) badge.textContent = '✅';
+function showBadge(id,text,type){
+  const el=document.getElementById(id);
+  el.textContent=text;el.className='info-badge show '+(type||'');
+}
+function hideBadge(id){document.getElementById(id).className='info-badge'}
+function saveProgress(level){
+  let done=JSON.parse(localStorage.getItem('kvantum_done')||'[]');
+  if(!done.includes(level)) done.push(level);
+  localStorage.setItem('kvantum_done',JSON.stringify(done));
 }
 
-function loadProgress() {
-  for (let i = 1; i <= 3; i++) {
-    if (progress['lvl' + i]) {
-      const card = $('card' + i);
-      if (card) card.classList.add('done');
-      const badge = $('badge' + i);
-      if (badge) badge.textContent = '✅';
+function shadeColor(c,p){
+  const n=parseInt(c.slice(1),16);
+  const r=Math.min(255,Math.max(0,(n>>16)+p));
+  const g=Math.min(255,Math.max(0,((n>>8)&0xff)+p));
+  const b=Math.min(255,Math.max(0,(n&0xff)+p));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+// ══════════════════ STARS ══════════════════
+function createStars(){
+  const wrap=document.getElementById('starsWrap');
+  wrap.innerHTML='';
+  for(let i=0;i<50;i++){
+    const s=document.createElement('div');
+    s.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${Math.random()*100}%;
+    width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;background:#fff;border-radius:50%;
+    opacity:${.3+Math.random()*.7};animation:pulse ${1.5+Math.random()*2}s ease-in-out infinite;animation-delay:${Math.random()*2}s`;
+    wrap.appendChild(s);
+  }
+}
+createStars();
+
+// ══════════════════════════════════════════════════
+// ════════  LEVEL 1 — GOLDBERG MACHINE  ════════════
+// ══════════════════════════════════════════════════
+let gc,gctx,gW,gH;
+let gElements=[],gRunning=false,gRaf=null;
+let gTool='ball',gScIdx=0;
+let gBall={x:0,y:0,vx:0,vy:0,active:false};
+let gGoalHit=false,gChainTime=0;
+
+const SCENARIOS=[
+  {name:'Разбуди кота!',goal:'😺',startPos:{x:32,y:64},
+   hint:'💡 Поставь горку (📐), потом шар (🔵) на горке',
+   fact:'Цепная реакция! Каждый элемент передаёт энергию следующему — как в машине Голдберга!'},
+  {name:'Полей цветок!',goal:'🌸',startPos:{x:32,y:52},
+   hint:'💡 Рычаг (⚖️) перенаправит шар вверх',
+   fact:'Рычаг умножает силу! Архимед сказал: "Дайте мне точку опоры — и я переверну Землю!"'},
+  {name:'Позвони в колокол!',goal:'🔔',startPos:{x:28,y:58},
+   hint:'💡 Пружина (🌀) подбросит шар к колоколу вверху',
+   fact:'Пружина накапливает потенциальную энергию и превращает её в кинетическую!'},
+];
+
+function getGoalPos(idx){
+  if(idx===0) return {x:gW-42,y:gH-38};
+  if(idx===1) return {x:gW-42,y:gH-38};
+  return {x:gW-38,y:56};
+}
+
+function initGoldberg(){
+  gc=document.getElementById('goldCanvas');
+  gctx=gc.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  gW=gc.offsetWidth; gH=300;
+  gc.width=gW*dpr; gc.height=gH*dpr;
+  gc.style.width=gW+'px'; gc.style.height=gH+'px';
+  gctx.scale(dpr,dpr);
+  gc.removeEventListener('click',gClick);
+  gc.removeEventListener('touchend',gTouch);
+  gc.addEventListener('click',gClick);
+  gc.addEventListener('touchend',gTouch,{passive:false});
+  resetGoldberg();
+}
+function stopGoldberg(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=null}gRunning=false}
+
+function selectScenario(idx){
+  gScIdx=idx;
+  document.querySelectorAll('.scenario-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  resetGoldberg();
+}
+function selectTool(el){
+  gTool=el.dataset.tool;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function gClick(e){
+  if(gRunning)return;
+  const r=gc.getBoundingClientRect();
+  placeElement((e.clientX-r.left)*(gW/r.width),(e.clientY-r.top)*(gH/r.height));
+}
+function gTouch(e){
+  e.preventDefault();if(gRunning)return;
+  const t=e.changedTouches[0],r=gc.getBoundingClientRect();
+  placeElement((t.clientX-r.left)*(gW/r.width),(t.clientY-r.top)*(gH/r.height));
+}
+
+function placeElement(x,y){
+  const sc=SCENARIOS[gScIdx];
+  const dx=x-sc.startPos.x,dy=y-sc.startPos.y;
+  if(Math.sqrt(dx*dx+dy*dy)<30)return;
+  const gp=getGoalPos(gScIdx);
+  const gx=x-gp.x,gy=y-gp.y;
+  if(Math.sqrt(gx*gx+gy*gy)<30)return;
+  gElements.push({type:gTool,x,y,angle:0,triggered:false,activated:false});
+  drawGold();
+  // ripple
+  const el=document.createElement('div');
+  const br=gc.getBoundingClientRect();
+  el.style.cssText=`position:fixed;left:${br.left+x*(br.width/gW)-16}px;top:${br.top+y*(br.height/gH)-16}px;
+  width:32px;height:32px;border-radius:50%;border:3px solid #3B82F6;pointer-events:none;z-index:50;
+  animation:ripple .5s ease-out forwards`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),550);
+}
+
+function resetGoldberg(){
+  stopGoldberg();
+  gGoalHit=false; gChainTime=0;
+  gElements=[]; gBall={x:0,y:0,vx:0,vy:0,active:false};
+  hideBadge('goldBadge');
+  document.getElementById('goldHint').textContent=SCENARIOS[gScIdx].hint;
+  document.getElementById('goldRunBtn').textContent='▶ Пуск';
+  drawGold();
+}
+
+function drawGlossyBall(ctx,x,y,r,color){
+  const g=ctx.createRadialGradient(x-r*.3,y-r*.3,r*.1,x,y,r);
+  g.addColorStop(0,'#fff');g.addColorStop(.35,color);g.addColorStop(1,shadeColor(color,-40));
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+function drawGold(){
+  const ctx=gctx,W=gW,H=gH,sc=SCENARIOS[gScIdx];
+  ctx.clearRect(0,0,W,H);
+  // BG
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#EEF6FF');bg.addColorStop(1,'#E0ECFF');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.fillStyle='rgba(59,130,246,.06)';
+  for(let gx=20;gx<W;gx+=28)for(let gy=20;gy<H;gy+=28){
+    ctx.beginPath();ctx.arc(gx,gy,1.5,0,Math.PI*2);ctx.fill();
+  }
+  // Floor
+  ctx.fillStyle='rgba(59,130,246,.12)';ctx.fillRect(0,H-14,W,14);
+  ctx.fillStyle='rgba(59,130,246,.35)';ctx.fillRect(0,H-15,W,2);
+
+  // Goal
+  const gp=getGoalPos(gScIdx);
+  ctx.font='30px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(sc.goal,gp.x,gp.y);
+  // Goal ring
+  ctx.beginPath();ctx.arc(gp.x,gp.y,24,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,225,65,.7)';ctx.lineWidth=3;ctx.stroke();
+
+  // Placed elements
+  gElements.forEach(el=>drawEl(ctx,el));
+
+  // Start ball
+  drawGlossyBall(ctx,sc.startPos.x,sc.startPos.y,16,'#3B82F6');
+  ctx.font='10px Space Grotesk';ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.fillStyle='rgba(59,130,246,.7)';
+  ctx.fillText('СТАРТ',sc.startPos.x,sc.startPos.y+19);
+
+  // Anim ball
+  if(gBall.active) drawGlossyBall(ctx,gBall.x,gBall.y,13,'#FF5038');
+}
+
+function drawEl(ctx,el){
+  ctx.save();
+  switch(el.type){
+    case 'ball':
+      drawGlossyBall(ctx,el.x,el.y,13,el.activated?'#FF8C00':'#00C27C');
+      break;
+    case 'domino':
+      ctx.translate(el.x,el.y);
+      ctx.rotate(el.angle*Math.PI/180);
+      ctx.fillStyle=el.activated?'#92400e':'#5D3A1A';
+      ctx.fillRect(-6,-20,12,40);
+      ctx.fillStyle='#F5DEB3';
+      [-12,0,12].forEach(oy=>{
+        ctx.beginPath();ctx.arc(0,oy,2,0,Math.PI*2);ctx.fill();
+      });
+      break;
+    case 'ramp':
+      ctx.beginPath();
+      ctx.moveTo(el.x,el.y);ctx.lineTo(el.x+88,el.y+54);
+      ctx.strokeStyle=el.activated?'#FF5038':'#3B82F6';
+      ctx.lineWidth=6;ctx.lineCap='round';ctx.stroke();
+      // support
+      ctx.beginPath();ctx.moveTo(el.x+44,el.y+27);ctx.lineTo(el.x+44,el.y+27+30);
+      ctx.strokeStyle='rgba(59,130,246,.3)';ctx.lineWidth=2;ctx.stroke();
+      break;
+    case 'lever':
+      ctx.translate(el.x,el.y);ctx.rotate(el.angle*Math.PI/180);
+      ctx.fillStyle=el.activated?'#FF5038':'#A0522D';
+      ctx.fillRect(-44,-4,88,8);ctx.restore();ctx.save();
+      ctx.translate(el.x,el.y);
+      ctx.beginPath();ctx.moveTo(-9,4);ctx.lineTo(9,4);ctx.lineTo(0,22);
+      ctx.closePath();ctx.fillStyle='#8B4513';ctx.fill();
+      break;
+    case 'spring':
+      ctx.strokeStyle=el.activated?'#FF5038':'#6366F1';
+      ctx.lineWidth=3;ctx.lineJoin='round';
+      ctx.beginPath();ctx.moveTo(el.x,el.y-22);
+      for(let i=0;i<6;i++) ctx.lineTo(el.x+(i%2===0?11:-11),el.y-14+(i*8));
+      ctx.stroke();
+      break;
+  }
+  ctx.restore();
+}
+
+function runGoldberg(){
+  if(gRunning){resetGoldberg();return}
+  gRunning=true;gGoalHit=false;gChainTime=0;
+  document.getElementById('goldRunBtn').textContent='⏹ Стоп';
+  const sc=SCENARIOS[gScIdx];
+  gBall={x:sc.startPos.x,y:sc.startPos.y,vx:2,vy:0,active:true};
+  gElements.forEach(e=>{e.activated=false;e.angle=0;e.triggered=false});
+  gRaf=requestAnimationFrame(gLoop);
+}
+
+function gLoop(){
+  if(!gRunning){drawGold();return}
+  gChainTime+=16;
+  const W=gW,H=gH,b=gBall,sc=SCENARIOS[gScIdx];
+  b.vy+=0.42;
+  // Ramp physics
+  let onRamp=false;
+  gElements.filter(e=>e.type==='ramp').forEach(ramp=>{
+    const len=Math.sqrt(88*88+54*54);
+    const nx=88/len,ny=54/len;
+    const dx=b.x-ramp.x,dy=b.y-ramp.y;
+    const proj=dx*nx+dy*ny;
+    if(proj>=-5&&proj<=len+5){
+      const perp=dx*(-ny)+dy*nx;
+      if(perp>-5&&perp<20){
+        b.x=ramp.x+proj*nx+(-ny)*13;
+        b.y=ramp.y+proj*ny+nx*13;
+        const dot=b.vx*nx+b.vy*ny;
+        b.vx=nx*(dot+0.3);b.vy=ny*(dot+0.3);
+        ramp.activated=true;onRamp=true;
+      }
     }
-  }
-}
-
-// ─── SUCCESS OVERLAY ─────────────────────────────────────────────
-const OV_DATA = {
-  1: { emoji:'🍎', title:'Закон Галилея открыт!', fact:'Galileo Galilei доказал: перо и камень падают одинаково быстро. Воздух мешает перу — но в вакууме они упадут вместе!', next: 2 },
-  2: { emoji:'🪃', title:'Физика силы открыта!', fact:'Чем сильнее тянешь — тем больше энергии запасает резинка. Это называется потенциальная энергия упругости — закон Гука!', next: 3 },
-  3: { emoji:'💡', title:'Закон отражения открыт!', fact:'Угол падения всегда равен углу отражения. Это открыл Снеллиус. Зеркала, перископы и лазеры работают именно так!', next: 0 }
-};
-
-function showSuccess(lvl) {
-  markDone(lvl);
-  const d = OV_DATA[lvl];
-  $('ovEmoji').textContent = d.emoji;
-  $('ovTitle').textContent = d.title;
-  $('ovFact').textContent = d.fact;
-  $('ovNext').style.display = d.next ? 'block' : 'none';
-  $('ovNext').dataset.next = d.next;
-  $('successOv').classList.add('visible');
-
-  // Check all done
-  if (progress.lvl1 && progress.lvl2 && progress.lvl3) {
-    $('ovNext').textContent = 'Завершить 🏆';
-    $('ovNext').dataset.next = 0;
-  }
-}
-
-function closeSuccess() { $('successOv').classList.remove('visible'); }
-
-function nextLevel() {
-  const next = parseInt($('ovNext').dataset.next);
-  closeSuccess();
-  if (next === 0) {
-    if (progress.lvl1 && progress.lvl2 && progress.lvl3) {
-      showScreen('complete');
-    } else {
-      showScreen('levelSelect');
+  });
+  b.x+=b.vx;b.y+=b.vy;
+  // Domino
+  gElements.filter(e=>e.type==='domino'&&!e.triggered).forEach(dom=>{
+    if(Math.abs(b.x-dom.x)<20&&Math.abs(b.y-dom.y)<30){
+      dom.triggered=true;dom.activated=true;
+      let a=0;const iv=setInterval(()=>{a+=5;dom.angle=a;if(a>=90){dom.angle=90;clearInterval(iv)}},16);
+      b.vx+=1.2;b.vy-=0.8;
     }
-  } else {
-    startLevel(next);
+  });
+  // Lever
+  gElements.filter(e=>e.type==='lever'&&!e.triggered).forEach(lev=>{
+    if(Math.abs(b.x-lev.x)<48&&Math.abs(b.y-lev.y)<14){
+      lev.triggered=true;lev.activated=true;
+      let a=0;const iv=setInterval(()=>{a-=3;lev.angle=a;if(a<=-30){clearInterval(iv)}},16);
+      b.vy=-4.5;b.vx+=1.5;
+    }
+  });
+  // Spring
+  gElements.filter(e=>e.type==='spring'&&!e.triggered).forEach(spr=>{
+    if(Math.abs(b.x-spr.x)<18&&Math.abs(b.y-spr.y)<32){
+      spr.triggered=true;spr.activated=true;
+      b.vy=-8;b.vx+=1.2;
+    }
+  });
+  // Extra balls
+  gElements.filter(e=>e.type==='ball'&&!e.triggered).forEach(eb=>{
+    const dx=b.x-eb.x,dy=b.y-eb.y;
+    if(Math.sqrt(dx*dx+dy*dy)<26){eb.triggered=true;eb.activated=true;b.vx+=0.8;b.vy-=0.5}
+  });
+  // Floor
+  if(b.y>H-18){b.y=H-18;b.vy*=-0.3;b.vx*=0.88;if(Math.abs(b.vy)<0.5)b.vy=0}
+  if(b.x<0){b.x=0;b.vx*=-0.5}
+  if(b.x>W){b.x=W;b.vx*=-0.5}
+  // Goal check
+  const gp=getGoalPos(gScIdx);
+  const dx=b.x-gp.x,dy=b.y-gp.y;
+  if(Math.sqrt(dx*dx+dy*dy)<34&&!gGoalHit){
+    gGoalHit=true;gRunning=false;
+    saveProgress(1);
+    burst(window.innerWidth/2,200,['⭐','🎉','✨','🌟','⚡','💫']);
+    setTimeout(()=>showSuccess('🧑‍🔬','Машина сработала!',SCENARIOS[gScIdx].fact,'levelSelect'),600);
+  }
+  // Fail: out of bounds or stuck
+  if(b.y>H+60||(gChainTime>2000&&Math.abs(b.vx)<0.15&&Math.abs(b.vy)<0.15)){
+    if(!gGoalHit){
+      gRunning=false;gBall.active=false;
+      document.getElementById('goldRunBtn').textContent='▶ Пуск';
+      showBadge('goldBadge','💔 Цепочка прервалась! Добавь ещё элементы и попробуй снова.','fail');
+    }
+    drawGold();return;
+  }
+  drawGold();
+  gRaf=requestAnimationFrame(gLoop);
+}
+
+// ══════════════════════════════════════════════════
+// ════════  LEVEL 2 — PENDULUM GALILEO  ════════════
+// ══════════════════════════════════════════════════
+let pc,pctx,pW,pH;
+let pRaf=null,pendulums=[],customPend=null;
+let pStart=null,discoveryShown=false,customGoalMet=false;
+
+const PEND_DATA=[
+  {length:80, mass:16,color:'#FF5038',label:'Лёгкий\nкороткий'},
+  {length:148,mass:26,color:'#3B82F6',label:'Тяжёлый\nдлинный'},
+  {length:80, mass:26,color:'#00C27C',label:'Тяжёлый\nкороткий'},
+];
+
+function initPendulum(){
+  pc=document.getElementById('pendCanvas');
+  pctx=pc.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  pW=pc.offsetWidth;pH=280;
+  pc.width=pW*dpr;pc.height=pH*dpr;
+  pc.style.width=pW+'px';pc.style.height=pH+'px';
+  pctx.scale(dpr,dpr);
+  const sp=pW/4;
+  pendulums=PEND_DATA.map((d,i)=>({
+    ...d,x:sp*(i+1),angle:0,maxAngle:0,t:0,swingCount:0,prevAngle:0
+  }));
+  customPend={x:pW*0.87,length:100,mass:20,color:'#6366F1',label:'Твой',angle:0,maxAngle:0,t:0,active:false};
+  discoveryShown=false;customGoalMet=false;pStart=null;
+  document.getElementById('discoveryBanner').classList.remove('show');
+  document.getElementById('pendSlider').style.display='none';
+  document.getElementById('pendGoalInfo').textContent='Двигай ползунок ↔';
+  hideBadge('pendBadge');
+  pc.removeEventListener('click',pClick);
+  pc.removeEventListener('touchend',pTouch);
+  pc.addEventListener('click',pClick);
+  pc.addEventListener('touchend',pTouch,{passive:false});
+  pRaf=requestAnimationFrame(pLoop);
+}
+
+function stopPendulums(){if(pRaf){cancelAnimationFrame(pRaf);pRaf=null}}
+
+function pClick(e){
+  const r=pc.getBoundingClientRect();
+  hitPend((e.clientX-r.left)*(pW/r.width),(e.clientY-r.top)*(pH/r.height));
+}
+function pTouch(e){
+  e.preventDefault();
+  const t=e.changedTouches[0],r=pc.getBoundingClientRect();
+  hitPend((t.clientX-r.left)*(pW/r.width),(t.clientY-r.top)*(pH/r.height));
+}
+function hitPend(cx,cy){
+  const anchorY=20;
+  const all=[...pendulums,(customPend.active?customPend:null)].filter(Boolean);
+  all.forEach(p=>{
+    const bx=p.x+Math.sin(p.angle)*p.length;
+    const by=anchorY+Math.cos(p.angle)*p.length;
+    if(Math.sqrt((cx-bx)**2+(cy-by)**2)<p.mass+16){
+      p.maxAngle=0.52;p.t=0;p.swingCount=0;p.prevAngle=0;
+    }
+  });
+}
+function launchAllPendulums(){
+  pendulums.forEach(p=>{p.maxAngle=0.52;p.t=0;p.swingCount=0;p.prevAngle=0});
+  if(customPend.active){customPend.t=0;customPend.maxAngle=0.52}
+}
+
+function pLoop(ts){
+  if(!pStart)pStart=ts;
+  const elapsed=(ts-pStart)/1000;
+  pendulums.forEach(p=>{
+    if(!p.maxAngle)return;
+    const L=p.length/90;
+    const omega=Math.sqrt(9.8/L);
+    p.t+=0.016;
+    p.prevAngle=p.angle;
+    p.angle=p.maxAngle*Math.cos(omega*p.t);
+    if(p.prevAngle*p.angle<0) p.swingCount++;
+  });
+  if(customPend.active&&customPend.maxAngle>0){
+    const L=customPend.length/90;
+    const omega=Math.sqrt(9.8/L);
+    customPend.t+=0.016;
+    customPend.angle=customPend.maxAngle*Math.cos(omega*customPend.t);
+  }
+  drawPend(elapsed);
+  // Discovery: pendulums 0 and 2 have same length → same frequency
+  if(!discoveryShown&&elapsed>5&&pendulums.every(p=>p.swingCount>3)){
+    discoveryShown=true;
+    document.getElementById('discoveryBanner').classList.add('show');
+    document.getElementById('pendSlider').style.display='block';
+    customPend.active=true;customPend.maxAngle=0.52;customPend.t=0;
+    burst(window.innerWidth/2,180,['⚡','🌟','💡','✨','🔭','🕰️']);
+  }
+  pRaf=requestAnimationFrame(pLoop);
+}
+
+function updateCustomPend(val){
+  customPend.length=parseInt(val);
+  customPend.t=0;
+  if(!customPend.active){customPend.active=true;customPend.maxAngle=0.52}
+  const L=parseInt(val)/90;
+  const omega=Math.sqrt(9.8/L);
+  const period=2*Math.PI/omega;
+  const swings=(6/period);
+  const info=document.getElementById('pendGoalInfo');
+  const diff=Math.abs(swings-3);
+  info.textContent=`Длина: ${val}px → ~${swings.toFixed(1)} кач. за 6 сек (цель: 3)`;
+  if(diff<0.4&&!customGoalMet){
+    customGoalMet=true;
+    saveProgress(2);
+    setTimeout(()=>{
+      burst(window.innerWidth/2,200,['🕰️','⚡','🌟','✨','🎉','⏳']);
+      showSuccess('🧑‍🔬','Галилей гордится тобой!',
+        'В 1583 году Галилей наблюдал за раскачивающейся люстрой в Пизанском соборе. Он заметил: период маятника зависит только от длины — масса не важна!','levelSelect');
+    },500);
+  } else if(diff>=0.4){customGoalMet=false}
+}
+
+function drawPend(elapsed){
+  const ctx=pctx,W=pW,H=pH,anchorY=20;
+  ctx.clearRect(0,0,W,H);
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#F5F0FF');bg.addColorStop(1,'#EDE9FE');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // Ceiling beam
+  const bgrad=ctx.createLinearGradient(0,0,0,20);
+  bgrad.addColorStop(0,'#92400e');bgrad.addColorStop(1,'#b45309');
+  ctx.fillStyle=bgrad;ctx.fillRect(0,0,W,20);
+  ctx.strokeStyle='rgba(0,0,0,.08)';ctx.lineWidth=1;
+  for(let i=0;i<W;i+=22){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+8,20);ctx.stroke()}
+  // Nails
+  [pW*.22,pW*.5,pW*.77].forEach(nx=>{
+    ctx.beginPath();ctx.arc(nx,10,4,0,Math.PI*2);
+    ctx.fillStyle='#374151';ctx.fill();
+    ctx.strokeStyle='#9ca3af';ctx.lineWidth=1;ctx.stroke();
+  });
+  // Each pendulum
+  const all=[...pendulums,(customPend.active?customPend:null)].filter(Boolean);
+  all.forEach(p=>{
+    const bx=p.x+Math.sin(p.angle)*p.length;
+    const by=anchorY+Math.cos(p.angle)*p.length;
+    // Trail
+    if(p.maxAngle>0){
+      ctx.beginPath();
+      const steps=24;
+      for(let s=0;s<=steps;s++){
+        const a=-p.maxAngle+s*(2*p.maxAngle/steps);
+        const tx=p.x+Math.sin(a)*p.length,ty=anchorY+Math.cos(a)*p.length;
+        s===0?ctx.moveTo(tx,ty):ctx.lineTo(tx,ty);
+      }
+      ctx.strokeStyle=p.color+'28';ctx.lineWidth=2.5;ctx.setLineDash([3,4]);ctx.stroke();ctx.setLineDash([]);
+    }
+    // String
+    ctx.beginPath();ctx.moveTo(p.x,anchorY);ctx.lineTo(bx,by);
+    ctx.strokeStyle='rgba(107,114,128,.8)';ctx.lineWidth=1.5;ctx.stroke();
+    // Anchor
+    ctx.beginPath();ctx.arc(p.x,anchorY,3.5,0,Math.PI*2);ctx.fillStyle='#374151';ctx.fill();
+    // Ball
+    const gr=ctx.createRadialGradient(bx-p.mass*.3,by-p.mass*.3,p.mass*.1,bx,by,p.mass);
+    gr.addColorStop(0,'#fff');gr.addColorStop(.3,p.color);gr.addColorStop(1,shadeColor(p.color,-30));
+    ctx.beginPath();ctx.arc(bx,by,p.mass,0,Math.PI*2);
+    ctx.fillStyle=gr;ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=2;ctx.stroke();
+    // Label
+    if(p.label){
+      ctx.font='10px Space Grotesk';ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillStyle='rgba(26,26,46,.45)';
+      p.label.split('\n').forEach((ln,i)=>ctx.fillText(ln,p.x,anchorY+p.length+p.mass+6+i*13));
+    }
+  });
+  // Timer
+  if(elapsed>0){
+    ctx.font='11px Space Grotesk';ctx.textAlign='right';ctx.textBaseline='top';
+    ctx.fillStyle='rgba(26,26,46,.3)';
+    ctx.fillText(`${elapsed.toFixed(1)}s`,W-8,24);
+  }
+  // Tip
+  if(elapsed<3){
+    ctx.font='12px Space Grotesk';ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillStyle='rgba(99,102,241,.7)';
+    ctx.fillText('👆 Нажми на шар чтобы запустить!',W/2,H-8);
   }
 }
 
-function startLevel(n) {
-  stopAllAnimations();
-  currentLevel = n;
-  showScreen('level' + n);
-  if (n === 1) initLevel1();
-  if (n === 2) initLevel2();
-  if (n === 3) initLevel3();
+// ══════════════════════════════════════════════════
+// ════════  LEVEL 3 — ARCHIMEDES  ══════════════════
+// ══════════════════════════════════════════════════
+let ac,actx,aW,aH;
+let aRaf=null,aPhase=1,aDone=0;
+let aAnimItems=[],aRaftSel=[];
+
+const ARCHI_OBJ=[
+  {name:'Деревянный кубик',emoji:'🪵',floats:true, msg:'🪵 Дерево плавает — оно легче воды! Плотность 0.6 < 1'},
+  {name:'Металлический шар',emoji:'⚙️',floats:false,msg:'⚙️ Металл тонет — он в 7 раз тяжелее воды!'},
+  {name:'Пробка',          emoji:'🔩',floats:true, msg:'🔩 Пробка самая лёгкая — мгновенно на поверхность!'},
+  {name:'Камень',          emoji:'🪨',floats:false,msg:'🪨 Камень тонет — плотность 2.7, в 2.7 раза тяжелее воды'},
+  {name:'Утка',            emoji:'🦆',floats:true, msg:'🦆 Утка плавает! Перья держат воздух — плотность < 1'},
+  {name:'Монета',          emoji:'🪙',floats:false,msg:'🪙 Монета тонет — медь в 9 раз тяжелее воды!'},
+];
+const RAFT_MAT=[
+  {name:'Бревно',  emoji:'🪵',density:0.5},
+  {name:'Пластик', emoji:'🧴',density:0.9},
+  {name:'Пенопласт',emoji:'🫧',density:0.08},
+  {name:'Дерево',  emoji:'🌳',density:0.6},
+];
+
+function initArchimedes(){
+  ac=document.getElementById('archiCanvas');
+  actx=ac.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  aW=ac.offsetWidth;aH=240;
+  ac.width=aW*dpr;ac.height=aH*dpr;
+  ac.style.width=aW+'px';ac.style.height=aH+'px';
+  actx.scale(dpr,dpr);
+  aPhase=1;aDone=0;aAnimItems=[];aRaftSel=[];
+  document.getElementById('raftSection').style.display='none';
+  document.getElementById('archiPhaseLabel').textContent='Часть 1 — Тонет или плавает? Нажимай на предметы!';
+  hideBadge('archiBadge');
+  buildShelf();buildRaft();
+  if(aRaf){cancelAnimationFrame(aRaf);aRaf=null}
+  aRaf=requestAnimationFrame(aLoop);
 }
+function stopArchimedes(){if(aRaf){cancelAnimationFrame(aRaf);aRaf=null}}
 
-// ═══════════════════════════════════════════════════════════════
-// LEVEL 1 — GRAVITY (все предметы падают одинаково)
-// ═══════════════════════════════════════════════════════════════
-function initLevel1() {
-  const canvas = $('c1');
-  const wrap = $('wrap1');
-  const ctx = canvas.getContext('2d');
-  const disc = $('disc1');
-  const hint = $('hint1');
-  const starsEl = $('stars1').querySelectorAll('.star-dot');
-
-  function resize() {
-    canvas.width = wrap.offsetWidth;
-    canvas.height = wrap.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const GROUND = () => canvas.height - 40;
-  const ITEMS = ['🍎','🪨','🪶','🏀','📦','🌸'];
-  const COLORS_DUST = ['#a0c4ff','#ffd6a5','#caffbf','#fdffb6'];
-
-  // Place items
-  const objects = ITEMS.map((emoji, i) => {
-    const cols = 3;
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    return {
-      emoji,
-      x: (canvas.width / (cols + 1)) * (col + 1),
-      y: 80 + row * 100 + Math.random() * 30,
-      vy: 0,
-      vr: 0,
-      angle: 0,
-      falling: false,
-      landed: false,
-      bouncing: false,
-      scaleY: 1,
-      bounceTimer: 0,
-      startY: 0,
-      startTime: 0
+function buildShelf(){
+  const shelf=document.getElementById('objectsShelf');
+  shelf.innerHTML='';
+  ARCHI_OBJ.forEach((obj,i)=>{
+    const div=document.createElement('div');
+    div.className='obj-item';
+    div.id='aobj'+i;
+    div.innerHTML=`<div class="obj-emoji">${obj.emoji}</div><div class="obj-name">${obj.name}</div>`;
+    div.addEventListener('click',()=>dropObj(i));
+    shelf.appendChild(div);
+  });
+}
+function buildRaft(){
+  const picks=document.getElementById('raftPicks');
+  picks.innerHTML='';
+  RAFT_MAT.forEach((m,i)=>{
+    const div=document.createElement('div');
+    div.className='raft-pick';
+    div.innerHTML=`${m.emoji} ${m.name}<br><span style="font-size:10px;opacity:.6">плотность ${m.density}</span>`;
+    div.onclick=()=>{
+      div.classList.toggle('selected');
+      aRaftSel=aRaftSel.includes(i)?aRaftSel.filter(x=>x!==i):[...aRaftSel,i];
     };
+    picks.appendChild(div);
   });
-
-  let fallen = 0;
-  let discoveryShown = false;
-  let dustParticles = [];
-  let done = false;
-
-  function isHit(obj, px, py) {
-    return Math.hypot(obj.x - px, obj.y - py) < 36;
-  }
-
-  function onTap(e) {
-    if (done) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY2 = canvas.height / rect.height;
-    const pts = e.touches ? [...e.touches] : [e];
-    for (const t of pts) {
-      const px = (t.clientX - rect.left) * scaleX;
-      const py = (t.clientY - rect.top) * scaleY2;
-      for (const o of objects) {
-        if (!o.falling && !o.landed && isHit(o, px, py)) {
-          o.falling = true;
-          o.vy = 0;
-          o.vr = (Math.random() - 0.5) * 0.08;
-          o.startTime = performance.now();
-          o.startY = o.y;
-        }
-      }
-    }
-  }
-
-  canvas.addEventListener('mousedown', onTap);
-  canvas.addEventListener('touchstart', onTap, { passive: true });
-
-  function spawnDust(x, y) {
-    for (let i = 0; i < 8; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      dustParticles.push({
-        x, y, vx: Math.cos(angle) * (1 + Math.random() * 2),
-        vy: -(0.5 + Math.random() * 1.5),
-        life: 1, color: COLORS_DUST[Math.floor(Math.random() * COLORS_DUST.length)],
-        r: 3 + Math.random() * 4
-      });
-    }
-  }
-
-  function drawTree(ctx, cx, groundY) {
-    // trunk
-    ctx.fillStyle = '#8B5E3C';
-    ctx.fillRect(cx - 8, groundY - 90, 16, 90);
-    // canopy
-    ctx.fillStyle = '#4A9B5F';
-    ctx.beginPath();
-    ctx.ellipse(cx, groundY - 130, 52, 58, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#3B8A50';
-    ctx.beginPath();
-    ctx.ellipse(cx - 20, groundY - 110, 32, 40, -0.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#5DB870';
-    ctx.beginPath();
-    ctx.ellipse(cx + 10, groundY - 140, 35, 38, 0.2, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function drawGround(ctx, w, groundY) {
-    // sky gradient
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
-    skyGrad.addColorStop(0, '#C8E6F5');
-    skyGrad.addColorStop(1, '#E8F4FD');
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(0, 0, w, groundY);
-    // grass
-    ctx.fillStyle = '#7EC850';
-    ctx.fillRect(0, groundY, w, 40);
-    ctx.fillStyle = '#9ED870';
-    for (let gx = 0; gx < w; gx += 18) {
-      ctx.beginPath();
-      ctx.moveTo(gx, groundY);
-      ctx.lineTo(gx + 6, groundY - 10);
-      ctx.lineTo(gx + 12, groundY);
-      ctx.fill();
-    }
-  }
-
-  function loop(ts) {
-    if (currentLevel !== 1) return;
-    const w = canvas.width, h = canvas.height;
-    const groundY = GROUND();
-    ctx.clearRect(0, 0, w, h);
-    drawGround(ctx, w, groundY);
-
-    // Tree on the left side
-    drawTree(ctx, w * 0.15, groundY);
-
-    // Sun
-    ctx.font = '42px serif';
-    ctx.fillText('☀️', w - 60, 50);
-
-    // Dust
-    dustParticles = dustParticles.filter(d => d.life > 0);
-    for (const d of dustParticles) {
-      ctx.globalAlpha = d.life;
-      ctx.fillStyle = d.color;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-      ctx.fill();
-      d.x += d.vx; d.y += d.vy; d.vy += 0.08; d.life -= 0.04;
-    }
-    ctx.globalAlpha = 1;
-
-    // Objects
-    ctx.font = '44px serif';
-    for (const o of objects) {
-      if (o.falling && !o.landed) {
-        o.vy += 0.4;
-        o.y += o.vy;
-        o.angle += o.vr;
-        if (o.y >= groundY - 22) {
-          o.y = groundY - 22;
-          o.landed = true;
-          o.falling = false;
-          o.bouncing = true;
-          o.bounceTimer = 0;
-          fallen++;
-          spawnDust(o.x, groundY);
-          burst(
-            o.x * (wrap.offsetWidth / w),
-            groundY * (wrap.offsetHeight / canvas.height),
-            ['💨','💨','·','·']
-          );
-          // Light up star
-          if (fallen <= 6) {
-            const star = starsEl[fallen - 1];
-            if (star) { star.classList.add('lit'); }
-          }
-          if (fallen === 3 && !discoveryShown) {
-            discoveryShown = true;
-            disc.classList.add('show');
-            hint.textContent = '⚡ Все падают одинаково быстро! Тапай ещё!';
-          }
-          if (fallen === 6 && !done) {
-            done = true;
-            setTimeout(() => showSuccess(1), 800);
-          }
-        }
-      }
-
-      if (o.bouncing) {
-        o.bounceTimer++;
-        if (o.bounceTimer < 8) o.scaleY = 0.6;
-        else if (o.bounceTimer < 16) o.scaleY = 1.2;
-        else { o.scaleY = 1; o.bouncing = false; }
-      }
-
-      ctx.save();
-      ctx.translate(o.x, o.y);
-      ctx.rotate(o.angle);
-      ctx.scale(1, o.scaleY);
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(o.emoji, 0, 0);
-
-      // Glow hint for untapped items
-      if (!o.falling && !o.landed) {
-        ctx.globalAlpha = 0.15 + 0.1 * Math.sin(ts / 400 + o.x);
-        ctx.fillStyle = '#3B82F6';
-        ctx.beginPath();
-        ctx.arc(0, 0, 30, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-      ctx.restore();
-    }
-
-    rafId = requestAnimationFrame(loop);
-  }
-
-  rafId = requestAnimationFrame(loop);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// LEVEL 2 — SLINGSHOT
-// ═══════════════════════════════════════════════════════════════
-function initLevel2() {
-  const canvas = $('c2');
-  const wrap = $('wrap2');
-  const ctx = canvas.getContext('2d');
-  const hint = $('hint2');
-  const starsEl = $('stars2').querySelectorAll('.star-dot');
-
-  function resize() {
-    canvas.width = wrap.offsetWidth;
-    canvas.height = wrap.offsetHeight;
+function dropObj(idx){
+  const el=document.getElementById('aobj'+idx);
+  if(!el||el.classList.contains('done'))return;
+  el.classList.add('done');
+  const obj=ARCHI_OBJ[idx];
+  const wSurface=aH*0.4;
+  const targetY=obj.floats?wSurface-20:aH*0.82;
+  aAnimItems.push({
+    obj,emoji:obj.emoji,x:50+Math.random()*(aW-120),y:18,
+    vy:obj.floats?2.5:4,targetY,done:false,bob:Math.random()*Math.PI*2
+  });
+  showBadge('archiBadge',obj.msg,obj.floats?'success':'fail');
+  aDone++;
+  if(aDone>=ARCHI_OBJ.length){
+    setTimeout(()=>{
+      aPhase=2;
+      document.getElementById('archiPhaseLabel').textContent='Часть 2 — Построй плот для сокровища!';
+      document.getElementById('raftSection').style.display='block';
+      showBadge('archiBadge','🏗️ Все исследовано! Теперь построй плот чтобы перевезти 💎 сокровище (3 кг)!','discovery');
+    },1600);
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const TARGETS = 5;
-  let targets = [];
-  let ball = { x: 0, y: 0, vx: 0, vy: 0, flying: false, landed: false };
-  let dragging = false;
-  let dragX = 0, dragY = 0;
-  let hit = 0;
-  let done = false;
-  let resetTimer = 0;
-  let particles = [];
-
-  function slingshotBase() {
-    return { x: canvas.width * 0.18, y: canvas.height * 0.72 };
-  }
-
-  function resetBall() {
-    const base = slingshotBase();
-    ball = { x: base.x, y: base.y - 36, vx: 0, vy: 0, flying: false, landed: false };
-    dragging = false;
-    resetTimer = 0;
-  }
-
-  function initTargets() {
-    targets = [];
-    const base = slingshotBase();
-    const minX = base.x + canvas.width * 0.22;
-    const maxX = canvas.width - 40;
-    const groundY = canvas.height * 0.72;
-    for (let i = 0; i < TARGETS; i++) {
-      const col = i % 3;
-      const row = Math.floor(i / 3);
-      targets.push({
-        x: minX + (maxX - minX) * (col / 2.2) + (row === 1 ? 60 : 0),
-        y: groundY - 30 - row * 80,
-        r: 26,
-        hit: false,
-        scaleAnim: 1,
-        alpha: 1,
-        color: ['#FF5038','#3B82F6','#00C27C','#FFE141','#7B2FFF'][i]
-      });
-    }
-  }
-
-  resetBall();
-  initTargets();
-
-  function getPointer(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const src = e.touches ? e.touches[0] : e;
-    return { x: (src.clientX - rect.left) * scaleX, y: (src.clientY - rect.top) * scaleY };
-  }
-
-  function onDown(e) {
-    if (ball.flying || done) return;
-    const p = getPointer(e);
-    if (Math.hypot(p.x - ball.x, p.y - ball.y) < 52) {
-      dragging = true;
-      dragX = p.x; dragY = p.y;
-      e.preventDefault();
-    }
-  }
-
-  function onMove(e) {
-    if (!dragging) return;
-    const p = getPointer(e);
-    const base = slingshotBase();
-    let dx = p.x - base.x;
-    let dy = p.y - (base.y - 36);
-    const dist = Math.hypot(dx, dy);
-    const maxPull = 90;
-    if (dist > maxPull) { dx = dx / dist * maxPull; dy = dy / dist * maxPull; }
-    // Only allow pulling left and any vertical
-    if (dx > 0) dx = 0;
-    dragX = base.x + dx;
-    dragY = base.y - 36 + dy;
-    ball.x = dragX; ball.y = dragY;
-    e.preventDefault();
-  }
-
-  function onUp(e) {
-    if (!dragging) return;
-    dragging = false;
-    const base = slingshotBase();
-    const anchorX = base.x;
-    const anchorY = base.y - 36;
-    const pullX = anchorX - ball.x;
-    const pullY = anchorY - ball.y;
-    ball.vx = pullX * 0.14;
-    ball.vy = pullY * 0.14;
-    ball.flying = true;
-    hint.textContent = '🎯 Летит!';
-  }
-
-  canvas.addEventListener('mousedown', onDown);
-  canvas.addEventListener('mousemove', onMove);
-  canvas.addEventListener('mouseup', onUp);
-  canvas.addEventListener('touchstart', onDown, { passive: false });
-  canvas.addEventListener('touchmove', onMove, { passive: false });
-  canvas.addEventListener('touchend', onUp);
-
-  function drawSlingshot(ctx, base) {
-    const bx = base.x, by = base.y;
-    ctx.strokeStyle = '#8B5E3C';
-    ctx.lineWidth = 8;
-    ctx.lineCap = 'round';
-    // trunk
-    ctx.beginPath();
-    ctx.moveTo(bx, by + 30);
-    ctx.lineTo(bx, by - 20);
-    ctx.stroke();
-    // left fork
-    ctx.beginPath();
-    ctx.moveTo(bx, by - 10);
-    ctx.lineTo(bx - 22, by - 45);
-    ctx.stroke();
-    // right fork
-    ctx.beginPath();
-    ctx.moveTo(bx, by - 10);
-    ctx.lineTo(bx + 22, by - 45);
-    ctx.stroke();
-  }
-
-  function drawBand(ctx, base, bx, by) {
-    const lx = base.x - 22, ly = base.y - 45;
-    const rx = base.x + 22, ry = base.y - 45;
-    ctx.strokeStyle = '#C0392B';
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(bx, by); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(bx, by); ctx.stroke();
-  }
-
-  function drawBall(ctx, x, y, fly) {
-    const grad = ctx.createRadialGradient(x - 5, y - 5, 2, x, y, 18);
-    grad.addColorStop(0, '#FFB347');
-    grad.addColorStop(1, '#FF5038');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(x, y, 18, 0, Math.PI * 2);
-    ctx.fill();
-    if (!fly) {
-      ctx.fillStyle = 'rgba(255,255,255,0.35)';
-      ctx.beginPath();
-      ctx.arc(x - 5, y - 5, 6, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function drawTrajectory(ctx, base) {
-    if (!dragging) return;
-    const anchorX = base.x;
-    const anchorY = base.y - 36;
-    const pullX = anchorX - ball.x;
-    const pullY = anchorY - ball.y;
-    let vx = pullX * 0.14, vy = pullY * 0.14;
-    let px = ball.x, py = ball.y;
-    ctx.setLineDash([5, 8]);
-    ctx.strokeStyle = 'rgba(59,130,246,0.5)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(px, py);
-    for (let i = 0; i < 30; i++) {
-      vx *= 1; vy += 0.32; px += vx; py += vy;
-      ctx.lineTo(px, py);
-      if (py > canvas.height * 0.75) break;
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
-  function spawnConfetti(x, y, color) {
-    for (let i = 0; i < 12; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 2 + Math.random() * 4;
-      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3, life: 1, color, r: 4 + Math.random() * 5 });
-    }
-  }
-
-  function loop() {
-    if (currentLevel !== 2) return;
-    const w = canvas.width, h = canvas.height;
-    const groundY = h * 0.72;
-    const base = slingshotBase();
-    ctx.clearRect(0, 0, w, h);
-
-    // Sky
-    const skyG = ctx.createLinearGradient(0, 0, 0, groundY);
-    skyG.addColorStop(0, '#C8E6F5'); skyG.addColorStop(1, '#E8F4FD');
-    ctx.fillStyle = skyG; ctx.fillRect(0, 0, w, groundY);
-    // Ground
-    ctx.fillStyle = '#7EC850'; ctx.fillRect(0, groundY, w, h - groundY);
-    // Sun
-    ctx.font = '40px serif'; ctx.fillText('☀️', w - 55, 45);
-
-    // Particles
-    particles = particles.filter(p => p.life > 0);
-    for (const p of particles) {
-      ctx.globalAlpha = p.life;
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= 0.03;
-    }
-    ctx.globalAlpha = 1;
-
-    // Targets
-    for (const t of targets) {
-      if (t.hit && t.alpha <= 0) continue;
-      ctx.globalAlpha = t.alpha;
-      ctx.fillStyle = t.color;
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, t.r * t.scaleAnim, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.beginPath();
-      ctx.arc(t.x - t.r * 0.3, t.y - t.r * 0.3, t.r * 0.35, 0, Math.PI * 2);
-      ctx.fill();
-      if (t.hit) { t.scaleAnim += 0.08; t.alpha -= 0.06; }
-      ctx.globalAlpha = 1;
-    }
-
-    // Stars on ground (hit indicator)
-    for (let i = 0; i < TARGETS; i++) {
-      const star = starsEl[i];
-      if (star && i < hit && !star.classList.contains('lit')) star.classList.add('lit');
-    }
-
-    // Trajectory
-    if (!ball.flying) drawTrajectory(ctx, base);
-
-    // Slingshot
-    drawSlingshot(ctx, base);
-    if (!ball.flying) drawBand(ctx, base, ball.x, ball.y);
-
-    // Ball physics
-    if (ball.flying) {
-      ball.vy += 0.32;
-      ball.x += ball.vx; ball.y += ball.vy;
-
-      // Check targets
-      for (const t of targets) {
-        if (!t.hit && Math.hypot(ball.x - t.x, ball.y - t.y) < t.r + 18) {
-          t.hit = true;
-          hit++;
-          spawnConfetti(t.x, t.y, t.color);
-          burst(
-            t.x * (wrap.offsetWidth / w),
-            t.y * (wrap.offsetHeight / h),
-            ['🌟','⭐','✨','💥']
-          );
-          if (!done && hit === TARGETS) {
-            done = true;
-            setTimeout(() => showSuccess(2), 600);
-          }
-        }
-      }
-
-      // Hit ground
-      if (ball.y > groundY + 10) {
-        ball.flying = false;
-        ball.landed = true;
-        resetTimer = 0;
-        hint.textContent = '😅 Промах! Попробуй ещё';
-      }
-    }
-
-    // Reset after miss
-    if (ball.landed) {
-      resetTimer++;
-      if (resetTimer > 90) resetBall(), hint.textContent = '👈 Тяни шар назад и отпускай!';
-    }
-
-    drawBall(ctx, ball.x, ball.y, ball.flying);
-
-    rafId2 = requestAnimationFrame(loop);
-  }
-
-  rafId2 = requestAnimationFrame(loop);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// LEVEL 3 — MIRROR & LIGHT
-// ═══════════════════════════════════════════════════════════════
-function initLevel3() {
-  const canvas = $('c3');
-  const wrap = $('wrap3');
-  const ctx = canvas.getContext('2d');
-  const hint = $('hint3');
-  const starsEl = $('stars3').querySelectorAll('.star-dot');
-
-  function resize() {
-    canvas.width = wrap.offsetWidth;
-    canvas.height = wrap.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Configs: [sourceAngle (deg from source), mirrorX ratio, mirrorY ratio, targetX ratio, targetY ratio]
-  const CONFIGS = [
-    { mirrorXr: 0.50, mirrorYr: 0.50, startAngle: 0 },   // config 1: start angle 0° → mirror near center
-    { mirrorXr: 0.42, mirrorYr: 0.40, startAngle: 30 },   // config 2: different mirror pos
-    { mirrorXr: 0.55, mirrorYr: 0.55, startAngle: -20 }   // config 3
-  ];
-  const TARGET_X_R = [0.82, 0.78, 0.80];
-  const TARGET_Y_R = [0.55, 0.65, 0.45];
-
-  let configIdx = 0;
-  let mirrorAngle = 0; // degrees
-  let starsLit = 0;
-  let done = false;
-  let flowerBloom = 0;
-  let flowerGlowing = false;
-
-  function getConfig() { return CONFIGS[configIdx]; }
-
-  function setConfig(idx) {
-    configIdx = idx;
-    mirrorAngle = CONFIGS[idx].startAngle;
-    flowerBloom = 0;
-    flowerGlowing = false;
-  }
-  setConfig(0);
-
-  // Source is always top-left area
-  function sourcePos() { return { x: canvas.width * 0.10, y: canvas.height * 0.15 }; }
-  function mirrorPos() {
-    const c = getConfig();
-    return { x: canvas.width * c.mirrorXr, y: canvas.height * c.mirrorYr };
-  }
-  function targetPos() {
-    return { x: canvas.width * TARGET_X_R[configIdx], y: canvas.height * TARGET_Y_R[configIdx] };
-  }
-
-  function getMirrorNormal(angleDeg) {
-    // Mirror line is at mirrorAngle, normal is perpendicular
-    const rad = (angleDeg + 90) * Math.PI / 180;
-    return { nx: Math.cos(rad), ny: Math.sin(rad) };
-  }
-
-  function reflect(dx, dy, nx, ny) {
-    const dot = dx * nx + dy * ny;
-    return { rx: dx - 2 * dot * nx, ry: dy - 2 * dot * ny };
-  }
-
-  // Segment-segment intersection
-  function segIntersect(ax, ay, bx, by, cx, cy, dx, dy) {
-    const den = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
-    if (Math.abs(den) < 1e-9) return null;
-    const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / den;
-    const u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / den;
-    if (t < 0 || t > 1 || u < 0 || u > 1) return null;
-    return { x: ax + t * (bx - ax), y: ay + t * (by - ay), t };
-  }
-
-  function computeRay() {
-    const src = sourcePos();
-    const mir = mirrorPos();
-    const tgt = targetPos();
-    const MIRROR_LEN = 60;
-    const mrad = mirrorAngle * Math.PI / 180;
-    const mx1 = mir.x - Math.cos(mrad) * MIRROR_LEN;
-    const my1 = mir.y - Math.sin(mrad) * MIRROR_LEN;
-    const mx2 = mir.x + Math.cos(mrad) * MIRROR_LEN;
-    const my2 = mir.y + Math.sin(mrad) * MIRROR_LEN;
-
-    // Ray from source toward mirror center direction
-    let ray = { x: src.x, y: src.y, dx: mir.x - src.x, dy: mir.y - src.y };
-    const len = Math.hypot(ray.dx, ray.dy);
-    ray.dx /= len; ray.dy /= len;
-
-    // Extend to long distance
-    const FAR = 2000;
-    const ex = src.x + ray.dx * FAR;
-    const ey = src.y + ray.dy * FAR;
-
-    // Check intersection with mirror segment
-    const hit = segIntersect(src.x, src.y, ex, ey, mx1, my1, mx2, my2);
-
-    let segments = [[src.x, src.y]];
-    let hitTarget = false;
-
-    if (hit) {
-      segments.push([hit.x, hit.y]);
-      // Compute reflected ray
-      const norm = getMirrorNormal(mirrorAngle);
-      const { rx, ry } = reflect(ray.dx, ray.dy, norm.nx, norm.ny);
-      // Extend reflected ray
-      const rx2 = hit.x + rx * FAR;
-      const ry2 = hit.y + ry * FAR;
-      segments.push([rx2, ry2]);
-
-      // Check if reflected ray hits target zone
-      const distToTarget = pointLineSegDist(tgt.x, tgt.y, hit.x, hit.y, rx2, ry2);
-      if (distToTarget < 60) hitTarget = true;
+function testRaft(){
+  if(aRaftSel.length<1){showBadge('archiBadge','Выбери хотя бы 1 материал!','fail');return}
+  const mats=aRaftSel.map(i=>RAFT_MAT[i]);
+  const avgD=mats.reduce((s,m)=>s+m.density,0)/mats.length;
+  const buoyancy=mats.length*2.5;
+  const floats=avgD<0.8&&buoyancy>3;
+  const wSurface=aH*0.4;
+  aAnimItems.push({
+    obj:{floats},emoji:'🛶',x:aW/2-20,y:20,
+    vy:2,targetY:floats?wSurface-18:aH*0.8,
+    done:false,bob:0,isRaft:true,scale:1.6
+  });
+  setTimeout(()=>{
+    if(floats){
+      showBadge('archiBadge','🎉 Плот держится! '+mats.map(m=>m.emoji).join('')+' легче воды!','success');
+      saveProgress(3);
+      setTimeout(()=>{
+        burst(window.innerWidth/2,window.innerHeight/2,['💎','🛶','🌊','⭐','🎉','💦']);
+        showSuccess('🧑‍🔬','Архимед доволен!',
+          'Сила Архимеда = вес воды, которую вытесняет тело. Если она больше веса тела — тело плавает! Открыто около 250 до н.э.','levelSelect');
+      },1400);
     } else {
-      segments.push([ex, ey]);
+      showBadge('archiBadge','💧 Плот тонет! Возьми пенопласт или дерево — они значительно легче воды','fail');
+      aRaftSel=[];document.querySelectorAll('.raft-pick').forEach(p=>p.classList.remove('selected'));
     }
-
-    return { segments, hitTarget, mx1, my1, mx2, my2 };
-  }
-
-  function pointLineSegDist(px, py, ax, ay, bx, by) {
-    const dx = bx - ax, dy = by - ay;
-    const lenSq = dx * dx + dy * dy;
-    if (lenSq === 0) return Math.hypot(px - ax, py - ay);
-    let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
-    t = Math.max(0, Math.min(1, t));
-    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
-  }
-
-  function onTap(e) {
-    if (done) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const src = e.touches ? e.touches[0] : e;
-    const px = (src.clientX - rect.left) * scaleX;
-    const py = (src.clientY - rect.top) * scaleY;
-    const mir = mirrorPos();
-    if (Math.hypot(px - mir.x, py - mir.y) < 80) {
-      mirrorAngle = (mirrorAngle + 45) % 360;
-      e.preventDefault();
-    }
-  }
-
-  canvas.addEventListener('mousedown', onTap);
-  canvas.addEventListener('touchstart', onTap, { passive: false });
-
-  function drawFlower(ctx, x, y, bloom, glow) {
-    const scale = 1 + bloom * 0.4;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-    if (glow) {
-      ctx.shadowColor = '#FFE141';
-      ctx.shadowBlur = 20 + bloom * 10;
-    }
-    ctx.font = '36px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🌻', 0, 0);
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
-
-  function loop() {
-    if (currentLevel !== 3) return;
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    // Background
-    ctx.fillStyle = '#F0F8FF';
-    ctx.fillRect(0, 0, w, h);
-    // Light atmosphere
-    const bgGrad = ctx.createRadialGradient(w * 0.1, h * 0.15, 10, w * 0.1, h * 0.15, w * 0.7);
-    bgGrad.addColorStop(0, 'rgba(255,255,200,0.25)');
-    bgGrad.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, w, h);
-
-    const ray = computeRay();
-    const src = sourcePos();
-    const mir = mirrorPos();
-    const tgt = targetPos();
-
-    // Draw light ray
-    if (ray.segments.length >= 2) {
-      // Beam glow
-      ctx.save();
-      ctx.strokeStyle = 'rgba(255,200,0,0.2)';
-      ctx.lineWidth = 18;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(ray.segments[0][0], ray.segments[0][1]);
-      for (let i = 1; i < ray.segments.length; i++) ctx.lineTo(ray.segments[i][0], ray.segments[i][1]);
-      ctx.stroke();
-      ctx.restore();
-      // Main beam
-      ctx.save();
-      ctx.strokeStyle = 'rgba(255,220,0,0.9)';
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      ctx.shadowColor = '#FFD700';
-      ctx.shadowBlur = 8;
-      ctx.beginPath();
-      ctx.moveTo(ray.segments[0][0], ray.segments[0][1]);
-      for (let i = 1; i < ray.segments.length; i++) ctx.lineTo(ray.segments[i][0], ray.segments[i][1]);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
-
-    // Mirror
-    ctx.save();
-    ctx.translate(mir.x, mir.y);
-    const mgrad = ctx.createLinearGradient(-60, -4, 60, -4);
-    mgrad.addColorStop(0, '#B0C8E8');
-    mgrad.addColorStop(0.4, '#FFFFFF');
-    mgrad.addColorStop(0.7, '#B8D0E8');
-    mgrad.addColorStop(1, '#9AB4D0');
-    ctx.strokeStyle = mgrad;
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.rotate(mirrorAngle * Math.PI / 180);
-    ctx.beginPath();
-    ctx.moveTo(-60, 0);
-    ctx.lineTo(60, 0);
-    ctx.stroke();
-    // Mirror tap zone indicator
-    ctx.strokeStyle = 'rgba(59,130,246,0.12)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(0, 0, 44, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-
-    // Source: sun emoji
-    ctx.font = '46px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('☀️', src.x, src.y);
-
-    // Target: flower
-    if (ray.hitTarget && !flowerGlowing) {
-      flowerGlowing = true;
-      starsLit++;
-      const star = starsEl[starsLit - 1];
-      if (star) star.classList.add('lit');
-      burst(
-        tgt.x * (wrap.offsetWidth / w),
-        tgt.y * (wrap.offsetHeight / h),
-        ['🌸','✨','⭐','🌟','🌼']
-      );
-      hint.textContent = '🌟 Луч попал! Цветок расцветает!';
-      setTimeout(() => {
-        if (!done) {
-          if (configIdx < CONFIGS.length - 1) {
-            setConfig(configIdx + 1);
-            hint.textContent = '👆 Поверни зеркало снова!';
-          } else {
-            done = true;
-            setTimeout(() => showSuccess(3), 500);
-          }
-        }
-      }, 1800);
-    }
-
-    if (flowerGlowing && flowerBloom < 1) flowerBloom = Math.min(1, flowerBloom + 0.04);
-    drawFlower(ctx, tgt.x, tgt.y, flowerBloom, flowerGlowing);
-
-    // Config counter
-    ctx.fillStyle = 'rgba(26,26,46,0.3)';
-    ctx.font = '700 13px Space Grotesk, sans-serif';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'top';
-    ctx.fillText(`${configIdx + 1} / ${CONFIGS.length}`, w - 16, 12);
-
-    rafId3 = requestAnimationFrame(loop);
-  }
-
-  rafId3 = requestAnimationFrame(loop);
+  },2200);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
-loadProgress();
+function aLoop(){
+  const wSurface=aH*0.4;
+  aAnimItems.forEach(item=>{
+    if(item.done){
+      if(item.obj.floats||item.isRaft){item.bob+=0.05;item.y=item.targetY+Math.sin(item.bob)*3}
+      return;
+    }
+    const diff=item.targetY-item.y;
+    if(Math.abs(diff)>2){item.y+=item.vy*(diff>0?1:-1)}
+    else{item.y=item.targetY;item.done=true;
+      if(item.obj.floats||item.isRaft){
+        const br=ac.getBoundingClientRect();
+        burst(br.left+item.x,br.top+item.y,['💧','🫧']);
+      }
+    }
+  });
+  drawArchi(wSurface);
+  aRaf=requestAnimationFrame(aLoop);
+}
+
+function drawArchi(waterY){
+  const ctx=actx,W=aW,H=aH;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#F0F9FF';ctx.fillRect(0,0,W,H);
+  // Tank walls
+  const tl=18,tr=W-18,tt=14,tb=H-14;
+  ctx.strokeStyle='rgba(59,130,246,.4)';ctx.lineWidth=3;ctx.lineJoin='round';
+  ctx.strokeRect(tl,tt,tr-tl,tb-tt);
+  ctx.fillStyle='rgba(240,249,255,.8)';ctx.fillRect(tl+2,tt+2,tr-tl-4,tb-tt-4);
+  // Water
+  const wg=ctx.createLinearGradient(0,waterY,0,tb);
+  wg.addColorStop(0,'rgba(59,130,246,.3)');wg.addColorStop(1,'rgba(59,130,246,.52)');
+  ctx.fillStyle=wg;ctx.fillRect(tl+2,waterY,tr-tl-4,tb-waterY-2);
+  // Surface ripple
+  ctx.beginPath();ctx.moveTo(tl+2,waterY);
+  const ww=tr-tl-4;
+  for(let i=0;i<=ww;i+=6){
+    ctx.lineTo(tl+2+i,waterY+Math.sin(Date.now()/900+i/18)*1.8);
+  }
+  ctx.lineTo(tr-2,waterY);
+  ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=2;ctx.stroke();
+  // Water label
+  ctx.font='10px Space Grotesk';ctx.textAlign='right';ctx.textBaseline='top';
+  ctx.fillStyle='rgba(59,130,246,.5)';ctx.fillText('H₂O',tr-6,waterY+4);
+  // Sand
+  ctx.fillStyle='rgba(194,164,94,.35)';ctx.fillRect(tl+2,tb-7,tr-tl-4,6);
+  // Items
+  aAnimItems.forEach(item=>{
+    ctx.font=`${Math.round(22*(item.scale||1))}px serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(item.emoji,item.x,item.y);
+    // Bubbles for sinking
+    if(!item.done&&!item.obj.floats&&!item.isRaft){
+      ctx.font='8px serif';ctx.fillText('🫧',item.x+10,item.y-14);
+    }
+  });
+  // Sunken label
+  const sunk=aAnimItems.filter(i=>i.done&&!i.obj.floats&&!i.isRaft);
+  if(sunk.length>0){
+    ctx.font='9px Space Grotesk';ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(26,26,46,.3)';
+    ctx.fillText('На дне: '+sunk.map(i=>i.emoji).join(''),tl+6,tb-8);
+  }
+}
 </script>
 </body>
 </html>
