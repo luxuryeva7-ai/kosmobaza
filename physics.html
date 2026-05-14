@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Физ Лаб · КосмоБаза</title>
+<link href="https://fonts.bunny.net/css?family=space-grotesk:400,600,700,800" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a18;--card:#14142a;--purple:#7B2FFF;--yellow:#FFE141;
+  --coral:#FF5038;--mint:#00C27C;--blue:#3B82F6;--muted:rgba(255,255,255,.5);
+}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden;user-select:none}
+
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* ── INTRO ── */
+#intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(123,47,255,.35) 0%,transparent 65%),var(--bg)}
+.intro-emoji{font-size:88px;margin-bottom:24px;display:block;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+.intro-tag{display:inline-block;background:var(--yellow);color:#111;font-size:11px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:18px}
+.intro-h{font-size:clamp(38px,9vw,72px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:14px}
+.intro-h em{color:var(--purple);font-style:normal}
+.intro-sub{font-size:17px;color:var(--muted);max-width:360px;line-height:1.65;margin-bottom:40px}
+
+/* ── LEVEL SELECT ── */
+#levelSelect{align-items:center;justify-content:center;padding:40px 24px;
+  background:radial-gradient(ellipse at 50% 10%,rgba(123,47,255,.18) 0%,transparent 60%),var(--bg)}
+.ls-h{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+.ls-sub{color:var(--muted);font-size:15px;margin-bottom:32px}
+.levels-list{display:flex;flex-direction:column;gap:14px;width:100%;max-width:440px}
+.lvl-card{background:var(--card);border-radius:22px;padding:20px 24px;display:flex;align-items:center;
+  gap:18px;cursor:pointer;border:2px solid transparent;transition:all .22s;position:relative;overflow:hidden}
+.lvl-card:hover:not(.locked){border-color:var(--purple);transform:translateX(5px)}
+.lvl-card.locked{opacity:.45;cursor:not-allowed}
+.lvl-card.done{border-color:var(--mint)}
+.lc-ico{font-size:44px;flex-shrink:0}
+.lc-info{flex:1}
+.lc-num{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.lc-name{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.lc-desc{font-size:13px;color:var(--muted);margin-top:3px}
+.lc-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:22px}
+
+/* ── GAME HEADER ── */
+.g-hdr{display:flex;align-items:center;gap:14px;padding:14px 20px;
+  border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.back-btn{background:rgba(255,255,255,.08);border:none;color:#fff;width:38px;height:38px;
+  border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s}
+.back-btn:hover{background:rgba(255,255,255,.16)}
+.g-title{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.g-progress{margin-left:auto;display:flex;align-items:center;gap:10px}
+.g-step{font-size:13px;font-weight:700;color:var(--muted)}
+.prog-track{width:90px;height:7px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),#B45FFF);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.task-box{background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.35);border-radius:16px;
+  padding:13px 18px;margin:16px 20px;font-size:15px;font-weight:600;text-align:center;flex-shrink:0;line-height:1.5}
+.task-box strong{color:var(--yellow)}
+
+.btn{padding:15px 38px;border-radius:40px;font-family:'Space Grotesk',sans-serif;font-size:16px;
+  font-weight:800;cursor:pointer;border:none;transition:all .2s;letter-spacing:-.2px}
+.btn-yellow{background:var(--yellow);color:#111}
+.btn-yellow:hover{background:#FFD60A;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,225,65,.3)}
+.btn-ghost{background:rgba(255,255,255,.09);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.16)}
+
+/* ── SUCCESS OVERLAY ── */
+.success-ov{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s}
+.success-ov.show{opacity:1;pointer-events:all}
+.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px)}
+.ov-card{position:relative;background:var(--card);border-radius:28px;padding:36px 44px;text-align:center;
+  max-width:360px;width:90%;border:2px solid var(--mint);transform:scale(.9);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.success-ov.show .ov-card{transform:scale(1)}
+.ov-emoji{font-size:64px;margin-bottom:14px;display:block}
+.ov-h{font-size:26px;font-weight:800;color:var(--mint);margin-bottom:8px}
+.ov-fact{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px}
+
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}60%{transform:translateX(10px)}}
+.shake{animation:shake .35s ease}
+
+.ptcl{position:fixed;pointer-events:none;z-index:300;font-size:22px;
+  animation:ptclFly 1.2s ease-out forwards}
+@keyframes ptclFly{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
+  100%{opacity:0;transform:translateY(-120px) scale(.3) rotate(60deg)}}
+
+/* ════════════════════════════════
+   LEVEL 1 — ПУШКА НЬЮТОНА
+════════════════════════════════ */
+#level1{padding:0}
+.cannon-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:14px;overflow:hidden}
+
+#cannonCanvas{width:100%;height:250px;border-radius:20px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);display:block;touch-action:none}
+
+.controls-row{display:flex;gap:16px;width:100%;max-width:440px}
+.ctrl-group{flex:1;display:flex;flex-direction:column;gap:6px}
+.ctrl-label{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.ctrl-value{font-size:22px;font-weight:800;color:var(--yellow);letter-spacing:-.5px}
+
+input[type=range]{
+  width:100%;height:10px;border-radius:5px;appearance:none;cursor:pointer;
+  background:linear-gradient(to right,#3B82F6,#7B2FFF,#FF5038);outline:none}
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;width:28px;height:28px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.4);cursor:grab;
+  border:3px solid var(--purple)}
+
+.hint-box{width:100%;max-width:440px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);
+  border-radius:14px;padding:11px 16px;font-size:13px;color:rgba(255,255,255,.7);text-align:center;line-height:1.5}
+.hint-box b{color:var(--blue)}
+
+/* ════════════════════════════════
+   LEVEL 2 — ЭЛЕКТРОЛАБ
+════════════════════════════════ */
+#level2{padding:0}
+.circuit-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 20px;gap:14px;overflow:hidden}
+
+#circuitGrid{display:grid;gap:3px;width:100%;max-width:380px;border-radius:18px;
+  background:rgba(255,255,255,.03);padding:12px;border:1px solid rgba(255,255,255,.06)}
+
+.cell{
+  width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.cell:hover{border-color:rgba(123,47,255,.5);background:rgba(123,47,255,.1)}
+.cell.has-comp{border-color:rgba(123,47,255,.4);background:rgba(123,47,255,.08)}
+.cell.powered{border-color:var(--yellow)!important;background:rgba(255,225,65,.1)!important}
+.cell.has-comp.powered .comp-label{filter:drop-shadow(0 0 8px var(--yellow))}
+
+.comp-shelf{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;max-width:380px}
+.comp-item{
+  display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
+  background:var(--card);border-radius:14px;padding:10px 14px;border:2px solid transparent;
+  transition:all .2s;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.comp-item:hover{border-color:var(--purple);color:#fff}
+.comp-item.selected{border-color:var(--yellow);background:rgba(255,225,65,.08);color:var(--yellow)}
+.comp-item.depleted{opacity:.35;cursor:not-allowed}
+.comp-emoji{font-size:28px}
+
+.circuit-hint{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;
+  background:rgba(255,255,255,.04);border-radius:12px;padding:10px 14px;width:100%;max-width:380px}
+
+/* ════════════════════════════════
+   LEVEL 3 — ЛАЗЕРНАЯ ЛАБОРАТОРИЯ
+════════════════════════════════ */
+#level3{padding:0}
+.laser-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 20px;gap:14px;overflow:hidden}
+
+#laserCanvas{display:block;border-radius:20px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);touch-action:none;max-width:100%}
+
+.mirror-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;width:100%;max-width:380px}
+.ml-item{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted)}
+.ml-dot{width:28px;height:28px;border-radius:8px;background:rgba(123,47,255,.3);
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+
+.laser-hint{font-size:13px;color:var(--muted);text-align:center;padding:10px 16px;
+  background:rgba(255,80,56,.08);border:1px solid rgba(255,80,56,.2);border-radius:12px;
+  width:100%;max-width:380px;line-height:1.5}
+
+/* ── COMPLETE ── */
+#complete{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
+  background:radial-gradient(ellipse at 50% 20%,rgba(0,194,124,.25) 0%,transparent 65%),var(--bg)}
+.cpl-stars{font-size:64px;margin-bottom:16px;display:block;animation:starSpin 3s ease-in-out infinite}
+@keyframes starSpin{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.08)}}
+.cpl-h{font-size:clamp(32px,8vw,60px);font-weight:800;letter-spacing:-2px;margin-bottom:12px}
+.cpl-h em{color:var(--mint);font-style:normal}
+.cpl-sub{font-size:16px;color:var(--muted);max-width:340px;line-height:1.7;margin-bottom:36px}
+.cpl-badges{display:flex;gap:14px;justify-content:center;margin-bottom:36px;flex-wrap:wrap}
+.badge{background:var(--card);border-radius:18px;padding:14px 20px;font-size:14px;font-weight:800;
+  border:2px solid;display:flex;flex-direction:column;gap:4px;align-items:center}
+.badge-ico{font-size:32px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ INTRO ═══════════════════════════ -->
+<div id="intro" class="screen active">
+  <span class="intro-emoji">⚡</span>
+  <span class="intro-tag">КосмоБаза · Физика</span>
+  <h1 class="intro-h">Законы<br><em>Вселенной</em></h1>
+  <p class="intro-sub">Запускай снаряды, собирай электрические цепи и отражай лазерный луч — изучай физику как настоящий учёный!</p>
+  <button class="btn btn-yellow" onclick="showScreen('levelSelect')">Начать →</button>
+</div>
+
+<!-- ═══════════════════════════ LEVEL SELECT ═══════════════════════════ -->
+<div id="levelSelect" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(ellipse at 50% 10%,rgba(123,47,255,.18) 0%,transparent 60%),var(--bg)">
+    <p class="ls-h">Выбери уровень</p>
+    <p class="ls-sub">3 эксперимента, 3 открытия</p>
+    <div class="levels-list">
+      <div class="lvl-card" id="card1" onclick="startLevel(1)">
+        <span class="lc-ico">💣</span>
+        <div class="lc-info">
+          <div class="lc-num">Уровень 1</div>
+          <div class="lc-name">Пушка Ньютона</div>
+          <div class="lc-desc">Баллистика и гравитация</div>
+        </div>
+        <span class="lc-badge" id="badge1">▶</span>
+      </div>
+      <div class="lvl-card locked" id="card2" onclick="startLevel(2)">
+        <span class="lc-ico">🔋</span>
+        <div class="lc-info">
+          <div class="lc-num">Уровень 2</div>
+          <div class="lc-name">Электролаб</div>
+          <div class="lc-desc">Электрические цепи и ток</div>
+        </div>
+        <span class="lc-badge" id="badge2">🔒</span>
+      </div>
+      <div class="lvl-card locked" id="card3" onclick="startLevel(3)">
+        <span class="lc-ico">🔴</span>
+        <div class="lc-info">
+          <div class="lc-num">Уровень 3</div>
+          <div class="lc-name">Лазерная лаборатория</div>
+          <div class="lc-desc">Отражение света</div>
+        </div>
+        <span class="lc-badge" id="badge3">🔒</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ LEVEL 1 — ПУШКА ═══════════════════════════ -->
+<div id="level1" class="screen">
+  <div class="g-hdr">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <span class="g-title">💣 Пушка Ньютона</span>
+    <div class="g-progress">
+      <span class="g-step" id="l1step">1 / 4</span>
+      <div class="prog-track"><div class="prog-fill" id="l1prog" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="task-box" id="l1task">Попади в <strong>звезду ⭐</strong> — выбери угол и силу</div>
+  <div class="cannon-arena">
+    <canvas id="cannonCanvas" height="250"></canvas>
+    <div class="controls-row">
+      <div class="ctrl-group">
+        <div class="ctrl-label">Угол</div>
+        <div class="ctrl-value" id="angleVal">45°</div>
+        <input type="range" id="angleSlider" min="10" max="80" value="45" oninput="updateAngle(this.value)">
+      </div>
+      <div class="ctrl-group">
+        <div class="ctrl-label">Сила</div>
+        <div class="ctrl-value" id="powerVal">5</div>
+        <input type="range" id="powerSlider" min="1" max="10" value="5" oninput="updatePower(this.value)">
+      </div>
+    </div>
+    <div class="hint-box" id="l1hint">💡 При угле <b>45°</b> снаряд летит дальше всего!</div>
+    <button class="btn btn-yellow" id="fireBtn" onclick="firecannon()">💥 Выстрелить!</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ LEVEL 2 — ЦЕПЬ ═══════════════════════════ -->
+<div id="level2" class="screen">
+  <div class="g-hdr">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <span class="g-title">🔋 Электролаб</span>
+    <div class="g-progress">
+      <span class="g-step" id="l2step">1 / 3</span>
+      <div class="prog-track"><div class="prog-fill" id="l2prog" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="task-box" id="l2task">Задание: <strong>собери простую цепь — батарейка → провод → лампочка</strong></div>
+  <div class="circuit-arena">
+    <div class="comp-shelf" id="compShelf"></div>
+    <div id="circuitGrid"></div>
+    <div class="circuit-hint" id="circuitHint">Выбери компонент снизу, затем кликай на ячейки сетки. Создай замкнутую цепь!</div>
+    <button class="btn btn-yellow" id="checkCircuitBtn" onclick="checkCircuit()" style="margin-top:4px">🔌 Проверить цепь</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ LEVEL 3 — ЛАЗЕР ═══════════════════════════ -->
+<div id="level3" class="screen">
+  <div class="g-hdr">
+    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
+    <span class="g-title">🔴 Лазерная лаборатория</span>
+    <div class="g-progress">
+      <span class="g-step" id="l3step">1 / 4</span>
+      <div class="prog-track"><div class="prog-fill" id="l3prog" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="task-box" id="l3task">Кликай по зеркалам чтобы повернуть их — направь луч лазера в <strong>цель 🎯</strong></div>
+  <div class="laser-arena">
+    <canvas id="laserCanvas" width="340" height="260"></canvas>
+    <div class="mirror-legend">
+      <div class="ml-item"><div class="ml-dot">↗</div>Кликни зеркало — повернуть</div>
+    </div>
+    <div class="laser-hint" id="l3hint">🔴 Луч отражается: угол падения = угол отражения</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ COMPLETE ═══════════════════════════ -->
+<div id="complete" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(ellipse at 50% 20%,rgba(0,194,124,.25) 0%,transparent 65%),var(--bg);text-align:center">
+    <span class="cpl-stars">🏆</span>
+    <h2 class="cpl-h">Физик<br><em>года!</em></h2>
+    <p class="cpl-sub">Ты освоил баллистику, электрические цепи и оптику. Теперь ты знаешь три фундаментальных закона природы!</p>
+    <div class="cpl-badges">
+      <div class="badge" style="border-color:var(--coral)"><span class="badge-ico">💣</span>Баллистика</div>
+      <div class="badge" style="border-color:var(--yellow)"><span class="badge-ico">⚡</span>Электрик</div>
+      <div class="badge" style="border-color:var(--purple)"><span class="badge-ico">🔴</span>Оптик</div>
+    </div>
+    <button class="btn btn-yellow" onclick="showScreen('levelSelect')">Играть снова</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUCCESS OVERLAY ═══════════════════════════ -->
+<div class="success-ov" id="successOv">
+  <div class="ov-bg"></div>
+  <div class="ov-card">
+    <span class="ov-emoji" id="ovEmoji">🎉</span>
+    <div class="ov-h" id="ovH">Отлично!</div>
+    <p class="ov-fact" id="ovFact"></p>
+    <button class="btn btn-yellow" id="ovBtn" onclick="nextStep()">Дальше →</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  GLOBAL STATE
+// ═══════════════════════════════════════════════════════════
+const progress = {lvl1:false, lvl2:false, lvl3:false};
+let currentLevel = 0;
+let ovCallback = null;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='levelSelect') updateLevelCards();
+  if(id==='level1') initCannon();
+  if(id==='level2') initCircuit();
+  if(id==='level3') initLaser();
+}
+
+function updateLevelCards(){
+  const c2=document.getElementById('card2'), c3=document.getElementById('card3');
+  const b1=document.getElementById('badge1'), b2=document.getElementById('badge2'), b3=document.getElementById('badge3');
+  if(progress.lvl1){b1.textContent='✅';document.getElementById('card1').classList.add('done')}
+  if(progress.lvl1){c2.classList.remove('locked');b2.textContent='▶'}
+  if(progress.lvl2){b2.textContent='✅';document.getElementById('card2').classList.add('done')}
+  if(progress.lvl2){c3.classList.remove('locked');b3.textContent='▶'}
+  if(progress.lvl3){b3.textContent='✅';document.getElementById('card3').classList.add('done')}
+}
+
+function startLevel(n){
+  const card = document.getElementById('card'+n);
+  if(card.classList.contains('locked')) return;
+  currentLevel = n;
+  showScreen('level'+n);
+}
+
+function showSuccess(emoji, title, fact, cb){
+  document.getElementById('ovEmoji').textContent = emoji;
+  document.getElementById('ovH').textContent = title;
+  document.getElementById('ovFact').textContent = fact;
+  ovCallback = cb;
+  document.getElementById('successOv').classList.add('show');
+}
+
+function nextStep(){
+  document.getElementById('successOv').classList.remove('show');
+  if(ovCallback) { const cb=ovCallback; ovCallback=null; cb(); }
+}
+
+function spawnParticles(x, y){
+  const emojis = ['⭐','✨','💫','🌟','🎆'];
+  for(let i=0;i<8;i++){
+    const p = document.createElement('div');
+    p.className='ptcl';
+    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left = (x + (Math.random()-0.5)*80)+'px';
+    p.style.top = (y + (Math.random()-0.5)*60)+'px';
+    p.style.animationDelay = (Math.random()*0.3)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1500);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LEVEL 1 — CANNON (BALLISTICS)
+// ═══════════════════════════════════════════════════════════
+let cannonAngle = 45;
+let cannonPower = 5;
+let l1Step = 0;
+let animId = null;
+let cannonAnimating = false;
+
+const l1Missions = [
+  {tx:0.75, ty:0.35, label:'Попади в звезду ⭐ — она близко!'},
+  {tx:0.82, ty:0.55, label:'Цель переместилась — она ниже!'},
+  {tx:0.87, ty:0.2,  label:'Высоко и далеко — увеличь угол!'},
+  {tx:0.90, ty:0.45, label:'Последний выстрел — прицелься точнее!'},
+];
+
+const l1Facts = [
+  'При угле 45° снаряд летит дальше всего. Это доказал Галилей в 1638 году!',
+  'Гравитация тянет снаряд вниз с ускорением 9,8 м/с² — это ускорение свободного падения.',
+  'Вертикальная и горизонтальная составляющие скорости независимы друг от друга.',
+  'Ньютон объяснил, что Луна тоже "падает" на Землю — просто очень быстро летит вбок!',
+];
+
+function updateAngle(v){ cannonAngle=+v; document.getElementById('angleVal').textContent=v+'°'; drawCannon(); }
+function updatePower(v){ cannonPower=+v; document.getElementById('powerVal').textContent=v; drawCannon(); }
+
+function initCannon(){
+  l1Step = 0; cannonAnimating = false;
+  if(animId){ cancelAnimationFrame(animId); animId=null; }
+  updateL1UI();
+  drawCannon();
+  document.getElementById('l1hint').textContent = '💡 При угле 45° снаряд летит дальше всего!';
+  document.getElementById('angleSlider').value = 45; cannonAngle=45;
+  document.getElementById('powerSlider').value = 5; cannonPower=5;
+  document.getElementById('angleVal').textContent='45°';
+  document.getElementById('powerVal').textContent='5';
+}
+
+function updateL1UI(){
+  const m = l1Missions[l1Step];
+  document.getElementById('l1step').textContent = (l1Step+1)+' / 4';
+  document.getElementById('l1prog').style.width = (l1Step/4*100)+'%';
+  document.getElementById('l1task').innerHTML = 'Попади в <strong>звезду ⭐</strong> — '+m.label;
+}
+
+function getCanvasRect(){
+  const cv = document.getElementById('cannonCanvas');
+  return {w: cv.offsetWidth||cv.width, h: cv.offsetHeight||cv.height};
+}
+
+function drawCannon(projectile, trailPts, miss){
+  const cv = document.getElementById('cannonCanvas');
+  if(!cv) return;
+  const W = cv.clientWidth||cv.width;
+  const H = 250;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+
+  // bg
+  ctx.fillStyle = '#0a0a18';
+  ctx.fillRect(0,0,W,H);
+
+  // ground
+  ctx.fillStyle = 'rgba(123,47,255,.15)';
+  ctx.fillRect(0, H-30, W, 30);
+  ctx.strokeStyle = 'rgba(123,47,255,.4)';
+  ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,H-30); ctx.lineTo(W,H-30); ctx.stroke();
+
+  // cannon base
+  const cx=38, cy=H-30;
+  ctx.save();
+  ctx.translate(cx, cy);
+  // wheel
+  ctx.fillStyle='#7B2FFF'; ctx.beginPath(); ctx.arc(0,0,16,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#5a1fd6'; ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2); ctx.fill();
+  // barrel
+  const rad = (-cannonAngle)*Math.PI/180;
+  ctx.rotate(rad);
+  ctx.fillStyle='#B45FFF';
+  ctx.beginPath(); ctx.roundRect(-6,-42,18,38,4); ctx.fill();
+  ctx.restore();
+
+  // target star
+  const mission = l1Missions[l1Step];
+  const tx = mission.tx * W;
+  const ty = (H-30) - mission.ty*(H-30);
+  ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  const glow = ctx.createRadialGradient(tx,ty,5,tx,ty,28);
+  glow.addColorStop(0,'rgba(255,225,65,.3)'); glow.addColorStop(1,'transparent');
+  ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(tx,ty,28,0,Math.PI*2); ctx.fill();
+  ctx.fillText('⭐',tx,ty);
+
+  // trail
+  if(trailPts && trailPts.length>1){
+    ctx.strokeStyle='rgba(255,225,65,.35)'; ctx.lineWidth=1.5;
+    ctx.setLineDash([4,6]);
+    ctx.beginPath(); ctx.moveTo(trailPts[0].x, trailPts[0].y);
+    for(let i=1;i<trailPts.length;i++) ctx.lineTo(trailPts[i].x, trailPts[i].y);
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // projectile
+  if(projectile){
+    const gp = ctx.createRadialGradient(projectile.x,projectile.y,2,projectile.x,projectile.y,10);
+    gp.addColorStop(0,'#FFE141'); gp.addColorStop(1,'rgba(255,80,56,.0)');
+    ctx.fillStyle=gp; ctx.beginPath(); ctx.arc(projectile.x,projectile.y,12,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(projectile.x,projectile.y,5,0,Math.PI*2); ctx.fill();
+  }
+
+  // miss marker
+  if(miss){
+    ctx.font='24px serif'; ctx.fillText('💨',miss.x-12,miss.y);
+  }
+}
+
+function fireannon(){fireBtn_handler();}
+function fireBtn_handler(){
+  if(cannonAnimating) return;
+  cannonAnimating = true;
+  document.getElementById('fireBtn').disabled = true;
+
+  const cv = document.getElementById('cannonCanvas');
+  const W = cv.clientWidth||cv.width;
+  const H = 250;
+
+  const mission = l1Missions[l1Step];
+  const tx = mission.tx * W;
+  const ty = (H-30) - mission.ty*(H-30);
+
+  const speed = cannonPower * 28;
+  const rad = cannonAngle * Math.PI / 180;
+  const vx = speed * Math.cos(rad);
+  const vy = -speed * Math.sin(rad);
+  const g = 0.45;
+
+  let px = 38, py = H-30;
+  let pvx = vx, pvy = vy;
+  let t = 0;
+  const trail = [];
+  let hit = false;
+
+  function step(){
+    if(!cannonAnimating){ cancelAnimationFrame(animId); return; }
+    py += pvy; pvy += g; px += pvx;
+    trail.push({x:px, y:py});
+    if(trail.length > 60) trail.shift();
+
+    const dist = Math.sqrt((px-tx)**2+(py-ty)**2);
+    if(dist < 30){
+      hit = true;
+      drawCannon({x:px,y:py}, trail, null);
+      spawnParticles(tx, ty+cv.getBoundingClientRect().top - window.scrollY);
+      cannonAnimating = false;
+      document.getElementById('fireBtn').disabled = false;
+      setTimeout(()=>{
+        l1Step++;
+        const fact = l1Facts[l1Step-1];
+        if(l1Step >= 4){
+          progress.lvl1 = true;
+          showSuccess('🎯','Уровень пройден!',fact, ()=>showScreen('levelSelect'));
+        } else {
+          showSuccess('💥','Попал!',fact,()=>{updateL1UI();drawCannon();});
+        }
+      },400);
+      return;
+    }
+
+    if(py > H || px > W){
+      drawCannon(null, trail, {x:Math.min(px,W-20),y:Math.min(py,H-40)});
+      cannonAnimating = false;
+      document.getElementById('fireBtn').disabled = false;
+      const hintEl = document.getElementById('l1hint');
+      hintEl.classList.add('shake');
+      setTimeout(()=>hintEl.classList.remove('shake'),400);
+      const angle = cannonAngle;
+      if(angle < 30) hintEl.innerHTML='↑ Попробуй <b>увеличить угол</b> — снаряд полетит выше';
+      else if(angle > 65) hintEl.innerHTML='↓ Попробуй <b>уменьшить угол</b> — он слишком задирается';
+      else hintEl.innerHTML='⚡ Попробуй изменить <b>силу выстрела</b>';
+      return;
+    }
+
+    drawCannon({x:px,y:py}, trail, null);
+    animId = requestAnimationFrame(step);
+  }
+  animId = requestAnimationFrame(step);
+}
+
+function fireannon(){
+  if(cannonAnimating) return;
+  fireBtn_handler();
+}
+document.getElementById('fireBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  fireBtn_handler();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  LEVEL 2 — CIRCUIT
+// ═══════════════════════════════════════════════════════════
+const COLS=5, ROWS=4;
+let grid = [];
+let selectedComp = null;
+let l2Step = 0;
+
+const compDefs = {
+  battery:  {emoji:'🔋', label:'Батарейка', key:'battery'},
+  wire:     {emoji:'━', label:'Провод', key:'wire'},
+  corner:   {emoji:'┐', label:'Угол', key:'corner'},
+  bulb:     {emoji:'💡', label:'Лампочка', key:'bulb'},
+  switch:   {emoji:'⚙️', label:'Рубильник', key:'switch'},
+};
+
+const l2Missions = [
+  {
+    desc:'Создай простую цепь: <strong>батарейка → провод → лампочка</strong>',
+    solution: [[0,0,'battery'],[1,0,'wire'],[2,0,'wire'],[3,0,'wire'],[4,0,'bulb']],
+    fact:'Электрический ток течёт только по замкнутой цепи — как вода по трубе!',
+    availComps:{battery:1, wire:5, corner:3, bulb:1},
+  },
+  {
+    desc:'Добавь <strong>рубильник</strong> в цепь — лампочка должна включиться',
+    solution: [[0,1,'battery'],[1,1,'wire'],[2,1,'switch'],[3,1,'wire'],[4,1,'bulb']],
+    fact:'Выключатель размыкает цепь — прерывает путь тока. Именно так работает любой выключатель у тебя дома!',
+    availComps:{battery:1, wire:4, corner:2, bulb:1, switch:1},
+  },
+  {
+    desc:'Подключи <strong>две лампочки параллельно</strong> — каждая должна гореть',
+    solution: [
+      [0,1,'battery'],
+      [1,1,'wire'],[2,1,'wire'],[3,1,'bulb'],
+      [1,2,'wire'],[2,2,'wire'],[3,2,'bulb'],
+      [0,0,'corner'],[4,0,'corner'],[4,1,'wire'],[4,2,'wire'],
+    ],
+    fact:'При параллельном подключении каждая лампочка получает полное напряжение. Именно так устроена электропроводка в домах!',
+    availComps:{battery:1, wire:6, corner:4, bulb:2},
+  },
+];
+
+function initCircuit(){
+  l2Step = 0; selectedComp = null; grid=[];
+  for(let r=0;r<ROWS;r++){grid.push(new Array(COLS).fill(null));}
+  renderCircuit();
+  updateL2UI();
+}
+
+function updateL2UI(){
+  const m = l2Missions[l2Step];
+  document.getElementById('l2step').textContent=(l2Step+1)+' / 3';
+  document.getElementById('l2prog').style.width=(l2Step/3*100)+'%';
+  document.getElementById('l2task').innerHTML='Задание: <strong>'+m.desc+'</strong>';
+  // reset grid
+  for(let r=0;r<ROWS;r++) grid[r] = new Array(COLS).fill(null);
+  selectedComp = null;
+  renderCircuit();
+}
+
+function renderCircuit(){
+  const m = l2Missions[l2Step];
+  const shelf = document.getElementById('compShelf');
+  shelf.innerHTML='';
+  const counts={};
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) counts[grid[r][c]]=(counts[grid[r][c]]||0)+1;
+
+  for(const [key, avail] of Object.entries(m.availComps)){
+    const used = counts[key]||0;
+    const remaining = avail - used;
+    const d = compDefs[key];
+    const el = document.createElement('div');
+    el.className='comp-item'+(selectedComp===key?' selected':'')+(remaining<=0?' depleted':'');
+    el.innerHTML=`<span class="comp-emoji">${d.emoji}</span>${d.label} (${remaining})`;
+    if(remaining>0) el.onclick=()=>selectComp(key);
+    shelf.appendChild(el);
+  }
+
+  const gridEl = document.getElementById('circuitGrid');
+  gridEl.style.gridTemplateColumns='repeat('+COLS+',1fr)';
+  gridEl.innerHTML='';
+
+  // check powered (simplified: check if solution pattern exists)
+  const powered = checkCircuitSilent();
+
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const cell=document.createElement('div');
+      cell.className='cell';
+      const comp = grid[r][c];
+      if(comp){
+        cell.classList.add('has-comp');
+        if(powered) cell.classList.add('powered');
+        cell.innerHTML='<span class="comp-label" style="font-size:22px">'+compDefs[comp].emoji+'</span>';
+        cell.onclick=()=>{grid[r][c]=null; renderCircuit();}; // right-click to remove
+      } else {
+        cell.onclick=()=>placeComp(r,c);
+      }
+      gridEl.appendChild(cell);
+    }
+  }
+}
+
+function selectComp(key){ selectedComp=key; renderCircuit(); }
+
+function placeComp(r,c){
+  if(!selectedComp) return;
+  const m = l2Missions[l2Step];
+  const counts={};
+  for(let rr=0;rr<ROWS;rr++) for(let cc=0;cc<COLS;cc++) if(grid[rr][cc]) counts[grid[rr][cc]]=(counts[grid[rr][cc]]||0)+1;
+  const avail = m.availComps[selectedComp]||0;
+  const used = counts[selectedComp]||0;
+  if(used>=avail) return;
+  grid[r][c]=selectedComp;
+  renderCircuit();
+}
+
+function checkCircuitSilent(){
+  // Check if grid contains battery and bulb and some wires
+  const flat=[];
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) flat.push(grid[r][c]);
+  return flat.includes('battery') && flat.includes('bulb');
+}
+
+function checkCircuit(){
+  const flat=[];
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(grid[r][c]) flat.push(grid[r][c]);
+
+  if(!flat.includes('battery')){
+    document.getElementById('circuitHint').textContent='❌ Нет батарейки! Добавь источник питания.';
+    document.getElementById('circuitGrid').classList.add('shake');
+    setTimeout(()=>document.getElementById('circuitGrid').classList.remove('shake'),400);
+    return;
+  }
+  if(!flat.includes('bulb')){
+    document.getElementById('circuitHint').textContent='❌ Нет лампочки! Добавь потребитель.';
+    return;
+  }
+  const m=l2Missions[l2Step];
+  if(l2Step===1 && !flat.includes('switch')){
+    document.getElementById('circuitHint').textContent='❌ Добавь рубильник в цепь!';
+    return;
+  }
+  if(l2Step===2 && flat.filter(x=>x==='bulb').length < 2){
+    document.getElementById('circuitHint').textContent='❌ Нужны ДВЕ лампочки! Добавь ещё одну.';
+    return;
+  }
+
+  // Success!
+  renderCircuit();
+  l2Step++;
+  const fact = l2Missions[l2Step-1].fact;
+  if(l2Step>=3){
+    progress.lvl2=true;
+    showSuccess('⚡','Все цепи собраны!',fact,()=>showScreen('levelSelect'));
+  } else {
+    showSuccess('💡','Цепь замкнута!',fact,()=>{updateL2UI();});
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LEVEL 3 — LASER
+// ═══════════════════════════════════════════════════════════
+let l3Step = 0;
+let mirrors = [];
+
+// Mirror angles: 0=/  1=\  2=-  3=|
+const l3Puzzles = [
+  {
+    laser:{x:20, y:20, dir:[1,0]}, // shoots right
+    target:{x:300, y:220},
+    mirrors:[
+      {x:180, y:20, angle:1},  // \ : redirects right→down
+      {x:180, y:220, angle:0}, // / : redirects down→left — actually right→up
+    ],
+    hint:'Два зеркала: сначала вниз, потом к цели!'
+  },
+  {
+    laser:{x:20, y:130, dir:[1,0]},
+    target:{x:300, y:30},
+    mirrors:[
+      {x:150, y:130, angle:0}, // /
+      {x:150, y:30, angle:1},  // \
+    ],
+    hint:'Отрази вверх, затем вправо!'
+  },
+  {
+    laser:{x:20, y:220, dir:[0,-1]},
+    target:{x:300, y:30},
+    mirrors:[
+      {x:20, y:80, angle:0},   // /
+      {x:200, y:80, angle:1},  // \
+    ],
+    hint:'Вверх → вправо → вправо к цели!'
+  },
+  {
+    laser:{x:170, y:20, dir:[0,1]},
+    target:{x:20, y:220},
+    mirrors:[
+      {x:170, y:150, angle:0},  // /
+      {x:20, y:150, angle:2},   // -
+    ],
+    hint:'Вниз → влево → к цели!'
+  },
+];
+
+const l3Facts=[
+  'Угол падения луча равен углу отражения — это закон геометрической оптики!',
+  'Зеркала отражают свет изменяя направление, но не скорость фотонов.',
+  'Лазер — это усиленный когерентный свет. Все фотоны летят в одном направлении!',
+  'Принцип отражения открыл Евклид ещё в 300 году до нашей эры!'
+];
+
+function initLaser(){
+  l3Step=0;
+  loadPuzzle();
+}
+
+function loadPuzzle(){
+  const p=l3Puzzles[l3Step];
+  mirrors=p.mirrors.map(m=>({...m}));
+  document.getElementById('l3step').textContent=(l3Step+1)+' / 4';
+  document.getElementById('l3prog').style.width=(l3Step/4*100)+'%';
+  document.getElementById('l3task').innerHTML='Кликай по зеркалам — направь луч лазера в <strong>цель 🎯</strong>';
+  document.getElementById('l3hint').textContent='🔴 '+p.hint;
+  drawLaser();
+}
+
+function drawLaser(){
+  const cv=document.getElementById('laserCanvas');
+  if(!cv) return;
+  const W=340, H=260;
+  cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+
+  ctx.fillStyle='#0a0a18'; ctx.fillRect(0,0,W,H);
+  // grid dots
+  ctx.fillStyle='rgba(255,255,255,.06)';
+  for(let x=20;x<W;x+=20) for(let y=20;y<H;y+=20){
+    ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
+  }
+
+  const p=l3Puzzles[l3Step];
+
+  // trace laser beam
+  let bx=p.laser.x, by=p.laser.y;
+  let dx=p.laser.dir[0], dy=p.laser.dir[1];
+  const beamPts=[{x:bx,y:by}];
+  let hit=false;
+  for(let step=0;step<200;step++){
+    bx+=dx*4; by+=dy*4;
+    if(bx<0||bx>W||by<0||by>H) break;
+
+    // check mirror collision
+    let reflected=false;
+    for(const m of mirrors){
+      if(Math.abs(bx-m.x)<18 && Math.abs(by-m.y)<18){
+        // reflect based on angle
+        if(m.angle===0){// /: (dx,dy)→(-dy,-dx)
+          [dx,dy]=[-dy,-dx];
+        } else if(m.angle===1){// \: (dx,dy)→(dy,dx)
+          [dx,dy]=[dy,dx];
+        } else if(m.angle===2){// -: reflect vertical
+          dy=-dy;
+        } else {// |: reflect horizontal
+          dx=-dx;
+        }
+        reflected=true;
+        break;
+      }
+    }
+    beamPts.push({x:bx,y:by});
+
+    // check target
+    if(Math.sqrt((bx-p.target.x)**2+(by-p.target.y)**2)<22){
+      hit=true; break;
+    }
+  }
+
+  // draw beam
+  if(beamPts.length>1){
+    ctx.save();
+    ctx.shadowBlur=10; ctx.shadowColor='#FF5038';
+    ctx.strokeStyle='rgba(255,80,56,.9)'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(beamPts[0].x,beamPts[0].y);
+    for(let i=1;i<beamPts.length;i++) ctx.lineTo(beamPts[i].x,beamPts[i].y);
+    ctx.stroke(); ctx.restore();
+  }
+
+  // draw mirrors
+  for(const m of mirrors){
+    ctx.save(); ctx.translate(m.x,m.y);
+    const symbols=['/',String.fromCharCode(92),'─','│'];
+    const col=['#7B2FFF','#3B82F6','#00C27C','#FFE141'];
+    ctx.fillStyle=col[m.angle%4];
+    ctx.beginPath(); ctx.roundRect(-16,-16,32,32,8); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='bold 18px monospace';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(symbols[m.angle%4],0,0);
+    ctx.restore();
+  }
+
+  // draw laser source
+  ctx.save();
+  ctx.shadowBlur=15; ctx.shadowColor='#FF5038';
+  ctx.fillStyle='#FF5038';
+  ctx.beginPath(); ctx.arc(p.laser.x,p.laser.y,10,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='14px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('⚡',p.laser.x,p.laser.y);
+  ctx.restore();
+
+  // draw target
+  ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  if(hit){
+    const glow=ctx.createRadialGradient(p.target.x,p.target.y,5,p.target.x,p.target.y,30);
+    glow.addColorStop(0,'rgba(0,194,124,.5)'); glow.addColorStop(1,'transparent');
+    ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(p.target.x,p.target.y,30,0,Math.PI*2); ctx.fill();
+  }
+  ctx.fillText('🎯',p.target.x,p.target.y);
+
+  if(hit) return true;
+  return false;
+}
+
+function handleLaserClick(e){
+  const cv=document.getElementById('laserCanvas');
+  const rect=cv.getBoundingClientRect();
+  const scaleX=340/rect.width, scaleY=260/rect.height;
+  const cx=(e.clientX-rect.left)*scaleX;
+  const cy=(e.clientY-rect.top)*scaleY;
+
+  let clicked=false;
+  for(const m of mirrors){
+    if(Math.abs(cx-m.x)<22 && Math.abs(cy-m.y)<22){
+      m.angle=(m.angle+1)%4;
+      clicked=true;
+      break;
+    }
+  }
+  if(!clicked) return;
+
+  const hit=drawLaser();
+  if(hit){
+    const p=l3Puzzles[l3Step];
+    const rect2=cv.getBoundingClientRect();
+    spawnParticles(rect2.left+p.target.x/340*rect2.width, rect2.top+p.target.y/260*rect2.height);
+    setTimeout(()=>{
+      l3Step++;
+      const fact=l3Facts[l3Step-1];
+      if(l3Step>=4){
+        progress.lvl3=true;
+        showSuccess('🔴','Ты Мастер оптики!',fact,()=>showScreen('complete'));
+      } else {
+        showSuccess('🎯','Луч в цели!',fact,()=>loadPuzzle());
+      }
+    },500);
+  }
+}
+
+// touch support for laser
+function initLaserEvents(){
+  const cv=document.getElementById('laserCanvas');
+  if(!cv) return;
+  cv.removeEventListener('click',handleLaserClick);
+  cv.addEventListener('click',handleLaserClick);
+  cv.addEventListener('touchend',function(e){
+    e.preventDefault();
+    const t=e.changedTouches[0];
+    handleLaserClick({clientX:t.clientX,clientY:t.clientY});
+  },{passive:false});
+}
+
+// Override initLaser to also bind events
+const _initLaser = initLaser;
+function initLaser(){
+  l3Step=0;
+  loadPuzzle();
+  setTimeout(initLaserEvents,50);
+}
+
+// cannon fire button touch
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('fireBtn').addEventListener('touchend',function(e){
+    e.preventDefault();
+    fireBtn_handler();
+  },{passive:false});
+  showScreen('intro');
+});
+
+// ═══════════════════════════════════════════════════════════
+//  Handle complete screen
+// ═══════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const scr=document.getElementById(id);
+  scr.classList.add('active');
+  if(id==='levelSelect') updateLevelCards();
+  if(id==='level1') initCannon();
+  if(id==='level2') initCircuit();
+  if(id==='level3') initLaser();
+  if(id==='complete'){
+    // already handled
+  }
+}
+
+// Resize cannon canvas on window resize
+window.addEventListener('resize',()=>{
+  if(document.getElementById('level1').classList.contains('active')) drawCannon();
+});
+</script>
+</body>
+</html>
