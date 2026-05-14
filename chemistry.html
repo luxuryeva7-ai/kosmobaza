@@ -4,1187 +4,1149 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Хемо Лаб — Химия для детей</title>
-<link href="https://fonts.bunny.net/css?family=space-grotesk:400,600,700,800" rel="stylesheet">
+<link href="https://fonts.bunny.net/css?family=space-grotesk:400,700,800" rel="stylesheet">
 <style>
-:root {
-  --bg: #FFFDF7; --card: #FFFFFF; --mint: #00C27C;
-  --yellow: #FFE141; --coral: #FF5038; --blue: #3B82F6;
-  --text: #1a1a2e; --muted: rgba(26,26,46,.45);
-}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+html, body { height: 100%; overflow: hidden; }
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #FFFDF7;
+  color: #1a1a2e;
   font-family: 'Space Grotesk', sans-serif;
   user-select: none;
-  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== SCREENS ===== */
-.screen { display: none; min-height: 100vh; padding: 20px; }
-.screen.active { display: flex; flex-direction: column; }
-
-/* ===== INTRO ===== */
-#intro {
-  background: linear-gradient(160deg, #e8fff4 0%, #f0fff8 50%, #FFFDF7 100%);
-  align-items: center; justify-content: center; text-align: center; gap: 20px;
-}
-.intro-icon { font-size: 72px; animation: floatBounce 3s ease-in-out infinite; }
-.intro-title { font-size: 38px; font-weight: 800; color: var(--mint); }
-.intro-sub { font-size: 18px; color: var(--muted); max-width: 320px; line-height: 1.5; }
-.intro-btn {
-  background: var(--mint); color: #fff; border: none; border-radius: 20px;
-  padding: 16px 48px; font-size: 20px; font-weight: 700; cursor: pointer;
-  font-family: inherit;
-  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
-  box-shadow: 0 6px 20px rgba(0,194,124,.35);
-}
-.intro-btn:hover { transform: scale(1.06); }
-.intro-btn:active { transform: scale(0.97); }
+.screen { display: none; height: 100vh; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
 
 /* ===== LEVEL SELECT ===== */
-#levelSelect {
-  align-items: center; justify-content: flex-start; padding-top: 30px;
+#screen-menu {
+  background: linear-gradient(160deg, #e8fff4 0%, #fff8e8 60%, #FFFDF7 100%);
+  padding: 24px 20px;
+  gap: 16px;
 }
-.ls-header { text-align: center; margin-bottom: 24px; }
-.ls-title { font-size: 28px; font-weight: 800; }
-.ls-sub { font-size: 15px; color: var(--muted); margin-top: 4px; }
-.ls-grid { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 420px; }
-.ls-card {
-  background: var(--card); border-radius: 20px; padding: 20px 24px;
-  display: flex; align-items: center; gap: 16px; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,.07);
-  border: 2.5px solid transparent;
-  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.2s, box-shadow 0.2s;
+.menu-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
 }
-.ls-card:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
-.ls-card:active { transform: scale(0.98); }
-.ls-card.done { border-color: var(--mint); }
-.ls-card-icon { font-size: 40px; flex-shrink: 0; }
-.ls-card-info { flex: 1; }
-.ls-card-name { font-size: 17px; font-weight: 700; }
-.ls-card-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
-.ls-card-badge { font-size: 22px; }
+.menu-sub {
+  text-align: center;
+  font-size: 15px;
+  color: #666;
+  margin-top: 6px;
+}
+.level-cards { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
+.level-card {
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 20px; height: 100px; border-radius: 24px; border: none;
+  cursor: pointer; text-align: left;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
+  position: relative; overflow: hidden;
+}
+.level-card:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(0,0,0,0.10); }
+.level-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+  background: linear-gradient(rgba(255,255,255,0.25), transparent);
+  pointer-events: none; border-radius: 24px 24px 0 0;
+}
+.lc-emoji { font-size: 56px; flex-shrink: 0; }
+.lc-info {}
+.lc-name { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; text-shadow: 0 1px 4px rgba(0,0,0,0.18); }
+.lc-desc { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; font-weight: 400; }
 
-/* ===== COMMON LEVEL UI ===== */
-.level-header {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
-}
+/* ===== BACK BUTTON ===== */
 .back-btn {
-  background: none; border: none; font-size: 26px; cursor: pointer;
-  transition: transform 0.2s; line-height: 1;
+  position: absolute; top: 14px; left: 14px;
+  background: rgba(255,255,255,0.85); border: none; border-radius: 14px;
+  padding: 8px 16px; font-size: 15px; font-weight: 700;
+  cursor: pointer; color: #1a1a2e; z-index: 20;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+  transition: transform 0.12s;
 }
-.back-btn:hover { transform: translateX(-3px); }
-.level-title { font-size: 20px; font-weight: 800; }
-.badge-strip {
-  background: var(--card); border-radius: 14px; padding: 10px 16px;
-  font-size: 14px; font-weight: 600; margin-bottom: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06); min-height: 42px;
-  display: flex; align-items: center; gap: 8px;
-  transition: all 0.4s cubic-bezier(.34,1.56,.64,1);
-}
-.badge-strip.pop { animation: badgePop 0.5s cubic-bezier(.34,1.56,.64,1); }
+.back-btn:active { transform: scale(0.95); }
 
-/* ===== LEVEL 1 ===== */
-#level1 { padding: 20px; }
-.l1-layout { display: flex; gap: 20px; align-items: flex-start; justify-content: center; }
-.l1-flasks { display: flex; flex-direction: column; gap: 12px; }
-.flask-btn {
-  background: var(--card); border: 2.5px solid transparent; border-radius: 16px;
-  padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px;
-  font-family: inherit; font-size: 15px; font-weight: 600; width: 140px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), border-color 0.2s;
+/* ===== LEVEL 1 — LIQUIDS ===== */
+#screen-l1 { position: relative; }
+.l1-header {
+  text-align: center;
+  font-size: 44px; font-weight: 800;
+  padding: 14px 0 10px;
+  flex-shrink: 0;
 }
-.flask-btn:not(:disabled):hover { transform: scale(1.05); }
-.flask-btn:not(:disabled):active { transform: scale(0.97) rotate(-5deg); }
-.flask-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.flask-btn.added { border-color: var(--mint); }
-.flask-emoji { font-size: 20px; }
-
-.cylinder-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.cylinder-label { font-size: 12px; color: var(--muted); font-weight: 600; }
-
-.l1-objects { margin-top: 16px; }
-.l1-objects-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--muted); text-align: center; }
-.objects-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.obj-card {
-  background: var(--card); border-radius: 14px; padding: 12px 16px;
-  font-size: 28px; text-align: center; cursor: grab;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+.l1-body {
+  display: flex; flex: 1; gap: 14px;
+  padding: 0 14px 14px; align-items: center;
+  overflow: hidden;
 }
-.obj-card:hover { transform: scale(1.1); }
-.obj-card.placed { opacity: 0.35; cursor: not-allowed; }
-.obj-card .obj-name { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 4px; }
-
-/* ===== LEVEL 2 ===== */
-#level2 { padding: 20px; }
-.scenario-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-.scenario-tab {
-  flex: 1; background: var(--card); border: 2px solid transparent; border-radius: 12px;
-  padding: 8px 4px; font-size: 11px; font-weight: 700; cursor: pointer;
-  font-family: inherit; text-align: center;
-  transition: all 0.2s; color: var(--muted);
+.l1-bottles { display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.bottle-btn {
+  width: 100%; height: 88px;
+  border-radius: 22px; border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 14px; padding: 0 18px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+  position: relative; overflow: hidden;
 }
-.scenario-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,.08); }
-.chain-slots { display: flex; align-items: center; gap: 0; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-.chain-slot {
-  min-width: 80px; max-width: 100px; flex: 1;
-  background: var(--card); border-radius: 14px; padding: 10px 6px;
-  border: 2.5px dashed rgba(26,26,46,.2); min-height: 76px;
+.bottle-btn:active:not(.used) { transform: scale(0.95); }
+.bottle-btn.used { opacity: 0.33; pointer-events: none; }
+.bottle-btn::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+  background: linear-gradient(rgba(255,255,255,0.28), transparent);
+  border-radius: 22px 22px 0 0; pointer-events: none;
+}
+.bottle-emoji { font-size: 34px; flex-shrink: 0; }
+.bottle-name { font-size: 17px; font-weight: 800; }
+.bottle-density { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+
+.l1-glass-wrap {
+  width: 170px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative;
+}
+.l1-badge {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: #fff; border-radius: 12px; padding: 6px 12px;
+  font-size: 12px; font-weight: 700; color: #1a1a2e;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12); white-space: nowrap;
+  opacity: 0; transition: opacity 0.3s, transform 0.3s;
+  text-align: center; max-width: 220px; pointer-events: none;
+  z-index: 10;
+}
+.l1-badge.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+
+/* Drop objects */
+.l1-objects {
+  display: flex; gap: 12px; justify-content: center; margin-top: 12px;
+}
+.obj-btn {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.08);
+  background: #fff; font-size: 36px;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; justify-content: center;
+}
+.obj-btn:active { transform: scale(0.9); }
+.obj-btn.used { opacity: 0.3; pointer-events: none; }
+
+/* ===== LEVEL 2 — CHAIN ===== */
+#screen-l2 { position: relative; background: #FFFDF7; }
+.l2-scenario-title {
+  text-align: center; font-size: 24px; font-weight: 800;
+  padding: 54px 20px 8px; flex-shrink: 0;
+}
+.l2-slots-wrap {
+  padding: 0 8px; flex-shrink: 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.l2-slots {
+  display: flex; gap: 0; align-items: center;
+  min-width: max-content; padding: 0 10px;
+}
+.l2-slot {
+  width: 108px; height: 96px; border-radius: 18px;
+  border: 3px dashed #ccc; background: #f9f9f9;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 11px; color: var(--muted); font-weight: 600; text-align: center;
-  transition: border-color 0.2s, background 0.2s; position: relative; cursor: pointer;
+  font-size: 12px; color: #aaa; font-weight: 700;
+  transition: border-color 0.2s, background 0.2s, transform 0.18s cubic-bezier(.34,1.56,.64,1);
+  position: relative; flex-shrink: 0;
 }
-.chain-slot.filled { border-style: solid; border-color: var(--mint); }
-.chain-slot.wrong { animation: shake 0.4s; border-color: var(--coral) !important; }
-.chain-slot.playing { animation: slotPlay 0.5s; }
-.chain-slot-content { font-size: 22px; margin-bottom: 4px; }
-.chain-slot-text { font-size: 10px; font-weight: 700; color: var(--text); line-height: 1.2; }
-.chain-arrow {
-  font-size: 18px; color: var(--muted); flex-shrink: 0; padding: 0 2px;
+.l2-slot.filled { border-style: solid; background: #fff; color: #1a1a2e; }
+.l2-slot.correct { border-color: #00C27C; background: #e8fff4; }
+.l2-slot.wrong { border-color: #FF5038; background: #fff0ee; animation: shakeSlot 0.4s ease; }
+.l2-slot.active-glow { box-shadow: 0 0 0 4px rgba(255,200,0,0.5); transform: scale(1.06); }
+@keyframes shakeSlot {
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} 80%{transform:translateX(-5px)}
+}
+.l2-slot-emoji { font-size: 32px; line-height: 1; }
+.l2-slot-label { font-size: 11px; font-weight: 700; text-align: center; margin-top: 3px; line-height: 1.2; }
+.l2-slot-check { position: absolute; top: -8px; right: -8px; font-size: 18px; display: none; }
+.l2-slot.correct .l2-slot-check { display: block; }
+
+.l2-arrow {
+  font-size: 20px; color: #ccc; flex-shrink: 0; padding: 0 3px;
   transition: color 0.3s;
 }
-.chain-arrow.lit { color: var(--mint); animation: arrowRun 0.4s; }
-.cards-pool { display: flex; gap: 10px; flex-wrap: wrap; min-height: 60px; margin-bottom: 16px; }
-.pool-card {
-  background: var(--card); border-radius: 14px; padding: 10px 14px;
-  border: 2.5px solid rgba(26,26,46,.1); cursor: grab;
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700; font-family: inherit;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
-  user-select: none; touch-action: none;
-}
-.pool-card:hover { transform: scale(1.05); }
-.pool-card.dragging { opacity: 0.4; }
-.pool-card-emoji { font-size: 20px; }
-.run-btn {
-  width: 100%; padding: 14px; border-radius: 16px; border: none;
-  background: linear-gradient(135deg, var(--blue), #6366f1);
-  color: #fff; font-size: 18px; font-weight: 800; font-family: inherit;
-  cursor: pointer; transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
-  box-shadow: 0 6px 20px rgba(59,130,246,.35);
-}
-.run-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.run-btn:not(:disabled):hover { transform: scale(1.03); }
-.run-btn:not(:disabled):active { transform: scale(0.98); }
+.l2-arrow.lit { color: #FFE141; }
 
-/* ===== LEVEL 3 ===== */
-#level3 { padding: 20px; }
-.photo-card {
-  background: var(--card); border-radius: 24px; padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.08); margin-bottom: 16px;
+.l2-cards-wrap {
+  flex: 1; padding: 12px 14px; overflow-y: auto;
 }
-#plantCanvas { display: block; margin: 0 auto; }
-.photo-meter {
-  display: flex; align-items: center; gap: 10px; margin-top: 14px;
+.l2-cards {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
 }
-.photo-meter-label { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
-.photo-meter-bar { flex: 1; height: 12px; background: rgba(0,0,0,.08); border-radius: 6px; overflow: hidden; }
-.photo-meter-fill { height: 100%; border-radius: 6px; transition: width 0.4s, background 0.4s; background: var(--mint); }
-.sliders-wrap { display: flex; flex-direction: column; gap: 14px; }
-.slider-row { display: flex; align-items: center; gap: 12px; }
-.slider-icon { font-size: 22px; width: 30px; text-align: center; }
-.slider-label { font-size: 13px; font-weight: 700; width: 40px; color: var(--muted); }
-.slider-input {
-  flex: 1; -webkit-appearance: none; appearance: none;
-  height: 8px; border-radius: 4px; background: rgba(0,0,0,.1); outline: none;
+.l2-card {
+  width: 108px; height: 90px; border-radius: 18px;
+  border: 3px solid transparent;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 30px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
+  position: relative; overflow: hidden;
 }
-.slider-input::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
-  background: var(--mint); cursor: pointer; box-shadow: 0 2px 8px rgba(0,194,124,.4);
-  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1);
+.l2-card:active { transform: scale(0.93); }
+.l2-card.selected { transform: scale(1.08); border-color: #1a1a2e; box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+.l2-card.placed { opacity: 0.28; pointer-events: none; }
+.l2-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48%;
+  background: linear-gradient(rgba(255,255,255,0.25), transparent);
+  pointer-events: none;
 }
-.slider-input::-webkit-slider-thumb:hover { transform: scale(1.2); }
-.slider-val { font-size: 13px; font-weight: 700; width: 36px; text-align: right; }
-.missions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.l2-card-emoji { font-size: 32px; }
+.l2-card-label { font-size: 11px; font-weight: 700; text-align: center; margin-top: 3px; line-height: 1.2; }
+
+.l2-run-btn {
+  margin: 10px 14px;
+  width: calc(100% - 28px); height: 56px;
+  background: #FFE141; border: none; border-radius: 20px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800;
+  cursor: pointer; color: #1a1a2e;
+  box-shadow: 0 4px 16px rgba(255,225,65,0.5);
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  flex-shrink: 0;
+}
+.l2-run-btn:disabled { opacity: 0.45; pointer-events: none; }
+.l2-run-btn:active { transform: scale(0.97); }
+
+.l2-hint {
+  text-align: center; font-size: 13px; color: #999; font-weight: 600;
+  padding: 0 20px 8px; flex-shrink: 0;
+}
+
+/* ===== LEVEL 3 — PHOTOSYNTHESIS ===== */
+#screen-l3 { position: relative; }
+.l3-plant-zone {
+  height: 55vh; background: linear-gradient(180deg, #f0fff4 0%, #e8f5e9 80%, #a1887f 100%);
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.l3-soil {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 44px;
+  background: linear-gradient(180deg, #8D6E63, #6D4C41);
+  border-radius: 0;
+}
+.l3-sun {
+  position: absolute; top: 14px; right: 18px;
+  font-size: 48px; transition: opacity 0.4s, filter 0.4s;
+}
+.l3-plant-svg { position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); }
+.l3-o2-container { position: absolute; top: 0; left: 0; right: 0; bottom: 44px; pointer-events: none; overflow: hidden; }
+
+.l3-missions {
+  display: flex; gap: 8px; padding: 8px 14px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch; flex-shrink: 0;
+}
 .mission-chip {
-  background: var(--card); border-radius: 12px; padding: 10px 12px;
-  font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06); border: 2px solid transparent;
-  transition: border-color 0.3s, background 0.3s;
+  flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+  background: #f0f0f0; border: 2px solid transparent;
+  font-size: 13px; font-weight: 700; color: #666; cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
 }
-.mission-chip.done { border-color: var(--mint); background: rgba(0,194,124,.06); }
-.mission-chip .m-icon { font-size: 18px; }
+.mission-chip.done { background: #e8fff4; color: #00C27C; border-color: #00C27C; }
+
+.l3-sliders { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 16px 10px; gap: 6px; }
+.slider-row { display: flex; align-items: center; gap: 12px; }
+.slider-icon { font-size: 32px; flex-shrink: 0; width: 40px; text-align: center; }
+.slider-label { font-size: 13px; font-weight: 700; color: #666; flex-shrink: 0; width: 42px; }
+input[type=range] {
+  flex: 1; height: 12px; border-radius: 6px; appearance: none; -webkit-appearance: none;
+  outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 34px; height: 34px; border-radius: 50%;
+  background: #fff; border: 3px solid #999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18); cursor: pointer;
+}
+.slider-val { font-size: 13px; font-weight: 700; color: #444; flex-shrink: 0; width: 36px; text-align: right; }
 
 /* ===== SUCCESS OVERLAY ===== */
-#successOverlay {
-  display: none; position: fixed; inset: 0; z-index: 1000;
-  background: rgba(255,253,247,.95); align-items: center; justify-content: center;
-  flex-direction: column; text-align: center; padding: 30px;
+.success-ov {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
 }
-#successOverlay.show { display: flex; }
-.success-icon { font-size: 72px; animation: bounceBig 0.7s cubic-bezier(.34,1.56,.64,1); }
-.success-title { font-size: 28px; font-weight: 800; color: var(--mint); margin-top: 16px; }
-.success-fact { font-size: 15px; color: var(--muted); max-width: 320px; line-height: 1.6; margin-top: 10px; }
-.success-btns { display: flex; gap: 12px; margin-top: 24px; }
-.success-btn {
-  padding: 14px 28px; border-radius: 16px; border: none;
-  font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer;
-  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+.ov-bg {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.48); backdrop-filter: blur(6px);
 }
-.success-btn:hover { transform: scale(1.05); }
-.success-btn.primary { background: var(--yellow); color: var(--text); }
-.success-btn.secondary { background: var(--card); color: var(--muted); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.ov-card {
+  position: relative; background: #fff; border-radius: 28px;
+  padding: 32px 36px; text-align: center; max-width: 340px; width: 88%;
+  border: 3px solid #00C27C;
+  animation: cardPop 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes cardPop { from{transform:scale(0.55);opacity:0} to{transform:scale(1);opacity:1} }
+.ov-sci { font-size: 64px; display: block; animation: sciBounce 0.55s cubic-bezier(.34,1.56,.64,1) 0.15s both; }
+@keyframes sciBounce { from{transform:translateY(-28px) scale(0.4)} to{transform:translateY(0) scale(1)} }
+.ov-title { font-size: 24px; font-weight: 800; color: #1a1a2e; margin: 12px 0 8px; }
+.ov-fact { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 22px; }
+.ov-btn {
+  background: #FFE141; color: #111; border: none;
+  padding: 15px 36px; border-radius: 40px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 800; cursor: pointer; width: 100%;
+  transition: transform 0.12s cubic-bezier(.34,1.56,.64,1);
+}
+.ov-btn:active { transform: scale(0.96); }
+
+/* ===== PARTICLES ===== */
+.particle { position: fixed; pointer-events: none; z-index: 999; font-size: 24px; }
 
 /* ===== ANIMATIONS ===== */
-@keyframes floatBounce {
-  0%,100% { transform: translateY(0) rotate(-3deg); }
-  50% { transform: translateY(-12px) rotate(3deg); }
+.pour-stream {
+  position: fixed; width: 10px; border-radius: 5px;
+  pointer-events: none; z-index: 50; transform-origin: top;
 }
-@keyframes badgePop {
-  0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); }
+@keyframes streamFlow { from{height:0;opacity:1} to{height:110px;opacity:0.85} }
+
+.splash-drop {
+  position: fixed; width: 8px; height: 8px; border-radius: 50%;
+  pointer-events: none; z-index: 50;
 }
-@keyframes bounceBig {
-  0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); }
-}
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
-}
-@keyframes slotPlay {
-  0% { background: rgba(0,194,124,.15); transform: scale(1); }
-  40% { background: rgba(0,194,124,.25); transform: scale(1.04); }
-  100% { background: var(--card); transform: scale(1); }
-}
-@keyframes arrowRun {
-  0% { color: var(--muted); } 50% { color: var(--yellow); font-size: 22px; } 100% { color: var(--mint); }
-}
+
 </style>
 </head>
 <body>
 
-<!-- ===== INTRO ===== -->
-<div id="intro" class="screen active">
-  <div class="intro-icon">🧪</div>
-  <div class="intro-title">Хемо Лаб</div>
-  <div class="intro-sub">Химия — это магия природы! Три опыта, которые тебя удивят.</div>
-  <button class="intro-btn" onclick="showScreen('levelSelect')">Начать опыты →</button>
-</div>
-
-<!-- ===== LEVEL SELECT ===== -->
-<div id="levelSelect" class="screen">
-  <div class="ls-header">
-    <div class="ls-title">🔬 Выбери опыт</div>
-    <div class="ls-sub">Все уровни открыты — исследуй в любом порядке</div>
-  </div>
-  <div class="ls-grid">
-    <div class="ls-card" id="ls-card-1" onclick="startLevel(1)">
-      <div class="ls-card-icon">🌈</div>
-      <div class="ls-card-info">
-        <div class="ls-card-name">Слои жидкостей</div>
-        <div class="ls-card-desc">Почему мёд тяжелее масла?</div>
+<!-- ===== MENU ===== -->
+<div id="screen-menu" class="screen active">
+  <div class="menu-title">🧪 Хемо Лаб</div>
+  <div class="menu-sub">Химия — это магия! Выбери опыт:</div>
+  <div class="level-cards">
+    <button class="level-card" style="background:linear-gradient(135deg,#FF9800,#F44336)" onclick="goLevel(1)">
+      <span class="lc-emoji">🌈</span>
+      <div class="lc-info">
+        <div class="lc-name">Слои жидкостей</div>
+        <div class="lc-desc">Почему мёд не смешивается с маслом?</div>
       </div>
-      <div class="ls-card-badge" id="ls-badge-1">🔓</div>
-    </div>
-    <div class="ls-card" id="ls-card-2" onclick="startLevel(2)">
-      <div class="ls-card-icon">⚗️</div>
-      <div class="ls-card-info">
-        <div class="ls-card-name">Химическая цепочка</div>
-        <div class="ls-card-desc">Собери реакцию шаг за шагом</div>
+    </button>
+    <button class="level-card" style="background:linear-gradient(135deg,#673AB7,#3F51B5)" onclick="goLevel(2)">
+      <span class="lc-emoji">⚗️</span>
+      <div class="lc-info">
+        <div class="lc-name">Химическая цепочка</div>
+        <div class="lc-desc">Собери реакцию по шагам!</div>
       </div>
-      <div class="ls-card-badge" id="ls-badge-2">🔓</div>
-    </div>
-    <div class="ls-card" id="ls-card-3" onclick="startLevel(3)">
-      <div class="ls-card-icon">🌱</div>
-      <div class="ls-card-info">
-        <div class="ls-card-name">Фотосинтез</div>
-        <div class="ls-card-desc">Вырасти растение из света и воды</div>
+    </button>
+    <button class="level-card" style="background:linear-gradient(135deg,#2E7D32,#43A047)" onclick="goLevel(3)">
+      <span class="lc-emoji">🌱</span>
+      <div class="lc-info">
+        <div class="lc-name">Фотосинтез</div>
+        <div class="lc-desc">Вырасти огромное растение!</div>
       </div>
-      <div class="ls-card-badge" id="ls-badge-3">🔓</div>
-    </div>
+    </button>
   </div>
 </div>
 
 <!-- ===== LEVEL 1 ===== -->
-<div id="level1" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <div class="level-title">🌈 Слои жидкостей</div>
-  </div>
-  <div class="badge-strip" id="l1-badge">🧪 Лей жидкости в стакан — они сами встанут по плотности!</div>
-  <div class="l1-layout">
-    <div class="l1-flasks" id="l1-flasks"></div>
-    <div class="cylinder-wrap">
-      <canvas id="cylinderCanvas" width="110" height="300"></canvas>
-      <div class="cylinder-label">↑ лёгкие / тяжёлые ↓</div>
+<div id="screen-l1" class="screen">
+  <button class="back-btn" onclick="goMenu()">← Назад</button>
+  <div class="l1-header">🌈 Слои жидкостей</div>
+  <div class="l1-body">
+    <div class="l1-bottles" id="l1-bottles"></div>
+    <div class="l1-glass-wrap">
+      <div class="l1-badge" id="l1-badge">Привет!</div>
+      <svg width="160" height="420" id="glass-svg">
+        <defs>
+          <clipPath id="liquidClip">
+            <rect x="18" y="20" width="124" height="360" rx="4"/>
+          </clipPath>
+          <linearGradient id="glassShine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+            <stop offset="28%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="72%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0.28)"/>
+          </linearGradient>
+        </defs>
+        <!-- Body -->
+        <rect x="18" y="20" width="124" height="360" rx="7" fill="rgba(200,230,255,0.12)" stroke="rgba(100,180,255,0.55)" stroke-width="3"/>
+        <!-- Liquids (clipped) -->
+        <g id="liquids-group" clip-path="url(#liquidClip)"></g>
+        <!-- Shine overlay -->
+        <rect x="18" y="20" width="124" height="360" rx="7" fill="url(#glassShine)" pointer-events="none"/>
+        <!-- Rim top -->
+        <rect x="34" y="10" width="92" height="18" rx="5" fill="rgba(200,230,255,0.28)" stroke="rgba(100,180,255,0.45)" stroke-width="2"/>
+        <!-- Bottom ellipse -->
+        <ellipse cx="80" cy="381" rx="62" ry="7" fill="rgba(100,180,255,0.18)"/>
+      </svg>
+      <div class="l1-objects" id="l1-objects" style="display:none"></div>
     </div>
-  </div>
-  <div class="l1-objects" id="l1-objects" style="display:none">
-    <div class="l1-objects-title">Нажми на предмет — где он остановится?</div>
-    <div class="objects-row" id="objects-row"></div>
   </div>
 </div>
 
 <!-- ===== LEVEL 2 ===== -->
-<div id="level2" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <div class="level-title">⚗️ Химическая цепочка</div>
+<div id="screen-l2" class="screen">
+  <button class="back-btn" onclick="goMenu()">← Назад</button>
+  <div class="l2-scenario-title" id="l2-title">🎈 Надуй шарик!</div>
+  <div class="l2-slots-wrap">
+    <div class="l2-slots" id="l2-slots"></div>
   </div>
-  <div class="badge-strip" id="l2-badge">🔗 Расставь карточки в правильном порядке и запусти реакцию!</div>
-  <div class="scenario-tabs" id="scenario-tabs"></div>
-  <div class="chain-slots" id="chain-slots"></div>
-  <div class="cards-pool" id="cards-pool"></div>
-  <button class="run-btn" id="run-btn" onclick="runChain()" disabled>▶ Запустить реакцию!</button>
+  <div class="l2-hint" id="l2-hint">Нажми на карточку, потом на слот</div>
+  <div class="l2-cards-wrap">
+    <div class="l2-cards" id="l2-cards"></div>
+  </div>
+  <button class="l2-run-btn" id="l2-run" disabled onclick="runChain()">▶ Запустить!</button>
 </div>
 
 <!-- ===== LEVEL 3 ===== -->
-<div id="level3" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="showScreen('levelSelect')">←</button>
-    <div class="level-title">🌱 Фотосинтез</div>
+<div id="screen-l3" class="screen">
+  <button class="back-btn" onclick="goMenu()">← Назад</button>
+  <div class="l3-plant-zone" id="l3-zone">
+    <div class="l3-sun" id="l3-sun">☀️</div>
+    <svg class="l3-plant-svg" id="l3-plant" width="200" height="260" viewBox="0 0 200 260"></svg>
+    <div class="l3-o2-container" id="l3-o2"></div>
+    <div class="l3-soil"></div>
   </div>
-  <div class="badge-strip" id="l3-badge">☀️ Двигай ползунки и найди идеальный баланс!</div>
-  <div class="photo-card">
-    <canvas id="plantCanvas" width="280" height="200"></canvas>
-    <div class="photo-meter">
-      <div class="photo-meter-label">Фотосинтез</div>
-      <div class="photo-meter-bar"><div class="photo-meter-fill" id="photo-fill" style="width:0%"></div></div>
-      <div id="photo-pct" style="font-size:13px;font-weight:700;width:36px;text-align:right">0%</div>
-    </div>
-  </div>
-  <div class="sliders-wrap">
-    <div class="slider-row">
-      <div class="slider-icon">☀️</div>
-      <div class="slider-label">Свет</div>
-      <input type="range" class="slider-input" id="sl-light" min="0" max="100" value="50">
-      <div class="slider-val" id="sv-light">50%</div>
-    </div>
-    <div class="slider-row">
-      <div class="slider-icon">💧</div>
-      <div class="slider-label">Вода</div>
-      <input type="range" class="slider-input" id="sl-water" min="0" max="100" value="50">
-      <div class="slider-val" id="sv-water">50%</div>
-    </div>
-    <div class="slider-row">
-      <div class="slider-icon">💨</div>
-      <div class="slider-label">CO₂</div>
-      <input type="range" class="slider-input" id="sl-co2" min="0" max="100" value="50">
-      <div class="slider-val" id="sv-co2">50%</div>
-    </div>
-  </div>
-  <div class="missions-grid" id="missions-grid"></div>
-</div>
-
-<!-- ===== SUCCESS ===== -->
-<div id="successOverlay">
-  <div class="success-icon" id="success-icon">🎉</div>
-  <div class="success-title" id="success-title">Отлично!</div>
-  <div class="success-fact" id="success-fact"></div>
-  <div class="success-btns">
-    <button class="success-btn secondary" onclick="hideSuccess()">Продолжить</button>
-    <button class="success-btn primary" onclick="showScreen('levelSelect')">Все уровни</button>
-  </div>
+  <div class="l3-missions" id="l3-missions"></div>
+  <div class="l3-sliders" id="l3-sliders"></div>
 </div>
 
 <script>
-// ===== UTILS =====
+/* ===================================================
+   NAVIGATION
+   =================================================== */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'levelSelect') updateLevelSelect();
+  document.getElementById('screen-' + id).classList.add('active');
+}
+function goMenu() { showScreen('menu'); }
+function goLevel(n) {
+  if (n === 1) initL1();
+  if (n === 2) initL2();
+  if (n === 3) initL3();
+  showScreen('l' + n);
 }
 
+/* ===================================================
+   PARTICLES
+   =================================================== */
 function burst(x, y, syms) {
   syms.forEach((s, i) => {
     const p = document.createElement('div');
+    p.className = 'particle';
     const angle = (i / syms.length) * Math.PI * 2;
-    const dist = 50 + Math.random() * 60;
-    p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;font-size:' + (18 + Math.random() * 14) + 'px;pointer-events:none;z-index:999;transition:all .7s ease-out;';
+    const dist = 55 + Math.random() * 60;
+    p.style.cssText = `left:${x}px;top:${y}px;font-size:${20 + Math.random() * 14}px;transition:all .72s cubic-bezier(.2,0,.8,1);`;
     p.textContent = s;
     document.body.appendChild(p);
-    requestAnimationFrame(function() {
-      p.style.transform = 'translate(' + (Math.cos(angle) * dist) + 'px,' + (Math.sin(angle) * dist - 40) + 'px)';
+    requestAnimationFrame(() => {
+      p.style.transform = `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist - 55}px) rotate(${Math.random() * 360}deg)`;
       p.style.opacity = '0';
     });
-    setTimeout(function() { p.remove(); }, 800);
+    setTimeout(() => p.remove(), 800);
   });
 }
-
-function setBadge(id, text) {
-  var el = document.getElementById(id);
-  el.textContent = text;
-  el.classList.remove('pop');
-  void el.offsetWidth;
-  el.classList.add('pop');
+function bigBurst(x, y) {
+  const pool = ['🎉','✨','⭐','🌟','💥','🎊','🫧','💫','🔥','❄️','🍬','🎈'];
+  for (let i = 0; i < 22; i++) {
+    setTimeout(() => burst(x, y, [pool[Math.floor(Math.random() * pool.length)]]), i * 30);
+  }
 }
 
-function showSuccess(icon, title, fact) {
-  document.getElementById('success-icon').textContent = icon;
-  document.getElementById('success-title').textContent = title;
-  document.getElementById('success-fact').textContent = fact;
-  document.getElementById('successOverlay').classList.add('show');
-}
-
-function hideSuccess() {
-  document.getElementById('successOverlay').classList.remove('show');
-}
-
-// ===== PROGRESS =====
-var progress = JSON.parse(localStorage.getItem('hemolabProgress') || '{}');
-
-function saveProgress(key) {
-  progress[key] = true;
-  localStorage.setItem('hemolabProgress', JSON.stringify(progress));
-}
-
-function updateLevelSelect() {
-  ['1','2','3'].forEach(function(n) {
-    var card = document.getElementById('ls-card-' + n);
-    var badge = document.getElementById('ls-badge-' + n);
-    if (progress['level' + n]) {
-      card.classList.add('done');
-      badge.textContent = '✅';
-    } else {
-      card.classList.remove('done');
-      badge.textContent = '🔓';
-    }
+/* ===================================================
+   SUCCESS OVERLAY
+   =================================================== */
+function showSuccess(emoji, title, fact, btnLabel, onClose) {
+  const ov = document.createElement('div');
+  ov.className = 'success-ov';
+  ov.innerHTML = `<div class="ov-bg"></div>
+    <div class="ov-card">
+      <span class="ov-sci">${emoji}</span>
+      <div class="ov-title">${title}</div>
+      <div class="ov-fact">${fact}</div>
+      <button class="ov-btn">${btnLabel || 'Здорово!'}</button>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('.ov-btn').addEventListener('click', () => {
+    ov.remove();
+    if (onClose) onClose();
   });
+  bigBurst(window.innerWidth / 2, window.innerHeight / 2);
 }
 
-function startLevel(n) {
-  if (n === 1) initLevel1();
-  else if (n === 2) initLevel2();
-  else if (n === 3) initLevel3();
-  showScreen('level' + n);
-}
-
-// ==============================
-// ===== LEVEL 1 — LAYERS =======
-// ==============================
-var liquids = [
-  { name: 'Мёд',   emoji: '🍯', color: 'rgba(180,100,0,.85)',    density: 1.4 },
-  { name: 'Вода',  emoji: '💧', color: 'rgba(100,180,255,.75)',  density: 1.0 },
-  { name: 'Масло', emoji: '🫙', color: 'rgba(255,220,50,.8)',    density: 0.8 },
-  { name: 'Спирт', emoji: '🍾', color: 'rgba(200,220,255,.65)', density: 0.79 },
+/* ===================================================
+   LEVEL 1 — LIQUID LAYERS
+   =================================================== */
+const LIQUIDS = [
+  { id:'honey',   name:'Мёд',   emoji:'🍯', density:1.4, color:'#E8860A',
+    grad:'#FFB347,#E8860A,#C4700A', btnGrad:'linear-gradient(135deg,#FFB347,#E8860A)', textColor:'#fff',
+    fact:'🍯 Мёд — самый тяжёлый, тонет на самое дно!' },
+  { id:'water',   name:'Вода',  emoji:'💧', density:1.0, color:'#29B6F6',
+    grad:'#81D4FA,#29B6F6,#0277BD', btnGrad:'linear-gradient(135deg,#81D4FA,#0288D1)', textColor:'#fff',
+    fact:'💧 Вода в середине — ни лёгкая, ни тяжёлая!' },
+  { id:'oil',     name:'Масло', emoji:'🫙', density:0.8, color:'#FDD835',
+    grad:'#FFF176,#FDD835,#F9A825', btnGrad:'linear-gradient(135deg,#FFF176,#FDD835)', textColor:'#555',
+    fact:'🫙 Масло легче воды — плавает над ней!' },
+  { id:'alcohol', name:'Спирт', emoji:'🍾', density:0.79, color:'#CE93D8',
+    grad:'#E1BEE7,#CE93D8,#AB47BC', btnGrad:'linear-gradient(135deg,#E1BEE7,#AB47BC)', textColor:'#fff',
+    fact:'🍾 Спирт самый лёгкий — всегда наверху!' },
 ];
 
-var dropObjects = [
-  { emoji: '🍇', name: 'Виноград', density: 1.1 },
-  { emoji: '🍋', name: 'Лимон',    density: 0.85 },
-  { emoji: '🪨', name: 'Камешек',  density: 2.5 },
+const DROP_OBJECTS = [
+  { emoji:'🍇', name:'Виноград', density:1.1, fact:'🍇 Виноград тяжелее воды — опустился в мёд!' },
+  { emoji:'🍋', name:'Лимон',    density:1.05, fact:'🍋 Лимон чуть тяжелее воды — лежит на дне воды!' },
+  { emoji:'🪨', name:'Камень',  density:2.5, fact:'🪨 Камень самый тяжёлый — сразу на дно!' },
 ];
 
-var l1 = { layers: [], addedCount: 0, animating: false, settleProgress: 1 };
+let l1State = { poured: [], done: false };
 
-function initLevel1() {
-  l1 = { layers: [], addedCount: 0, animating: false, settleProgress: 1 };
+function initL1() {
+  l1State = { poured: [], done: false };
+  document.getElementById('liquids-group').innerHTML = '';
+
+  const bottlesEl = document.getElementById('l1-bottles');
+  bottlesEl.innerHTML = '';
+  LIQUIDS.forEach(liq => {
+    const btn = document.createElement('button');
+    btn.className = 'bottle-btn';
+    btn.id = 'btn-' + liq.id;
+    btn.style.background = liq.btnGrad;
+    btn.style.color = liq.textColor;
+    btn.innerHTML = `<span class="bottle-emoji">${liq.emoji}</span>
+      <div><div class="bottle-name">${liq.name}</div><div class="bottle-density">плотность ${liq.density}</div></div>`;
+    btn.addEventListener('click', () => pourLiquid(liq, btn));
+    bottlesEl.appendChild(btn);
+  });
+
   document.getElementById('l1-objects').style.display = 'none';
-  setBadge('l1-badge', '🧪 Нажми на флакон — жидкость польётся в стакан!');
-
-  var flasksEl = document.getElementById('l1-flasks');
-  flasksEl.innerHTML = '';
-  liquids.forEach(function(liq, i) {
-    var btn = document.createElement('button');
-    btn.className = 'flask-btn';
-    btn.id = 'flask-btn-' + i;
-    btn.innerHTML = '<span class="flask-emoji">' + liq.emoji + '</span><span>' + liq.name + '</span>';
-    btn.onclick = function() { addLiquid(i, btn); };
-    flasksEl.appendChild(btn);
-  });
-  drawCylinder(1);
+  document.getElementById('l1-objects').innerHTML = '';
+  hideBadge();
 }
 
-function addLiquid(i, btn) {
-  if (l1.animating || btn.disabled) return;
-  l1.animating = true;
-  btn.disabled = true;
-  btn.classList.add('added');
-  var liq = liquids[i];
+function pourLiquid(liq, btn) {
+  if (l1State.done) return;
+  btn.classList.add('used');
 
-  // Pour animation: find canvas position
-  var canvasRect = document.getElementById('cylinderCanvas').getBoundingClientRect();
-  var btnRect = btn.getBoundingClientRect();
+  // Tilt animation
+  btn.style.transition = 'transform 0.25s cubic-bezier(.34,1.56,.64,1)';
+  btn.style.transform = 'rotate(-38deg) scale(1.08)';
+  setTimeout(() => { btn.style.transform = ''; }, 450);
 
-  var stream = document.createElement('div');
-  var streamTop = Math.min(btnRect.bottom, canvasRect.top);
-  var streamH = canvasRect.top - btnRect.top + 10;
-  stream.style.cssText = [
-    'position:fixed',
-    'left:' + (canvasRect.left + canvasRect.width / 2 - 4) + 'px',
-    'top:' + btnRect.top + 'px',
-    'width:8px',
-    'height:0px',
-    'background:' + liq.color,
-    'border-radius:4px',
-    'pointer-events:none',
-    'z-index:900',
-    'transition:height 0.5s ease-in, opacity 0.2s 0.5s'
-  ].join(';');
+  // Pour stream
+  const btnRect = btn.getBoundingClientRect();
+  const glassRect = document.getElementById('glass-svg').getBoundingClientRect();
+  const streamX = glassRect.left + 80 - 5;
+  const streamY = glassRect.top + 10;
+
+  const stream = document.createElement('div');
+  stream.className = 'pour-stream';
+  stream.style.cssText = `left:${streamX}px;top:${streamY}px;background:${liq.color};height:0;opacity:1;`;
   document.body.appendChild(stream);
+  stream.style.animation = 'streamFlow 0.45s ease-out forwards';
+  setTimeout(() => stream.remove(), 500);
 
-  requestAnimationFrame(function() {
-    stream.style.height = Math.max(10, streamH) + 'px';
+  // Add to poured list
+  l1State.poured.push(liq);
+  setTimeout(() => renderLiquids(liq), 350);
+}
+
+function renderLiquids(justAdded) {
+  // Sort by density descending (heaviest at bottom)
+  const sorted = [...l1State.poured].sort((a, b) => b.density - a.density);
+  const svgH = 360; // clip height
+  const svgBottom = 20 + svgH; // 380
+  const layerH = svgH / 4; // 90px each slot
+
+  const group = document.getElementById('liquids-group');
+  group.innerHTML = '';
+
+  sorted.forEach((liq, i) => {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    // Create gradient
+    const defs = document.getElementById('glass-svg').querySelector('defs');
+    const gradId = 'grad-' + liq.id;
+    if (!defs.querySelector('#' + gradId)) {
+      const lg = document.createElementNS(svgNS, 'linearGradient');
+      lg.setAttribute('id', gradId);
+      lg.setAttribute('x1', '0'); lg.setAttribute('y1', '0');
+      lg.setAttribute('x2', '0'); lg.setAttribute('y2', '1');
+      const colors = liq.grad.split(',');
+      colors.forEach((c, ci) => {
+        const stop = document.createElementNS(svgNS, 'stop');
+        stop.setAttribute('offset', (ci / (colors.length - 1) * 100) + '%');
+        stop.setAttribute('stop-color', c.trim());
+        lg.appendChild(stop);
+      });
+      defs.appendChild(lg);
+    }
+
+    const totalFilled = sorted.length;
+    // Y position: bottom layers first (index 0 = heaviest = bottom)
+    const yTop = svgBottom - (i + 1) * layerH;
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('x', '18');
+    rect.setAttribute('y', yTop);
+    rect.setAttribute('width', '124');
+    rect.setAttribute('height', layerH);
+    rect.setAttribute('fill', `url(#grad-${liq.id})`);
+    rect.style.transformOrigin = `80px ${yTop + layerH}px`;
+
+    if (liq.id === justAdded.id) {
+      rect.style.transform = 'scaleY(0)';
+      group.appendChild(rect);
+      requestAnimationFrame(() => {
+        rect.style.transition = 'transform 0.55s cubic-bezier(.34,1.56,.64,1)';
+        rect.style.transform = 'scaleY(1)';
+      });
+    } else {
+      group.appendChild(rect);
+    }
+
+    // Label inside layer
+    const txt = document.createElementNS(svgNS, 'text');
+    txt.setAttribute('x', '80');
+    txt.setAttribute('y', yTop + layerH / 2 + 5);
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('font-size', '13');
+    txt.setAttribute('font-weight', '700');
+    txt.setAttribute('font-family', 'Space Grotesk, sans-serif');
+    txt.setAttribute('fill', liq.textColor || '#fff');
+    txt.setAttribute('opacity', '0.85');
+    txt.setAttribute('pointer-events', 'none');
+    txt.textContent = liq.emoji + ' ' + liq.name;
+    group.appendChild(txt);
   });
 
-  setTimeout(function() {
-    stream.style.opacity = '0';
-    setTimeout(function() { stream.remove(); }, 300);
+  // Show badge
+  showBadge(justAdded.fact);
 
-    l1.layers.push(Object.assign({}, liq));
-    l1.layers.sort(function(a, b) { return b.density - a.density; });
-    l1.addedCount++;
-
-    animateSettle(liq.name);
-  }, 650);
-}
-
-function animateSettle(addedName) {
-  var step = 0;
-  var steps = 24;
-  var timer = setInterval(function() {
-    step++;
-    drawCylinder(step / steps);
-    if (step >= steps) {
-      clearInterval(timer);
-      l1.animating = false;
-
-      var msgs = {
-        'Мёд':   '🍯 Мёд самый тяжёлый — он всегда тонет на дно!',
-        'Вода':  '💧 Вода — средняя. Она между лёгкими и тяжёлыми.',
-        'Масло': '🫙 Масло легче воды — оно всплывает вверх!',
-        'Спирт': '🍾 Спирт чуть легче масла и тоже плавает наверху.',
-      };
-      setBadge('l1-badge', msgs[addedName] || '🌈 Каждое вещество заняло свой уровень!');
-
-      if (l1.addedCount === 4) {
-        setTimeout(function() {
-          setBadge('l1-badge', '🌈 Каждое вещество имеет свою плотность — поэтому они не смешиваются!');
-          showL1Objects();
-        }, 1000);
-      }
-    }
-  }, 25);
-}
-
-function drawCylinder(prog) {
-  var canvas = document.getElementById('cylinderCanvas');
-  var ctx = canvas.getContext('2d');
-  var W = canvas.width, H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-
-  var cx = W / 2, cw = 72, ch = H - 24, cy = 8;
-  var innerX = cx - cw / 2 + 4, innerW = cw - 8;
-
-  // Background glass
-  ctx.fillStyle = 'rgba(220,240,255,.15)';
-  ctx.fillRect(innerX, cy, innerW, ch);
-
-  // Layers
-  if (l1.layers.length > 0) {
-    var layerH = ch / Math.max(l1.layers.length, 4);
-    l1.layers.forEach(function(layer, idx) {
-      var targetY = cy + idx * layerH;
-      var startY = cy; // settle from top
-      var y = prog >= 1 ? targetY : (startY + (targetY - startY) * prog);
-
-      ctx.fillStyle = layer.color;
-      ctx.fillRect(innerX, y, innerW, layerH + 1);
-
-      // Layer name
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.font = 'bold 11px Space Grotesk, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(layer.name, cx, y + layerH / 2 + 4);
-    });
+  // All 4 poured
+  if (l1State.poured.length === 4) {
+    l1State.done = true;
+    setTimeout(() => {
+      hideBadge();
+      bigBurst(window.innerWidth / 2, window.innerHeight / 2);
+      setTimeout(showDropObjects, 600);
+    }, 2200);
   }
-
-  // Glass borders
-  ctx.strokeStyle = 'rgba(100,160,220,.65)';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(cx - cw / 2 + 2, cy);
-  ctx.lineTo(cx - cw / 2 + 2, cy + ch);
-  ctx.lineTo(cx + cw / 2 - 2, cy + ch);
-  ctx.lineTo(cx + cw / 2 - 2, cy);
-  ctx.stroke();
-
-  // Shine
-  ctx.strokeStyle = 'rgba(255,255,255,.5)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(cx - cw / 2 + 8, cy + 6);
-  ctx.lineTo(cx - cw / 2 + 8, cy + ch - 6);
-  ctx.stroke();
-
-  ctx.textAlign = 'left';
 }
 
-function showL1Objects() {
-  document.getElementById('l1-objects').style.display = 'block';
-  var row = document.getElementById('objects-row');
-  row.innerHTML = '';
-  dropObjects.forEach(function(obj, i) {
-    var card = document.createElement('div');
-    card.className = 'obj-card';
-    card.id = 'obj-' + i;
-    card.innerHTML = obj.emoji + '<div class="obj-name">' + obj.name + '</div>';
-    card.onclick = function() { dropObject(i); };
-    row.appendChild(card);
+function showBadge(text) {
+  const b = document.getElementById('l1-badge');
+  b.textContent = text;
+  b.classList.add('show');
+  clearTimeout(b._timeout);
+  b._timeout = setTimeout(() => b.classList.remove('show'), 2500);
+}
+function hideBadge() { document.getElementById('l1-badge').classList.remove('show'); }
+
+function showDropObjects() {
+  const wrap = document.getElementById('l1-objects');
+  wrap.style.display = 'flex';
+  wrap.innerHTML = '';
+  DROP_OBJECTS.forEach(obj => {
+    const btn = document.createElement('button');
+    btn.className = 'obj-btn';
+    btn.textContent = obj.emoji;
+    btn.title = obj.name;
+    btn.addEventListener('click', (e) => dropObject(obj, btn, e));
+    wrap.appendChild(btn);
   });
+  showBadge('⬇️ Что утонет? Брось что-нибудь!');
 }
 
-function dropObject(i) {
-  var obj = dropObjects[i];
-  var card = document.getElementById('obj-' + i);
-  if (card.classList.contains('placed')) return;
-  card.classList.add('placed');
+function dropObject(obj, btn, e) {
+  btn.classList.add('used');
 
-  // Find which layer it lands in
-  var sorted = l1.layers.slice().sort(function(a, b) { return b.density - a.density; });
-  var targetIdx = sorted.length; // sinks past everything
-  for (var j = 0; j < sorted.length; j++) {
-    if (obj.density > sorted[j].density) { targetIdx = j; break; }
+  const glassRect = document.getElementById('glass-svg').getBoundingClientRect();
+  const startX = e.clientX;
+  const startY = e.clientY;
+
+  // Floating emoji that falls
+  const floater = document.createElement('div');
+  floater.style.cssText = `position:fixed;left:${startX - 20}px;top:${startY - 20}px;font-size:40px;z-index:100;pointer-events:none;transition:top 0.6s cubic-bezier(.6,0,.4,1.2),left 0.3s ease;`;
+  floater.textContent = obj.emoji;
+  document.body.appendChild(floater);
+
+  const targetX = glassRect.left + 80 - 20;
+  // Find layer where object settles (based on density)
+  const sorted = [...l1State.poured].sort((a, b) => b.density - a.density);
+  let settleLayerIdx = sorted.length - 1; // default: top
+  for (let i = 0; i < sorted.length; i++) {
+    if (obj.density > sorted[i].density) { settleLayerIdx = i; break; }
   }
+  const layerH = 360 / 4;
+  const svgBottom = 20 + 360;
+  const settleY = glassRect.top + (svgBottom - (settleLayerIdx) * layerH - layerH / 2) - 20;
 
-  var canvas = document.getElementById('cylinderCanvas');
-  var rect = canvas.getBoundingClientRect();
-  var layerH = (canvas.height - 24) / Math.max(sorted.length, 4);
-  var targetFrac = (8 + targetIdx * layerH + layerH / 2) / canvas.height;
-  var targetY = rect.top + targetFrac * rect.height;
-  var cx = rect.left + rect.width / 2;
+  setTimeout(() => {
+    floater.style.left = targetX + 'px';
+    floater.style.top = settleY + 'px';
+  }, 50);
 
-  var ghost = document.createElement('div');
-  ghost.textContent = obj.emoji;
-  ghost.style.cssText = 'position:fixed;left:' + (cx - 16) + 'px;top:' + (rect.top - 30) + 'px;font-size:28px;pointer-events:none;z-index:950;transition:top 0.85s cubic-bezier(.34,1.56,.64,1),opacity 0.3s 1s;';
-  document.body.appendChild(ghost);
-
-  requestAnimationFrame(function() { ghost.style.top = targetY + 'px'; });
-  setTimeout(function() {
-    ghost.style.opacity = '0';
-    setTimeout(function() { ghost.remove(); }, 400);
-    burst(cx, targetY, ['💥', '✨', '⭐', '🔬']);
-
-    var facts = {
-      '🍇': '🍇 Виноград тяжелее воды но легче мёда — остановился между ними!',
-      '🍋': '🍋 Лимон легче воды! В кожуре много воздуха.',
-      '🪨': '🪨 Камень тяжелее всех — тонет прямо на дно к мёду!',
-    };
-    setBadge('l1-badge', facts[obj.emoji] || '✨ Предмет нашёл свой уровень!');
-
-    var allPlaced = dropObjects.every(function(_, j) {
-      var c = document.getElementById('obj-' + j);
-      return c && c.classList.contains('placed');
-    });
-    if (allPlaced) {
-      saveProgress('level1');
-      updateLevelSelect();
-      setTimeout(function() {
-        showSuccess('🌈', 'Плотность освоена!',
-          'Плотность — это сколько вещества умещается в одном объёме. Мёд тяжелее воды в 1.4 раза — поэтому он всегда на дне!');
-      }, 1000);
-    }
-  }, 950);
+  // Splash
+  setTimeout(() => {
+    splash(targetX + 20, glassRect.top + 20, obj.emoji);
+    showBadge(obj.fact);
+    floater.style.transition = 'opacity 0.4s';
+    floater.style.opacity = '0';
+    setTimeout(() => floater.remove(), 500);
+  }, 700);
 }
 
-// ==============================
-// ===== LEVEL 2 — CHAIN ========
-// ==============================
-var scenarios = [
+function splash(x, y, emoji) {
+  const colors = ['#4FC3F7','#FDD835','#CE93D8'];
+  for (let i = 0; i < 5; i++) {
+    const d = document.createElement('div');
+    d.className = 'splash-drop';
+    const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
+    const dist = 20 + Math.random() * 20;
+    d.style.cssText = `left:${x}px;top:${y}px;background:${colors[i % colors.length]};transition:all 0.5s cubic-bezier(.2,0,.8,1);`;
+    document.body.appendChild(d);
+    requestAnimationFrame(() => {
+      d.style.transform = `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist - 25}px)`;
+      d.style.opacity = '0';
+    });
+    setTimeout(() => d.remove(), 600);
+  }
+  burst(x, y, [emoji, '💦', '✨']);
+}
+
+/* ===================================================
+   LEVEL 2 — CHAIN REACTION
+   =================================================== */
+const SCENARIOS = [
   {
-    id: 's1', emoji: '🎈', title: '🎈 Надуй шарик',
-    steps: [
-      { emoji: '🍶', text: 'Уксус + Сода' },
-      { emoji: '💨', text: 'CO₂ газ' },
-      { emoji: '🎈', text: 'Шарик надувается' },
-      { emoji: '🚀', text: 'Шарик летит' },
-      { emoji: '🎉', text: 'Готово!' },
+    name: '🎈 Надуй шарик!',
+    cards: [
+      { id: 'vin_soda', label: 'Уксус\n+ Сода', emoji: '🫧', color: '#FDE68A' },
+      { id: 'co2',      label: 'CO₂\nгаз',      emoji: '💨', color: '#E0E7FF' },
+      { id: 'ball',     label: 'Шарик\nнадут',   emoji: '🎈', color: '#FCE7F3' },
+      { id: 'fly',      label: 'Летит!',          emoji: '🚀', color: '#DBEAFE' },
+      { id: 'party',    label: 'Ура!',             emoji: '🎉', color: '#D1FAE5' },
     ],
-    fact: 'Уксус и сода выделяют CO₂ — тот самый газ, что в газировке и огнетушителях!',
+    correct: [0, 1, 2, 3, 4],
+    completeFact: 'Уксус и сода реагируют — выделяется углекислый газ CO₂! Он надувает шарик, и тот взлетает! 🎈',
   },
   {
-    id: 's2', emoji: '🔥', title: '🔥 Потуши огонь',
-    steps: [
-      { emoji: '🧂', text: 'Сода + Вода' },
-      { emoji: '🫧', text: 'Раствор соды' },
-      { emoji: '💨', text: 'CO₂ на огонь' },
-      { emoji: '🚒', text: 'Огонь гаснет' },
-      { emoji: '✅', text: 'Потушили!' },
+    name: '🌋 Лавовый вулкан!',
+    cards: [
+      { id: 'water',    label: 'Вода\n+ краска', emoji: '🪣', color: '#DBEAFE' },
+      { id: 'oil2',     label: 'Масло\nсверху',  emoji: '🫙', color: '#FEF9C3' },
+      { id: 'salt',     label: 'Соль\nбросаем',  emoji: '🧂', color: '#F1F5F9' },
+      { id: 'bubble',   label: 'Пузыри\nвзлетают', emoji: '🫧', color: '#E0E7FF' },
+      { id: 'volcano',  label: 'Вулкан!',         emoji: '🌋', color: '#FEE2E2' },
     ],
-    fact: 'CO₂ тяжелее воздуха и не горит — накрывает огонь как одеяло. Именно так работают огнетушители!',
+    correct: [0, 1, 2, 3, 4],
+    completeFact: 'Соль тонет сквозь масло, тянет за собой воду — вверх летят цветные пузыри. Домашний лавовый вулкан! 🌋',
   },
   {
-    id: 's3', emoji: '💎', title: '💎 Кристалл',
-    steps: [
-      { emoji: '🧂', text: 'Соль + вода' },
-      { emoji: '🌡️', text: 'Нагреть' },
-      { emoji: '💧', text: 'Раствор готов' },
-      { emoji: '❄️', text: 'Охладить' },
-      { emoji: '💎', text: 'Кристаллы!' },
+    name: '🔮 Невидимые чернила!',
+    cards: [
+      { id: 'lemon',    label: 'Сок\nлимона',   emoji: '🍋', color: '#FEF9C3' },
+      { id: 'write',    label: 'Пишем\nбумагу', emoji: '✏️', color: '#F1F5F9' },
+      { id: 'dry',      label: 'Сушим\nна солнце', emoji: '☀️', color: '#FEF3C7' },
+      { id: 'heat',     label: 'Греем\nсвечой',  emoji: '🕯️', color: '#FDE68A' },
+      { id: 'appear',   label: 'Текст\nпоявился!', emoji: '🔮', color: '#EDE9FE' },
     ],
-    fact: 'В горячей воде растворяется больше соли. При охлаждении лишняя соль "выпадает" и растёт в красивые кристаллы!',
+    correct: [0, 1, 2, 3, 4],
+    completeFact: 'Лимонный сок невидим, но при нагреве окисляется — буквы проявляются коричневым! Это настоящее шпионское письмо! 🔮',
   },
 ];
 
-var l2 = { scenario: 0, slots: [], running: false };
+let l2State = {
+  scenario: null,
+  slotContents: [],
+  selectedCard: null,
+  animating: false,
+};
 
-function initLevel2() {
-  l2 = { scenario: 0, slots: new Array(5).fill(null), running: false };
-  renderScenarioTabs();
-  loadScenario(0);
+function initL2() {
+  l2State.scenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+  l2State.slotContents = new Array(5).fill(null);
+  l2State.selectedCard = null;
+  l2State.animating = false;
+
+  document.getElementById('l2-title').textContent = l2State.scenario.name;
+  document.getElementById('l2-run').disabled = true;
+  document.getElementById('l2-hint').textContent = 'Нажми на карточку, потом на слот ⬆️';
+  renderL2();
 }
 
-function renderScenarioTabs() {
-  var tabs = document.getElementById('scenario-tabs');
-  tabs.innerHTML = '';
-  scenarios.forEach(function(sc, i) {
-    var tab = document.createElement('button');
-    tab.className = 'scenario-tab' + (i === l2.scenario ? ' active' : '');
-    tab.textContent = sc.emoji + ' ' + sc.title.replace(sc.emoji + ' ', '');
-    tab.onclick = function() { l2.scenario = i; loadScenario(i); renderScenarioTabs(); };
-    tabs.appendChild(tab);
-  });
-}
+function renderL2() {
+  const sc = l2State.scenario;
 
-function loadScenario(si) {
-  var sc = scenarios[si];
-  l2.slots = new Array(5).fill(null);
-  l2.running = false;
-  // Shuffle cards
-  var order = [0,1,2,3,4].sort(function() { return Math.random() - 0.5; });
-  l2._shuffled = order;
-  renderSlots();
-  renderPool();
-  document.getElementById('run-btn').disabled = true;
-  setBadge('l2-badge', '🔗 Расставь карточки в правильном порядке!');
-}
+  // Slots
+  const slotsEl = document.getElementById('l2-slots');
+  slotsEl.innerHTML = '';
+  for (let i = 0; i < sc.cards.length; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'l2-slot';
+    slot.id = 'l2-slot-' + i;
+    slot.innerHTML = `<span class="l2-slot-check">✅</span><span>${i + 1}</span>`;
+    slot.addEventListener('click', () => placeCard(i));
+    slotsEl.appendChild(slot);
 
-function renderSlots() {
-  var sc = scenarios[l2.scenario];
-  var container = document.getElementById('chain-slots');
-  container.innerHTML = '';
-
-  for (var si = 0; si < 5; si++) {
-    var slot = l2.slots[si];
-    var slotEl = document.createElement('div');
-    slotEl.className = 'chain-slot' + (slot !== null ? ' filled' : '');
-    slotEl.id = 'slot-' + si;
-
-    if (slot !== null) {
-      slotEl.innerHTML = '<div class="chain-slot-content">' + sc.steps[slot].emoji + '</div>' +
-        '<div class="chain-slot-text">' + sc.steps[slot].text + '</div>';
-      (function(idx) {
-        slotEl.onclick = function() { if (!l2.running) returnToPool(idx); };
-      })(si);
-    } else {
-      slotEl.innerHTML = '<div style="font-size:22px;opacity:.25">' + (si + 1) + '</div>';
-    }
-
-    // Drop target (desktop)
-    (function(idx) {
-      slotEl.addEventListener('dragover', function(e) { e.preventDefault(); });
-      slotEl.addEventListener('drop', function(e) {
-        e.preventDefault();
-        var cardIdx = parseInt(e.dataTransfer.getData('cardIdx'));
-        placeCard(cardIdx, idx);
-      });
-    })(si);
-
-    container.appendChild(slotEl);
-
-    if (si < 4) {
-      var arrow = document.createElement('div');
-      arrow.className = 'chain-arrow';
-      arrow.id = 'arrow-' + si;
+    if (i < sc.cards.length - 1) {
+      const arrow = document.createElement('div');
+      arrow.className = 'l2-arrow';
+      arrow.id = 'l2-arrow-' + i;
       arrow.textContent = '→';
-      container.appendChild(arrow);
+      slotsEl.appendChild(arrow);
     }
   }
-}
 
-function renderPool() {
-  var sc = scenarios[l2.scenario];
-  var pool = document.getElementById('cards-pool');
-  pool.innerHTML = '';
-
-  for (var ci = 0; ci < 5; ci++) {
-    if (l2.slots.indexOf(ci) !== -1) continue;
-    var card = document.createElement('div');
-    card.className = 'pool-card';
-    card.id = 'pool-card-' + ci;
-    card.draggable = true;
-    card.innerHTML = '<span class="pool-card-emoji">' + sc.steps[ci].emoji + '</span><span>' + sc.steps[ci].text + '</span>';
-
-    (function(cardIdx) {
-      card.addEventListener('dragstart', function(e) {
-        e.dataTransfer.setData('cardIdx', String(cardIdx));
-        card.classList.add('dragging');
-      });
-      card.addEventListener('dragend', function() { card.classList.remove('dragging'); });
-      card.onclick = function() {
-        var first = l2.slots.indexOf(null);
-        if (first !== -1) placeCard(cardIdx, first);
-      };
-      // Touch
-      card.addEventListener('touchstart', function(e) { touchStart(e, cardIdx); }, { passive: true });
-      card.addEventListener('touchmove', touchMove, { passive: false });
-      card.addEventListener('touchend', function(e) { touchEnd(e, cardIdx); });
-    })(ci);
-
-    pool.appendChild(card);
-  }
-}
-
-// Touch DnD
-var _touchGhost = null, _touchCardIdx = -1;
-
-function touchStart(e, cardIdx) {
-  _touchCardIdx = cardIdx;
-  var touch = e.touches[0];
-  var card = e.currentTarget;
-  var rect = card.getBoundingClientRect();
-  _touchGhost = card.cloneNode(true);
-  _touchGhost.style.cssText = 'position:fixed;left:' + rect.left + 'px;top:' + rect.top + 'px;width:' + rect.width + 'px;opacity:.8;pointer-events:none;z-index:999;';
-  document.body.appendChild(_touchGhost);
-}
-
-function touchMove(e) {
-  e.preventDefault();
-  if (!_touchGhost) return;
-  var touch = e.touches[0];
-  _touchGhost.style.left = (touch.clientX - 60) + 'px';
-  _touchGhost.style.top = (touch.clientY - 25) + 'px';
-}
-
-function touchEnd(e, cardIdx) {
-  if (_touchGhost) { _touchGhost.remove(); _touchGhost = null; }
-  var touch = e.changedTouches[0];
-  document.querySelectorAll('.chain-slot').forEach(function(slotEl, si) {
-    var rect = slotEl.getBoundingClientRect();
-    if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-      placeCard(cardIdx, si);
-    }
+  // Cards (shuffled)
+  const shuffled = [...sc.cards].sort(() => Math.random() - 0.5);
+  const cardsEl = document.getElementById('l2-cards');
+  cardsEl.innerHTML = '';
+  shuffled.forEach(card => {
+    const el = document.createElement('div');
+    el.className = 'l2-card';
+    el.id = 'l2-card-' + card.id;
+    el.style.background = card.color;
+    el.innerHTML = `<span class="l2-card-emoji">${card.emoji}</span>
+      <div class="l2-card-label">${card.label.replace('\n', '<br>')}</div>`;
+    el.addEventListener('click', () => selectCard(card.id));
+    cardsEl.appendChild(el);
   });
 }
 
-function placeCard(cardIdx, slotIdx) {
-  if (l2.running) return;
-  // Correct card for this slot = cardIdx same as slotIdx (steps are in order 0-4)
-  var correct = slotIdx; // step[0] in slot[0], step[1] in slot[1] etc.
+function selectCard(cardId) {
+  if (l2State.animating) return;
+  // Deselect previous
+  document.querySelectorAll('.l2-card').forEach(c => c.classList.remove('selected'));
+  if (l2State.selectedCard === cardId) {
+    l2State.selectedCard = null;
+    return;
+  }
+  l2State.selectedCard = cardId;
+  const el = document.getElementById('l2-card-' + cardId);
+  if (el) el.classList.add('selected');
+}
 
-  if (cardIdx !== correct) {
-    var slotEl = document.getElementById('slot-' + slotIdx);
-    slotEl.classList.add('wrong');
-    setTimeout(function() { slotEl.classList.remove('wrong'); }, 500);
-    setBadge('l2-badge', '🤔 Не то — попробуй другой шаг!');
+function placeCard(slotIdx) {
+  if (l2State.animating) return;
+  if (!l2State.selectedCard) {
+    document.getElementById('l2-hint').textContent = '👆 Сначала выбери карточку внизу!';
     return;
   }
 
-  // If slot already filled, free it
-  if (l2.slots[slotIdx] !== null) l2.slots[slotIdx] = null;
-  l2.slots[slotIdx] = cardIdx;
-  renderSlots();
-  renderPool();
+  const sc = l2State.scenario;
+  const correctCardIdx = sc.correct[slotIdx];
+  const correctCardId = sc.cards[correctCardIdx].id;
+  const card = sc.cards.find(c => c.id === l2State.selectedCard);
 
-  var filled = l2.slots.filter(function(s) { return s !== null; }).length;
-  if (filled === 5) {
-    document.getElementById('run-btn').disabled = false;
-    setBadge('l2-badge', '🚀 Все шаги на месте — запускай реакцию!');
+  const slotEl = document.getElementById('l2-slot-' + slotIdx);
+
+  if (l2State.selectedCard === correctCardId) {
+    // Correct!
+    l2State.slotContents[slotIdx] = card;
+    slotEl.classList.add('filled', 'correct');
+    slotEl.innerHTML = `<span class="l2-slot-check">✅</span>
+      <span class="l2-slot-emoji">${card.emoji}</span>
+      <div class="l2-slot-label">${card.label.replace('\n', '<br>')}</div>`;
+
+    const cardEl = document.getElementById('l2-card-' + card.id);
+    if (cardEl) cardEl.classList.add('placed');
+    document.querySelectorAll('.l2-card').forEach(c => c.classList.remove('selected'));
+    l2State.selectedCard = null;
+
+    burst(slotEl.getBoundingClientRect().left + 54, slotEl.getBoundingClientRect().top + 48, ['✅','⭐','✨']);
+
+    // Check if all done
+    if (l2State.slotContents.filter(Boolean).length === 5) {
+      document.getElementById('l2-run').disabled = false;
+      document.getElementById('l2-hint').textContent = '🎉 Цепочка готова — запускай!';
+    } else {
+      document.getElementById('l2-hint').textContent = 'Отлично! Продолжай 👇';
+    }
   } else {
-    setBadge('l2-badge', '✅ ' + filled + '/5 шагов расставлено!');
+    // Wrong
+    l2State.animating = true;
+    slotEl.classList.add('wrong');
+    document.getElementById('l2-hint').textContent = '❌ Не то! Попробуй ещё раз';
+    setTimeout(() => {
+      slotEl.classList.remove('wrong');
+      l2State.animating = false;
+    }, 500);
   }
-}
-
-function returnToPool(slotIdx) {
-  l2.slots[slotIdx] = null;
-  renderSlots();
-  renderPool();
-  document.getElementById('run-btn').disabled = true;
-  setBadge('l2-badge', '🔗 Расставь все 5 карточек!');
 }
 
 function runChain() {
-  if (l2.running) return;
-  l2.running = true;
-  document.getElementById('run-btn').disabled = true;
+  if (l2State.animating) return;
+  l2State.animating = true;
+  document.getElementById('l2-run').disabled = true;
 
-  var sc = scenarios[l2.scenario];
-  var step = 0;
+  const sc = l2State.scenario;
+  let delay = 0;
+  for (let i = 0; i < sc.cards.length; i++) {
+    ((idx) => {
+      setTimeout(() => {
+        const slotEl = document.getElementById('l2-slot-' + idx);
+        slotEl.classList.add('active-glow');
+        burst(
+          slotEl.getBoundingClientRect().left + 54,
+          slotEl.getBoundingClientRect().top + 48,
+          [sc.cards[idx].emoji, '✨']
+        );
+        setTimeout(() => slotEl.classList.remove('active-glow'), 500);
 
-  function nextStep() {
-    if (step >= 5) {
-      var mid = document.getElementById('chain-slots').getBoundingClientRect();
-      burst(mid.left + mid.width / 2, mid.top + 40, ['🎉','⭐','✨','💥','🌟','🎊','🔬','💡']);
-      saveProgress('level2');
-      updateLevelSelect();
-      l2.running = false;
-      setTimeout(function() { showSuccess('⚗️', 'Реакция прошла!', sc.fact); }, 500);
-      return;
-    }
-    var slotEl = document.getElementById('slot-' + step);
-    slotEl.classList.add('playing');
-    var content = slotEl.querySelector('.chain-slot-content');
-    if (content) {
-      content.style.transition = 'transform 0.3s';
-      content.style.transform = 'scale(1.35)';
-      setTimeout(function() { content.style.transform = 'scale(1)'; }, 350);
-    }
-    if (step < 4) {
-      setTimeout(function() {
-        var arrow = document.getElementById('arrow-' + step);
-        if (arrow) { arrow.classList.add('lit'); }
-        step++;
-        setTimeout(nextStep, 350);
-      }, 550);
-    } else {
-      step++;
-      setTimeout(nextStep, 600);
-    }
+        if (idx < sc.cards.length - 1) {
+          const arrow = document.getElementById('l2-arrow-' + idx);
+          if (arrow) arrow.classList.add('lit');
+        }
+
+        if (idx === sc.cards.length - 1) {
+          setTimeout(() => {
+            showSuccess('🧪', 'Реакция запущена!', sc.completeFact, 'Ещё раз!', () => {
+              initL2();
+              l2State.animating = false;
+            });
+          }, 500);
+        }
+      }, delay);
+    })(i);
+    delay += 450;
   }
-  nextStep();
 }
 
-// ================================
-// ===== LEVEL 3 — PHOTOSYNTHESIS =
-// ================================
-var missions3 = [
-  { id: 'grow',    check: function(g,l,w,c) { return g > 0.5; },   emoji: '🌿', title: 'Вырасти растение' },
-  { id: 'bloom',   check: function(g,l,w,c) { return g > 0.85; },  emoji: '🌸', title: 'Заставь зацвести' },
-  { id: 'nolight', check: function(g,l,w,c) { return l < 10; },    emoji: '🌑', title: 'Что без света?' },
-  { id: 'nowater', check: function(g,l,w,c) { return w < 10; },    emoji: '🏜️', title: 'Что без воды?' },
-  { id: 'perfect', check: function(g,l,w,c) { return g > 0.95; },  emoji: '🏆', title: 'Идеальный баланс' },
+/* ===================================================
+   LEVEL 3 — PHOTOSYNTHESIS
+   =================================================== */
+const MISSIONS = [
+  { id: 'grow',    label: '🌿 Вырасти',       check: g => g >= 0.5 },
+  { id: 'flower',  label: '🌸 Зацвети',        check: g => g >= 0.85 },
+  { id: 'nolight', label: '🌑 Без света',      check: (g, v) => v.light <= 8 && g < 0.15 },
+  { id: 'nowater', label: '🏜️ Без воды',      check: (g, v) => v.water <= 8 && g < 0.15 },
+  { id: 'perfect', label: '🏆 Идеальный',      check: g => g >= 0.97 },
 ];
 
-var l3 = { light: 50, water: 50, co2: 50, done: {}, bubbles: [], raf: null, growth: 0 };
-
-function initLevel3() {
-  l3 = { light: 50, water: 50, co2: 50, done: {}, bubbles: [], raf: null, growth: 0 };
-  if (l3.raf) cancelAnimationFrame(l3.raf);
-
-  ['light','water','co2'].forEach(function(k) {
-    var sl = document.getElementById('sl-' + k);
-    var sv = document.getElementById('sv-' + k);
-    sl.value = 50; sv.textContent = '50%';
-    sl.oninput = function() {
-      l3[k] = parseInt(sl.value);
-      sv.textContent = l3[k] + '%';
-      updatePlant();
-    };
-  });
-
-  renderMissions3();
-  updatePlant();
-  startBubbleLoop();
-}
+let l3State = { light: 50, water: 50, co2: 50, doneMissions: new Set(), o2Timer: null, growth: 0 };
 
 function calcGrowth(light, water, co2) {
-  var ls = light  >= 60 && light  <= 80 ? 1 : light  < 60 ? light / 60  : (100 - light) / 20;
-  var ws = water  >= 50 && water  <= 70 ? 1 : water  < 50 ? water / 50  : (100 - water) / 30;
-  var cs = co2    >= 40 && co2    <= 60 ? 1 : co2    < 40 ? co2   / 40  : (100 - co2)   / 40;
-  ls = Math.max(0, Math.min(1, ls));
-  ws = Math.max(0, Math.min(1, ws));
-  cs = Math.max(0, Math.min(1, cs));
-  return ls * ws * cs; // limiting factor law
+  const lScore = light >= 60 && light <= 85 ? 1 : light < 60 ? light / 60 : (100 - light) / 15;
+  const wScore = water >= 45 && water <= 75 ? 1 : water < 45 ? water / 45 : (100 - water) / 25;
+  const cScore = co2 >= 35 && co2 <= 65 ? 1 : co2 < 35 ? co2 / 35 : (100 - co2) / 35;
+  return Math.max(0, Math.min(1, Math.min(lScore, wScore, cScore)));
 }
 
+function initL3() {
+  l3State = { light: 50, water: 50, co2: 50, doneMissions: new Set(), o2Timer: null, growth: 0 };
+  renderMissions();
+  renderSliders();
+  updatePlant();
+}
+
+function renderMissions() {
+  const el = document.getElementById('l3-missions');
+  el.innerHTML = '';
+  MISSIONS.forEach(m => {
+    const chip = document.createElement('div');
+    chip.className = 'mission-chip' + (l3State.doneMissions.has(m.id) ? ' done' : '');
+    chip.id = 'mission-' + m.id;
+    chip.textContent = m.label;
+    el.appendChild(chip);
+  });
+}
+
+function renderSliders() {
+  const sliders = [
+    { key: 'light', icon: '☀️', label: 'Свет', color: '#FDD835', val: l3State.light },
+    { key: 'water', icon: '💧', label: 'Вода', color: '#29B6F6', val: l3State.water },
+    { key: 'co2',   icon: '💨', label: 'CO₂',  color: '#78909C', val: l3State.co2 },
+  ];
+  const el = document.getElementById('l3-sliders');
+  el.innerHTML = '';
+  sliders.forEach(s => {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    const pct = s.val + '%';
+    row.innerHTML = `<span class="slider-icon">${s.icon}</span>
+      <input type="range" min="0" max="100" value="${s.val}" id="sl-${s.key}"
+        style="background:linear-gradient(to right,${s.color} ${pct},#e5e7eb ${pct})">
+      <span class="slider-val" id="slv-${s.key}">${s.val}%</span>`;
+    row.querySelector('input').addEventListener('input', function() {
+      l3State[s.key] = +this.value;
+      const pct2 = this.value + '%';
+      this.style.background = `linear-gradient(to right,${s.color} ${pct2},#e5e7eb ${pct2})`;
+      this.nextElementSibling.textContent = this.value + '%';
+      updatePlant();
+    });
+    row.querySelector('input').style.setProperty('--thumb-color', s.color);
+    // Thumb color via pseudo — apply via inline CSS trick
+    const styleId = 'sl-style-' + s.key;
+    if (!document.getElementById(styleId)) {
+      const st = document.createElement('style');
+      st.id = styleId;
+      st.textContent = `#sl-${s.key}::-webkit-slider-thumb { border-color: ${s.color}; }`;
+      document.head.appendChild(st);
+    }
+    el.appendChild(row);
+  });
+}
+
+let l3AnimFrame = null;
 function updatePlant() {
-  var g = calcGrowth(l3.light, l3.water, l3.co2);
-  l3.growth = g;
-  var pct = Math.round(g * 100);
-  var fill = document.getElementById('photo-fill');
-  fill.style.width = pct + '%';
-  fill.style.background = g > 0.7 ? 'var(--mint)' : g > 0.35 ? '#FFE141' : '#FF5038';
-  document.getElementById('photo-pct').textContent = pct + '%';
-  drawPlant();
-  checkMissions3();
+  const g = calcGrowth(l3State.light, l3State.water, l3State.co2);
+  l3State.growth = g;
+
+  // Sun brightness
+  const sun = document.getElementById('l3-sun');
+  const lightFrac = l3State.light / 100;
+  sun.style.opacity = 0.3 + lightFrac * 0.7;
+  sun.style.filter = `brightness(${0.6 + lightFrac * 1.2})`;
+
+  drawPlant(g);
+  checkMissions(g);
+
+  // O2 bubbles
+  if (g > 0.5) {
+    if (!l3State.o2Timer) {
+      l3State.o2Timer = setInterval(() => spawnO2(), 700);
+    }
+  } else {
+    if (l3State.o2Timer) { clearInterval(l3State.o2Timer); l3State.o2Timer = null; }
+  }
 }
 
-function drawPlant() {
-  var canvas = document.getElementById('plantCanvas');
-  var ctx = canvas.getContext('2d');
-  var W = canvas.width, H = canvas.height;
-  var g = l3.growth, light = l3.light, water = l3.water;
-  ctx.clearRect(0, 0, W, H);
+function drawPlant(g) {
+  const svg = document.getElementById('l3-plant');
+  svg.innerHTML = '';
+  const svgNS = 'http://www.w3.org/2000/svg';
 
-  var cx = W / 2, groundY = H - 18;
-  var stemH = Math.max(15, g * 135);
+  const stemH = Math.max(0, Math.min(220, g * 240));
+  const stemW = 10 + g * 10;
+  const cx = 100;
+  const baseY = 255;
 
-  // Sky
-  var grd = ctx.createLinearGradient(0, 0, 0, H * 0.7);
-  grd.addColorStop(0, 'rgba(173,216,255,' + (light / 180) + ')');
-  grd.addColorStop(1, 'rgba(255,253,247,0)');
-  ctx.fillStyle = grd;
-  ctx.fillRect(0, 0, W, H);
+  // Color based on growth
+  let stemColor, leafColor;
+  if (g < 0.15) { stemColor = '#9E9E9E'; leafColor = '#CDDC39'; }
+  else if (g < 0.5) { stemColor = '#66BB6A'; leafColor = '#81C784'; }
+  else if (g < 0.7) { stemColor = '#43A047'; leafColor = '#388E3C'; }
+  else { stemColor = '#2E7D32'; leafColor = '#1B5E20'; }
 
-  // Sun
-  if (light > 8) {
-    var sunR = 16 + (light / 100) * 10;
-    ctx.fillStyle = 'rgba(255,210,30,' + (0.3 + light / 140) + ')';
-    ctx.beginPath();
-    ctx.arc(W - 38, 34, sunR, 0, Math.PI * 2);
-    ctx.fill();
-    if (light > 88) {
-      ctx.font = '16px serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('🔥', W - 38, 34 + sunR + 14);
+  // Roots
+  if (stemH > 5) {
+    for (let r = 0; r < 4; r++) {
+      const angle = (r / 3) * Math.PI * 0.8 - Math.PI * 0.4 + Math.PI / 2;
+      const len = 18 + g * 22;
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', `M${cx},${baseY} Q${cx + Math.cos(angle) * len * 0.5},${baseY + 10} ${cx + Math.cos(angle) * len},${baseY + Math.sin(angle) * len * 0.5}`);
+      path.setAttribute('stroke', '#8D6E63'); path.setAttribute('stroke-width', '3');
+      path.setAttribute('fill', 'none'); path.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(path);
     }
   }
 
-  // Ground
-  var groundColor = water < 12 ? 'rgba(200,165,110,.45)' : water > 85 ? 'rgba(80,50,20,.35)' : 'rgba(110,72,24,.22)';
-  ctx.fillStyle = groundColor;
-  ctx.beginPath();
-  ctx.ellipse(cx, groundY + 5, 58, 9, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Roots
-  ctx.strokeStyle = water > 80 ? 'rgba(100,50,15,.6)' : 'rgba(130,80,30,.45)';
-  ctx.lineWidth = 2;
-  [[-18, 16], [0, 22], [18, 16]].forEach(function(pt) {
-    ctx.beginPath();
-    ctx.moveTo(cx, groundY);
-    ctx.quadraticCurveTo(cx + pt[0] * 0.4, groundY + pt[1] * 0.5, cx + pt[0], groundY + pt[1]);
-    ctx.stroke();
-  });
-  if (water > 85) {
-    ctx.font = '13px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('💀', cx - 38, groundY + 20);
-  }
-
-  // Stem
-  var wilt = g < 0.2;
-  var stemHue = 110 + (g > 0.5 ? 15 : 0);
-  var stemSat = 45 + g * 30;
-  var stemLit = 25 + g * 18;
-  ctx.strokeStyle = g < 0.15 ? '#aaa87a' : 'hsl(' + stemHue + ',' + stemSat + '%,' + stemLit + '%)';
-  ctx.lineWidth = 4 + g * 5;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx, groundY);
-  if (wilt) {
-    ctx.bezierCurveTo(cx + 10, groundY - stemH * 0.3, cx + 35, groundY - stemH * 0.7, cx + 32, groundY - stemH);
-  } else {
-    ctx.lineTo(cx, groundY - stemH);
-  }
-  ctx.stroke();
-
-  var tipX = wilt ? cx + 32 : cx;
-  var tipY = groundY - stemH;
+  // Stem (wavy path)
+  const tilt = g < 0.15 ? 12 : 0;
+  const topX = cx + tilt;
+  const topY = baseY - stemH;
+  const stemPath = document.createElementNS(svgNS, 'path');
+  const cp1x = cx - 12; const cp1y = baseY - stemH * 0.4;
+  const cp2x = cx + 14; const cp2y = baseY - stemH * 0.7;
+  stemPath.setAttribute('d', `M${cx},${baseY} C${cp1x},${cp1y} ${cp2x},${cp2y} ${topX},${topY}`);
+  stemPath.setAttribute('stroke', stemColor);
+  stemPath.setAttribute('stroke-width', stemW);
+  stemPath.setAttribute('fill', 'none');
+  stemPath.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(stemPath);
 
   // Leaves
-  if (g > 0.12) {
-    var leafH = 110 + g * 20;
-    var leafSat = 40 + g * 35;
-    ctx.fillStyle = light > 85 ? 'hsl(65,' + leafSat + '%,' + (30 + g*10) + '%)' :
-                    'hsl(' + leafH + ',' + leafSat + '%,' + (28 + g*14) + '%)';
-    var ls = Math.max(5, g * 28);
-    [[1, 0.28], [-1, 0.52], [1, 0.68]].forEach(function(pair) {
-      var side = pair[0], pos = pair[1];
-      var lx = wilt ? cx + 32 * pos : cx;
-      var ly = groundY - stemH * pos;
-      ctx.beginPath();
-      ctx.ellipse(lx + side * ls, ly, ls, ls * 0.48, side * 0.4, 0, Math.PI * 2);
-      ctx.fill();
-    });
+  if (g > 0.15) {
+    const leafCount = g > 0.7 ? 4 : 2;
+    for (let li = 0; li < leafCount; li++) {
+      const frac = (li + 1) / (leafCount + 1);
+      const lx = cx + (li % 2 === 0 ? -4 : 4);
+      const ly = baseY - stemH * frac;
+      const side = li % 2 === 0 ? -1 : 1;
+      const lw = 22 + g * 30;
+      const lh = 14 + g * 12;
+      const leaf = document.createElementNS(svgNS, 'ellipse');
+      leaf.setAttribute('cx', lx + side * lw * 0.55);
+      leaf.setAttribute('cy', ly - 6);
+      leaf.setAttribute('rx', lw * 0.7);
+      leaf.setAttribute('ry', lh * 0.45);
+      leaf.setAttribute('fill', leafColor);
+      leaf.setAttribute('transform', `rotate(${side * (15 + g * 12)},${lx},${ly})`);
+      leaf.setAttribute('opacity', '0.9');
+      svg.appendChild(leaf);
+
+      // Leaf vein
+      const vein = document.createElementNS(svgNS, 'line');
+      vein.setAttribute('x1', lx); vein.setAttribute('y1', ly);
+      vein.setAttribute('x2', lx + side * lw * 1.1); vein.setAttribute('y2', ly - 4);
+      vein.setAttribute('stroke', 'rgba(255,255,255,0.35)'); vein.setAttribute('stroke-width', '1.5');
+      svg.appendChild(vein);
+    }
   }
 
   // Flower
   if (g > 0.85) {
-    ctx.font = (14 + g * 10) + 'px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('🌸', tipX, tipY - 10);
+    const flower = document.createElementNS(svgNS, 'text');
+    flower.setAttribute('x', topX);
+    flower.setAttribute('y', topY - 10);
+    flower.setAttribute('text-anchor', 'middle');
+    flower.setAttribute('font-size', 28 + (g - 0.85) * 60);
+    flower.textContent = '🌸';
+    flower.style.transition = 'font-size 0.3s';
+    svg.appendChild(flower);
   }
+}
 
-  // O2 bubbles
-  l3.bubbles.forEach(function(b) {
-    ctx.globalAlpha = b.opacity;
-    ctx.fillStyle = 'rgba(0,194,124,1)';
-    ctx.beginPath();
-    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold ' + (7 + b.r) + 'px Space Grotesk, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('O₂', b.x, b.y + 4);
-    ctx.globalAlpha = 1;
+function spawnO2() {
+  const container = document.getElementById('l3-o2');
+  const zone = document.getElementById('l3-zone');
+  const zRect = zone.getBoundingClientRect();
+  const svgEl = document.getElementById('l3-plant');
+  const svgRect = svgEl.getBoundingClientRect();
+  const g = l3State.growth;
+
+  // Spawn near top of plant
+  const stemH = Math.max(0, Math.min(220, g * 240));
+  const startX = svgRect.left - zRect.left + 90 + (Math.random() - 0.5) * 30;
+  const startY = svgRect.top - zRect.top + (260 - stemH * 0.7) - 44;
+
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `position:absolute;left:${startX}px;top:${startY}px;
+    font-size:${11 + Math.random() * 8}px;color:#43A047;font-weight:800;
+    opacity:0.85;pointer-events:none;
+    transition:top 1.8s linear,opacity 1.8s,left 1.8s;`;
+  bubble.textContent = 'O₂';
+  container.appendChild(bubble);
+
+  requestAnimationFrame(() => {
+    bubble.style.top = (startY - 80 - Math.random() * 40) + 'px';
+    bubble.style.left = (startX + (Math.random() - 0.5) * 30) + 'px';
+    bubble.style.opacity = '0';
   });
-
-  ctx.textAlign = 'left';
+  setTimeout(() => bubble.remove(), 2000);
 }
 
-var _lastBubbleTime = 0;
-
-function startBubbleLoop() {
-  function loop(ts) {
-    var g = l3.growth;
-    var interval = 1400 - g * 900;
-    if (g > 0.5 && ts - _lastBubbleTime > interval) {
-      var canvas = document.getElementById('plantCanvas');
-      l3.bubbles.push({
-        x: canvas.width / 2 + (Math.random() - 0.5) * 45,
-        y: 95 + Math.random() * 55,
-        r: 4 + Math.random() * 4,
-        opacity: 0.85,
-        vy: -(0.5 + Math.random() * 0.6),
-      });
-      _lastBubbleTime = ts;
-    }
-    l3.bubbles = l3.bubbles.filter(function(b) { return b.opacity > 0.04; });
-    l3.bubbles.forEach(function(b) { b.y += b.vy; b.opacity -= 0.009; });
-    if (l3.bubbles.length > 0 || g > 0.5) drawPlant();
-    l3.raf = requestAnimationFrame(loop);
-  }
-  l3.raf = requestAnimationFrame(loop);
-}
-
-function renderMissions3() {
-  var grid = document.getElementById('missions-grid');
-  grid.innerHTML = '';
-  missions3.forEach(function(m) {
-    var chip = document.createElement('div');
-    chip.className = 'mission-chip' + (l3.done[m.id] ? ' done' : '');
-    chip.id = 'mchip-' + m.id;
-    chip.innerHTML = '<span class="m-icon">' + (l3.done[m.id] ? '✅' : m.emoji) + '</span><span>' + m.title + '</span>';
-    grid.appendChild(chip);
-  });
-}
-
-function checkMissions3() {
-  var g = l3.growth, light = l3.light, water = l3.water, co2 = l3.co2;
-  missions3.forEach(function(m) {
-    if (l3.done[m.id]) return;
-    if (m.check(g, light, water, co2)) {
-      l3.done[m.id] = true;
-      renderMissions3();
-
-      var facts = {
-        grow:    '🌿 Растение растёт! Ему нужны свет, вода и CO₂ одновременно.',
-        bloom:   '🌸 Цветение! Только при идеальных условиях растение тратит энергию на цветок.',
-        nolight: '🌑 Без света фотосинтез невозможен — растение не может делать еду из темноты!',
-        nowater: '🏜️ Без воды растение вянет — вода переносит питательные вещества по стеблю.',
-        perfect: '🏆 Закон Либиха: рост ограничивает самый дефицитный ресурс. Идеальный баланс найден!',
-      };
-
-      setBadge('l3-badge', m.emoji + ' Задание "' + m.title + '" выполнено!');
-
-      var canvas = document.getElementById('plantCanvas');
-      var rect = canvas.getBoundingClientRect();
-      burst(rect.left + rect.width / 2, rect.top + 60, ['🌿','✨','💚','🌱','⭐','🔬']);
-
-      var doneCount = Object.keys(l3.done).length;
-      if (doneCount === missions3.length) {
-        saveProgress('level3');
-        updateLevelSelect();
-        setTimeout(function() {
-          showSuccess('🏆', 'Фотосинтез освоен!',
-            'Фотосинтез — процесс без которого жизнь на Земле невозможна. Растения превращают свет в еду и дают нам кислород!');
-        }, 800);
-      } else {
-        setTimeout(function() { setBadge('l3-badge', facts[m.id]); }, 1800);
+function checkMissions(g) {
+  const vals = { light: l3State.light, water: l3State.water, co2: l3State.co2 };
+  let newDone = false;
+  MISSIONS.forEach(m => {
+    if (l3State.doneMissions.has(m.id)) return;
+    if (m.check(g, vals)) {
+      l3State.doneMissions.add(m.id);
+      newDone = true;
+      const chip = document.getElementById('mission-' + m.id);
+      if (chip) {
+        chip.classList.add('done');
+        const rect = chip.getBoundingClientRect();
+        burst(rect.left + rect.width / 2, rect.top + rect.height / 2, ['⭐','✨','🌱']);
       }
     }
   });
+  if (newDone && l3State.doneMissions.size === MISSIONS.size) {
+    setTimeout(() => showSuccess('🌸', 'Ты — ботаник!', 'Ты выполнил все миссии! Фотосинтез — это когда растение ест свет и пьёт воду, а выдыхает кислород O₂ для нас!', 'Круто!', () => {}), 400);
+  }
 }
 
-// ===== BOOT =====
-updateLevelSelect();
+/* ===================================================
+   INIT
+   =================================================== */
+// Check webfont loaded or proceed anyway
+document.addEventListener('DOMContentLoaded', () => {
+  // nothing extra needed
+});
 </script>
 </body>
 </html>
