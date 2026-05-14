@@ -8,252 +8,340 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0a0a18;--card:#14142a;--purple:#7B2FFF;--yellow:#FFE141;
-  --coral:#FF5038;--mint:#00C27C;--blue:#3B82F6;--muted:rgba(255,255,255,.5);
+  --bg:#FFFDF7;--card:#fff;--purple:#7B2FFF;--yellow:#FFE141;
+  --coral:#FF5038;--mint:#00C27C;--blue:#3B82F6;--muted:#9997A8;
+  --surface:#F5F3FF;--border:rgba(0,0,0,.07);
 }
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden;user-select:none}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:#1a1730;min-height:100vh;overflow-x:hidden;user-select:none}
 
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
 
+/* ── ANIMATIONS ── */
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.15) rotate(3deg);opacity:1}80%{transform:scale(.95) rotate(-1deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}60%{transform:translateX(10px)}}
+@keyframes slotPop{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes moleculeWow{0%{transform:scale(1)}30%{transform:scale(1.3) rotate(5deg)}60%{transform:scale(.95) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes ptclFly{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}100%{opacity:0;transform:translateY(-140px) scale(.2) rotate(80deg)}}
+@keyframes atomFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(var(--dx1,8px),var(--dy1,-10px))}50%{transform:translate(var(--dx2,-6px),var(--dy2,8px))}75%{transform:translate(var(--dx3,10px),var(--dy3,4px))}}
+@keyframes scientistBounce{0%{transform:scale(0) translateY(20px);opacity:0}60%{transform:scale(1.2) translateY(-5px);opacity:1}80%{transform:scale(.95) translateY(2px)}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes stirWhirl{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes dropFall{0%{transform:translateY(-20px) scaleX(.6);opacity:0}60%{opacity:1}100%{transform:translateY(80px) scaleX(.8);opacity:0}}
+@keyframes liquidRise{from{height:var(--from-h,0)}to{height:var(--to-h,0)}}
+@keyframes bubbleRise{0%{transform:translateY(0);opacity:.8}100%{transform:translateY(-130px) translateX(var(--bx,0px));opacity:0}}
+@keyframes badgeBounce{0%{transform:scale(0);opacity:0}60%{transform:scale(1.3);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes particleExplode{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--px,0px),var(--py,-60px)) scale(.3);opacity:0}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px var(--glow,rgba(123,47,255,.4))}50%{box-shadow:0 0 40px var(--glow,rgba(123,47,255,.7))}}
+
+.bounce-in{animation:bounceIn .55s cubic-bezier(.34,1.56,.64,1) forwards}
+.shake{animation:shake .35s ease}
+
 /* ── INTRO ── */
 #intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(123,47,255,.35) 0%,transparent 65%),var(--bg)}
+  background:radial-gradient(ellipse at 50% 0%,rgba(123,47,255,.12) 0%,transparent 65%),var(--bg)}
 .intro-emoji{font-size:88px;margin-bottom:24px;display:block;animation:bob 3s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
 .intro-tag{display:inline-block;background:var(--yellow);color:#111;font-size:11px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:18px}
-.intro-h{font-size:clamp(38px,9vw,72px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:14px}
+  letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:40px;margin-bottom:18px;
+  box-shadow:0 4px 16px rgba(255,225,65,.4)}
+.intro-h{font-size:clamp(38px,9vw,72px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:14px;color:#1a1730}
 .intro-h em{color:var(--purple);font-style:normal}
 .intro-sub{font-size:17px;color:var(--muted);max-width:360px;line-height:1.65;margin-bottom:40px}
 
 /* ── LEVEL SELECT ── */
 #levelSelect{align-items:center;justify-content:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 10%,rgba(123,47,255,.18) 0%,transparent 60%),var(--bg)}
-.ls-h{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+  background:radial-gradient(ellipse at 50% 0%,rgba(123,47,255,.08) 0%,transparent 60%),var(--bg)}
+.ls-h{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;color:#1a1730}
 .ls-sub{color:var(--muted);font-size:15px;margin-bottom:32px}
 .levels-list{display:flex;flex-direction:column;gap:14px;width:100%;max-width:440px}
-.lvl-card{background:var(--card);border-radius:22px;padding:20px 24px;display:flex;align-items:center;
-  gap:18px;cursor:pointer;border:2px solid transparent;transition:all .22s;position:relative;overflow:hidden}
-.lvl-card:hover:not(.locked){border-color:var(--purple);transform:translateX(5px)}
+.lvl-card{background:var(--card);border-radius:24px;padding:20px 24px;display:flex;align-items:center;
+  gap:18px;cursor:pointer;border:2px solid transparent;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.lvl-card:hover:not(.locked){border-color:var(--purple);transform:translateY(-3px);box-shadow:0 8px 40px rgba(123,47,255,.15)}
 .lvl-card.locked{opacity:.45;cursor:not-allowed}
-.lvl-card.done{border-color:var(--mint)}
+.lvl-card.done{border-color:var(--mint);box-shadow:0 4px 24px rgba(0,194,124,.15)}
 .lc-ico{font-size:44px;flex-shrink:0}
 .lc-info{flex:1}
 .lc-num{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
-.lc-name{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.lc-name{font-size:19px;font-weight:800;letter-spacing:-.4px;color:#1a1730}
 .lc-desc{font-size:13px;color:var(--muted);margin-top:3px}
 .lc-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:22px}
 
 /* ── GAME HEADER ── */
 .g-hdr{display:flex;align-items:center;gap:14px;padding:14px 20px;
-  border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
-.back-btn{background:rgba(255,255,255,.08);border:none;color:#fff;width:38px;height:38px;
-  border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s}
-.back-btn:hover{background:rgba(255,255,255,.16)}
-.g-title{font-size:17px;font-weight:800;letter-spacing:-.3px}
+  border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card);
+  box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.back-btn{background:var(--surface);border:none;color:#1a1730;width:38px;height:38px;
+  border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .18s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.back-btn:hover{background:#ede9ff}
+.g-title{font-size:17px;font-weight:800;letter-spacing:-.3px;color:#1a1730}
 .g-progress{margin-left:auto;display:flex;align-items:center;gap:10px}
 .g-step{font-size:13px;font-weight:700;color:var(--muted)}
-.prog-track{width:90px;height:7px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+.prog-track{width:90px;height:7px;background:rgba(123,47,255,.12);border-radius:4px;overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),#B45FFF);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
 
-.task-box{background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.35);border-radius:16px;
-  padding:13px 18px;margin:16px 20px;font-size:15px;font-weight:600;text-align:center;flex-shrink:0;line-height:1.5}
-.task-box strong{color:var(--yellow)}
+.task-box{background:var(--surface);border:1.5px solid rgba(123,47,255,.2);border-radius:16px;
+  padding:13px 18px;margin:16px 20px;font-size:15px;font-weight:600;text-align:center;flex-shrink:0;
+  line-height:1.5;color:#1a1730;box-shadow:0 2px 12px rgba(123,47,255,.08)}
+.task-box strong{color:var(--purple)}
 
 .btn{padding:15px 38px;border-radius:40px;font-family:'Space Grotesk',sans-serif;font-size:16px;
-  font-weight:800;cursor:pointer;border:none;transition:all .2s;letter-spacing:-.2px}
-.btn-yellow{background:var(--yellow);color:#111}
-.btn-yellow:hover{background:#FFD60A;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,225,65,.3)}
-.btn-ghost{background:rgba(255,255,255,.09);color:#fff}
-.btn-ghost:hover{background:rgba(255,255,255,.16)}
+  font-weight:800;cursor:pointer;border:none;transition:all .2s cubic-bezier(.34,1.56,.64,1);letter-spacing:-.2px}
+.btn-yellow{background:var(--yellow);color:#111;box-shadow:0 4px 20px rgba(255,225,65,.4)}
+.btn-yellow:hover{background:#FFD60A;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,225,65,.5)}
+.btn-purple{background:var(--purple);color:#fff;box-shadow:0 4px 20px rgba(123,47,255,.35)}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(123,47,255,.5)}
+.btn-ghost{background:var(--surface);color:#1a1730;border:2px solid var(--border)}
+.btn-ghost:hover{background:#ede9ff;border-color:var(--purple)}
 
-/* ── SUCCESS OVERLAY ── */
+/* ── SUCCESS OVERLAY — СВЕТЛЫЙ ── */
 .success-ov{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity .3s}
 .success-ov.show{opacity:1;pointer-events:all}
-.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px)}
+.ov-bg{position:absolute;inset:0;background:rgba(255,253,247,.88);backdrop-filter:blur(8px)}
 .ov-card{position:relative;background:var(--card);border-radius:28px;padding:36px 44px;text-align:center;
-  max-width:360px;width:90%;border:2px solid var(--mint);transform:scale(.9);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+  max-width:360px;width:90%;border:2.5px solid var(--mint);
+  box-shadow:0 20px 60px rgba(0,194,124,.15);
+  transform:scale(.9);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
 .success-ov.show .ov-card{transform:scale(1)}
-.ov-emoji{font-size:64px;margin-bottom:14px;display:block}
+.ov-scientist{font-size:52px;margin-bottom:8px;display:block;
+  animation:scientistBounce .6s cubic-bezier(.34,1.56,.64,1) .1s both}
+.ov-emoji{font-size:48px;margin-bottom:8px;display:block}
 .ov-h{font-size:26px;font-weight:800;color:var(--mint);margin-bottom:8px}
 .ov-fact{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px}
 
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}60%{transform:translateX(10px)}}
-.shake{animation:shake .35s ease}
-
+/* ── PARTICLES ── */
 .ptcl{position:fixed;pointer-events:none;z-index:300;font-size:22px;
   animation:ptclFly 1.2s ease-out forwards}
-@keyframes ptclFly{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
-  100%{opacity:0;transform:translateY(-120px) scale(.3) rotate(60deg)}}
 
 /* ════════════════════════════════
    LEVEL 1 — ОХОТА НА АТОМЫ
 ════════════════════════════════ */
-#level1{padding:0}
-.hunt-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:16px;position:relative;overflow:hidden}
+#level1{padding:0;background:var(--bg)}
+.hunt-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:14px;position:relative}
 
-.mol-target-display{
-  display:flex;flex-direction:column;align-items:center;gap:8px}
-.mol-name-lbl{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
-.mol-formula-big{font-size:48px;font-weight:800;letter-spacing:-1px;line-height:1}
-.mol-formula-big sub{font-size:30px;font-weight:800}
+.mol-target-display{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mol-name-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+.mol-formula-big{font-size:52px;font-weight:800;letter-spacing:-1px;line-height:1;color:#1a1730}
+.mol-formula-big sub{font-size:30px;font-weight:800;vertical-align:sub}
 
 .mol-build-zone{
   display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;
-  min-height:100px;width:100%;background:rgba(255,255,255,.04);border-radius:24px;
-  padding:16px;position:relative}
+  min-height:88px;width:100%;background:var(--surface);border-radius:20px;
+  padding:14px;position:relative;border:1.5px dashed rgba(123,47,255,.25)}
+
+/* Слот для атома — кружок с пунктиром */
 .mol-slot{
-  width:56px;height:56px;border-radius:50%;
-  border:2.5px dashed rgba(255,255,255,.25);
+  width:60px;height:60px;border-radius:50%;
+  border:2.5px dashed rgba(123,47,255,.3);
+  background:rgba(255,255,255,.6);
   display:flex;align-items:center;justify-content:center;
   font-size:18px;font-weight:800;transition:all .3s;position:relative}
-.mol-slot.filled{border-style:solid;animation:slotPop .3s cubic-bezier(.34,1.56,.64,1)}
-@keyframes slotPop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.mol-slot.filled{border-style:solid;border-color:transparent;animation:slotPop .4s cubic-bezier(.34,1.56,.64,1)}
 
-.floating-atoms{position:relative;width:100%;height:200px;overflow:hidden;
-  background:rgba(255,255,255,.03);border-radius:24px}
+/* Поле с летающими атомами */
+.floating-atoms{position:relative;width:100%;height:210px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(245,243,255,.7) 0%,rgba(255,253,247,1) 100%);
+  border-radius:24px;border:1.5px solid var(--border)}
+
+/* Глянцевый атом */
 .f-atom{
-  position:absolute;width:58px;height:58px;border-radius:50%;
+  position:absolute;width:60px;height:60px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-size:19px;font-weight:800;cursor:pointer;
-  box-shadow:0 4px 20px rgba(0,0,0,.3);
-  transition:transform .15s,box-shadow .15s;
+  transition:transform .15s;
   animation:atomFloat var(--dur,4s) ease-in-out infinite var(--delay,0s)}
-@keyframes atomFloat{
-  0%{transform:translate(0,0)}
-  25%{transform:translate(var(--dx1,8px),var(--dy1,-10px))}
-  50%{transform:translate(var(--dx2,-6px),var(--dy2,8px))}
-  75%{transform:translate(var(--dx3,10px),var(--dy3,4px))}
-  100%{transform:translate(0,0)}}
-.f-atom:hover{transform:scale(1.18)!important;box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.f-atom:active{transform:scale(.92)!important}
-.f-atom.captured{animation:captureAnim .5s ease forwards!important}
-@keyframes captureAnim{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{opacity:0;transform:scale(0)}}
-.f-atom.wrong{animation:wrongShake .4s ease!important}
-@keyframes wrongShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+.f-atom:hover{transform:scale(1.2) !important;z-index:10}
+.f-atom:active{transform:scale(.88) !important}
 
-.atom-H{background:linear-gradient(135deg,#FFE141,#F59E0B);color:#111}
-.atom-O{background:linear-gradient(135deg,#FF5038,#B91C1C);color:#fff}
-.atom-C{background:linear-gradient(135deg,#7B2FFF,#4C1D95);color:#fff}
-.atom-N{background:linear-gradient(135deg,#3B82F6,#1D4ED8);color:#fff}
-.atom-S{background:linear-gradient(135deg,#F59E0B,#D97706);color:#111}
+/* Глянцевые градиенты атомов */
+.atom-H{
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#FFE141 40%,#FF9500 100%);
+  box-shadow:0 6px 20px rgba(255,149,0,.5),inset 0 1px 0 rgba(255,255,255,.7);
+  color:#7a4f00}
+.atom-O{
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#FF6B6B 40%,#FF5038 100%);
+  box-shadow:0 6px 20px rgba(255,80,56,.5),inset 0 1px 0 rgba(255,255,255,.7);
+  color:#fff}
+.atom-C{
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#A78BFA 40%,#7B2FFF 100%);
+  box-shadow:0 6px 20px rgba(123,47,255,.5),inset 0 1px 0 rgba(255,255,255,.7);
+  color:#fff}
+.atom-N{
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#60A5FA 40%,#3B82F6 100%);
+  box-shadow:0 6px 20px rgba(59,130,246,.5),inset 0 1px 0 rgba(255,255,255,.7);
+  color:#fff}
+.atom-S{
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#FDE68A 40%,#F59E0B 100%);
+  box-shadow:0 6px 20px rgba(245,158,11,.5),inset 0 1px 0 rgba(255,255,255,.7);
+  color:#7a4f00}
+
+.f-atom.wrong{animation:shake .35s ease !important}
+.f-atom.captured{animation:slotPop .4s ease forwards !important;opacity:0 !important}
 
 .need-label{font-size:13px;color:var(--muted);font-weight:600;text-align:center}
 .need-atoms{display:flex;gap:8px;justify-content:center}
-.need-chip{padding:5px 14px;border-radius:20px;font-size:14px;font-weight:800}
 
 /* ════════════════════════════════
    LEVEL 2 — ЛАБОРАТОРИЯ
 ════════════════════════════════ */
-#level2{padding:0}
+#level2{padding:0;background:var(--bg)}
 .lab-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 20px;gap:14px;overflow-y:auto}
 
-/* Flask */
-.flask-container{position:relative;width:160px;height:220px;flex-shrink:0;margin:0 auto}
-.flask-svg-wrap{width:100%;height:100%;position:relative}
+/* Полка с реагентами */
+.reagents-shelf{
+  width:100%;background:var(--card);border-radius:20px;
+  padding:14px 12px 10px;
+  box-shadow:0 4px 20px rgba(0,0,0,.07);border:1.5px solid var(--border)}
+.shelf-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.reagents-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
-/* Reagents shelf */
-.reagents-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%}
+/* Глянцевый флакон */
 .reagent-btn{
   display:flex;flex-direction:column;align-items:center;gap:6px;
-  cursor:pointer;transition:all .2s;border:none;background:none;font-family:'Space Grotesk',sans-serif}
-.reagent-btn:hover:not(:disabled){transform:translateY(-4px)}
+  cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);border:none;background:none;font-family:'Space Grotesk',sans-serif}
+.reagent-btn:hover:not(:disabled){transform:translateY(-6px) rotate(-3deg)}
+.reagent-btn:active:not(:disabled){transform:translateY(0) rotate(5deg)}
 .reagent-btn:disabled{opacity:.35;cursor:not-allowed}
+
 .reagent-bottle{
-  width:56px;height:80px;border-radius:8px 8px 12px 12px;
+  width:52px;height:78px;border-radius:10px 10px 14px 14px;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-  position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+  position:relative;overflow:hidden;
+  box-shadow:0 6px 20px rgba(0,0,0,.12),inset 2px 2px 0 rgba(255,255,255,.5),inset -1px -1px 0 rgba(0,0,0,.05)}
+.bottle-shine{
+  position:absolute;top:8px;left:10px;width:8px;height:30px;
+  background:rgba(255,255,255,.6);border-radius:4px;transform:rotate(-15deg)}
 .bottle-liquid{
   position:absolute;bottom:0;left:0;right:0;
-  border-radius:0 0 10px 10px;transition:height .3s;height:70%}
+  border-radius:0 0 12px 12px;transition:height .4s cubic-bezier(.34,1.56,.64,1);height:70%}
 .bottle-cap{
-  position:absolute;top:-8px;left:50%;transform:translateX(-50%);
-  width:18px;height:10px;border-radius:3px 3px 0 0}
-.bottle-label{font-size:12px;color:#fff;font-weight:800;position:relative;z-index:1;margin-bottom:8px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.reagent-name{font-size:12px;color:var(--muted);font-weight:700}
+  position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  width:20px;height:11px;border-radius:3px 3px 0 0;
+  box-shadow:0 -2px 6px rgba(0,0,0,.15)}
+.bottle-neck{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:22px;height:12px;
+  background:rgba(255,255,255,.2);border-radius:0 0 4px 4px}
+.bottle-label{font-size:13px;font-weight:800;position:relative;z-index:1;margin-bottom:8px;
+  text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.reagent-name{font-size:11px;color:var(--muted);font-weight:700;text-align:center;max-width:56px}
 
-/* Stir button */
-.stir-zone{display:flex;align-items:center;gap:12px;width:100%}
+/* Большая колба */
+.flask-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+.flask-container{position:relative;width:170px;height:230px;flex-shrink:0;margin:0 auto}
+
+/* Анимация капель при добавлении */
+.drop{
+  position:absolute;width:10px;height:14px;border-radius:50% 50% 60% 60%;
+  top:0;left:50%;transform:translateX(-50%);z-index:5;
+  animation:dropFall .6s ease-out forwards}
+
+/* Кнопка смешать */
+.mix-btn-wrap{display:flex;justify-content:center;width:100%}
 .stir-btn{
-  flex:1;padding:13px;border-radius:16px;border:2px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.06);color:#fff;font-family:'Space Grotesk',sans-serif;
-  font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:-.2px}
-.stir-btn:hover:not(:disabled){border-color:var(--yellow);background:rgba(255,225,65,.08);color:var(--yellow)}
-.stir-btn:disabled{opacity:.3;cursor:not-allowed}
-.stir-btn.stirring{border-color:var(--yellow);background:rgba(255,225,65,.1);animation:stirPulse .5s ease infinite}
-@keyframes stirPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+  padding:13px 32px;border-radius:16px;border:2.5px solid rgba(123,47,255,.25);
+  background:var(--surface);color:#1a1730;font-family:'Space Grotesk',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:-.2px;
+  box-shadow:0 2px 12px rgba(123,47,255,.1)}
+.stir-btn:hover:not(:disabled){border-color:var(--purple);background:#ede9ff;color:var(--purple);transform:scale(1.03)}
+.stir-btn:disabled{opacity:.35;cursor:not-allowed}
+.stir-btn.stirring{border-color:var(--yellow);background:rgba(255,225,65,.1);animation:glowPulse .5s ease infinite;--glow:rgba(255,225,65,.4)}
+.stir-btn.bounce-in{animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1) forwards}
 
+/* Панель результата реакции */
 .reaction-display{
-  width:100%;border-radius:20px;padding:16px 20px;text-align:center;
-  min-height:72px;display:flex;align-items:center;justify-content:center;
+  width:100%;border-radius:16px;padding:14px 18px;text-align:center;
+  min-height:64px;display:flex;align-items:center;justify-content:center;
   flex-direction:column;gap:6px;transition:all .4s;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
-.reaction-display.success{background:rgba(0,194,124,.1);border-color:var(--mint)}
-.reaction-display.error{background:rgba(255,80,56,.08);border-color:var(--coral)}
-.reaction-display.partial{background:rgba(255,225,65,.08);border-color:var(--yellow)}
+  background:var(--surface);border:1.5px solid var(--border)}
+.reaction-display.success{background:rgba(0,194,124,.08);border-color:var(--mint)}
+.reaction-display.error{background:rgba(255,80,56,.06);border-color:rgba(255,80,56,.3)}
+.reaction-display.partial{background:rgba(255,225,65,.08);border-color:rgba(255,225,65,.4)}
 .rxd-emoji{font-size:28px}
-.rxd-text{font-size:14px;font-weight:600;color:#fff;line-height:1.5}
+.rxd-text{font-size:14px;font-weight:600;color:#1a1730;line-height:1.5}
 
-/* Flask SVG animation */
-.flask-body{filter:drop-shadow(0 8px 24px rgba(0,0,0,.4))}
-.liquid-anim{transition:all .6s cubic-bezier(.34,1.1,.64,1)}
-.bubble{animation:bubbleRise var(--dur,2s) ease-in infinite var(--delay,0s);opacity:0}
-@keyframes bubbleRise{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-120px);opacity:0}}
+/* Вихрь в колбе */
+.whirl-anim{animation:stirWhirl 1.2s linear infinite;transform-origin:center}
+
+/* Пузыри */
+.lab-bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.8);
+  animation:bubbleRise var(--dur,2s) ease-in infinite var(--delay,0s);opacity:0}
 
 /* ════════════════════════════════
-   LEVEL 3 — СОСТОЯНИЯ (расширенный)
+   LEVEL 3 — СОСТОЯНИЯ
 ════════════════════════════════ */
-#level3{padding:0}
-.st-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:14px}
+#level3{padding:0;background:var(--bg)}
+.st-arena{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px 20px;gap:12px}
 
-.substances-row{display:flex;gap:12px;width:100%;max-width:400px}
+.substances-row{display:flex;gap:12px;width:100%;max-width:420px}
 .substance-panel{
-  flex:1;border-radius:20px;background:rgba(255,255,255,.04);
-  overflow:hidden;position:relative}
-.sub-canvas{height:160px;position:relative;overflow:hidden}
-.sub-label{font-size:13px;font-weight:800;text-align:center;padding:10px;
-  border-top:1px solid rgba(255,255,255,.08)}
-.sub-state{font-size:11px;color:var(--muted);text-align:center;padding-bottom:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  flex:1;border-radius:20px;background:var(--card);
+  overflow:hidden;position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,.07);border:1.5px solid var(--border)}
+.sub-canvas{height:150px;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(245,243,255,.5) 0%,rgba(255,255,255,1) 100%)}
+.sub-label{font-size:14px;font-weight:800;text-align:center;padding:8px;
+  border-top:1.5px solid var(--border);color:#1a1730;background:var(--card)}
+.sub-state-badge{
+  font-size:11px;font-weight:800;text-align:center;padding:4px 10px;margin:4px auto;
+  border-radius:20px;display:inline-block;transition:all .3s}
+.sub-state-badge.solid{background:#EDE9FF;color:var(--purple)}
+.sub-state-badge.liquid{background:#E0F2FE;color:#0369A1}
+.sub-state-badge.gas{background:#FFF9C4;color:#B45309}
+.sub-state-wrap{text-align:center;padding-bottom:10px}
 
-.mol-dot{position:absolute;border-radius:50%;transition:background .5s}
-
-.temp-section{width:100%;max-width:400px;display:flex;flex-direction:column;gap:8px}
-.temp-header{display:flex;justify-content:space-between;align-items:center}
-.temp-cold{font-size:12px;font-weight:800;color:#93C5FD}
+/* Ползунок температуры */
+.temp-section{width:100%;max-width:420px;background:var(--card);border-radius:20px;
+  padding:14px 18px;box-shadow:0 4px 20px rgba(0,0,0,.07);border:1.5px solid var(--border)}
+.temp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.temp-cold{font-size:12px;font-weight:800;color:#3B82F6}
 .temp-hot{font-size:12px;font-weight:800;color:var(--coral)}
-.temp-now{font-size:32px;font-weight:800;text-align:center;letter-spacing:-1.5px;line-height:1}
-.temp-sub{font-size:12px;color:var(--muted);text-align:center;font-weight:600;margin-top:2px}
+.temp-now-wrap{text-align:center}
+.temp-now{font-size:38px;font-weight:800;letter-spacing:-2px;line-height:1;color:#1a1730}
+.temp-unit{font-size:16px;color:var(--muted);font-weight:700}
+.temp-sub{font-size:12px;color:var(--muted);text-align:center;font-weight:600;margin-top:4px;margin-bottom:6px}
 
 input[type=range]{
   width:100%;height:10px;border-radius:5px;appearance:none;cursor:pointer;
-  background:linear-gradient(to right,#93C5FD 0%,var(--purple) 40%,var(--coral) 100%);outline:none}
+  background:linear-gradient(to right,#93C5FD 0%,var(--purple) 45%,var(--coral) 100%);
+  outline:none;margin-top:4px}
 input[type=range]::-webkit-slider-thumb{
-  appearance:none;width:32px;height:32px;border-radius:50%;
-  background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.4);cursor:grab;
-  border:3px solid var(--purple)}
+  appearance:none;width:34px;height:34px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 16px rgba(123,47,255,.3);cursor:grab;
+  border:3px solid var(--purple);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.2);cursor:grabbing}
 
-.missions-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:400px}
+/* Список заданий */
+.missions-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px}
 .mission-item{
-  background:rgba(255,255,255,.05);border-radius:14px;padding:12px 16px;
-  display:flex;align-items:center;gap:12px;border:2px solid transparent;transition:all .3s}
-.mission-item.current{border-color:var(--purple);background:rgba(123,47,255,.12)}
-.mission-item.done{border-color:var(--mint);background:rgba(0,194,124,.08)}
-.mi-ico{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.2);
-  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .3s}
+  background:var(--card);border-radius:14px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;border:2px solid var(--border);
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.mission-item.current{border-color:var(--purple);background:rgba(123,47,255,.04);box-shadow:0 4px 20px rgba(123,47,255,.12)}
+.mission-item.done{border-color:var(--mint);background:rgba(0,194,124,.04)}
+.mi-ico{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;transition:all .3s}
 .mission-item.done .mi-ico{background:var(--mint);border-color:var(--mint)}
 .mi-info{flex:1}
-.mi-title{font-size:14px;font-weight:800;letter-spacing:-.2px}
+.mi-title{font-size:14px;font-weight:800;letter-spacing:-.2px;color:#1a1730}
 .mi-desc{font-size:12px;color:var(--muted);margin-top:2px}
 .mi-target{font-size:11px;color:var(--purple);font-weight:700;margin-top:3px}
-.mission-item.current .mi-target{color:var(--yellow)}
+.mission-item.current .mi-target{color:var(--coral)}
+
+/* Глянцевые молекулярные точки (уровень 3) */
+.mol-dot{position:absolute;border-radius:50%;transition:background .5s,opacity .3s}
 
 /* ── COMPLETE ── */
 #complete{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-  background:radial-gradient(ellipse at 50% 30%,rgba(0,194,124,.25) 0%,transparent 65%),var(--bg)}
-.cmp-icon{font-size:88px;margin-bottom:20px;display:block;animation:bob 2.5s ease-in-out infinite}
-.cmp-stars{font-size:44px;letter-spacing:10px;margin-bottom:16px}
+  background:radial-gradient(ellipse at 50% 30%,rgba(0,194,124,.12) 0%,transparent 65%),var(--bg)}
+.cmp-icon{font-size:88px;margin-bottom:8px;display:block;animation:bob 2.5s ease-in-out infinite}
+.cmp-scientist{font-size:40px;margin-bottom:16px;display:block;animation:scientistBounce .7s cubic-bezier(.34,1.56,.64,1) .3s both}
+.cmp-stars{font-size:44px;letter-spacing:8px;margin-bottom:16px}
 .cmp-h{font-size:38px;font-weight:800;letter-spacing:-2px;color:var(--mint);margin-bottom:10px}
 .cmp-sub{font-size:16px;color:var(--muted);max-width:320px;line-height:1.7;margin-bottom:36px}
 .cmp-btns{display:flex;flex-direction:column;gap:12px;width:100%;max-width:280px}
@@ -267,7 +355,7 @@ input[type=range]::-webkit-slider-thumb{
   <div class="intro-tag">КосмоБаза · Химия</div>
   <h1 class="intro-h">Хемо<em>Лаб</em></h1>
   <p class="intro-sub">Лови атомы, смешивай реагенты в колбе и управляй состоянием вещества</p>
-  <button class="btn btn-yellow" onclick="showLevelSelect()">Начать</button>
+  <button class="btn btn-yellow" onclick="showLevelSelect()">Начать ⚡</button>
 </section>
 
 <!-- LEVEL SELECT -->
@@ -317,14 +405,14 @@ input[type=range]::-webkit-slider-thumb{
       <div class="prog-track"><div class="prog-fill" id="hunt-prog" style="width:25%"></div></div>
     </div>
   </div>
-  <div class="task-box" id="hunt-task">Найди атомы и собери молекулу</div>
+  <div class="task-box" id="hunt-task">Поймай атомы и собери молекулу</div>
   <div class="hunt-arena">
     <div class="mol-target-display">
       <div class="mol-name-lbl">Собери</div>
       <div class="mol-formula-big" id="hunt-formula">H₂O</div>
     </div>
     <div class="mol-build-zone" id="build-zone"></div>
-    <div class="need-label">Нужно: <span id="need-txt"></span> — нажимай на нужные атомы ниже</div>
+    <div class="need-label" id="need-txt-wrap">Нужно: <span id="need-txt"></span> — тапай нужные атомы!</div>
     <div class="floating-atoms" id="floating-atoms"></div>
   </div>
 </section>
@@ -341,53 +429,66 @@ input[type=range]::-webkit-slider-thumb{
   </div>
   <div class="task-box" id="lab-task">Добавь нужные реагенты в колбу</div>
   <div class="lab-arena">
-    <!-- Flask -->
-    <div class="flask-container">
-      <svg viewBox="0 0 160 220" width="160" height="220" class="flask-body">
-        <defs>
-          <clipPath id="flaskClip">
-            <path d="M55 10 L55 90 L10 190 Q5 210 20 215 L140 215 Q155 210 150 190 L105 90 L105 10 Z"/>
-          </clipPath>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="rgba(255,255,255,.15)"/>
-            <stop offset="40%" stop-color="rgba(255,255,255,.05)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,.08)"/>
-          </linearGradient>
-        </defs>
-        <!-- Flask outline -->
-        <path d="M55 10 L55 90 L10 190 Q5 210 20 215 L140 215 Q155 210 150 190 L105 90 L105 10 Z"
-          fill="url(#glassGrad)" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
-        <!-- Liquid fill (clipped) -->
-        <g clip-path="url(#flaskClip)">
-          <rect id="flask-liquid" x="0" y="215" width="160" height="0" fill="rgba(59,130,246,.6)" rx="0">
-            <animate attributeName="y" id="liquid-anim-y" from="215" to="215" dur="0.001s" fill="freeze"/>
-            <animate attributeName="height" id="liquid-anim-h" from="0" to="0" dur="0.001s" fill="freeze"/>
-          </rect>
-          <!-- Bubbles (hidden by default) -->
-          <circle id="b1" class="bubble" cx="50" cy="210" r="5" fill="rgba(255,255,255,.4)" style="--dur:1.8s;--delay:0s"/>
-          <circle id="b2" class="bubble" cx="80" cy="210" r="4" fill="rgba(255,255,255,.35)" style="--dur:2.2s;--delay:.4s"/>
-          <circle id="b3" class="bubble" cx="110" cy="210" r="6" fill="rgba(255,255,255,.3)" style="--dur:1.5s;--delay:.8s"/>
-          <circle id="b4" class="bubble" cx="65" cy="210" r="3" fill="rgba(255,255,255,.45)" style="--dur:2s;--delay:1.1s"/>
-          <circle id="b5" class="bubble" cx="95" cy="210" r="5" fill="rgba(255,255,255,.35)" style="--dur:1.7s;--delay:.2s"/>
-        </g>
-        <!-- Shine -->
-        <path d="M65 15 L65 85 L30 160" stroke="rgba(255,255,255,.2)" stroke-width="4" stroke-linecap="round" fill="none"/>
-        <!-- Neck -->
-        <rect x="52" y="5" width="56" height="12" rx="4" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
-      </svg>
-      <div id="flask-emoji" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+
+    <!-- Полка с реагентами -->
+    <div class="reagents-shelf">
+      <div class="shelf-label">Реагенты</div>
+      <div class="reagents-row" id="reagents-row"></div>
     </div>
 
-    <!-- Reagents -->
-    <div class="reagents-row" id="reagents-row"></div>
+    <!-- Колба -->
+    <div class="flask-wrap">
+      <div class="flask-container">
+        <svg id="flask-svg" viewBox="0 0 170 230" width="170" height="230">
+          <defs>
+            <clipPath id="flaskClip">
+              <path d="M60 12 L60 92 L12 198 Q6 218 22 222 L148 222 Q164 218 158 198 L110 92 L110 12 Z"/>
+            </clipPath>
+            <radialGradient id="glassGrad" cx="30%" cy="25%" r="70%">
+              <stop offset="0%" stop-color="rgba(255,255,255,.35)"/>
+              <stop offset="100%" stop-color="rgba(200,200,255,.05)"/>
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Стекло колбы -->
+          <path d="M60 12 L60 92 L12 198 Q6 218 22 222 L148 222 Q164 218 158 198 L110 92 L110 12 Z"
+            fill="url(#glassGrad)" stroke="rgba(0,0,0,.12)" stroke-width="2.5"/>
+          <!-- Жидкость -->
+          <g clip-path="url(#flaskClip)">
+            <rect id="flask-liquid" x="0" y="222" width="170" height="0" fill="rgba(59,130,246,.5)" rx="0"/>
+            <!-- Блик на жидкости -->
+            <rect id="flask-liquid-shine" x="20" y="222" width="40" height="0" fill="rgba(255,255,255,.25)" rx="0"/>
+            <!-- Пузыри -->
+            <circle id="b1" class="lab-bubble" cx="55" cy="215" r="5" style="--dur:1.8s;--delay:0s;--bx:-8px"/>
+            <circle id="b2" class="lab-bubble" cx="85" cy="215" r="4" style="--dur:2.2s;--delay:.4s;--bx:5px"/>
+            <circle id="b3" class="lab-bubble" cx="115" cy="215" r="6" style="--dur:1.5s;--delay:.8s;--bx:-5px"/>
+            <circle id="b4" class="lab-bubble" cx="70" cy="215" r="3" style="--dur:2s;--delay:1.1s;--bx:10px"/>
+            <circle id="b5" class="lab-bubble" cx="100" cy="215" r="5" style="--dur:1.7s;--delay:.2s;--bx:-12px"/>
+          </g>
+          <!-- Бликовая полоска на стекле -->
+          <path d="M68 18 L68 88 L32 165" stroke="rgba(255,255,255,.5)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Горлышко -->
+          <rect x="57" y="6" width="56" height="14" rx="5" fill="rgba(255,255,255,.2)" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
+          <!-- Вихрь при перемешивании -->
+          <g id="whirl-group" opacity="0" clip-path="url(#flaskClip)">
+            <ellipse cx="85" cy="180" rx="35" ry="18" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="3" stroke-dasharray="8 6" class="whirl-anim"/>
+            <ellipse cx="85" cy="165" rx="22" ry="10" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" stroke-dasharray="5 4" class="whirl-anim" style="animation-direction:reverse"/>
+          </g>
+        </svg>
+        <div id="flask-emoji" style="position:absolute;top:48%;left:50%;transform:translate(-50%,-50%);font-size:44px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:5"></div>
+      </div>
+    </div>
 
-    <!-- Stir -->
-    <div class="stir-zone">
-      <button class="stir-btn" id="stir-btn" onclick="stirFlask()" disabled>🌀 Перемешать</button>
+    <!-- Кнопка смешать -->
+    <div class="mix-btn-wrap" id="mix-btn-wrap" style="opacity:0;pointer-events:none;transition:opacity .3s">
+      <button class="stir-btn" id="stir-btn" onclick="stirFlask()" disabled>🌀 Смешать!</button>
     </div>
 
     <div class="reaction-display" id="rxn-display">
-      <div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу</div>
+      <div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу 👆</div>
     </div>
   </div>
 </section>
@@ -408,24 +509,24 @@ input[type=range]::-webkit-slider-thumb{
       <div class="substance-panel">
         <div class="sub-canvas" id="canvas-water"></div>
         <div class="sub-label">💧 Вода</div>
-        <div class="sub-state" id="state-water">Жидкость</div>
+        <div class="sub-state-wrap"><span class="sub-state-badge liquid" id="state-water">Жидкость</span></div>
       </div>
       <div class="substance-panel">
         <div class="sub-canvas" id="canvas-alcohol"></div>
         <div class="sub-label">🍾 Спирт</div>
-        <div class="sub-state" id="state-alcohol">Жидкость</div>
+        <div class="sub-state-wrap"><span class="sub-state-badge liquid" id="state-alcohol">Жидкость</span></div>
       </div>
     </div>
 
     <div class="temp-section">
       <div class="temp-header">
         <span class="temp-cold">❄️ −130°C</span>
-        <div style="text-align:center">
-          <div class="temp-now" id="temp-now">20°C</div>
-          <div class="temp-sub" id="temp-sub">Вода: жидкость · Спирт: жидкость</div>
+        <div class="temp-now-wrap">
+          <span class="temp-now" id="temp-now">20</span><span class="temp-unit">°C</span>
         </div>
         <span class="temp-hot">🔥 300°C</span>
       </div>
+      <div class="temp-sub" id="temp-sub">Вода: жидкость · Спирт: жидкость</div>
       <input type="range" id="temp-slider" min="-130" max="300" value="20" oninput="onTempChange(this.value)">
     </div>
 
@@ -436,6 +537,7 @@ input[type=range]::-webkit-slider-thumb{
 <!-- COMPLETE -->
 <section id="complete" class="screen">
   <span class="cmp-icon">🏆</span>
+  <span class="cmp-scientist">🧑‍🔬</span>
   <div class="cmp-stars">⭐⭐⭐</div>
   <div class="cmp-h">Ты химик!</div>
   <p class="cmp-sub">Поймал атомы, провёл реакции и управлял состоянием вещества. Так работает настоящая наука!</p>
@@ -445,10 +547,11 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </section>
 
-<!-- SUCCESS -->
+<!-- SUCCESS OVERLAY — СВЕТЛЫЙ -->
 <div class="success-ov" id="success-ov">
   <div class="ov-bg"></div>
   <div class="ov-card">
+    <span class="ov-scientist" id="ov-scientist">🧑‍🔬</span>
     <span class="ov-emoji" id="ov-emoji">🎉</span>
     <div class="ov-h" id="ov-h">Отлично!</div>
     <div class="ov-fact" id="ov-fact"></div>
@@ -466,9 +569,7 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-function showLevelSelect(){
-  updateCards();showScreen('levelSelect');
-}
+function showLevelSelect(){updateCards();showScreen('levelSelect');}
 function updateCards(){
   [1,2,3].forEach(i=>{
     const c=document.getElementById('card'+i),b=document.getElementById('badge'+i);
@@ -485,22 +586,34 @@ function startLevel(n){
   else{initStates();showScreen('level3');}
 }
 function showSuccess(emoji,title,fact,cb){
+  const ov=document.getElementById('success-ov');
   document.getElementById('ov-emoji').textContent=emoji;
   document.getElementById('ov-h').textContent=title;
   document.getElementById('ov-fact').textContent=fact;
+  // bounce scientist in
+  const sci=document.getElementById('ov-scientist');
+  sci.style.animation='none';
+  sci.offsetHeight;
+  sci.style.animation='scientistBounce .6s cubic-bezier(.34,1.56,.64,1) .1s both';
   successCb=cb;
-  document.getElementById('success-ov').classList.add('show');
+  ov.classList.add('show');
 }
-function successNext(){document.getElementById('success-ov').classList.remove('show');if(successCb)successCb();}
+function successNext(){
+  document.getElementById('success-ov').classList.remove('show');
+  if(successCb)successCb();
+}
 
-function burst(x,y,arr){
-  for(let i=0;i<8;i++){
+function burst(x,y,arr,count){
+  count=count||8;
+  for(let i=0;i<count;i++){
     const el=document.createElement('div');el.className='ptcl';
     el.textContent=arr[Math.floor(Math.random()*arr.length)];
-    el.style.left=(x+Math.random()*100-50)+'px';
-    el.style.top=(y+Math.random()*40)+'px';
+    el.style.left=(x+Math.random()*120-60)+'px';
+    el.style.top=(y+Math.random()*30)+'px';
     el.style.animationDelay=(Math.random()*.4)+'s';
-    document.body.appendChild(el);setTimeout(()=>el.remove(),1500);
+    el.style.fontSize=(16+Math.random()*12)+'px';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1600);
   }
 }
 
@@ -509,20 +622,16 @@ function burst(x,y,arr){
 // ══════════════════════════════════════
 const huntMols=[
   {name:'воды',formula:'H₂O',recipe:{H:2,O:1},emoji:'💧',
-   fact:'В одной капле воды больше молекул H₂O, чем песчинок на всех пляжах Земли вместе взятых!'},
+   fact:'В одной капле воды больше молекул H₂O, чем песчинок на всех пляжах Земли! Это примерно 2 секстиллиона молекул.'},
   {name:'кислорода',formula:'O₂',recipe:{O:2},emoji:'🫧',
-   fact:'Кислород O₂ производят растения при фотосинтезе. Один гектар леса даёт 5 тонн кислорода в год!'},
+   fact:'O₂ производят растения при фотосинтезе. Один гектар леса выделяет 5 тонн кислорода в год!'},
   {name:'углекислого газа',formula:'CO₂',recipe:{C:1,O:2},emoji:'🌿',
-   fact:'CO₂ тяжелее воздуха — он скапливается внизу. Именно поэтому в пещерах опасно у пола!'},
+   fact:'CO₂ тяжелее воздуха — он скапливается у пола. В пещерах на дне бывают опасные карманы углекислоты!'},
   {name:'аммиака',formula:'NH₃',recipe:{N:1,H:3},emoji:'🔬',
-   fact:'Аммиак NH₃ пахнет резко — это запах нашатыря. Его используют в удобрениях и хладагентах!'},
+   fact:'Аммиак NH₃ пахнет как нашатырь. Половина азота в человеческом теле когда-то прошла через аммиачный цикл!'},
 ];
 
-let huntIdx=0;
-let huntCollected={};
-let huntNeeded={};
-let huntAtoms=[];
-let huntAF=null;
+let huntIdx=0,huntCollected={},huntNeeded={};
 
 function initHunt(){huntIdx=0;startHuntMol();}
 
@@ -532,7 +641,7 @@ function startHuntMol(){
   Object.keys(huntNeeded).forEach(k=>huntCollected[k]=0);
   document.getElementById('hunt-step').textContent=`${huntIdx+1} / ${huntMols.length}`;
   document.getElementById('hunt-prog').style.width=`${((huntIdx+1)/huntMols.length)*100}%`;
-  document.getElementById('hunt-task').innerHTML=`Поймай атомы и собери молекулу <strong>${mol.name}</strong>`;
+  document.getElementById('hunt-task').innerHTML=`Поймай атомы и собери <strong>${mol.name}</strong>`;
   document.getElementById('hunt-formula').textContent=mol.formula;
   renderBuildZone();
   updateNeedLabel();
@@ -544,18 +653,14 @@ function renderBuildZone(){
   const zone=document.getElementById('build-zone');
   zone.innerHTML='';
   const slots=[];
-  Object.entries(mol.recipe).forEach(([sym,cnt])=>{
-    for(let i=0;i<cnt;i++)slots.push(sym);
-  });
+  Object.entries(mol.recipe).forEach(([sym,cnt])=>{for(let i=0;i<cnt;i++)slots.push(sym);});
   let filled=[];
-  Object.entries(huntCollected).forEach(([sym,cnt])=>{
-    for(let i=0;i<cnt;i++)filled.push(sym);
-  });
+  Object.entries(huntCollected).forEach(([sym,cnt])=>{for(let i=0;i<cnt;i++)filled.push(sym);});
   slots.forEach((sym,i)=>{
     const el=document.createElement('div');
     el.className='mol-slot';
     if(filled[i]){
-      el.classList.add('filled',`atom-${filled[i]}`);
+      el.classList.add('filled','atom-'+filled[i]);
       el.textContent=filled[i];
     }
     zone.appendChild(el);
@@ -572,33 +677,36 @@ function updateNeedLabel(){
 }
 
 function spawnAtoms(){
-  if(huntAF)cancelAnimationFrame(huntAF);
   const container=document.getElementById('floating-atoms');
   container.innerHTML='';
-  huntAtoms=[];
   const mol=huntMols[huntIdx];
-  // all possible atoms + decoys
   const pool=['H','H','H','O','O','O','C','N'];
-  const W=container.offsetWidth||320, H=container.offsetHeight||200;
+  const W=container.offsetWidth||320,H=container.offsetHeight||210;
+  // Случайные непересекающиеся позиции
+  const placed=[];
   pool.forEach((sym,i)=>{
     const el=document.createElement('div');
     el.className=`f-atom atom-${sym}`;
     el.textContent=sym;
-    const x=16+Math.random()*(W-72), y=16+Math.random()*(H-72);
+    let x,y,tries=0;
+    do{
+      x=14+Math.random()*(W-74);
+      y=14+Math.random()*(H-74);
+      tries++;
+    }while(placed.some(p=>Math.hypot(p.x-x,p.y-y)<68)&&tries<30);
+    placed.push({x,y});
     el.style.left=x+'px';el.style.top=y+'px';
-    // random float params
-    el.style.setProperty('--dur',(3+Math.random()*3)+'s');
-    el.style.setProperty('--delay',(-Math.random()*3)+'s');
-    el.style.setProperty('--dx1',(Math.random()*20-10)+'px');
-    el.style.setProperty('--dy1',(Math.random()*20-10)+'px');
-    el.style.setProperty('--dx2',(Math.random()*20-10)+'px');
-    el.style.setProperty('--dy2',(Math.random()*20-10)+'px');
-    el.style.setProperty('--dx3',(Math.random()*20-10)+'px');
-    el.style.setProperty('--dy3',(Math.random()*20-10)+'px');
+    el.style.setProperty('--dur',(3.5+Math.random()*2.5)+'s');
+    el.style.setProperty('--delay',(-Math.random()*4)+'s');
+    el.style.setProperty('--dx1',(Math.random()*22-11)+'px');
+    el.style.setProperty('--dy1',(Math.random()*22-11)+'px');
+    el.style.setProperty('--dx2',(Math.random()*22-11)+'px');
+    el.style.setProperty('--dy2',(Math.random()*22-11)+'px');
+    el.style.setProperty('--dx3',(Math.random()*22-11)+'px');
+    el.style.setProperty('--dy3',(Math.random()*22-11)+'px');
     el.addEventListener('click',()=>catchAtom(el,sym));
     el.addEventListener('touchend',e=>{e.preventDefault();catchAtom(el,sym);},{passive:false});
     container.appendChild(el);
-    huntAtoms.push({el,sym,x,y});
   });
 }
 
@@ -608,136 +716,143 @@ function catchAtom(el,sym){
   const have=huntCollected[sym]||0;
   if(have<needed){
     huntCollected[sym]=(huntCollected[sym]||0)+1;
-    el.classList.add('captured');
+    el.style.transition='all .35s cubic-bezier(.34,1.56,.64,1)';
+    el.style.transform='scale(1.4)';
     const r=el.getBoundingClientRect();
-    burst(r.left+r.width/2,r.top+r.height/2,['⚛️','✨']);
-    setTimeout(()=>{el.style.visibility='hidden';},500);
+    burst(r.left+r.width/2,r.top+r.height/2,['⚛️','✨','💫'],6);
+    setTimeout(()=>{
+      el.style.transform='scale(0)';
+      el.style.opacity='0';
+      setTimeout(()=>el.style.visibility='hidden',350);
+    },150);
     renderBuildZone();
     updateNeedLabel();
-    // check complete
     const done=Object.keys(huntNeeded).every(k=>(huntCollected[k]||0)>=huntNeeded[k]);
     if(done){
       const mol=huntMols[huntIdx];
-      burst(window.innerWidth/2,window.innerHeight/2,['🎉','⭐','💫',mol.emoji]);
+      // WOW анимация молекулы
+      const zone=document.getElementById('build-zone');
+      zone.style.animation='moleculeWow .6s cubic-bezier(.34,1.56,.64,1) forwards';
+      burst(window.innerWidth/2,window.innerHeight*0.45,[mol.emoji,'🎉','⭐','💫','✨'],12);
       setTimeout(()=>{
+        zone.style.animation='';
         showSuccess(mol.emoji,`${mol.formula} — готово!`,mol.fact,()=>{
           huntIdx++;
           if(huntIdx>=huntMols.length){
             progress.done[0]=true;updateCards();
-            showSuccess('🏅','Уровень 1 пройден!','Теперь ты знаешь как выглядят атомы и как они объединяются в молекулы!',()=>showLevelSelect());
+            showSuccess('🏅','Уровень 1 пройден!','Теперь ты знаешь как атомы объединяются в молекулы!',()=>showLevelSelect());
           } else startHuntMol();
         });
-      },400);
+      },500);
     }
   } else {
-    // wrong atom or already have enough
     el.classList.add('wrong');
-    setTimeout(()=>el.classList.remove('wrong'),500);
+    el.style.animation='none';
+    setTimeout(()=>{el.classList.remove('wrong');el.style.animation='';},400);
   }
 }
 
 // ══════════════════════════════════════
-// LEVEL 2 — ЛАБОРАТОРИЯ (КОЛБА)
+// LEVEL 2 — ЛАБОРАТОРИЯ (Toca Lab стиль)
 // ══════════════════════════════════════
 const experiments=[
   {
-    task:'Добавь <strong>уксус</strong> и <strong>соду</strong> — перемешай и смотри!',
+    task:'Налей <strong>уксус</strong> и <strong>соду</strong> — что будет?',
     reagents:[
-      {id:'vinegar',name:'Уксус',emoji:'🍶',color:'#FDE68A',bg:'rgba(253,230,138,.8)'},
-      {id:'soda',name:'Сода',emoji:'🧂',color:'#E0E7FF',bg:'rgba(224,231,255,.8)'},
-      {id:'oil',name:'Масло',emoji:'🫙',color:'#FEF3C7',bg:'rgba(254,243,199,.8)'},
-      {id:'water',name:'Вода',emoji:'💧',color:'#DBEAFE',bg:'rgba(219,234,254,.8)'},
+      {id:'vinegar',name:'Уксус',emoji:'🍶',color:'#F59E0B',liquid:'rgba(253,230,138,.9)',cap:'#F59E0B'},
+      {id:'soda',name:'Сода',emoji:'🧂',color:'#6B7280',liquid:'rgba(243,244,246,.9)',cap:'#9CA3AF'},
+      {id:'oil',name:'Масло',emoji:'🫙',color:'#FDE68A',liquid:'rgba(254,243,199,.9)',cap:'#FDE68A'},
+      {id:'water',name:'Вода',emoji:'💧',color:'#3B82F6',liquid:'rgba(219,234,254,.9)',cap:'#60A5FA'},
     ],
     correct:['vinegar','soda'],
     partialMsg:'Добавь ещё один реагент...',
-    rxnMsg:'💨 CO₂! Бурная реакция — уксусная кислота нейтрализуется содой с выделением углекислого газа!',
+    rxnMsg:'💨 CO₂! Уксусная кислота нейтрализуется содой с выделением углекислого газа — бурная реакция!',
     rxnEmoji:'🌋',
-    rxnColor:'rgba(34,197,94,.15)',
-    liquidColor1:'rgba(253,230,138,.7)',
-    liquidColor2:'rgba(255,255,255,.85)',
-    fact:'Именно эту реакцию используют в огнетушителях! Кислота + щёлочь → соль + вода + CO₂.',
+    liquidColor1:'rgba(253,230,138,.8)',
+    liquidColor2:'rgba(255,255,255,.9)',
+    fact:'Эту реакцию используют в огнетушителях! Кислота + щёлочь → соль + вода + CO₂.',
     bubbles:true,
   },
   {
-    task:'Смешай <strong>синий раствор</strong> и <strong>красный раствор</strong>',
+    task:'Смешай <strong>синий</strong> и <strong>красный</strong> растворы',
     reagents:[
-      {id:'blue',name:'Синий р-р',emoji:'🔵',color:'#3B82F6',bg:'rgba(59,130,246,.7)'},
-      {id:'red',name:'Красный р-р',emoji:'🔴',color:'#FF5038',bg:'rgba(255,80,56,.7)'},
-      {id:'green',name:'Зелёный р-р',emoji:'🟢',color:'#00C27C',bg:'rgba(0,194,124,.7)'},
-      {id:'yellow',name:'Жёлтый р-р',emoji:'🟡',color:'#FFE141',bg:'rgba(255,225,65,.7)'},
+      {id:'blue',name:'Синий р-р',emoji:'🔵',color:'#3B82F6',liquid:'rgba(59,130,246,.8)',cap:'#60A5FA'},
+      {id:'red',name:'Красный р-р',emoji:'🔴',color:'#FF5038',liquid:'rgba(255,80,56,.8)',cap:'#FF6B6B'},
+      {id:'green',name:'Зелёный р-р',emoji:'🟢',color:'#00C27C',liquid:'rgba(0,194,124,.8)',cap:'#34D399'},
+      {id:'yellow2',name:'Жёлтый р-р',emoji:'🟡',color:'#FFE141',liquid:'rgba(255,225,65,.8)',cap:'#FFE141'},
     ],
     correct:['blue','red'],
     partialMsg:'Добавь второй раствор...',
-    rxnMsg:'🟣 Фиолетовый! Синий + красный = фиолетовый. Это не химия, но оптика — смешение длин волн!',
+    rxnMsg:'🟣 Фиолетовый! Синий + красный = фиолетовый. Смешение длин волн света!',
     rxnEmoji:'🔮',
-    rxnColor:'rgba(123,47,255,.2)',
-    liquidColor1:'rgba(59,130,246,.7)',
-    liquidColor2:'rgba(139,0,220,.7)',
+    liquidColor1:'rgba(59,130,246,.8)',
+    liquidColor2:'rgba(139,0,220,.75)',
     fact:'Смешение цветов — основа понимания спектра. Именно так работает сетчатка твоего глаза!',
     bubbles:false,
   },
   {
     task:'Налей <strong>воду</strong> и <strong>масло</strong> — что случится?',
     reagents:[
-      {id:'water2',name:'Вода',emoji:'💧',color:'#93C5FD',bg:'rgba(147,197,253,.8)'},
-      {id:'oil2',name:'Масло',emoji:'🫙',color:'#FDE68A',bg:'rgba(253,230,138,.85)'},
-      {id:'salt',name:'Соль',emoji:'🧂',color:'#F3F4F6',bg:'rgba(243,244,246,.7)'},
-      {id:'sugar',name:'Сахар',emoji:'🍬',color:'#FEE2E2',bg:'rgba(254,226,226,.7)'},
+      {id:'water2',name:'Вода',emoji:'💧',color:'#3B82F6',liquid:'rgba(147,197,253,.85)',cap:'#60A5FA'},
+      {id:'oil2',name:'Масло',emoji:'🫙',color:'#F59E0B',liquid:'rgba(254,243,199,.9)',cap:'#FDE68A'},
+      {id:'salt',name:'Соль',emoji:'🧂',color:'#9CA3AF',liquid:'rgba(243,244,246,.8)',cap:'#D1D5DB'},
+      {id:'sugar',name:'Сахар',emoji:'🍬',color:'#F472B6',liquid:'rgba(253,242,248,.85)',cap:'#F9A8D4'},
     ],
     correct:['water2','oil2'],
     partialMsg:'Добавь второй компонент...',
-    rxnMsg:'🚫 Слои! Масло всплыло — его молекулы гидрофобны, они отталкивают воду. Мешай сколько угодно — разделятся снова!',
+    rxnMsg:'🚫 Слои! Масло всплыло — его молекулы гидрофобны и отталкивают воду. Мешай сколько угодно — разделятся снова!',
     rxnEmoji:'🌊',
-    rxnColor:'rgba(147,197,253,.15)',
     liquidColor1:'rgba(147,197,253,.8)',
-    liquidColor2:'rgba(253,230,138,.85)',
-    fact:'Из-за этого суп с жиром расслаивается. Для смешения нужен эмульгатор — например лецитин в яйце!',
+    liquidColor2:'rgba(254,243,199,.9)',
+    fact:'Из-за этого суп расслаивается. Для смешения нужен эмульгатор — например лецитин в яичном желтке!',
     bubbles:false,
     layers:true,
   },
   {
     task:'Смешай <strong>медный купорос</strong> и <strong>едкий натр</strong>',
     reagents:[
-      {id:'copper',name:'Медь(II)',emoji:'🔷',color:'#0EA5E9',bg:'rgba(14,165,233,.8)'},
-      {id:'naoh',name:'Едкий натр',emoji:'⬜',color:'#E5E7EB',bg:'rgba(229,231,235,.8)'},
-      {id:'hcl',name:'Соляная к-та',emoji:'🟨',color:'#FEF3C7',bg:'rgba(254,243,199,.8)'},
-      {id:'ethanol',name:'Спирт',emoji:'🍾',color:'#D1FAE5',bg:'rgba(209,250,229,.8)'},
+      {id:'copper',name:'Медь(II)',emoji:'🔷',color:'#0EA5E9',liquid:'rgba(14,165,233,.8)',cap:'#38BDF8'},
+      {id:'naoh',name:'Едкий натр',emoji:'⬜',color:'#9CA3AF',liquid:'rgba(229,231,235,.8)',cap:'#D1D5DB'},
+      {id:'hcl',name:'Соляная к-та',emoji:'🟨',color:'#F59E0B',liquid:'rgba(254,243,199,.8)',cap:'#FDE68A'},
+      {id:'ethanol',name:'Спирт',emoji:'🍾',color:'#34D399',liquid:'rgba(209,250,229,.8)',cap:'#6EE7B7'},
     ],
     correct:['copper','naoh'],
     partialMsg:'Добавь второй реагент...',
-    rxnMsg:'🟦 Синий осадок! Cu(OH)₂ — голубой осадок гидроксида меди выпадает мгновенно. Это качественная реакция на ионы меди!',
+    rxnMsg:'🟦 Синий осадок Cu(OH)₂! Голубой осадок гидроксида меди выпадает мгновенно — качественная реакция на ионы меди!',
     rxnEmoji:'💎',
-    rxnColor:'rgba(14,165,233,.2)',
     liquidColor1:'rgba(14,165,233,.7)',
     liquidColor2:'rgba(30,64,175,.8)',
-    fact:'Эту реакцию используют в лабораториях для определения ионов меди. Синий цвет — 100% признак Cu²⁺!',
+    fact:'Эту реакцию используют в лабораториях для определения ионов меди. Синий — 100% признак Cu²⁺!',
     bubbles:false,
     precipitate:true,
   },
 ];
 
-let labIdx=0;
-let labAdded=[];
-let labStirred=false;
-let labDone=false;
+let labIdx=0,labAdded=[],labDone=false;
 
-function initLab(){
-  labIdx=0;startExp();
-}
+function initLab(){labIdx=0;startExp();}
 
 function startExp(){
   const exp=experiments[labIdx];
-  labAdded=[];labStirred=false;labDone=false;
+  labAdded=[];labDone=false;
   document.getElementById('lab-step').textContent=`${labIdx+1} / ${experiments.length}`;
   document.getElementById('lab-prog').style.width=`${((labIdx+1)/experiments.length)*100}%`;
   document.getElementById('lab-task').innerHTML=exp.task;
-  // reset flask
-  setFlaskLiquid(0,'rgba(59,130,246,.5)');
+  // Сброс колбы
+  setFlaskLiquid(0,'rgba(59,130,246,.3)');
   hideBubbles();
+  hideWhirl();
   document.getElementById('flask-emoji').style.opacity='0';
-  document.getElementById('stir-btn').disabled=true;
+  document.getElementById('flask-emoji').textContent='';
+  // Скрываем кнопку смешать
+  const mixWrap=document.getElementById('mix-btn-wrap');
+  const stirBtn=document.getElementById('stir-btn');
+  mixWrap.style.opacity='0';
+  mixWrap.style.pointerEvents='none';
+  stirBtn.disabled=true;
+  stirBtn.classList.remove('stirring','bounce-in');
   document.getElementById('rxn-display').className='reaction-display';
-  document.getElementById('rxn-display').innerHTML='<div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу</div>';
+  document.getElementById('rxn-display').innerHTML='<div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу 👆</div>';
   renderReagents();
 }
 
@@ -750,60 +865,79 @@ function renderReagents(){
     btn.className='reagent-btn';
     btn.id='reagent-'+r.id;
     btn.innerHTML=`
-      <div class="reagent-bottle" style="background:rgba(255,255,255,.08)">
-        <div class="bottle-liquid" style="background:${r.bg};height:68%"></div>
-        <div class="bottle-cap" style="background:${r.color}"></div>
-        <span class="bottle-label">${r.emoji}</span>
+      <div class="reagent-bottle" style="background:rgba(240,240,255,.6)">
+        <div class="bottle-shine"></div>
+        <div class="bottle-liquid" style="background:${r.liquid};height:68%"></div>
+        <div class="bottle-cap" style="background:${r.cap}"></div>
+        <div class="bottle-neck" style="background:rgba(255,255,255,.3)"></div>
+        <span class="bottle-label" style="color:${r.color}">${r.emoji}</span>
       </div>
       <div class="reagent-name">${r.name}</div>`;
-    btn.onclick=()=>addReagent(r.id);
+    btn.onclick=()=>addReagent(r.id,r);
     shelf.appendChild(btn);
   });
 }
 
-function addReagent(id){
+function addReagent(id,rData){
   if(labDone)return;
   if(labAdded.includes(id))return;
   const exp=experiments[labIdx];
+  const r=rData||exp.reagents.find(x=>x.id===id);
   labAdded.push(id);
-  // disable button
   document.getElementById('reagent-'+id).disabled=true;
 
-  const fillPct=labAdded.length===1?40:80;
-  const isCorrect1=exp.correct.includes(labAdded[0]);
+  // Анимация наклона флакона и капель
+  const btn=document.getElementById('reagent-'+id);
+  btn.style.transform='rotate(130deg) translateY(-20px)';
+  setTimeout(()=>btn.style.transform='',700);
 
+  // Капля
+  const drop=document.createElement('div');
+  drop.className='drop';
+  drop.style.background=r.liquid;
+  document.querySelector('.flask-wrap').appendChild(drop);
+  setTimeout(()=>drop.remove(),700);
+
+  const fillPct=labAdded.length===1?38:76;
   if(labAdded.length===1){
-    // fill flask to 40%
-    const r=exp.reagents.find(x=>x.id===id);
-    setFlaskLiquid(fillPct,r.bg);
+    setFlaskLiquid(fillPct,r.liquid);
     document.getElementById('rxn-display').className='reaction-display partial';
     document.getElementById('rxn-display').innerHTML=`<div class="rxd-text">${exp.partialMsg}</div>`;
-    burst(document.querySelector('.flask-container').getBoundingClientRect().left+80,
-      document.querySelector('.flask-container').getBoundingClientRect().top+160,['💧']);
   } else if(labAdded.length===2){
-    // fill to 80%
-    const r2=exp.reagents.find(x=>x.id===id);
-    setFlaskLiquid(fillPct,r2.bg);
-    // check correct
     const correctSet=new Set(exp.correct);
     const addedSet=new Set(labAdded);
     const isRight=[...correctSet].every(c=>addedSet.has(c))&&[...addedSet].every(c=>correctSet.has(c));
     if(isRight){
-      document.getElementById('stir-btn').disabled=false;
+      setFlaskLiquid(fillPct,r.liquid);
+      // Показываем кнопку смешать с bounce
+      const mixWrap=document.getElementById('mix-btn-wrap');
+      const stirBtn=document.getElementById('stir-btn');
+      mixWrap.style.opacity='1';
+      mixWrap.style.pointerEvents='all';
+      stirBtn.disabled=false;
+      stirBtn.classList.add('bounce-in');
       document.getElementById('rxn-display').className='reaction-display partial';
-      document.getElementById('rxn-display').innerHTML=`<div class="rxd-text">🌀 Теперь перемешай!</div>`;
+      document.getElementById('rxn-display').innerHTML='<div class="rxd-text">🌀 Теперь нажми <strong>Смешать!</strong></div>';
     } else {
-      // wrong combo
+      setFlaskLiquid(fillPct,r.liquid);
       document.getElementById('rxn-display').className='reaction-display error';
-      document.getElementById('rxn-display').innerHTML=`<div class="rxd-text">😕 Эти вещества не реагируют интересно. Сбрось и попробуй другую пару!</div>`;
+      document.getElementById('rxn-display').innerHTML='<div class="rxd-text">😕 Эти вещества не реагируют интересно. Попробуй другую пару!</div>';
+      // Shake колбы
+      const flaskSvg=document.getElementById('flask-svg');
+      flaskSvg.style.animation='none';flaskSvg.offsetHeight;
+      flaskSvg.style.animation='shake .4s ease';
+      setTimeout(()=>{flaskSvg.style.animation='';},450);
       setTimeout(()=>{
         document.getElementById('rxn-display').className='reaction-display';
-        document.getElementById('rxn-display').innerHTML='<div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу</div>';
+        document.getElementById('rxn-display').innerHTML='<div class="rxd-text" style="color:var(--muted)">Добавь реагенты в колбу 👆</div>';
         labAdded=[];
-        setFlaskLiquid(0,'rgba(59,130,246,.5)');
+        setFlaskLiquid(0,'rgba(59,130,246,.3)');
+        const mixWrap=document.getElementById('mix-btn-wrap');
+        mixWrap.style.opacity='0';
+        mixWrap.style.pointerEvents='none';
         document.getElementById('stir-btn').disabled=true;
         renderReagents();
-      },2000);
+      },2200);
     }
   }
 }
@@ -813,25 +947,23 @@ function stirFlask(){
   const btn=document.getElementById('stir-btn');
   const exp=experiments[labIdx];
   btn.disabled=true;btn.classList.add('stirring');
-  // stir animation 1.5s then react
+  // Показываем вихрь
+  document.getElementById('whirl-group').style.opacity='1';
   setTimeout(()=>{
     btn.classList.remove('stirring');
+    hideWhirl();
     labDone=true;
-    // reaction!
-    setFlaskLiquid(78,exp.liquidColor2);
+    // Реакция!
+    setFlaskLiquid(80,exp.liquidColor2);
     if(exp.bubbles)showBubbles();
     if(exp.layers)showLayers(exp.liquidColor1,exp.liquidColor2);
     if(exp.precipitate)showPrecipitate(exp.liquidColor2);
-
     const flaskEmoji=document.getElementById('flask-emoji');
     flaskEmoji.textContent=exp.rxnEmoji;
     flaskEmoji.style.opacity='1';
-
     document.getElementById('rxn-display').className='reaction-display success';
     document.getElementById('rxn-display').innerHTML=`<div class="rxd-emoji">${exp.rxnEmoji}</div><div class="rxd-text">${exp.rxnMsg}</div>`;
-
-    burst(window.innerWidth/2,window.innerHeight*.4,[exp.rxnEmoji,'✨','💫','⭐']);
-
+    burst(window.innerWidth/2,window.innerHeight*.35,[exp.rxnEmoji,'✨','💫','⭐','🎉'],10);
     setTimeout(()=>{
       showSuccess(exp.rxnEmoji,'Реакция!',exp.fact,()=>{
         labIdx++;
@@ -841,79 +973,80 @@ function stirFlask(){
         } else startExp();
       });
     },1000);
-  },1500);
+  },1600);
 }
 
 function setFlaskLiquid(pct,color){
-  const maxH=170; // pixels from bottom inside flask
+  const maxH=172;
   const h=maxH*pct/100;
-  const y=215-h;
+  const y=222-h;
   const liq=document.getElementById('flask-liquid');
+  const shine=document.getElementById('flask-liquid-shine');
   liq.style.fill=color;
-  // trigger CSS transition by animating via setAttribute
   liq.setAttribute('y',y);
   liq.setAttribute('height',h);
+  shine.setAttribute('y',y+4);
+  shine.setAttribute('height',Math.max(0,h-8));
 }
-function showBubbles(){document.querySelectorAll('.bubble').forEach(b=>b.style.opacity='.7');}
-function hideBubbles(){document.querySelectorAll('.bubble').forEach(b=>b.style.opacity='0');}
+function showBubbles(){document.querySelectorAll('.lab-bubble').forEach(b=>b.style.opacity='.8');}
+function hideBubbles(){document.querySelectorAll('.lab-bubble').forEach(b=>b.style.opacity='0');}
+function hideWhirl(){document.getElementById('whirl-group').style.opacity='0';}
 
 function showLayers(c1,c2){
-  const liq=document.getElementById('flask-liquid');
-  liq.style.fill=c1;
-  // add second layer
+  const svg=document.getElementById('flask-svg');
+  const old=svg.querySelector('#layer2');if(old)old.remove();
   const extra=document.createElementNS('http://www.w3.org/2000/svg','rect');
-  extra.id='layer2';extra.setAttribute('x','0');extra.setAttribute('y','175');
-  extra.setAttribute('width','160');extra.setAttribute('height','40');
+  extra.id='layer2';extra.setAttribute('x','0');extra.setAttribute('y','178');
+  extra.setAttribute('width','170');extra.setAttribute('height','44');
   extra.setAttribute('fill',c2);extra.setAttribute('clip-path','url(#flaskClip)');
-  document.querySelector('svg').appendChild(extra);
+  svg.appendChild(extra);
 }
 function showPrecipitate(color){
+  const svg=document.getElementById('flask-svg');
+  const old=svg.querySelector('#precip');if(old)old.remove();
   const extra=document.createElementNS('http://www.w3.org/2000/svg','rect');
-  extra.id='precip';extra.setAttribute('x','20');extra.setAttribute('y','195');
-  extra.setAttribute('width','120');extra.setAttribute('height','20');
-  extra.setAttribute('rx','4');extra.setAttribute('fill',color);
+  extra.id='precip';extra.setAttribute('x','22');extra.setAttribute('y','200');
+  extra.setAttribute('width','126');extra.setAttribute('height','22');
+  extra.setAttribute('rx','5');extra.setAttribute('fill',color);
   extra.setAttribute('clip-path','url(#flaskClip)');
-  document.querySelector('svg').appendChild(extra);
+  svg.appendChild(extra);
 }
 
 // ══════════════════════════════════════
 // LEVEL 3 — СОСТОЯНИЯ (6 заданий)
 // ══════════════════════════════════════
-// Water: freezes 0°C, boils 100°C
-// Alcohol (ethanol): freezes -114°C, boils 78°C
-
 const missions=[
-  {id:'freeze-water', title:'Заморозь воду',desc:'Опусти температуру ниже 0°C',
-   emoji:'❄️',check:t=>t<0,
-   fact:'При 0°C молекулы воды замедляются настолько, что выстраиваются в кристаллическую решётку — лёд!',hint:'Температура: ниже 0°C'},
-  {id:'boil-alcohol', title:'Вскипяти спирт',desc:'Нагрей до температуры кипения спирта',
-   emoji:'🍾',check:t=>t>=78,
-   fact:'Спирт кипит при 78°C — намного раньше воды. Именно этот принцип лежит в основе дистилляции!',hint:'Температура: выше 78°C'},
-  {id:'both-liquid', title:'Оба вещества — жидкость',desc:'Найди диапазон где и вода и спирт жидкие',
-   emoji:'⚖️',check:t=>t>=0&&t<78,
-   fact:'Между 0°C и 78°C оба вещества жидкие — молекулы двигаются, но не разлетаются и не застывают!',hint:'Диапазон: 0°C до 78°C'},
-  {id:'boil-water', title:'Вскипяти воду',desc:'Нагрей воду до кипения',
-   emoji:'♨️',check:t=>t>=100,
-   fact:'При 100°C вода кипит при нормальном давлении. На вершине Эвереста кипит уже при 70°C — меньше давление!',hint:'Температура: выше 100°C'},
-  {id:'freeze-both', title:'Заморозь оба вещества',desc:'Найди температуру где и вода и спирт — лёд',
-   emoji:'🧊',check:t=>t<-114,
-   fact:'Спирт замерзает лишь при -114°C! Именно поэтому медицинский спирт не замерзает в холодильнике.',hint:'Температура: ниже -114°C'},
-  {id:'only-alcohol-gas', title:'Только спирт — пар',desc:'Найди зону: вода жидкая, а спирт уже пар',
-   emoji:'💨',check:t=>t>=78&&t<100,
-   fact:'Между 78°C и 100°C спирт уже газ, а вода ещё жидкость — на этом основана вся перегонка алкоголя!',hint:'Диапазон: 78°C–100°C'},
+  {id:'freeze-water',title:'Заморозь воду',desc:'Опусти температуру ниже 0°C',
+   emoji:'❄️',check:t=>t<0,hint:'Температура: ниже 0°C',
+   fact:'При 0°C молекулы воды выстраиваются в кристаллическую решётку — каждая снежинка уникальна!'},
+  {id:'boil-alcohol',title:'Вскипяти спирт',desc:'Нагрей до температуры кипения спирта',
+   emoji:'🍾',check:t=>t>=78,hint:'Температура: выше 78°C',
+   fact:'Спирт кипит при 78°C — раньше воды. Именно этот принцип лежит в основе дистилляции!'},
+  {id:'both-liquid',title:'Оба вещества — жидкость',desc:'Найди диапазон где оба жидкие',
+   emoji:'⚖️',check:t=>t>=0&&t<78,hint:'Диапазон: 0°C — 78°C',
+   fact:'Между 0°C и 78°C оба жидкие — молекулы двигаются, но не разлетаются и не застывают!'},
+  {id:'boil-water',title:'Вскипяти воду',desc:'Нагрей воду до кипения',
+   emoji:'♨️',check:t=>t>=100,hint:'Температура: выше 100°C',
+   fact:'На вершине Эвереста вода кипит при 70°C — давление ниже, молекулам легче вырваться!'},
+  {id:'freeze-both',title:'Заморозь оба вещества',desc:'Найди температуру где оба — лёд',
+   emoji:'🧊',check:t=>t<-114,hint:'Температура: ниже −114°C',
+   fact:'Спирт замерзает при −114°C! Медицинский спирт в морозилке так и останется жидким.'},
+  {id:'only-alcohol-gas',title:'Только спирт — пар',desc:'Найди зону: вода жидкая, а спирт уже пар',
+   emoji:'💨',check:t=>t>=78&&t<100,hint:'Диапазон: 78°C — 100°C',
+   fact:'Между 78°C и 100°C спирт — пар, вода — жидкость. На этом основана вся перегонка алкоголя!'},
 ];
 
-let stDone=new Set();
-let stCurrent=0;
-let stDots={water:[],alcohol:[]};
-let stAF=null;
+let stDone=new Set(),stCurrent=0,stDots={water:[],alcohol:[]},stAF=null;
+let prevWaterState=null,prevAlcoholState=null;
 
-function getWaterState(t){return t<0?'ice':t<100?'liquid':'steam';}
-function getAlcoholState(t){return t<-114?'ice':t<78?'liquid':'steam';}
-function stateLabel(s){return {ice:'❄️ Лёд',liquid:'💧 Жидкость',steam:'☁️ Пар'}[s];}
+function getWaterState(t){return t<0?'solid':t<100?'liquid':'gas';}
+function getAlcoholState(t){return t<-114?'solid':t<78?'liquid':'gas';}
+function stateLabel(s){return {solid:'Лёд ❄️',liquid:'Жидкость 💧',gas:'Пар ☁️'}[s];}
+function stateClass(s){return {solid:'solid',liquid:'liquid',gas:'gas'}[s];}
 
 function initStates(){
-  stDone=new Set();stCurrent=0;
+  stDone=new Set();stCurrent=0;prevWaterState=null;prevAlcoholState=null;
+  if(stAF){cancelAnimationFrame(stAF);stAF=null;}
   createDots('canvas-water',stDots,'water');
   createDots('canvas-alcohol',stDots,'alcohol');
   document.getElementById('temp-slider').value=20;
@@ -925,54 +1058,47 @@ function createDots(canvasId,store,key){
   const canvas=document.getElementById(canvasId);
   canvas.innerHTML='';
   store[key]=[];
-  const W=canvas.offsetWidth||160,H=canvas.offsetHeight||160;
-  for(let i=0;i<10;i++){
+  const W=canvas.offsetWidth||148,H=canvas.offsetHeight||150;
+  for(let i=0;i<12;i++){
     const dot=document.createElement('div');
     dot.className='mol-dot';
-    dot.style.width='14px';dot.style.height='14px';
-    const x=8+Math.random()*(W-22),y=30+Math.random()*(H-44);
+    const size=10+Math.random()*6;
+    dot.style.width=size+'px';dot.style.height=size+'px';
+    const x=6+Math.random()*(W-size-12),y=6+Math.random()*(H-size-12);
     dot.style.left=x+'px';dot.style.top=y+'px';
     canvas.appendChild(dot);
-    store[key].push({el:dot,x,y,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2});
+    store[key].push({el:dot,x,y,vx:(Math.random()-.5)*1.5,vy:(Math.random()-.5)*1.5});
   }
 }
 
-function onTempChange(val){
-  val=parseInt(val);
-  document.getElementById('temp-now').textContent=val+'°C';
-  const ws=getWaterState(val),as=getAlcoholState(val);
-  document.getElementById('state-water').textContent=stateLabel(ws);
-  document.getElementById('state-alcohol').textContent=stateLabel(as);
-  document.getElementById('temp-sub').textContent=`Вода: ${stateLabel(ws)} · Спирт: ${stateLabel(as)}`;
-  animateDots('canvas-water',stDots,'water',ws,val);
-  animateDots('canvas-alcohol',stDots,'alcohol',as,val);
-  checkMission(val);
-}
-
-function animateDots(canvasId,store,key,state,temp){
-  if(stAF)cancelAnimationFrame(stAF);
+let animLoops={};
+function animateDots(key,state){
+  if(animLoops[key]){cancelAnimationFrame(animLoops[key]);animLoops[key]=null;}
+  const canvasId='canvas-'+key;
   const canvas=document.getElementById(canvasId);
-  const W=canvas.offsetWidth-16||144,H=canvas.offsetHeight-30||130;
-  const dots=store[key];
-  const speed=state==='steam'?3.5:state==='liquid'?1:0;
+  const W=(canvas.offsetWidth||148)-16,H=(canvas.offsetHeight||150)-20;
+  const dots=stDots[key];
+  const speed=state==='gas'?3:state==='liquid'?1:0;
 
-  // colors
   const colors={
-    ice:'radial-gradient(circle at 35% 30%,#BAE6FD,#0369A1)',
-    liquid:'radial-gradient(circle at 35% 30%,#93C5FD,#1D4ED8)',
-    steam:'radial-gradient(circle at 35% 30%,#E0F2FE,#7DD3FC)'
+    solid:'radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#BAE6FD 40%,#0369A1 100%)',
+    liquid:'radial-gradient(circle at 30% 25%,rgba(255,255,255,.9) 0%,#60A5FA 40%,#1D4ED8 100%)',
+    gas:'radial-gradient(circle at 30% 25%,rgba(255,255,255,.8) 0%,#E0F2FE 60%,#7DD3FC 100%)'
   };
-  dots.forEach(d=>d.el.style.background=colors[state]);
+  dots.forEach(d=>{
+    d.el.style.background=colors[state];
+    d.el.style.boxShadow=state==='solid'?'0 2px 6px rgba(3,105,161,.3)':state==='liquid'?'0 2px 8px rgba(29,78,216,.25)':'0 1px 4px rgba(125,211,252,.2)';
+  });
 
-  if(state==='ice'){
-    // arrange in grid
-    const cols=Math.floor(Math.sqrt(dots.length)+1);
+  if(state==='solid'){
+    const cols=Math.ceil(Math.sqrt(dots.length));
     dots.forEach((d,i)=>{
-      const tx=18+(i%cols)*28,ty=38+Math.floor(i/cols)*26;
-      d.x+=(tx-d.x)*.18;d.y+=(ty-d.y)*.18;
+      const tx=8+(i%cols)*26,ty=8+Math.floor(i/cols)*24;
+      d.x+=(tx-d.x)*.2;d.y+=(ty-d.y)*.2;
       d.el.style.left=d.x+'px';d.el.style.top=d.y+'px';
+      d.el.style.opacity='1';
     });
-    requestAnimationFrame(()=>{if(getWaterState(parseInt(document.getElementById('temp-slider').value))==='ice'||getAlcoholState(parseInt(document.getElementById('temp-slider').value))==='ice')animateDots(canvasId,store,key,state,temp);});
+    animLoops[key]=requestAnimationFrame(()=>animateDots(key,'solid'));
     return;
   }
 
@@ -980,14 +1106,42 @@ function animateDots(canvasId,store,key,state,temp){
     dots.forEach(d=>{
       d.x+=d.vx*speed;d.y+=d.vy*speed;
       if(d.x<0||d.x>W){d.vx*=-1;d.x=Math.max(0,Math.min(W,d.x));}
-      if(d.y<28||d.y>H){d.vy*=-1;d.y=Math.max(28,Math.min(H,d.y));}
+      if(d.y<0||d.y>H){d.vy*=-1;d.y=Math.max(0,Math.min(H,d.y));}
       d.el.style.left=d.x+'px';d.el.style.top=d.y+'px';
-      if(state==='steam')d.el.style.opacity=(0.3+Math.random()*.5).toString();
-      else d.el.style.opacity='1';
+      d.el.style.opacity=state==='gas'?(0.25+Math.random()*.5).toString():'1';
     });
-    stAF=requestAnimationFrame(step);
+    animLoops[key]=requestAnimationFrame(step);
   }
   step();
+}
+
+function onTempChange(val){
+  val=parseInt(val);
+  document.getElementById('temp-now').textContent=val;
+  const ws=getWaterState(val),as=getAlcoholState(val);
+
+  // Обновляем бейджи с bounce при смене состояния
+  const wBadge=document.getElementById('state-water');
+  const aBadge=document.getElementById('state-alcohol');
+  if(ws!==prevWaterState){
+    wBadge.textContent=stateLabel(ws);
+    wBadge.className='sub-state-badge '+stateClass(ws);
+    wBadge.style.animation='none';wBadge.offsetHeight;
+    wBadge.style.animation='badgeBounce .5s cubic-bezier(.34,1.56,.64,1)';
+    animateDots('water',ws);
+    prevWaterState=ws;
+  }
+  if(as!==prevAlcoholState){
+    aBadge.textContent=stateLabel(as);
+    aBadge.className='sub-state-badge '+stateClass(as);
+    aBadge.style.animation='none';aBadge.offsetHeight;
+    aBadge.style.animation='badgeBounce .5s cubic-bezier(.34,1.56,.64,1)';
+    animateDots('alcohol',as);
+    prevAlcoholState=as;
+  }
+
+  document.getElementById('temp-sub').textContent=`Вода: ${stateLabel(ws)} · Спирт: ${stateLabel(as)}`;
+  checkMission(val);
 }
 
 function checkMission(temp){
@@ -995,7 +1149,7 @@ function checkMission(temp){
   const m=missions[stCurrent];
   if(!stDone.has(m.id)&&m.check(temp)){
     stDone.add(m.id);
-    burst(window.innerWidth/2,window.innerHeight*.35,[m.emoji,'✨','💫']);
+    burst(window.innerWidth/2,window.innerHeight*.3,[m.emoji,'✨','💫','⭐'],10);
     setTimeout(()=>{
       showSuccess(m.emoji,m.title,m.fact,()=>{
         stCurrent++;
@@ -1004,13 +1158,13 @@ function checkMission(temp){
           progress.done[2]=true;updateCards();
           showSuccess('🏅','Уровень 3 пройден!','Ты мастер состояний вещества!',()=>showScreen('complete'));
         } else {
+          const next=missions[stCurrent];
           document.getElementById('st-step').textContent=`${stCurrent+1} / ${missions.length}`;
           document.getElementById('st-prog').style.width=`${((stCurrent+1)/missions.length)*100}%`;
-          const next=missions[stCurrent];
-          document.getElementById('st-task').innerHTML=`Задание: <strong>${next.title}</strong> · <em style="color:var(--muted);font-size:13px">${next.hint}</em>`;
+          document.getElementById('st-task').innerHTML=`Задание: <strong>${next.title}</strong> · <em style="color:var(--muted);font-size:12px">${next.hint}</em>`;
         }
       });
-    },500);
+    },400);
   }
 }
 
@@ -1034,9 +1188,12 @@ function renderMissions(){
     const m=missions[stCurrent];
     document.getElementById('st-step').textContent=`${stCurrent+1} / ${missions.length}`;
     document.getElementById('st-prog').style.width=`${((stCurrent+1)/missions.length)*100}%`;
-    document.getElementById('st-task').innerHTML=`Задание: <strong>${m.title}</strong> · <em style="color:var(--muted);font-size:13px">${m.hint}</em>`;
+    document.getElementById('st-task').innerHTML=`Задание: <strong>${m.title}</strong> · <em style="color:var(--muted);font-size:12px">${m.hint}</em>`;
   }
 }
+
+// Init
+updateCards();
 </script>
 </body>
 </html>
