@@ -9,7 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#FFFDF7;--card:#fff;--blue:#3B82F6;--yellow:#FFE141;
-  --coral:#FF5038;--mint:#00C27C;--purple:#7B2FFF;--text:#1a1a2e;
+  --coral:#FF5038;--mint:#00C27C;--text:#1a1a2e;
   --muted:rgba(26,26,46,.45);--border:rgba(0,0,0,.07);--surface:#EEF4FF;
 }
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;user-select:none}
@@ -17,15 +17,13 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .screen{display:none;min-height:100vh;flex-direction:column}
 .screen.active{display:flex}
 
-/* ANIMATIONS */
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
 @keyframes bounceIn{0%{transform:scale(0) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(2deg);opacity:1}80%{transform:scale(.97)}100%{transform:scale(1) rotate(0)}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
 @keyframes starPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.5);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes sciIn{0%{transform:scale(0) translateY(20px);opacity:0}60%{transform:scale(1.2) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
-@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(255,225,65,.4)}50%{box-shadow:0 0 28px rgba(255,225,65,.9)}}
-
-.bounce-in{animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(59,130,246,.3)}50%{box-shadow:0 0 32px rgba(59,130,246,.8)}}
+@keyframes bloom{0%{transform:scale(1)}40%{transform:scale(1.45)}70%{transform:scale(0.95)}100%{transform:scale(1.2)}}
 
 /* INTRO */
 #intro{align-items:center;justify-content:center;text-align:center;padding:40px 24px;
@@ -48,8 +46,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
   gap:16px;cursor:pointer;border:2px solid transparent;
   box-shadow:0 4px 20px rgba(0,0,0,.07);
   transition:all .22s cubic-bezier(.34,1.56,.64,1);position:relative}
-.lvl-card:hover:not(.locked){border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 36px rgba(59,130,246,.15)}
-.lvl-card.locked{opacity:.4;cursor:not-allowed}
+.lvl-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 36px rgba(59,130,246,.15)}
 .lvl-card.done{border-color:var(--mint);box-shadow:0 4px 20px rgba(0,194,124,.15)}
 .lc-ico{font-size:40px;flex-shrink:0}
 .lc-info{flex:1}
@@ -86,33 +83,23 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .hint-bar{text-align:center;font-size:13px;color:var(--muted);padding:6px 16px;flex-shrink:0;
   background:var(--bg);border-bottom:1px solid var(--border)}
 
-/* ELECTRO LEVEL */
-#level2 .game-area{flex:1;position:relative;overflow:hidden;background:var(--surface)}
-.el-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.components-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2}
-.comp-card{position:absolute;background:#fff;border-radius:16px;padding:10px 12px;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  box-shadow:0 4px 20px rgba(0,0,0,.1);border:2px solid transparent;
-  transition:border-color .3s,box-shadow .3s,transform .2s;min-width:68px}
-.comp-card.powered{border-color:var(--yellow);box-shadow:0 0 24px rgba(255,225,65,.6),0 4px 20px rgba(0,0,0,.1);animation:glow 1.2s ease-in-out infinite}
-.comp-emoji{font-size:30px;line-height:1}
-.comp-name{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.terminal{position:absolute;width:16px;height:16px;border-radius:50%;background:#888;
-  border:2.5px solid #fff;cursor:crosshair;box-shadow:0 1px 6px rgba(0,0,0,.25);
-  transition:background .2s,transform .2s;z-index:3}
-.terminal:hover{background:var(--blue);transform:scale(1.35)}
-.terminal.active{background:var(--blue);transform:scale(1.25)}
-.el-task-badge{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
-  border-radius:14px;padding:8px 18px;font-size:13px;font-weight:700;
-  color:var(--text);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:4}
+/* DISCOVERY BADGE */
+.discovery-badge{
+  position:absolute;bottom:80px;left:50%;transform:translateX(-50%) translateY(30px);
+  background:linear-gradient(135deg,var(--yellow) 0%,#FFB800 100%);
+  color:#111;padding:12px 20px;border-radius:18px;font-size:13px;font-weight:800;
+  max-width:300px;text-align:center;line-height:1.4;
+  box-shadow:0 8px 30px rgba(255,225,65,.5);
+  opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:10;
+  white-space:nowrap}
+.discovery-badge.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* SUCCESS OVERLAY */
 .success-ov{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center}
 .success-ov.visible{display:flex}
 .ov-bg{position:absolute;inset:0;background:rgba(26,26,46,.55);backdrop-filter:blur(6px)}
 .ov-card{position:relative;background:#fff;border-radius:28px;padding:36px 32px;text-align:center;
-  max-width:340px;width:calc(100% - 40px);border:3px solid var(--mint);
+  max-width:340px;width:calc(100% - 40px);border:3px solid var(--blue);
   box-shadow:0 20px 80px rgba(0,0,0,.2);animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1)}
 .ov-scientist{font-size:52px;display:block;margin-bottom:6px;animation:sciIn .6s .1s both}
 .ov-emoji{font-size:36px;display:block;margin-bottom:8px}
@@ -139,7 +126,7 @@ canvas{touch-action:none}
     <span class="intro-emoji">⚡</span>
     <div class="intro-tag">КосмоБаза · Физика</div>
     <h1 class="intro-h">Квант<em>Ум</em><br>Физ Лаб</h1>
-    <p class="intro-sub">Тяни, крути, соединяй — физика оживёт прямо в руках</p>
+    <p class="intro-sub">Тяни, роняй, отражай — физика оживёт прямо в руках</p>
     <button class="btn btn-blue" onclick="showScreen('levelSelect')">Начать →</button>
   </div>
 </div>
@@ -148,32 +135,32 @@ canvas{touch-action:none}
 <div id="levelSelect" class="screen">
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
     <h2 class="ls-h">Выбери уровень</h2>
-    <p class="ls-sub">Открывай один за другим</p>
+    <p class="ls-sub">Все открыты — исследуй!</p>
     <div class="levels-list">
       <div class="lvl-card" id="card1" onclick="startLevel(1)">
-        <span class="lc-ico">🪃</span>
+        <span class="lc-ico">🍎</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 1</div>
-          <div class="lc-name">Рогатка Ньютона</div>
-          <div class="lc-desc">Тяни — лети — попадай по мишеням</div>
+          <div class="lc-name">Всё падает вниз</div>
+          <div class="lc-desc">Тапай на предметы — открой закон гравитации!</div>
         </div>
         <span class="lc-badge" id="badge1">▶</span>
       </div>
       <div class="lvl-card" id="card2" onclick="startLevel(2)">
-        <span class="lc-ico">🔌</span>
+        <span class="lc-ico">🪃</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 2</div>
-          <div class="lc-name">ЭлектроЛаб</div>
-          <div class="lc-desc">Тяни провода, зажигай лампочки</div>
+          <div class="lc-name">Чем сильнее — тем дальше</div>
+          <div class="lc-desc">Тяни рогатку назад и сбивай мишени!</div>
         </div>
         <span class="lc-badge" id="badge2">▶</span>
       </div>
       <div class="lvl-card" id="card3" onclick="startLevel(3)">
-        <span class="lc-ico">🔴</span>
+        <span class="lc-ico">💡</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 3</div>
-          <div class="lc-name">Лазер и Зеркала</div>
-          <div class="lc-desc">Поворачивай зеркала — направляй луч</div>
+          <div class="lc-name">Свет отражается</div>
+          <div class="lc-desc">Поворачивай зеркало — направляй луч к цветку!</div>
         </div>
         <span class="lc-badge" id="badge3">▶</span>
       </div>
@@ -181,68 +168,54 @@ canvas{touch-action:none}
   </div>
 </div>
 
-<!-- LEVEL 1 — SLINGSHOT -->
+<!-- LEVEL 1 — GRAVITY -->
 <div id="level1" class="screen">
   <div class="g-hdr">
     <button class="back-btn" onclick="goBack(1)">←</button>
-    <span class="g-title">🪃 Рогатка Ньютона</span>
+    <span class="g-title">🍎 Всё падает вниз</span>
     <div class="g-progress" id="stars1">
-      <span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
-      <span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
     </div>
   </div>
-  <div class="hint-bar">Тяни 🟠 назад и отпускай!</div>
+  <div class="hint-bar" id="hint1">👇 Тапай на любой предмет!</div>
   <div class="canvas-wrap" id="wrap1">
     <canvas id="c1"></canvas>
+    <div class="discovery-badge" id="disc1">⚡ Галилей открыл: всё падает одинаково быстро!</div>
   </div>
 </div>
 
-<!-- LEVEL 2 — ELECTRO -->
+<!-- LEVEL 2 — SLINGSHOT -->
 <div id="level2" class="screen">
   <div class="g-hdr">
     <button class="back-btn" onclick="goBack(2)">←</button>
-    <span class="g-title">🔌 ЭлектроЛаб</span>
-    <div class="g-progress">
-      <span id="elStepInfo" style="font-size:12px;color:var(--muted);font-weight:700">Задание 1/3</span>
+    <span class="g-title">🪃 Рогатка</span>
+    <div class="g-progress" id="stars2">
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
     </div>
   </div>
-  <div class="hint-bar">Тяни от клеммы ● к клемме ● другого компонента</div>
-  <div class="game-area" id="elArea">
-    <canvas class="el-canvas" id="c2"></canvas>
-    <div class="components-layer" id="compLayer"></div>
-    <div class="el-task-badge" id="elTask">Соедини батарею с лампочкой</div>
+  <div class="hint-bar" id="hint2">👈 Тяни шар назад и отпускай!</div>
+  <div class="canvas-wrap" id="wrap2">
+    <canvas id="c2"></canvas>
   </div>
 </div>
 
-<!-- LEVEL 3 — LASER -->
+<!-- LEVEL 3 — MIRROR LIGHT -->
 <div id="level3" class="screen">
   <div class="g-hdr">
     <button class="back-btn" onclick="goBack(3)">←</button>
-    <span class="g-title">🔴 Лазер и Зеркала</span>
-    <div class="g-progress">
-      <span id="laserStepInfo" style="font-size:12px;color:var(--muted);font-weight:700">Задача 1/3</span>
+    <span class="g-title">💡 Свет и зеркало</span>
+    <div class="g-progress" id="stars3">
+      <span class="star-dot">⭐</span><span class="star-dot">⭐</span>
+      <span class="star-dot">⭐</span>
     </div>
   </div>
-  <div class="hint-bar">Тап по зеркалу = поворот на 45°</div>
+  <div class="hint-bar" id="hint3">👆 Тапай на зеркало — оно повернётся!</div>
   <div class="canvas-wrap" id="wrap3">
     <canvas id="c3"></canvas>
-  </div>
-</div>
-
-<!-- COMPLETE -->
-<div id="complete" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
-    <span class="complete-emoji">🎓</span>
-    <h2 class="complete-h">Ты <em>физик!</em> 🎉</h2>
-    <p class="complete-sub">Рогатки, электричество, лазеры —<br>всё подчиняется твоим рукам!</p>
-    <div class="stars-final">⭐⭐⭐⭐⭐</div>
-    <button class="btn btn-blue" onclick="resetAll()">Пройти ещё раз ↩</button>
-    <div style="margin-top:20px">
-      <a href="index.html" style="font-size:14px;color:var(--muted);text-decoration:none;font-weight:600">← КосмоБаза</a>
-    </div>
   </div>
 </div>
 
@@ -251,42 +224,39 @@ canvas{touch-action:none}
   <div class="ov-bg" onclick="closeSuccess()"></div>
   <div class="ov-card">
     <span class="ov-scientist">🧑‍🔬</span>
-    <span class="ov-emoji" id="ovEmoji"></span>
-    <h2 class="ov-h" id="ovTitle"></h2>
-    <p class="ov-fact" id="ovFact"></p>
-    <button class="btn btn-yellow" id="ovBtn" onclick="closeSuccess()">Продолжить →</button>
+    <span class="ov-emoji" id="ovEmoji">🍎</span>
+    <h2 class="ov-h" id="ovTitle">Отлично!</h2>
+    <p class="ov-fact" id="ovFact">Интересный факт появится здесь.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-mint" id="ovNext" onclick="nextLevel()">Следующий →</button>
+      <button class="btn" style="background:var(--surface);color:var(--text)" onclick="showScreen('levelSelect')">Все уровни</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETE -->
+<div id="complete" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px">
+    <span class="complete-emoji">🏆</span>
+    <h2 class="complete-h">Ты настоящий<br><em>Физик!</em></h2>
+    <p class="complete-sub">Прошёл все 3 уровня физики.<br>Ньютон, Галилей и Снеллиус гордятся тобой!</p>
+    <div class="stars-final">⭐⭐⭐⭐⭐⭐</div>
+    <button class="btn btn-blue" onclick="showScreen('levelSelect')">Ещё раз!</button>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════════
-   GLOBAL UTILS
-════════════════════════════════════ */
-let _successCb = null;
-let _currentScreen = 'intro';
-let _sl_raf = null;
-let _el_raf = null;
-let _ls_raf = null;
+// ─── UTILS ───────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
 
 function showScreen(id) {
-  // Stop animation loops when leaving
-  if (_currentScreen === 'level1' && _sl_raf) { cancelAnimationFrame(_sl_raf); _sl_raf = null; }
-  if (_currentScreen === 'level2' && _el_raf) { cancelAnimationFrame(_el_raf); _el_raf = null; }
-  if (_currentScreen === 'level3' && _ls_raf) { cancelAnimationFrame(_ls_raf); _ls_raf = null; }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  _currentScreen = id;
-  if (id === 'level1') initSlingshot();
-  if (id === 'level2') initElectro();
-  if (id === 'level3') initLaser();
+  $(id).classList.add('active');
 }
 
 function goBack(lvl) {
+  stopAllAnimations();
   showScreen('levelSelect');
-}
-
-function startLevel(n) {
-  showScreen('level' + n);
 }
 
 function burst(x, y, syms) {
@@ -294,859 +264,907 @@ function burst(x, y, syms) {
     const p = document.createElement('div');
     const angle = (i / syms.length) * Math.PI * 2;
     const dist = 50 + Math.random() * 60;
-    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:9999;transition:all .7s ease-out;`;
+    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:999;transition:all .7s ease-out;`;
     p.textContent = s;
     document.body.appendChild(p);
     requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-50}px)`;
+      p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-40}px)`;
       p.style.opacity = '0';
     });
     setTimeout(() => p.remove(), 800);
   });
 }
 
-function showSuccess(emoji, title, fact, cb) {
-  document.getElementById('ovEmoji').textContent = emoji;
-  document.getElementById('ovTitle').textContent = title;
-  document.getElementById('ovFact').textContent = fact;
-  _successCb = cb || null;
-  document.getElementById('successOv').classList.add('visible');
-}
-function closeSuccess() {
-  document.getElementById('successOv').classList.remove('visible');
-  if (_successCb) { const f = _successCb; _successCb = null; f(); }
+let currentLevel = 0;
+let rafId = null;
+let rafId2 = null;
+let rafId3 = null;
+
+function stopAllAnimations() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  if (rafId2) { cancelAnimationFrame(rafId2); rafId2 = null; }
+  if (rafId3) { cancelAnimationFrame(rafId3); rafId3 = null; }
 }
 
-// Progress
-const progress = { lvl1: false, lvl2: false, lvl3: false };
-function saveProgress() {
-  try { localStorage.setItem('kosmobaza_physics', JSON.stringify(progress)); } catch(e) {}
+// ─── PROGRESS ────────────────────────────────────────────────────
+const progress = JSON.parse(localStorage.getItem('phys_progress') || '{}');
+
+function markDone(lvl) {
+  progress['lvl' + lvl] = true;
+  localStorage.setItem('phys_progress', JSON.stringify(progress));
+  const card = $('card' + lvl);
+  if (card) card.classList.add('done');
+  const badge = $('badge' + lvl);
+  if (badge) badge.textContent = '✅';
 }
+
 function loadProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem('kosmobaza_physics') || '{}');
-    if (d.lvl1) progress.lvl1 = true;
-    if (d.lvl2) progress.lvl2 = true;
-    if (d.lvl3) progress.lvl3 = true;
-  } catch(e) {}
-  applyProgress();
-}
-function applyProgress() {
-  if (progress.lvl1) {
-    document.getElementById('badge1').textContent = '✅';
-    document.getElementById('card1').classList.add('done');
-    document.getElementById('card2').classList.remove('locked');
-    document.getElementById('badge2').textContent = '▶';
+  for (let i = 1; i <= 3; i++) {
+    if (progress['lvl' + i]) {
+      const card = $('card' + i);
+      if (card) card.classList.add('done');
+      const badge = $('badge' + i);
+      if (badge) badge.textContent = '✅';
+    }
   }
-  if (progress.lvl2) {
-    document.getElementById('badge2').textContent = '✅';
-    document.getElementById('card2').classList.add('done');
-    document.getElementById('card3').classList.remove('locked');
-    document.getElementById('badge3').textContent = '▶';
-  }
-  if (progress.lvl3) {
-    document.getElementById('badge3').textContent = '✅';
-    document.getElementById('card3').classList.add('done');
-  }
-}
-function resetAll() {
-  progress.lvl1 = false; progress.lvl2 = false; progress.lvl3 = false;
-  saveProgress();
-  ['badge1','badge2','badge3'].forEach(id => document.getElementById(id).textContent = '▶');
-  ['card1','card2','card3'].forEach(id => {
-    document.getElementById(id).classList.remove('done');
-  });
-  document.querySelectorAll('.star-dot').forEach(s => s.classList.remove('lit'));
-  showScreen('levelSelect');
 }
 
-/* ════════════════════════════════════
-   LEVEL 1 — SLINGSHOT
-════════════════════════════════════ */
-function initSlingshot() {
-  const canvas = document.getElementById('c1');
-  const wrap = document.getElementById('wrap1');
-  canvas.width = wrap.clientWidth;
-  canvas.height = wrap.clientHeight;
-  const W = canvas.width, H = canvas.height;
+// ─── SUCCESS OVERLAY ─────────────────────────────────────────────
+const OV_DATA = {
+  1: { emoji:'🍎', title:'Закон Галилея открыт!', fact:'Galileo Galilei доказал: перо и камень падают одинаково быстро. Воздух мешает перу — но в вакууме они упадут вместе!', next: 2 },
+  2: { emoji:'🪃', title:'Физика силы открыта!', fact:'Чем сильнее тянешь — тем больше энергии запасает резинка. Это называется потенциальная энергия упругости — закон Гука!', next: 3 },
+  3: { emoji:'💡', title:'Закон отражения открыт!', fact:'Угол падения всегда равен углу отражения. Это открыл Снеллиус. Зеркала, перископы и лазеры работают именно так!', next: 0 }
+};
+
+function showSuccess(lvl) {
+  markDone(lvl);
+  const d = OV_DATA[lvl];
+  $('ovEmoji').textContent = d.emoji;
+  $('ovTitle').textContent = d.title;
+  $('ovFact').textContent = d.fact;
+  $('ovNext').style.display = d.next ? 'block' : 'none';
+  $('ovNext').dataset.next = d.next;
+  $('successOv').classList.add('visible');
+
+  // Check all done
+  if (progress.lvl1 && progress.lvl2 && progress.lvl3) {
+    $('ovNext').textContent = 'Завершить 🏆';
+    $('ovNext').dataset.next = 0;
+  }
+}
+
+function closeSuccess() { $('successOv').classList.remove('visible'); }
+
+function nextLevel() {
+  const next = parseInt($('ovNext').dataset.next);
+  closeSuccess();
+  if (next === 0) {
+    if (progress.lvl1 && progress.lvl2 && progress.lvl3) {
+      showScreen('complete');
+    } else {
+      showScreen('levelSelect');
+    }
+  } else {
+    startLevel(next);
+  }
+}
+
+function startLevel(n) {
+  stopAllAnimations();
+  currentLevel = n;
+  showScreen('level' + n);
+  if (n === 1) initLevel1();
+  if (n === 2) initLevel2();
+  if (n === 3) initLevel3();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEVEL 1 — GRAVITY (все предметы падают одинаково)
+// ═══════════════════════════════════════════════════════════════
+function initLevel1() {
+  const canvas = $('c1');
+  const wrap = $('wrap1');
   const ctx = canvas.getContext('2d');
+  const disc = $('disc1');
+  const hint = $('hint1');
+  const starsEl = $('stars1').querySelectorAll('.star-dot');
 
-  const FORK = { x: W * 0.17, y: H * 0.60 };
-  const ARM = 28;
-  const BALL_REST = { x: FORK.x, y: FORK.y - 8 };
-  const BALL_R = 18;
-  const GRAVITY = 0.32;
-  const POWER = 0.14;
-  const MAX_PULL = 88;
+  function resize() {
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-  const TARGET_DATA = [
-    { xf: 0.38, yf: 0.50, emoji: '🎯', color: '#FF5038' },
-    { xf: 0.52, yf: 0.36, emoji: '🎪', color: '#7B2FFF' },
-    { xf: 0.63, yf: 0.52, emoji: '🌟', color: '#FFB800' },
-    { xf: 0.76, yf: 0.38, emoji: '💎', color: '#3B82F6' },
-    { xf: 0.88, yf: 0.54, emoji: '🎁', color: '#00C27C' },
-  ];
+  const GROUND = () => canvas.height - 40;
+  const ITEMS = ['🍎','🪨','🪶','🏀','📦','🌸'];
+  const COLORS_DUST = ['#a0c4ff','#ffd6a5','#caffbf','#fdffb6'];
 
-  function makeTargets() {
-    return TARGET_DATA.map(t => ({
-      x: W * t.xf, y: H * t.yf, r: 26,
-      emoji: t.emoji, color: t.color, hit: false
-    }));
+  // Place items
+  const objects = ITEMS.map((emoji, i) => {
+    const cols = 3;
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    return {
+      emoji,
+      x: (canvas.width / (cols + 1)) * (col + 1),
+      y: 80 + row * 100 + Math.random() * 30,
+      vy: 0,
+      vr: 0,
+      angle: 0,
+      falling: false,
+      landed: false,
+      bouncing: false,
+      scaleY: 1,
+      bounceTimer: 0,
+      startY: 0,
+      startTime: 0
+    };
+  });
+
+  let fallen = 0;
+  let discoveryShown = false;
+  let dustParticles = [];
+  let done = false;
+
+  function isHit(obj, px, py) {
+    return Math.hypot(obj.x - px, obj.y - py) < 36;
   }
 
-  const starDots = document.querySelectorAll('#stars1 .star-dot');
-  starDots.forEach(s => s.classList.remove('lit'));
-
-  let targets = makeTargets();
-  let hits = 0;
-  let ball = { x: BALL_REST.x, y: BALL_REST.y, vx: 0, vy: 0, flying: false, returning: false };
-  let drag = false;
-  let pullX = 0, pullY = 0;
-  let level1Done = false;
-
-  let clouds = [
-    { x: W * 0.20, y: H * 0.10, s: 1.0 },
-    { x: W * 0.58, y: H * 0.07, s: 0.80 },
-    { x: W * 0.82, y: H * 0.16, s: 0.90 },
-  ];
-
-  function dist2(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
-
-  function predictPath(bx, by, vx, vy) {
-    const pts = [];
-    let x = bx, y = by, dvx = vx, dvy = vy;
-    for (let i = 0; i < 50; i++) {
-      x += dvx; y += dvy; dvy += GRAVITY;
-      pts.push({ x, y });
-      if (y > H + 20) break;
-    }
-    return pts;
-  }
-
-  function drawBG() {
-    ctx.fillStyle = '#EEF4FF';
-    ctx.fillRect(0, 0, W, H);
-    // Clouds
-    clouds.forEach(c => {
-      ctx.save();
-      ctx.globalAlpha = 0.55;
-      ctx.fillStyle = '#fff';
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, 28*c.s, 0, Math.PI*2);
-      ctx.arc(c.x+22*c.s, c.y-8*c.s, 22*c.s, 0, Math.PI*2);
-      ctx.arc(c.x+44*c.s, c.y, 26*c.s, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-      c.x -= 0.25;
-      if (c.x < -80) c.x = W + 80;
-    });
-    // Ground gradient
-    const gy = H * 0.80;
-    const grd = ctx.createLinearGradient(0, gy, 0, H);
-    grd.addColorStop(0, '#5DB85D');
-    grd.addColorStop(0.3, '#48A448');
-    grd.addColorStop(1, '#2D8A2D');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, gy, W, H - gy);
-    // Grass tufts
-    ctx.fillStyle = '#6CC96C';
-    for (let ix = 0; ix < W; ix += 28) {
-      ctx.fillRect(ix, gy-3, 3, 5);
-      ctx.fillRect(ix+10, gy-2, 2, 4);
+  function onTap(e) {
+    if (done) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY2 = canvas.height / rect.height;
+    const pts = e.touches ? [...e.touches] : [e];
+    for (const t of pts) {
+      const px = (t.clientX - rect.left) * scaleX;
+      const py = (t.clientY - rect.top) * scaleY2;
+      for (const o of objects) {
+        if (!o.falling && !o.landed && isHit(o, px, py)) {
+          o.falling = true;
+          o.vy = 0;
+          o.vr = (Math.random() - 0.5) * 0.08;
+          o.startTime = performance.now();
+          o.startY = o.y;
+        }
+      }
     }
   }
 
-  function drawSlingshot(bx, by) {
-    // Handle
-    ctx.save();
-    ctx.strokeStyle = '#8B5E3C'; ctx.lineWidth = 13; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x, FORK.y+90); ctx.stroke();
-    // Branches
-    ctx.strokeStyle = '#6B4226'; ctx.lineWidth = 10;
-    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x-ARM, FORK.y-ARM); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(FORK.x, FORK.y+50); ctx.lineTo(FORK.x+ARM, FORK.y-ARM); ctx.stroke();
-    // Rubber
-    ctx.strokeStyle = '#C0392B'; ctx.lineWidth = 4; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(FORK.x-ARM, FORK.y-ARM); ctx.lineTo(bx, by); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(FORK.x+ARM, FORK.y-ARM); ctx.lineTo(bx, by); ctx.stroke();
-    ctx.restore();
+  canvas.addEventListener('mousedown', onTap);
+  canvas.addEventListener('touchstart', onTap, { passive: true });
+
+  function spawnDust(x, y) {
+    for (let i = 0; i < 8; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      dustParticles.push({
+        x, y, vx: Math.cos(angle) * (1 + Math.random() * 2),
+        vy: -(0.5 + Math.random() * 1.5),
+        life: 1, color: COLORS_DUST[Math.floor(Math.random() * COLORS_DUST.length)],
+        r: 3 + Math.random() * 4
+      });
+    }
   }
 
-  function drawBall(x, y) {
-    ctx.save();
-    const grd = ctx.createRadialGradient(x-BALL_R*.3, y-BALL_R*.3, BALL_R*.1, x, y, BALL_R);
-    grd.addColorStop(0, '#FFF5E0');
-    grd.addColorStop(0.35, '#FF8C00');
-    grd.addColorStop(1, '#E65C00');
-    ctx.beginPath(); ctx.arc(x, y, BALL_R, 0, Math.PI*2);
-    ctx.fillStyle = grd; ctx.fill();
-    ctx.beginPath(); ctx.arc(x-BALL_R*.3, y-BALL_R*.3, BALL_R*.22, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fill();
-    ctx.restore();
-  }
-
-  function drawTargets() {
-    targets.forEach(t => {
-      if (t.hit) return;
-      ctx.save();
-      // Shadow
-      ctx.beginPath();
-      ctx.ellipse(t.x, t.y+t.r+3, t.r*.75, 5, 0, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fill();
-      // Body
-      const grd = ctx.createRadialGradient(t.x-5, t.y-5, 3, t.x, t.y, t.r);
-      grd.addColorStop(0, t.color+'ee');
-      grd.addColorStop(1, t.color+'88');
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2);
-      ctx.fillStyle = grd; ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.font = `${t.r*1.05}px serif`;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(t.emoji, t.x, t.y+1);
-      ctx.restore();
-    });
-  }
-
-  function drawPrediction(bx, by) {
-    if (!drag || ball.flying) return;
-    const vx = -pullX * POWER, vy = -pullY * POWER;
-    const pts = predictPath(bx, by, vx, vy);
-    ctx.save();
-    ctx.setLineDash([6, 8]);
-    ctx.strokeStyle = 'rgba(59,130,246,0.4)';
-    ctx.lineWidth = 2; ctx.lineCap = 'round';
+  function drawTree(ctx, cx, groundY) {
+    // trunk
+    ctx.fillStyle = '#8B5E3C';
+    ctx.fillRect(cx - 8, groundY - 90, 16, 90);
+    // canopy
+    ctx.fillStyle = '#4A9B5F';
     ctx.beginPath();
-    pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.restore();
+    ctx.ellipse(cx, groundY - 130, 52, 58, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#3B8A50';
+    ctx.beginPath();
+    ctx.ellipse(cx - 20, groundY - 110, 32, 40, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#5DB870';
+    ctx.beginPath();
+    ctx.ellipse(cx + 10, groundY - 140, 35, 38, 0.2, 0, Math.PI * 2);
+    ctx.fill();
   }
 
-  function loop() {
-    const bx = drag ? ball.x : BALL_REST.x;
-    const by = drag ? ball.y : BALL_REST.y;
+  function drawGround(ctx, w, groundY) {
+    // sky gradient
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
+    skyGrad.addColorStop(0, '#C8E6F5');
+    skyGrad.addColorStop(1, '#E8F4FD');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, w, groundY);
+    // grass
+    ctx.fillStyle = '#7EC850';
+    ctx.fillRect(0, groundY, w, 40);
+    ctx.fillStyle = '#9ED870';
+    for (let gx = 0; gx < w; gx += 18) {
+      ctx.beginPath();
+      ctx.moveTo(gx, groundY);
+      ctx.lineTo(gx + 6, groundY - 10);
+      ctx.lineTo(gx + 12, groundY);
+      ctx.fill();
+    }
+  }
 
-    drawBG();
-    drawTargets();
-    drawSlingshot(ball.flying || ball.returning ? ball.x : bx, ball.flying || ball.returning ? ball.y : by);
-    drawPrediction(bx, by);
+  function loop(ts) {
+    if (currentLevel !== 1) return;
+    const w = canvas.width, h = canvas.height;
+    const groundY = GROUND();
+    ctx.clearRect(0, 0, w, h);
+    drawGround(ctx, w, groundY);
 
-    if (ball.flying) {
-      ball.x += ball.vx;
-      ball.y += ball.vy;
-      ball.vy += GRAVITY;
-      // Hit detection
-      for (const t of targets) {
-        if (!t.hit && dist2(ball, t) < t.r + BALL_R) {
-          t.hit = true;
-          const rect = canvas.getBoundingClientRect();
-          burst(rect.left + t.x, rect.top + t.y, ['💥', '⭐', '✨', '🎊', '🌟']);
-          hits++;
-          if (hits <= 5) starDots[hits-1].classList.add('lit');
-          if (hits === 5 && !level1Done) {
-            level1Done = true;
-            setTimeout(() => {
-              showSuccess('🏆', 'Ньютон гордится!',
-                'Шар летит по параболе — кривой, которую Ньютон описал 350 лет назад. Та же физика!',
-                () => { progress.lvl1 = true; saveProgress(); applyProgress(); showScreen('levelSelect'); });
-            }, 600);
+    // Tree on the left side
+    drawTree(ctx, w * 0.15, groundY);
+
+    // Sun
+    ctx.font = '42px serif';
+    ctx.fillText('☀️', w - 60, 50);
+
+    // Dust
+    dustParticles = dustParticles.filter(d => d.life > 0);
+    for (const d of dustParticles) {
+      ctx.globalAlpha = d.life;
+      ctx.fillStyle = d.color;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+      d.x += d.vx; d.y += d.vy; d.vy += 0.08; d.life -= 0.04;
+    }
+    ctx.globalAlpha = 1;
+
+    // Objects
+    ctx.font = '44px serif';
+    for (const o of objects) {
+      if (o.falling && !o.landed) {
+        o.vy += 0.4;
+        o.y += o.vy;
+        o.angle += o.vr;
+        if (o.y >= groundY - 22) {
+          o.y = groundY - 22;
+          o.landed = true;
+          o.falling = false;
+          o.bouncing = true;
+          o.bounceTimer = 0;
+          fallen++;
+          spawnDust(o.x, groundY);
+          burst(
+            o.x * (wrap.offsetWidth / w),
+            groundY * (wrap.offsetHeight / canvas.height),
+            ['💨','💨','·','·']
+          );
+          // Light up star
+          if (fallen <= 6) {
+            const star = starsEl[fallen - 1];
+            if (star) { star.classList.add('lit'); }
+          }
+          if (fallen === 3 && !discoveryShown) {
+            discoveryShown = true;
+            disc.classList.add('show');
+            hint.textContent = '⚡ Все падают одинаково быстро! Тапай ещё!';
+          }
+          if (fallen === 6 && !done) {
+            done = true;
+            setTimeout(() => showSuccess(1), 800);
           }
         }
       }
-      if (ball.y > H + 40 || ball.x > W + 40 || ball.x < -80) {
-        ball.flying = false; ball.returning = true;
+
+      if (o.bouncing) {
+        o.bounceTimer++;
+        if (o.bounceTimer < 8) o.scaleY = 0.6;
+        else if (o.bounceTimer < 16) o.scaleY = 1.2;
+        else { o.scaleY = 1; o.bouncing = false; }
       }
-    } else if (ball.returning) {
-      ball.x += (BALL_REST.x - ball.x) * 0.12;
-      ball.y += (BALL_REST.y - ball.y) * 0.12;
-      if (dist2(ball, BALL_REST) < 2) {
-        ball.x = BALL_REST.x; ball.y = BALL_REST.y;
-        ball.returning = false;
+
+      ctx.save();
+      ctx.translate(o.x, o.y);
+      ctx.rotate(o.angle);
+      ctx.scale(1, o.scaleY);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(o.emoji, 0, 0);
+
+      // Glow hint for untapped items
+      if (!o.falling && !o.landed) {
+        ctx.globalAlpha = 0.15 + 0.1 * Math.sin(ts / 400 + o.x);
+        ctx.fillStyle = '#3B82F6';
+        ctx.beginPath();
+        ctx.arc(0, 0, 30, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
       }
+      ctx.restore();
     }
 
-    const drawX = (ball.flying || ball.returning) ? ball.x : bx;
-    const drawY = (ball.flying || ball.returning) ? ball.y : by;
-    drawBall(drawX, drawY);
-    _sl_raf = requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
-  // Input
-  function getPos(e) {
-    const r = canvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  rafId = requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEVEL 2 — SLINGSHOT
+// ═══════════════════════════════════════════════════════════════
+function initLevel2() {
+  const canvas = $('c2');
+  const wrap = $('wrap2');
+  const ctx = canvas.getContext('2d');
+  const hint = $('hint2');
+  const starsEl = $('stars2').querySelectorAll('.star-dot');
+
+  function resize() {
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
   }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const TARGETS = 5;
+  let targets = [];
+  let ball = { x: 0, y: 0, vx: 0, vy: 0, flying: false, landed: false };
+  let dragging = false;
+  let dragX = 0, dragY = 0;
+  let hit = 0;
+  let done = false;
+  let resetTimer = 0;
+  let particles = [];
+
+  function slingshotBase() {
+    return { x: canvas.width * 0.18, y: canvas.height * 0.72 };
+  }
+
+  function resetBall() {
+    const base = slingshotBase();
+    ball = { x: base.x, y: base.y - 36, vx: 0, vy: 0, flying: false, landed: false };
+    dragging = false;
+    resetTimer = 0;
+  }
+
+  function initTargets() {
+    targets = [];
+    const base = slingshotBase();
+    const minX = base.x + canvas.width * 0.22;
+    const maxX = canvas.width - 40;
+    const groundY = canvas.height * 0.72;
+    for (let i = 0; i < TARGETS; i++) {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      targets.push({
+        x: minX + (maxX - minX) * (col / 2.2) + (row === 1 ? 60 : 0),
+        y: groundY - 30 - row * 80,
+        r: 26,
+        hit: false,
+        scaleAnim: 1,
+        alpha: 1,
+        color: ['#FF5038','#3B82F6','#00C27C','#FFE141','#7B2FFF'][i]
+      });
+    }
+  }
+
+  resetBall();
+  initTargets();
+
+  function getPointer(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * scaleX, y: (src.clientY - rect.top) * scaleY };
+  }
+
   function onDown(e) {
-    if (ball.flying || ball.returning) return;
-    const p = getPos(e);
-    const bx = BALL_REST.x, by = BALL_REST.y;
-    if (Math.hypot(p.x - bx, p.y - by) < 52) {
-      drag = true;
-      ball.x = bx; ball.y = by;
+    if (ball.flying || done) return;
+    const p = getPointer(e);
+    if (Math.hypot(p.x - ball.x, p.y - ball.y) < 52) {
+      dragging = true;
+      dragX = p.x; dragY = p.y;
       e.preventDefault();
     }
   }
+
   function onMove(e) {
-    if (!drag) return;
+    if (!dragging) return;
+    const p = getPointer(e);
+    const base = slingshotBase();
+    let dx = p.x - base.x;
+    let dy = p.y - (base.y - 36);
+    const dist = Math.hypot(dx, dy);
+    const maxPull = 90;
+    if (dist > maxPull) { dx = dx / dist * maxPull; dy = dy / dist * maxPull; }
+    // Only allow pulling left and any vertical
+    if (dx > 0) dx = 0;
+    dragX = base.x + dx;
+    dragY = base.y - 36 + dy;
+    ball.x = dragX; ball.y = dragY;
     e.preventDefault();
-    const p = getPos(e);
-    let dx = p.x - FORK.x, dy = p.y - FORK.y;
-    if (dx > 0) dx = dx * 0.12; // limit right pull
-    const len = Math.hypot(dx, dy);
-    if (len > MAX_PULL) { dx = dx/len*MAX_PULL; dy = dy/len*MAX_PULL; }
-    pullX = dx; pullY = dy;
-    ball.x = FORK.x + dx;
-    ball.y = FORK.y + dy;
   }
+
   function onUp(e) {
-    if (!drag) return;
-    drag = false;
-    if (Math.abs(pullX) > 4 || Math.abs(pullY) > 4) {
-      ball.vx = -pullX * POWER;
-      ball.vy = -pullY * POWER;
-      ball.flying = true;
-    } else {
-      ball.returning = true;
-    }
-    pullX = 0; pullY = 0;
+    if (!dragging) return;
+    dragging = false;
+    const base = slingshotBase();
+    const anchorX = base.x;
+    const anchorY = base.y - 36;
+    const pullX = anchorX - ball.x;
+    const pullY = anchorY - ball.y;
+    ball.vx = pullX * 0.14;
+    ball.vy = pullY * 0.14;
+    ball.flying = true;
+    hint.textContent = '🎯 Летит!';
   }
+
   canvas.addEventListener('mousedown', onDown);
   canvas.addEventListener('mousemove', onMove);
   canvas.addEventListener('mouseup', onUp);
   canvas.addEventListener('touchstart', onDown, { passive: false });
   canvas.addEventListener('touchmove', onMove, { passive: false });
-  canvas.addEventListener('touchend', onUp, { passive: false });
+  canvas.addEventListener('touchend', onUp);
 
-  if (_sl_raf) cancelAnimationFrame(_sl_raf);
-  loop();
+  function drawSlingshot(ctx, base) {
+    const bx = base.x, by = base.y;
+    ctx.strokeStyle = '#8B5E3C';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    // trunk
+    ctx.beginPath();
+    ctx.moveTo(bx, by + 30);
+    ctx.lineTo(bx, by - 20);
+    ctx.stroke();
+    // left fork
+    ctx.beginPath();
+    ctx.moveTo(bx, by - 10);
+    ctx.lineTo(bx - 22, by - 45);
+    ctx.stroke();
+    // right fork
+    ctx.beginPath();
+    ctx.moveTo(bx, by - 10);
+    ctx.lineTo(bx + 22, by - 45);
+    ctx.stroke();
+  }
+
+  function drawBand(ctx, base, bx, by) {
+    const lx = base.x - 22, ly = base.y - 45;
+    const rx = base.x + 22, ry = base.y - 45;
+    ctx.strokeStyle = '#C0392B';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(bx, by); ctx.stroke();
+  }
+
+  function drawBall(ctx, x, y, fly) {
+    const grad = ctx.createRadialGradient(x - 5, y - 5, 2, x, y, 18);
+    grad.addColorStop(0, '#FFB347');
+    grad.addColorStop(1, '#FF5038');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, 18, 0, Math.PI * 2);
+    ctx.fill();
+    if (!fly) {
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath();
+      ctx.arc(x - 5, y - 5, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawTrajectory(ctx, base) {
+    if (!dragging) return;
+    const anchorX = base.x;
+    const anchorY = base.y - 36;
+    const pullX = anchorX - ball.x;
+    const pullY = anchorY - ball.y;
+    let vx = pullX * 0.14, vy = pullY * 0.14;
+    let px = ball.x, py = ball.y;
+    ctx.setLineDash([5, 8]);
+    ctx.strokeStyle = 'rgba(59,130,246,0.5)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    for (let i = 0; i < 30; i++) {
+      vx *= 1; vy += 0.32; px += vx; py += vy;
+      ctx.lineTo(px, py);
+      if (py > canvas.height * 0.75) break;
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function spawnConfetti(x, y, color) {
+    for (let i = 0; i < 12; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random() * 4;
+      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3, life: 1, color, r: 4 + Math.random() * 5 });
+    }
+  }
+
+  function loop() {
+    if (currentLevel !== 2) return;
+    const w = canvas.width, h = canvas.height;
+    const groundY = h * 0.72;
+    const base = slingshotBase();
+    ctx.clearRect(0, 0, w, h);
+
+    // Sky
+    const skyG = ctx.createLinearGradient(0, 0, 0, groundY);
+    skyG.addColorStop(0, '#C8E6F5'); skyG.addColorStop(1, '#E8F4FD');
+    ctx.fillStyle = skyG; ctx.fillRect(0, 0, w, groundY);
+    // Ground
+    ctx.fillStyle = '#7EC850'; ctx.fillRect(0, groundY, w, h - groundY);
+    // Sun
+    ctx.font = '40px serif'; ctx.fillText('☀️', w - 55, 45);
+
+    // Particles
+    particles = particles.filter(p => p.life > 0);
+    for (const p of particles) {
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= 0.03;
+    }
+    ctx.globalAlpha = 1;
+
+    // Targets
+    for (const t of targets) {
+      if (t.hit && t.alpha <= 0) continue;
+      ctx.globalAlpha = t.alpha;
+      ctx.fillStyle = t.color;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.r * t.scaleAnim, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.arc(t.x - t.r * 0.3, t.y - t.r * 0.3, t.r * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      if (t.hit) { t.scaleAnim += 0.08; t.alpha -= 0.06; }
+      ctx.globalAlpha = 1;
+    }
+
+    // Stars on ground (hit indicator)
+    for (let i = 0; i < TARGETS; i++) {
+      const star = starsEl[i];
+      if (star && i < hit && !star.classList.contains('lit')) star.classList.add('lit');
+    }
+
+    // Trajectory
+    if (!ball.flying) drawTrajectory(ctx, base);
+
+    // Slingshot
+    drawSlingshot(ctx, base);
+    if (!ball.flying) drawBand(ctx, base, ball.x, ball.y);
+
+    // Ball physics
+    if (ball.flying) {
+      ball.vy += 0.32;
+      ball.x += ball.vx; ball.y += ball.vy;
+
+      // Check targets
+      for (const t of targets) {
+        if (!t.hit && Math.hypot(ball.x - t.x, ball.y - t.y) < t.r + 18) {
+          t.hit = true;
+          hit++;
+          spawnConfetti(t.x, t.y, t.color);
+          burst(
+            t.x * (wrap.offsetWidth / w),
+            t.y * (wrap.offsetHeight / h),
+            ['🌟','⭐','✨','💥']
+          );
+          if (!done && hit === TARGETS) {
+            done = true;
+            setTimeout(() => showSuccess(2), 600);
+          }
+        }
+      }
+
+      // Hit ground
+      if (ball.y > groundY + 10) {
+        ball.flying = false;
+        ball.landed = true;
+        resetTimer = 0;
+        hint.textContent = '😅 Промах! Попробуй ещё';
+      }
+    }
+
+    // Reset after miss
+    if (ball.landed) {
+      resetTimer++;
+      if (resetTimer > 90) resetBall(), hint.textContent = '👈 Тяни шар назад и отпускай!';
+    }
+
+    drawBall(ctx, ball.x, ball.y, ball.flying);
+
+    rafId2 = requestAnimationFrame(loop);
+  }
+
+  rafId2 = requestAnimationFrame(loop);
 }
 
-/* ════════════════════════════════════
-   LEVEL 2 — ELECTRO
-════════════════════════════════════ */
-let _elStep = 0;
-let _elWires = [];
-let _elDragging = null;
-let _elLevel2Done = false;
-
-const EL_STEPS = [
-  {
-    task: 'Соедини батарею с лампочкой',
-    comps: [
-      { id: 'bat',  emoji: '🔋', name: 'Батарея',      xf: 0.12, yf: 0.38, terms: [{ side: 'r' }] },
-      { id: 'bulb', emoji: '💡', name: 'Лампочка',     xf: 0.70, yf: 0.38, terms: [{ side: 'l' }] },
-    ],
-    required: [{ from: 'bat', ft: 0, to: 'bulb', tt: 0 }]
-  },
-  {
-    task: 'Добавь выключатель в цепь',
-    comps: [
-      { id: 'bat',  emoji: '🔋', name: 'Батарея',       xf: 0.10, yf: 0.38, terms: [{ side: 'r' }] },
-      { id: 'sw',   emoji: '🔘', name: 'Выключатель',   xf: 0.44, yf: 0.38, terms: [{ side: 'l' }, { side: 'r' }] },
-      { id: 'bulb', emoji: '💡', name: 'Лампочка',      xf: 0.78, yf: 0.38, terms: [{ side: 'l' }] },
-    ],
-    required: [
-      { from: 'bat', ft: 0, to: 'sw',   tt: 0 },
-      { from: 'sw',  ft: 1, to: 'bulb', tt: 0 }
-    ]
-  },
-  {
-    task: 'Параллельно: две лампочки!',
-    comps: [
-      { id: 'bat',   emoji: '🔋', name: 'Батарея',    xf: 0.12, yf: 0.44, terms: [{ side: 'r' }] },
-      { id: 'bulb1', emoji: '💡', name: 'Лампочка 1', xf: 0.70, yf: 0.22, terms: [{ side: 'l' }] },
-      { id: 'bulb2', emoji: '💡', name: 'Лампочка 2', xf: 0.70, yf: 0.66, terms: [{ side: 'l' }] },
-    ],
-    required: [
-      { from: 'bat', ft: 0, to: 'bulb1', tt: 0 },
-      { from: 'bat', ft: 0, to: 'bulb2', tt: 0 }
-    ]
-  }
-];
-
-function initElectro() {
-  const area = document.getElementById('elArea');
-  const W = area.clientWidth, H = area.clientHeight;
-  const canvas = document.getElementById('c2');
-  canvas.width = W; canvas.height = H;
+// ═══════════════════════════════════════════════════════════════
+// LEVEL 3 — MIRROR & LIGHT
+// ═══════════════════════════════════════════════════════════════
+function initLevel3() {
+  const canvas = $('c3');
+  const wrap = $('wrap3');
   const ctx = canvas.getContext('2d');
-  const compLayer = document.getElementById('compLayer');
+  const hint = $('hint3');
+  const starsEl = $('stars3').querySelectorAll('.star-dot');
 
-  _elStep = 0; _elWires = []; _elDragging = null; _elLevel2Done = false;
+  function resize() {
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-  function getTermPos(compId, ti) {
-    const el = document.getElementById(`term_${compId}_${ti}`);
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    const ar = area.getBoundingClientRect();
-    return { x: r.left - ar.left + 8, y: r.top - ar.top + 8 };
+  // Configs: [sourceAngle (deg from source), mirrorX ratio, mirrorY ratio, targetX ratio, targetY ratio]
+  const CONFIGS = [
+    { mirrorXr: 0.50, mirrorYr: 0.50, startAngle: 0 },   // config 1: start angle 0° → mirror near center
+    { mirrorXr: 0.42, mirrorYr: 0.40, startAngle: 30 },   // config 2: different mirror pos
+    { mirrorXr: 0.55, mirrorYr: 0.55, startAngle: -20 }   // config 3
+  ];
+  const TARGET_X_R = [0.82, 0.78, 0.80];
+  const TARGET_Y_R = [0.55, 0.65, 0.45];
+
+  let configIdx = 0;
+  let mirrorAngle = 0; // degrees
+  let starsLit = 0;
+  let done = false;
+  let flowerBloom = 0;
+  let flowerGlowing = false;
+
+  function getConfig() { return CONFIGS[configIdx]; }
+
+  function setConfig(idx) {
+    configIdx = idx;
+    mirrorAngle = CONFIGS[idx].startAngle;
+    flowerBloom = 0;
+    flowerGlowing = false;
+  }
+  setConfig(0);
+
+  // Source is always top-left area
+  function sourcePos() { return { x: canvas.width * 0.10, y: canvas.height * 0.15 }; }
+  function mirrorPos() {
+    const c = getConfig();
+    return { x: canvas.width * c.mirrorXr, y: canvas.height * c.mirrorYr };
+  }
+  function targetPos() {
+    return { x: canvas.width * TARGET_X_R[configIdx], y: canvas.height * TARGET_Y_R[configIdx] };
   }
 
-  function renderStep() {
-    compLayer.innerHTML = '';
-    _elWires = []; _elDragging = null;
-    const def = EL_STEPS[_elStep];
-    document.getElementById('elTask').textContent = def.task;
-    document.getElementById('elStepInfo').textContent = `Задание ${_elStep+1}/3`;
-
-    def.comps.forEach(c => {
-      const cx = Math.round(c.xf * W);
-      const cy = Math.round(c.yf * H);
-      const card = document.createElement('div');
-      card.className = 'comp-card';
-      card.id = 'comp_' + c.id;
-      card.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);`;
-      card.innerHTML = `<span class="comp-emoji">${c.emoji}</span><span class="comp-name">${c.name}</span>`;
-      compLayer.appendChild(card);
-
-      c.terms.forEach((t, ti) => {
-        const term = document.createElement('div');
-        term.className = 'terminal';
-        term.id = `term_${c.id}_${ti}`;
-        const ox = t.side === 'l' ? -42 : 42;
-        term.style.cssText = `left:${cx+ox-8}px;top:${cy-8}px;position:absolute;`;
-        term.dataset.comp = c.id;
-        term.dataset.ti = ti;
-        compLayer.appendChild(term);
-        term.addEventListener('mousedown', termDown);
-        term.addEventListener('touchstart', termDown, { passive: false });
-      });
-    });
+  function getMirrorNormal(angleDeg) {
+    // Mirror line is at mirrorAngle, normal is perpendicular
+    const rad = (angleDeg + 90) * Math.PI / 180;
+    return { nx: Math.cos(rad), ny: Math.sin(rad) };
   }
 
-  function drawGrid() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#EEF4FF'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = 'rgba(59,130,246,0.12)';
-    for (let x = 30; x < W; x += 30)
-      for (let y = 30; y < H; y += 30) {
-        ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI*2); ctx.fill();
-      }
+  function reflect(dx, dy, nx, ny) {
+    const dot = dx * nx + dy * ny;
+    return { rx: dx - 2 * dot * nx, ry: dy - 2 * dot * ny };
   }
 
-  function drawWires() {
-    _elWires.forEach(w => {
-      const from = getTermPos(w.from, w.ft);
-      const to   = getTermPos(w.to,   w.tt);
-      if (!from || !to) return;
+  // Segment-segment intersection
+  function segIntersect(ax, ay, bx, by, cx, cy, dx, dy) {
+    const den = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
+    if (Math.abs(den) < 1e-9) return null;
+    const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / den;
+    const u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / den;
+    if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+    return { x: ax + t * (bx - ax), y: ay + t * (by - ay), t };
+  }
+
+  function computeRay() {
+    const src = sourcePos();
+    const mir = mirrorPos();
+    const tgt = targetPos();
+    const MIRROR_LEN = 60;
+    const mrad = mirrorAngle * Math.PI / 180;
+    const mx1 = mir.x - Math.cos(mrad) * MIRROR_LEN;
+    const my1 = mir.y - Math.sin(mrad) * MIRROR_LEN;
+    const mx2 = mir.x + Math.cos(mrad) * MIRROR_LEN;
+    const my2 = mir.y + Math.sin(mrad) * MIRROR_LEN;
+
+    // Ray from source toward mirror center direction
+    let ray = { x: src.x, y: src.y, dx: mir.x - src.x, dy: mir.y - src.y };
+    const len = Math.hypot(ray.dx, ray.dy);
+    ray.dx /= len; ray.dy /= len;
+
+    // Extend to long distance
+    const FAR = 2000;
+    const ex = src.x + ray.dx * FAR;
+    const ey = src.y + ray.dy * FAR;
+
+    // Check intersection with mirror segment
+    const hit = segIntersect(src.x, src.y, ex, ey, mx1, my1, mx2, my2);
+
+    let segments = [[src.x, src.y]];
+    let hitTarget = false;
+
+    if (hit) {
+      segments.push([hit.x, hit.y]);
+      // Compute reflected ray
+      const norm = getMirrorNormal(mirrorAngle);
+      const { rx, ry } = reflect(ray.dx, ray.dy, norm.nx, norm.ny);
+      // Extend reflected ray
+      const rx2 = hit.x + rx * FAR;
+      const ry2 = hit.y + ry * FAR;
+      segments.push([rx2, ry2]);
+
+      // Check if reflected ray hits target zone
+      const distToTarget = pointLineSegDist(tgt.x, tgt.y, hit.x, hit.y, rx2, ry2);
+      if (distToTarget < 60) hitTarget = true;
+    } else {
+      segments.push([ex, ey]);
+    }
+
+    return { segments, hitTarget, mx1, my1, mx2, my2 };
+  }
+
+  function pointLineSegDist(px, py, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq === 0) return Math.hypot(px - ax, py - ay);
+    let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+
+  function onTap(e) {
+    if (done) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    const px = (src.clientX - rect.left) * scaleX;
+    const py = (src.clientY - rect.top) * scaleY;
+    const mir = mirrorPos();
+    if (Math.hypot(px - mir.x, py - mir.y) < 80) {
+      mirrorAngle = (mirrorAngle + 45) % 360;
+      e.preventDefault();
+    }
+  }
+
+  canvas.addEventListener('mousedown', onTap);
+  canvas.addEventListener('touchstart', onTap, { passive: false });
+
+  function drawFlower(ctx, x, y, bloom, glow) {
+    const scale = 1 + bloom * 0.4;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    if (glow) {
+      ctx.shadowColor = '#FFE141';
+      ctx.shadowBlur = 20 + bloom * 10;
+    }
+    ctx.font = '36px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🌻', 0, 0);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  function loop() {
+    if (currentLevel !== 3) return;
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Background
+    ctx.fillStyle = '#F0F8FF';
+    ctx.fillRect(0, 0, w, h);
+    // Light atmosphere
+    const bgGrad = ctx.createRadialGradient(w * 0.1, h * 0.15, 10, w * 0.1, h * 0.15, w * 0.7);
+    bgGrad.addColorStop(0, 'rgba(255,255,200,0.25)');
+    bgGrad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const ray = computeRay();
+    const src = sourcePos();
+    const mir = mirrorPos();
+    const tgt = targetPos();
+
+    // Draw light ray
+    if (ray.segments.length >= 2) {
+      // Beam glow
       ctx.save();
-      const mx = (from.x + to.x) / 2;
-      ctx.beginPath();
-      ctx.moveTo(from.x, from.y);
-      ctx.bezierCurveTo(mx, from.y, mx, to.y, to.x, to.y);
-      ctx.strokeStyle = w.powered ? '#FF8C00' : '#666';
-      ctx.lineWidth = w.powered ? 5 : 3;
+      ctx.strokeStyle = 'rgba(255,200,0,0.2)';
+      ctx.lineWidth = 18;
       ctx.lineCap = 'round';
-      if (w.powered) { ctx.shadowBlur = 10; ctx.shadowColor = '#FFE141'; }
+      ctx.beginPath();
+      ctx.moveTo(ray.segments[0][0], ray.segments[0][1]);
+      for (let i = 1; i < ray.segments.length; i++) ctx.lineTo(ray.segments[i][0], ray.segments[i][1]);
+      ctx.stroke();
+      ctx.restore();
+      // Main beam
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,220,0,0.9)';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = '#FFD700';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(ray.segments[0][0], ray.segments[0][1]);
+      for (let i = 1; i < ray.segments.length; i++) ctx.lineTo(ray.segments[i][0], ray.segments[i][1]);
       ctx.stroke();
       ctx.shadowBlur = 0;
       ctx.restore();
-    });
-    if (_elDragging) {
-      const from = getTermPos(_elDragging.comp, _elDragging.ti);
-      if (from) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        ctx.lineTo(_elDragging.x, _elDragging.y);
-        ctx.strokeStyle = 'rgba(59,130,246,0.55)';
-        ctx.lineWidth = 3; ctx.setLineDash([8,6]); ctx.lineCap = 'round';
-        ctx.stroke(); ctx.setLineDash([]);
-        ctx.restore();
-      }
     }
-  }
 
-  function redraw() { drawGrid(); drawWires(); }
-
-  function loop() {
-    redraw();
-    _el_raf = requestAnimationFrame(loop);
-  }
-  if (_el_raf) cancelAnimationFrame(_el_raf);
-  renderStep();
-  loop();
-
-  function getAreaPos(e) {
-    const r = area.getBoundingClientRect();
-    const src = e.changedTouches ? e.changedTouches[0] : (e.touches ? e.touches[0] : e);
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
-  }
-
-  function termDown(e) {
-    e.preventDefault(); e.stopPropagation();
-    const comp = e.currentTarget.dataset.comp;
-    const ti   = parseInt(e.currentTarget.dataset.ti);
-    const p = getAreaPos(e);
-    _elDragging = { comp, ti, x: p.x, y: p.y };
-    e.currentTarget.classList.add('active');
-  }
-
-  function onElMove(e) {
-    if (!_elDragging) return;
-    e.preventDefault();
-    const p = getAreaPos(e);
-    _elDragging.x = p.x; _elDragging.y = p.y;
-  }
-  function onElUp(e) {
-    if (!_elDragging) return;
-    const p = getAreaPos(e);
-    let best = null, bestD = Infinity;
-    document.querySelectorAll('.terminal').forEach(term => {
-      const r = term.getBoundingClientRect();
-      const ar = area.getBoundingClientRect();
-      const tx = r.left - ar.left + 8, ty = r.top - ar.top + 8;
-      const d = Math.hypot(tx - p.x, ty - p.y);
-      if (d < 44 && d < bestD) { bestD = d; best = term; }
-    });
-
-    if (best && best.dataset.comp !== _elDragging.comp) {
-      addWire(_elDragging.comp, _elDragging.ti, best.dataset.comp, parseInt(best.dataset.ti));
-    } else if (best && best.dataset.comp === _elDragging.comp) {
-      // Same component — spark
-      const ar = area.getBoundingClientRect();
-      burst(ar.left + p.x, ar.top + p.y, ['⚡','✨','💫']);
-    }
-    document.querySelectorAll('.terminal.active').forEach(t => t.classList.remove('active'));
-    _elDragging = null;
-  }
-
-  area.addEventListener('mousemove', onElMove);
-  area.addEventListener('mouseup',   onElUp);
-  area.addEventListener('touchmove', onElMove, { passive: false });
-  area.addEventListener('touchend',  onElUp,   { passive: false });
-
-  function addWire(fc, ft, tc, tt) {
-    const dup = _elWires.find(w =>
-      (w.from===fc && w.ft===ft && w.to===tc && w.tt===tt) ||
-      (w.from===tc && w.ft===tt && w.to===fc && w.tt===ft)
-    );
-    if (dup) return;
-    _elWires.push({ from: fc, ft, to: tc, tt, powered: false });
-    checkCircuit();
-  }
-
-  function checkCircuit() {
-    const def = EL_STEPS[_elStep];
-    const allMet = def.required.every(req =>
-      _elWires.find(w =>
-        (w.from===req.from && w.ft===req.ft && w.to===req.to && w.tt===req.tt) ||
-        (w.from===req.to   && w.ft===req.tt  && w.to===req.from && w.tt===req.ft)
-      )
-    );
-    if (!allMet) return;
-
-    _elWires.forEach(w => w.powered = true);
-    def.comps.filter(c => c.emoji === '💡').forEach(c => {
-      const card = document.getElementById('comp_' + c.id);
-      if (card) card.classList.add('powered');
-    });
-
-    const facts = [
-      'Электричество течёт по замкнутой цепи — как вода по кольцу трубы!',
-      'Выключатель разрывает цепь — ток остановился, лампочка гаснет',
-      'Параллельная цепь: если одна лампочка сгорит — другая горит!'
-    ];
-    const titles  = ['Цепь замкнута! ⚡', 'Выключатель работает! 🔘', 'Параллель — сила! 💪'];
-    const emojis  = ['💡', '🔘', '⚡'];
-    const stepNow = _elStep;
-
-    setTimeout(() => {
-      const ar = area.getBoundingClientRect();
-      burst(ar.left + ar.width/2, ar.top + ar.height/2, ['💡','⚡','✨','🌟','💫']);
-      showSuccess(emojis[stepNow], titles[stepNow], facts[stepNow], () => {
-        if (stepNow < 2) {
-          _elStep = stepNow + 1;
-          renderStep();
-        } else if (!_elLevel2Done) {
-          _elLevel2Done = true;
-          progress.lvl2 = true; saveProgress(); applyProgress();
-          showScreen('levelSelect');
-        }
-      });
-    }, 500);
-  }
-}
-
-/* ════════════════════════════════════
-   LEVEL 3 — LASER
-════════════════════════════════════ */
-let _lsStep = 0;
-let _lsMirrors = [];
-let _lsLevel3Done = false;
-let _lsTargetGlowing = false;
-
-const LS_STEPS = [
-  {
-    task: '1 зеркало: направь луч в цель!',
-    srcYf: 0.38,
-    tgt: { xf: 0.82, yf: 0.70, r: 26 },
-    mirrors: [{ xf: 0.48, yf: 0.38, angle: 45, len: 52 }]
-  },
-  {
-    task: '2 зеркала: два отражения!',
-    srcYf: 0.28,
-    tgt: { xf: 0.78, yf: 0.72, r: 26 },
-    mirrors: [
-      { xf: 0.42, yf: 0.28, angle: 45,  len: 48 },
-      { xf: 0.42, yf: 0.72, angle: -45, len: 48 }
-    ]
-  },
-  {
-    task: '3 зеркала: доведи луч!',
-    srcYf: 0.22,
-    tgt: { xf: 0.16, yf: 0.76, r: 26 },
-    mirrors: [
-      { xf: 0.60, yf: 0.22, angle: 45,  len: 46 },
-      { xf: 0.60, yf: 0.76, angle: -45, len: 46 },
-      { xf: 0.16, yf: 0.76, angle: 90,  len: 46 }
-    ]
-  }
-];
-
-function initLaser() {
-  const canvas = document.getElementById('c3');
-  const wrap   = document.getElementById('wrap3');
-  canvas.width  = wrap.clientWidth;
-  canvas.height = wrap.clientHeight;
-  const W = canvas.width, H = canvas.height;
-  const ctx = canvas.getContext('2d');
-
-  _lsStep = 0; _lsLevel3Done = false; _lsTargetGlowing = false;
-
-  let sparks = [];
-
-  function buildStep() {
-    const s = LS_STEPS[_lsStep];
-    _lsMirrors = s.mirrors.map(m => ({
-      x: Math.round(m.xf * W),
-      y: Math.round(m.yf * H),
-      angle: m.angle,
-      len: m.len
-    }));
-    document.getElementById('laserStepInfo').textContent = `Задача ${_lsStep+1}/3`;
-  }
-
-  function getSrc()  { const s=LS_STEPS[_lsStep]; return { x:42, y:Math.round(s.srcYf*H) }; }
-  function getTgt()  { const s=LS_STEPS[_lsStep]; return { x:Math.round(s.tgt.xf*W), y:Math.round(s.tgt.yf*H), r:s.tgt.r }; }
-
-  function mirrorSeg(m) {
-    const rad = m.angle * Math.PI / 180;
-    const dx = Math.cos(rad)*m.len/2, dy = Math.sin(rad)*m.len/2;
-    return { x1:m.x-dx, y1:m.y-dy, x2:m.x+dx, y2:m.y+dy };
-  }
-
-  function segIntersect(ox,oy,dx,dy, x1,y1,x2,y2) {
-    const ex=x2-x1, ey=y2-y1;
-    const denom = dx*ey - dy*ex;
-    if (Math.abs(denom)<1e-9) return null;
-    const t = ((x1-ox)*ey-(y1-oy)*ex)/denom;
-    const u = ((x1-ox)*dy-(y1-oy)*dx)/denom;
-    if (t>0.001 && u>=0 && u<=1) return { t, x:ox+dx*t, y:oy+dy*t, nx:ey, ny:-ex };
-    return null;
-  }
-
-  function reflectDir(dx,dy,nx,ny) {
-    const l=Math.hypot(nx,ny); const nnx=nx/l,nny=ny/l;
-    const d=dx*nnx+dy*nny;
-    return { dx:dx-2*d*nnx, dy:dy-2*d*nny };
-  }
-
-  function lineCircle(ox,oy,dx,dy,cx,cy,r) {
-    const fx=ox-cx, fy=oy-cy;
-    const a=dx*dx+dy*dy, b=2*(fx*dx+fy*dy), c=fx*fx+fy*fy-r*r;
-    const disc=b*b-4*a*c;
-    if(disc<0) return null;
-    const t=(-b-Math.sqrt(disc))/(2*a);
-    return t>0.001?t:null;
-  }
-
-  function wallT(ox,oy,dx,dy) {
-    const ts=[];
-    if(Math.abs(dx)>1e-9){ts.push((W-ox)/dx);ts.push(-ox/dx);}
-    if(Math.abs(dy)>1e-9){ts.push((H-oy)/dy);ts.push(-oy/dy);}
-    const pos=ts.filter(t=>t>0.001);
-    return pos.length?Math.min(...pos):400;
-  }
-
-  function castRay(ox,oy,dx,dy,bounces,segs,tgt) {
-    if(bounces>8) return false;
-    const len=Math.hypot(dx,dy);
-    const ndx=dx/len, ndy=dy/len;
-    let nearM=null, nearHit=null;
-    for(const m of _lsMirrors) {
-      const seg=mirrorSeg(m);
-      const h=segIntersect(ox,oy,ndx,ndy,seg.x1,seg.y1,seg.x2,seg.y2);
-      if(h && (!nearHit||h.t<nearHit.t)){nearHit=h;nearM=m;}
-    }
-    const tHit=lineCircle(ox,oy,ndx,ndy,tgt.x,tgt.y,tgt.r);
-    if(nearHit && (!tHit||nearHit.t<tHit)){
-      segs.push({x1:ox,y1:oy,x2:nearHit.x,y2:nearHit.y});
-      const r=reflectDir(ndx,ndy,nearHit.nx,nearHit.ny);
-      return castRay(nearHit.x,nearHit.y,r.dx,r.dy,bounces+1,segs,tgt);
-    } else if(tHit) {
-      segs.push({x1:ox,y1:oy,x2:ox+ndx*tHit,y2:oy+ndy*tHit});
-      return true;
-    } else {
-      const wt=wallT(ox,oy,ndx,ndy);
-      segs.push({x1:ox,y1:oy,x2:ox+ndx*wt,y2:oy+ndy*wt});
-      return false;
-    }
-  }
-
-  function drawMirror(m) {
-    const seg=mirrorSeg(m);
+    // Mirror
     ctx.save();
-    const grd=ctx.createLinearGradient(seg.x1,seg.y1,seg.x2,seg.y2);
-    grd.addColorStop(0,'#AAAAAA'); grd.addColorStop(0.4,'#EEEEEE'); grd.addColorStop(1,'#999999');
-    ctx.shadowBlur=6; ctx.shadowColor='rgba(0,0,0,0.18)';
-    ctx.beginPath(); ctx.moveTo(seg.x1,seg.y1); ctx.lineTo(seg.x2,seg.y2);
-    ctx.strokeStyle=grd; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
-    ctx.shadowBlur=0;
-    ctx.beginPath(); ctx.moveTo(seg.x1,seg.y1); ctx.lineTo(seg.x2,seg.y2);
-    ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2; ctx.stroke();
-    // Pivot dot
-    ctx.beginPath(); ctx.arc(m.x,m.y,5,0,Math.PI*2);
-    ctx.fillStyle='rgba(59,130,246,0.45)'; ctx.fill();
+    ctx.translate(mir.x, mir.y);
+    const mgrad = ctx.createLinearGradient(-60, -4, 60, -4);
+    mgrad.addColorStop(0, '#B0C8E8');
+    mgrad.addColorStop(0.4, '#FFFFFF');
+    mgrad.addColorStop(0.7, '#B8D0E8');
+    mgrad.addColorStop(1, '#9AB4D0');
+    ctx.strokeStyle = mgrad;
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.rotate(mirrorAngle * Math.PI / 180);
+    ctx.beginPath();
+    ctx.moveTo(-60, 0);
+    ctx.lineTo(60, 0);
+    ctx.stroke();
+    // Mirror tap zone indicator
+    ctx.strokeStyle = 'rgba(59,130,246,0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(0, 0, 44, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.restore();
-  }
 
-  function drawSource(s) {
-    ctx.save();
-    const grd=ctx.createRadialGradient(s.x,s.y,2,s.x,s.y,24);
-    grd.addColorStop(0,'#fff'); grd.addColorStop(0.3,'#FF6B6B'); grd.addColorStop(1,'rgba(255,0,0,0)');
-    ctx.beginPath(); ctx.arc(s.x,s.y,24,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
-    ctx.beginPath(); ctx.arc(s.x,s.y,11,0,Math.PI*2);
-    ctx.fillStyle='#FF2222'; ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle='rgba(26,26,46,0.45)'; ctx.font='bold 9px Space Grotesk';
-    ctx.textAlign='center'; ctx.fillText('LASER',s.x,s.y+32);
-    ctx.restore();
-  }
+    // Source: sun emoji
+    ctx.font = '46px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('☀️', src.x, src.y);
 
-  function drawTarget(tgt, hit) {
-    const pulse = hit ? (1+0.14*Math.sin(Date.now()*0.009)) : 1;
-    const r = tgt.r * pulse;
-    ctx.save();
-    const grd=ctx.createRadialGradient(tgt.x,tgt.y,2,tgt.x,tgt.y,r);
-    if(hit){
-      grd.addColorStop(0,'#fff'); grd.addColorStop(0.4,'#FFE141'); grd.addColorStop(1,'rgba(255,225,65,0)');
-      ctx.shadowBlur=28; ctx.shadowColor='#FFE141';
-    } else {
-      grd.addColorStop(0,'#FFD700'); grd.addColorStop(0.55,'#FFA500'); grd.addColorStop(1,'rgba(255,165,0,.15)');
-    }
-    ctx.beginPath(); ctx.arc(tgt.x,tgt.y,r,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
-    ctx.strokeStyle='#FF8C00'; ctx.lineWidth=2; ctx.stroke();
-    ctx.shadowBlur=0;
-    ctx.font=`${Math.round(tgt.r*.95)}px serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('🎯',tgt.x,tgt.y+1);
-    ctx.restore();
-  }
-
-  function drawSparks() {
-    sparks = sparks.filter(p => {
-      p.life-=2; p.x+=p.vx; p.y+=p.vy; p.vy+=0.12;
-      if(p.life<=0)return false;
-      ctx.save();
-      ctx.globalAlpha=p.life/80;
-      ctx.fillStyle='#FFD700';
-      ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-      return true;
-    });
-  }
-
-  function loop() {
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#EEF4FF'; ctx.fillRect(0,0,W,H);
-    // Grid
-    ctx.fillStyle='rgba(59,130,246,0.08)';
-    for(let x=40;x<W;x+=40) for(let y=40;y<H;y+=40){
-      ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
-    }
-
-    const src=getSrc(), tgt=getTgt();
-    const segs=[]; const hit=castRay(src.x,src.y,1,0,0,segs,tgt);
-
-    // Draw ray
-    ctx.save();
-    ctx.strokeStyle='#FF3333'; ctx.lineWidth=3; ctx.lineCap='round';
-    ctx.shadowBlur=14; ctx.shadowColor='#FF0000';
-    segs.forEach(s=>{
-      ctx.beginPath(); ctx.moveTo(s.x1,s.y1); ctx.lineTo(s.x2,s.y2); ctx.stroke();
-    });
-    ctx.shadowBlur=0; ctx.restore();
-
-    _lsMirrors.forEach(m => drawMirror(m));
-    drawSource(src);
-    drawTarget(tgt, hit);
-    drawSparks();
-
-    if(hit && !_lsTargetGlowing) {
-      _lsTargetGlowing = true;
-      const rect=canvas.getBoundingClientRect();
-      burst(rect.left+tgt.x, rect.top+tgt.y, ['⭐','✨','🎯','💫','🌟']);
-      const facts=[
-        'Угол падения = угол отражения — луч ведёт себя как мяч от стены!',
-        'Именно так работает перископ подводной лодки — два зеркала под 45°',
-        'Лазеры с зеркалами используют в гироскопах самолётов и GPS-спутниках!'
-      ];
-      const stepNow=_lsStep;
-      setTimeout(()=>{
-        showSuccess('🎯', `Попадание! ${stepNow+1}/3`,facts[stepNow],()=>{
-          _lsTargetGlowing=false;
-          if(stepNow<2){
-            _lsStep=stepNow+1;
-            buildStep();
-          } else if(!_lsLevel3Done){
-            _lsLevel3Done=true;
-            progress.lvl3=true; saveProgress(); applyProgress();
-            showSuccess('🎓','Ты физик!',
-              'Рогатка, электричество, лазеры — физика везде вокруг нас!',
-              ()=>showScreen('complete'));
+    // Target: flower
+    if (ray.hitTarget && !flowerGlowing) {
+      flowerGlowing = true;
+      starsLit++;
+      const star = starsEl[starsLit - 1];
+      if (star) star.classList.add('lit');
+      burst(
+        tgt.x * (wrap.offsetWidth / w),
+        tgt.y * (wrap.offsetHeight / h),
+        ['🌸','✨','⭐','🌟','🌼']
+      );
+      hint.textContent = '🌟 Луч попал! Цветок расцветает!';
+      setTimeout(() => {
+        if (!done) {
+          if (configIdx < CONFIGS.length - 1) {
+            setConfig(configIdx + 1);
+            hint.textContent = '👆 Поверни зеркало снова!';
+          } else {
+            done = true;
+            setTimeout(() => showSuccess(3), 500);
           }
-        });
-      },700);
-    } else if(!hit) {
-      _lsTargetGlowing=false;
+        }
+      }, 1800);
     }
 
-    _ls_raf=requestAnimationFrame(loop);
+    if (flowerGlowing && flowerBloom < 1) flowerBloom = Math.min(1, flowerBloom + 0.04);
+    drawFlower(ctx, tgt.x, tgt.y, flowerBloom, flowerGlowing);
+
+    // Config counter
+    ctx.fillStyle = 'rgba(26,26,46,0.3)';
+    ctx.font = '700 13px Space Grotesk, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`${configIdx + 1} / ${CONFIGS.length}`, w - 16, 12);
+
+    rafId3 = requestAnimationFrame(loop);
   }
 
-  // Tap mirrors
-  function tapAt(tx,ty){
-    let best=null, bestD=Infinity;
-    _lsMirrors.forEach(m=>{
-      const d=Math.hypot(m.x-tx,m.y-ty);
-      if(d<44&&d<bestD){bestD=d;best=m;}
-    });
-    if(best){
-      best.angle=(best.angle+45)%180;
-      for(let i=0;i<14;i++){
-        const a=Math.random()*Math.PI*2;
-        sparks.push({x:best.x,y:best.y,vx:Math.cos(a)*3.5,vy:Math.sin(a)*3.5-2,life:80});
-      }
-    }
-  }
-  canvas.addEventListener('click',e=>{
-    const r=canvas.getBoundingClientRect();
-    tapAt(e.clientX-r.left, e.clientY-r.top);
-  });
-  canvas.addEventListener('touchend',e=>{
-    e.preventDefault();
-    const r=canvas.getBoundingClientRect();
-    tapAt(e.changedTouches[0].clientX-r.left, e.changedTouches[0].clientY-r.top);
-  },{passive:false});
-
-  if(_ls_raf) cancelAnimationFrame(_ls_raf);
-  buildStep();
-  loop();
+  rafId3 = requestAnimationFrame(loop);
 }
 
-/* INIT */
+// ─── INIT ─────────────────────────────────────────────────────
 loadProgress();
 </script>
 </body>
