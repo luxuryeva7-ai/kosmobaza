@@ -3,999 +3,1055 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Физика — КосмоБаза</title>
+<title>КвантУм — Физика | КосмоБаза</title>
 <link href="https://fonts.bunny.net/css?family=space-grotesk:400,700,800" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Space Grotesk',sans-serif;background:#1a237e;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#FFFDF7;font-family:'Space Grotesk',sans-serif}
+body{display:flex;flex-direction:column}
+
+/* ===== SCREENS ===== */
+.screen{display:none;flex-direction:column;height:100%;overflow:hidden}
+.screen.active{display:flex}
 
 /* ===== INTRO ===== */
-#intro{position:fixed;inset:0;z-index:200;background:#1a237e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
-#intro-canvas{position:absolute;inset:0;pointer-events:none;}
-#intro-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.intro-icon{font-size:100px;line-height:1;animation:floatIcon 2s ease-in-out infinite;}
-@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
-.intro-title{font-size:42px;font-weight:800;color:#fff;letter-spacing:-1px;}
-.intro-sub{font-size:18px;color:#90CAF9;font-weight:700;}
-.intro-btn{background:#FFE141;color:#111;border:none;padding:18px 56px;border-radius:40px;font-size:22px;font-weight:800;cursor:pointer;font-family:'Space Grotesk',sans-serif;box-shadow:0 8px 24px rgba(255,225,65,.35);transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
-.intro-btn:active{transform:scale(.95);}
+#intro{background:linear-gradient(160deg,#1E3A8A 0%,#3B82F6 60%,#60A5FA 100%);align-items:center;justify-content:center;text-align:center;padding:32px 24px;gap:16px}
+.intro-ico{font-size:80px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.intro-title{font-size:32px;font-weight:800;color:#fff;line-height:1.2}
+.intro-sub{font-size:16px;color:#BFDBFE;line-height:1.5;max-width:300px}
+.intro-btn{background:#FFE141;color:#111;border:none;padding:16px 48px;border-radius:40px;font-size:20px;font-weight:800;cursor:pointer;margin-top:8px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.intro-btn:active{transform:scale(.96)}
 
 /* ===== LEVEL SELECT ===== */
-#level-select{position:fixed;inset:0;z-index:190;background:linear-gradient(160deg,#1a237e 0%,#0d47a1 100%);display:none;flex-direction:column;overflow-y:auto;}
-.ls-header{padding:24px 20px 12px;text-align:center;}
-.ls-title{font-size:28px;font-weight:800;color:#fff;}
-.ls-sub{font-size:14px;color:#90CAF9;margin-top:4px;}
-.ls-cards{display:flex;flex-direction:column;gap:14px;padding:12px 20px 32px;}
-.ls-card{height:110px;border-radius:24px;display:flex;align-items:center;gap:16px;padding:0 24px;cursor:pointer;border:none;font-family:'Space Grotesk',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .15s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
-.ls-card:active{transform:scale(.97);}
-.ls-card-1{background:linear-gradient(135deg,#FF6B6B,#FF8E53);}
-.ls-card-2{background:linear-gradient(135deg,#4FACFE,#00F2FE);}
-.ls-card-3{background:linear-gradient(135deg,#A8EDEA,#FED6E3);}
-.ls-emoji{font-size:60px;line-height:1;flex-shrink:0;}
-.ls-info{text-align:left;}
-.ls-name{font-size:22px;font-weight:800;color:#fff;}
-.ls-card-3 .ls-name{color:#333;}
-.ls-desc{font-size:13px;color:rgba(255,255,255,.85);margin-top:2px;font-weight:700;}
-.ls-card-3 .ls-desc{color:rgba(0,0,0,.6);}
-.ls-badge{position:absolute;right:18px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.25);border-radius:12px;padding:6px 14px;font-size:13px;font-weight:800;color:#fff;}
-.ls-card-3 .ls-badge{color:#333;background:rgba(0,0,0,.12);}
+#levelselect{padding:20px 16px;gap:16px;align-items:stretch;overflow-y:auto}
+.ls-title{font-size:22px;font-weight:800;color:#1E3A8A;text-align:center;margin-bottom:4px}
+.ls-sub{font-size:14px;color:#64748B;text-align:center;margin-bottom:8px}
+.level-card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 16px rgba(0,0,0,.08);border:2px solid #E2E8F0;display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.level-card:active{transform:scale(.97);box-shadow:0 1px 8px rgba(0,0,0,.1)}
+.level-card .lc-ico{font-size:48px;flex-shrink:0}
+.level-card .lc-info{}
+.level-card .lc-num{font-size:12px;font-weight:700;color:#3B82F6;text-transform:uppercase;letter-spacing:.5px}
+.level-card .lc-name{font-size:18px;font-weight:800;color:#1a1a2e;margin:2px 0}
+.level-card .lc-desc{font-size:13px;color:#64748B;line-height:1.4}
+.lc-badge{margin-left:auto;background:#3B82F6;color:#fff;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.back-btn{background:none;border:none;color:#3B82F6;font-size:15px;font-weight:700;cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:6px;font-family:inherit}
 
-/* ===== GAME SCREEN ===== */
-#game{position:fixed;inset:0;z-index:180;display:none;flex-direction:column;background:#87CEEB;}
-.game-topbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(0,0,0,.2);backdrop-filter:blur(8px);}
-.game-level-title{font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3);}
-.game-back{background:none;border:2px solid rgba(255,255,255,.6);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;}
-.game-counter{font-size:15px;font-weight:800;color:#FFE141;text-shadow:0 1px 4px rgba(0,0,0,.3);}
-#canvas-wrap{position:relative;flex:1;overflow:hidden;min-height:0;}
-#canvas-wrap canvas{display:block;}
-.canvas-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.45);color:#fff;font-size:14px;font-weight:700;padding:6px 18px;border-radius:20px;pointer-events:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;z-index:5;}
+/* ===== LEVEL HEADER ===== */
+.level-header{padding:12px 16px 8px;display:flex;align-items:center;gap:12px;background:#FFFDF7;border-bottom:1px solid #F1F5F9;flex-shrink:0}
+.level-header .back-btn{font-size:22px;padding:0}
+.level-header-info{flex:1}
+.level-header-info .lh-name{font-size:17px;font-weight:800;color:#1a1a2e}
+.level-header-info .lh-sub{font-size:12px;color:#64748B}
+.progress-dots{display:flex;gap:6px;align-items:center}
+.pdot{width:10px;height:10px;border-radius:50%;background:#E2E8F0;transition:background .3s}
+.pdot.done{background:#22C55E}
+.pdot.active{background:#3B82F6;animation:pulse-dot 1s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
 
-/* ===== LEVEL 2 TOOLBAR ===== */
-#toolbar{display:none;gap:10px;padding:12px 16px;background:#F8FAFC;border-top:2px solid #E2E8F0;overflow-x:auto;flex-shrink:0;}
-.tool-btn{min-width:80px;height:80px;border-radius:16px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);transition:transform .15s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
-.tool-btn.selected{transform:scale(1.12);box-shadow:0 6px 20px rgba(59,130,246,.4);outline:3px solid #3B82F6;}
-.tool-icon{font-size:28px;}
-#l2-launch-btn{display:none;background:linear-gradient(90deg,#3B82F6,#6366F1);color:#fff;border:none;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;padding:0 20px;height:56px;cursor:pointer;flex-shrink:0;width:100%;transition:opacity .2s;}
-#l2-launch-btn:active{opacity:.8;}
-.l2-scenarios{display:none;gap:8px;padding:10px 16px;background:#F0F4FF;overflow-x:auto;flex-shrink:0;}
-.scen-btn{flex-shrink:0;background:#fff;border:2px solid #CBD5E1;border-radius:14px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:8px 16px;cursor:pointer;color:#334155;transition:all .15s;}
-.scen-btn.active{background:#3B82F6;border-color:#3B82F6;color:#fff;}
+/* ===== LEVEL 1: FALL ===== */
+#level1{background:#FFFDF7}
+.fall-scene{flex:1;position:relative;overflow:hidden;background:linear-gradient(180deg,#E0F2FE 0%,#BAE6FD 82%,#4ADE80 82%,#16A34A 100%)}
+.fall-scale{position:absolute;left:50%;transform:translateX(-50%);top:10px;bottom:64px;width:4px;background:rgba(0,0,0,.15);border-radius:2px}
+.fall-item{position:absolute;width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:54px;background:rgba(255,255,255,.75);box-shadow:0 4px 20px rgba(0,0,0,.15);cursor:default;transition:top 1.2s cubic-bezier(0.25,0.46,0.45,0.94);user-select:none;backdrop-filter:blur(4px);flex-direction:column}
+.fall-item.bounce-in{animation:bounce-in .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bounce-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.fall-item-label{font-size:10px;font-weight:700;color:#1E3A8A;line-height:1;margin-top:2px;text-align:center}
+.fall-controls{flex-shrink:0;padding:10px 12px 14px;background:#FFFDF7;display:flex;flex-direction:column;gap:8px}
+.fall-task-text{text-align:center;font-size:15px;font-weight:700;color:#1E3A8A;padding:2px 0}
+.fall-btns{display:flex;gap:8px}
+.fall-btn{flex:1;padding:14px 8px;border:none;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .1s,opacity .1s}
+.fall-btn:active{transform:scale(.95)}
+.fall-btn.left{background:#3B82F6;color:#fff}
+.fall-btn.same{flex:1.4;background:#22C55E;color:#fff}
+.fall-btn.right{background:#3B82F6;color:#fff}
+.fall-btn.correct-flash{background:#FFE141!important;color:#111!important;transform:scale(1.05)}
+.fall-btn.wrong-flash{opacity:.35}
+
+/* ===== LEVEL 2: GOLDBERG ===== */
+#level2{background:#FFFDF7}
+.gb-header{padding:8px 16px 6px;flex-shrink:0}
+.gb-goal{font-size:17px;font-weight:800;color:#1a1a2e;text-align:center}
+.gb-field{margin:0 12px;background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,.1);position:relative;overflow:hidden;flex-shrink:0;height:210px}
+.gb-field svg{position:absolute;top:0;left:0;width:100%;height:100%}
+.gb-ball{position:absolute;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,#3B82F6 60%,#1E40AF 100%);box-shadow:0 3px 12px rgba(0,0,0,.3);z-index:5;display:flex;align-items:center;justify-content:center;font-size:20px}
+.gb-star{position:absolute;font-size:30px;z-index:4;animation:star-pulse 1.5s ease-in-out infinite}
+@keyframes star-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.gb-slot{position:absolute;width:62px;height:62px;border-radius:14px;border:2.5px dashed #CBD5E1;background:rgba(248,250,252,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s;z-index:6}
+.gb-slot.highlight{border-color:#3B82F6;background:rgba(59,130,246,.08)}
+.gb-slot.filled{border-style:solid;border-color:#3B82F6;background:rgba(59,130,246,.1)}
+.gb-slot-emoji{font-size:28px;line-height:1}
+.gb-slot-label{font-size:9px;font-weight:700;color:#64748B;margin-top:2px}
+.gb-toolbar{padding:8px 12px 4px;display:flex;gap:8px;justify-content:center;flex-shrink:0}
+.gb-tool{width:70px;height:70px;border-radius:16px;border:2.5px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:28px;transition:border-color .2s,transform .15s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.gb-tool:active{transform:scale(.93)}
+.gb-tool.selected{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25);background:#EFF6FF}
+.gb-tool.used{opacity:.4;pointer-events:none}
+.gb-tool-label{font-size:9px;font-weight:700;color:#475569;margin-top:3px}
+.gb-launch-btn{margin:6px 12px 8px;padding:14px;background:#3B82F6;color:#fff;border:none;border-radius:16px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .1s}
+.gb-launch-btn:active{transform:scale(.97)}
+.gb-launch-btn:disabled{background:#CBD5E1;cursor:default}
+.gb-status{text-align:center;font-size:13px;color:#64748B;padding:0 12px;flex-shrink:0;min-height:18px}
+
+/* ===== LEVEL 3: PENDULUM ===== */
+#level3{background:#FFFDF7}
+.pend-canvas-wrap{flex-shrink:0;background:linear-gradient(180deg,#1E3A8A 0%,#1D4ED8 100%);position:relative}
+.pend-canvas-wrap canvas{display:block;width:100%}
+.pend-task-badge{margin:8px 12px;background:#fff;border-radius:14px;padding:10px 14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);flex-shrink:0}
+.pend-task-emoji{font-size:20px}
+.pend-task-text{font-size:15px;font-weight:700;color:#1a1a2e;margin-top:2px}
+.pend-task-hint{font-size:12px;color:#64748B;margin-top:2px}
+.pend-controls{padding:6px 12px 10px;flex-shrink:0}
+.pend-row{display:flex;gap:8px;margin-bottom:8px}
+.pend-btn{flex:1;padding:13px 8px;border:none;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .12s}
+.pend-btn:active{transform:scale(.94)}
+.pend-btn.dir{background:#3B82F6;color:#fff}
+.pend-btn.power-strong{background:#EF4444;color:#fff}
+.pend-btn.power-weak{background:#22C55E;color:#fff}
+.pend-counter{text-align:center;font-size:13px;font-weight:700;color:#475569}
+.pend-slider-wrap{padding:6px 12px 0;flex-shrink:0}
+.pend-slider-label{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:6px;text-align:center}
+.pend-slider{width:100%;accent-color:#3B82F6;height:6px;cursor:pointer}
 
 /* ===== SUCCESS OVERLAY ===== */
-.success-ov{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
-.success-ov.show{opacity:1;pointer-events:all;}
-.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);}
-.ov-card{position:relative;background:#fff;border-radius:28px;padding:36px 40px;text-align:center;max-width:380px;width:92%;border:3px solid #3B82F6;animation:cardPop .4s cubic-bezier(.34,1.56,.64,1);}
-@keyframes cardPop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-.ov-scientist{font-size:72px;display:block;margin-bottom:8px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) .15s both;}
-@keyframes pop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
-.ov-title{font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:10px;line-height:1.2;}
-.ov-fact{font-size:14px;color:#555;line-height:1.65;margin-bottom:24px;}
-.ov-btn{background:#FFE141;color:#111;border:none;padding:16px;border-radius:40px;font-size:18px;font-weight:800;cursor:pointer;width:100%;font-family:'Space Grotesk',sans-serif;transition:transform .15s;}
-.ov-btn:active{transform:scale(.96);}
+.success-ov{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.success-ov.show{opacity:1;pointer-events:all}
+.ov-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(8px)}
+.ov-card{position:relative;background:#fff;border-radius:28px;padding:28px 28px 24px;text-align:center;max-width:340px;width:90%;border:3px solid #3B82F6;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.ov-ico{font-size:68px;display:block;margin-bottom:4px;line-height:1}
+.ov-title{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:8px}
+.ov-fact{font-size:14px;color:#475569;line-height:1.65;margin-bottom:16px;text-align:left;background:#F8FAFC;border-radius:12px;padding:12px 14px}
+.ov-fact strong{color:#1a1a2e}
+.ov-btn{background:#FFE141;color:#111;border:none;padding:15px;border-radius:40px;font-size:17px;font-weight:800;cursor:pointer;width:100%;font-family:inherit}
+.ov-btn:active{transform:scale(.97)}
 
-/* ===== FAIL BADGE ===== */
-.fail-badge{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;border:2px solid #FF6B6B;border-radius:20px;padding:14px 24px;text-align:center;z-index:250;opacity:0;pointer-events:none;transition:opacity .3s;font-family:'Space Grotesk',sans-serif;max-width:320px;width:90%;}
-.fail-badge.show{opacity:1;pointer-events:all;}
-.fail-text{font-size:15px;font-weight:700;color:#FF4444;margin-bottom:10px;}
-.fail-retry{background:#3B82F6;color:#fff;border:none;border-radius:14px;padding:10px 24px;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:15px;cursor:pointer;}
+/* ===== FINISH OVERLAY ===== */
+.finish-ov{position:fixed;inset:0;z-index:110;display:none;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#1E3A8A,#3B82F6);text-align:center;padding:32px;gap:12px}
+.finish-ov.show{display:flex}
+.finish-ico{font-size:80px;animation:float 2s ease-in-out infinite}
+.finish-title{font-size:28px;font-weight:800;color:#fff}
+.finish-sub{font-size:16px;color:#BFDBFE}
+.finish-btn{background:#FFE141;color:#111;border:none;padding:16px 40px;border-radius:40px;font-size:18px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:8px}
 
-/* PENDULUM panel */
-#pendulum-panel{display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.93);border-radius:16px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,.15);text-align:center;z-index:20;}
-.slider-label{font-size:12px;font-weight:700;color:#334155;margin-bottom:8px;}
-#pendulum-slider{writing-mode:vertical-lr;direction:rtl;height:130px;cursor:pointer;accent-color:#3B82F6;}
-.slider-val{font-size:14px;font-weight:800;color:#3B82F6;margin-top:8px;}
+/* ===== ANIMATIONS ===== */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.shake{animation:shake .35s ease-in-out}
+@keyframes pop-small{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 
-#l3-launch-btn{display:none;background:#FFE141;color:#111;border:none;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;height:60px;cursor:pointer;flex-shrink:0;width:100%;transition:opacity .2s;border-top:2px solid #E2E8F0;}
-#l3-launch-btn:active{opacity:.8;}
-
-/* CONFETTI */
-#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:299;}
+/* ===== UTILS ===== */
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
 <!-- INTRO -->
-<div id="intro">
-  <canvas id="intro-canvas"></canvas>
-  <div id="intro-content">
-    <div class="intro-icon">⚡</div>
-    <div class="intro-title">КосмоБаза</div>
-    <div class="intro-sub">Физика — это магия!</div>
-    <button class="intro-btn" onclick="showLevelSelect()">Начать ▶</button>
-  </div>
+<div id="intro" class="screen active">
+  <div class="intro-ico">🔭</div>
+  <div class="intro-title">КвантУм<br>Физика</div>
+  <div class="intro-sub">Задачи руками. Видишь — понимаешь. Никаких скучных формул!</div>
+  <button class="intro-btn" onclick="showLevelSelect()">Поехали! 🚀</button>
 </div>
 
 <!-- LEVEL SELECT -->
-<div id="level-select">
-  <div class="ls-header">
-    <div class="ls-title">Выбери уровень</div>
-    <div class="ls-sub">Все открыты — начни с любого!</div>
+<div id="levelselect" class="screen">
+  <div class="ls-title">Выбери уровень</div>
+  <div class="ls-sub">Все уровни открыты — начинай с любого!</div>
+  <div class="level-card" onclick="startLevel(1)">
+    <div class="lc-ico">🍎</div>
+    <div class="lc-info">
+      <div class="lc-num">Уровень 1</div>
+      <div class="lc-name">Что упадёт быстрее?</div>
+      <div class="lc-desc">Угадывай и проверяй — кто победит в гонке падения</div>
+    </div>
+    <div class="lc-badge">5 задач</div>
   </div>
-  <div class="ls-cards">
-    <button class="ls-card ls-card-1" onclick="startLevel(1)">
-      <span class="ls-emoji">🍎</span>
-      <div class="ls-info">
-        <div class="ls-name">Всё падает!</div>
-        <div class="ls-desc">Гравитация и Галилей</div>
-      </div>
-      <span class="ls-badge">Ур. 1</span>
-    </button>
-    <button class="ls-card ls-card-2" onclick="startLevel(2)">
-      <span class="ls-emoji">⚙️</span>
-      <div class="ls-info">
-        <div class="ls-name">Машина Голдберга</div>
-        <div class="ls-desc">Передача энергии</div>
-      </div>
-      <span class="ls-badge">Ур. 2</span>
-    </button>
-    <button class="ls-card ls-card-3" onclick="startLevel(3)">
-      <span class="ls-emoji">🕰️</span>
-      <div class="ls-info">
-        <div class="ls-name">Маятник Галилея</div>
-        <div class="ls-desc">Период и длина</div>
-      </div>
-      <span class="ls-badge">Ур. 3</span>
-    </button>
+  <div class="level-card" onclick="startLevel(2)">
+    <div class="lc-ico">⚙️</div>
+    <div class="lc-info">
+      <div class="lc-num">Уровень 2</div>
+      <div class="lc-name">Машина Голдберга</div>
+      <div class="lc-desc">Расставь детали — прокати шар до цели</div>
+    </div>
+    <div class="lc-badge">3 задачи</div>
+  </div>
+  <div class="level-card" onclick="startLevel(3)">
+    <div class="lc-ico">🎯</div>
+    <div class="lc-info">
+      <div class="lc-num">Уровень 3</div>
+      <div class="lc-name">Маятник — Сбей мишени!</div>
+      <div class="lc-desc">Управляй маятником и сбивай цели</div>
+    </div>
+    <div class="lc-badge">5 задач</div>
   </div>
 </div>
 
-<!-- GAME SCREEN -->
-<div id="game">
-  <div class="game-topbar">
-    <button class="game-back" onclick="backToMenu()">← Меню</button>
-    <div class="game-level-title" id="game-title">Уровень 1</div>
-    <div class="game-counter" id="game-counter"></div>
+<!-- LEVEL 1 -->
+<div id="level1" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="level-header-info">
+      <div class="lh-name">🍎 Что упадёт быстрее?</div>
+      <div class="lh-sub">Угадай, потом проверь</div>
+    </div>
+    <div class="progress-dots" id="fall-dots"></div>
   </div>
-  <div id="l2-scenarios" class="l2-scenarios">
-    <button class="scen-btn active" data-s="0" onclick="setScenario(0)">🐱 Разбуди кота</button>
-    <button class="scen-btn" data-s="1" onclick="setScenario(1)">🌸 Полей цветок</button>
-    <button class="scen-btn" data-s="2" onclick="setScenario(2)">🔔 Звони в колокол</button>
+  <div class="fall-scene" id="fall-scene">
+    <div class="fall-scale"></div>
+    <div class="fall-item" id="fall-left"></div>
+    <div class="fall-item" id="fall-right"></div>
   </div>
-  <div id="canvas-wrap">
-    <canvas id="main-canvas"></canvas>
-    <div class="canvas-hint" id="canvas-hint"></div>
-    <div id="pendulum-panel">
-      <div class="slider-label">Длина нитки</div>
-      <input type="range" id="pendulum-slider" min="50" max="250" value="140" oninput="updateCustomPendulum()">
-      <div class="slider-val" id="slider-val">140px</div>
+  <div class="fall-controls">
+    <div class="fall-task-text" id="fall-task-text">Что упадёт БЫСТРЕЕ?</div>
+    <div class="fall-btns">
+      <button class="fall-btn left" id="btn-left" onclick="fallGuess('left')">⬅️ Левый</button>
+      <button class="fall-btn same" id="btn-same" onclick="fallGuess('same')">🤝 Вместе!</button>
+      <button class="fall-btn right" id="btn-right" onclick="fallGuess('right')">➡️ Правый</button>
     </div>
   </div>
-  <div id="toolbar">
-    <button class="tool-btn selected" data-type="ramp" onclick="selectTool('ramp')" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)"><span class="tool-icon">📐</span><span>Горка</span></button>
-    <button class="tool-btn" data-type="domino" onclick="selectTool('domino')" style="background:linear-gradient(135deg,#FDE8D8,#F97316)"><span class="tool-icon">🁣</span><span>Домино</span></button>
-    <button class="tool-btn" data-type="lever" onclick="selectTool('lever')" style="background:linear-gradient(135deg,#D1FAE5,#34D399)"><span class="tool-icon">⚖️</span><span>Рычаг</span></button>
-    <button class="tool-btn" data-type="spring" onclick="selectTool('spring')" style="background:linear-gradient(135deg,#EDE9FE,#8B5CF6)"><span class="tool-icon">🌀</span><span>Пружина</span></button>
-    <button class="tool-btn" data-type="wall" onclick="selectTool('wall')" style="background:linear-gradient(135deg,#F1F5F9,#94A3B8)"><span class="tool-icon">🧱</span><span>Стена</span></button>
+</div>
+
+<!-- LEVEL 2 -->
+<div id="level2" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="level-header-info">
+      <div class="lh-name">⚙️ Машина Голдберга</div>
+      <div class="lh-sub">Расставь детали правильно</div>
+    </div>
+    <div class="progress-dots" id="gb-dots"></div>
   </div>
-  <button id="l2-launch-btn" onclick="launchLevel2()">▶ ПУСК</button>
-  <button id="l3-launch-btn" onclick="launchAllPendulums()">Запустить все 🚀</button>
+  <div class="gb-header">
+    <div class="gb-goal" id="gb-goal"></div>
+  </div>
+  <div class="gb-field" id="gb-field">
+    <svg id="gb-svg" viewBox="0 0 360 210" preserveAspectRatio="none"></svg>
+    <div class="gb-ball" id="gb-ball"></div>
+    <div class="gb-star" id="gb-star">⭐</div>
+  </div>
+  <div class="gb-status" id="gb-status">Выбери деталь снизу и помести в слот</div>
+  <div class="gb-toolbar" id="gb-toolbar"></div>
+  <button class="gb-launch-btn" id="gb-launch" onclick="gbLaunch()" disabled>▶️ Запустить!</button>
+</div>
+
+<!-- LEVEL 3 -->
+<div id="level3" class="screen">
+  <div class="level-header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="level-header-info">
+      <div class="lh-name">🎯 Маятник</div>
+      <div class="lh-sub">Сбивай мишени!</div>
+    </div>
+    <div class="progress-dots" id="pend-dots"></div>
+  </div>
+  <div class="pend-canvas-wrap" id="pend-wrap">
+    <canvas id="pend-canvas"></canvas>
+  </div>
+  <div class="pend-task-badge" id="pend-badge">
+    <div class="pend-task-emoji" id="pend-emoji"></div>
+    <div class="pend-task-text" id="pend-task-text"></div>
+    <div class="pend-task-hint" id="pend-task-hint"></div>
+  </div>
+  <div class="pend-controls">
+    <div class="pend-row">
+      <button class="pend-btn dir" onclick="pendSwing('left')">⬅️ Влево</button>
+      <button class="pend-btn dir" onclick="pendSwing('right')">➡️ Вправо</button>
+    </div>
+    <div class="pend-row">
+      <button class="pend-btn power-strong" id="pow-strong" onclick="setPendPower('strong')">💥 Сильно</button>
+      <button class="pend-btn power-weak" id="pow-weak" onclick="setPendPower('weak')">🍃 Слабо</button>
+    </div>
+    <div class="pend-counter" id="pend-counter"></div>
+  </div>
+  <div class="pend-slider-wrap hidden" id="pend-slider-wrap">
+    <div class="pend-slider-label">🔬 Длина верёвки: <span id="pend-len-val">120</span>px</div>
+    <input type="range" class="pend-slider" id="pend-len-slider" min="60" max="190" value="120" oninput="pendChangeLen(this.value)">
+  </div>
 </div>
 
 <!-- SUCCESS OVERLAY -->
 <div class="success-ov" id="success-ov">
   <div class="ov-bg" onclick="closeSuccess()"></div>
   <div class="ov-card">
-    <span class="ov-scientist" id="ov-scientist">🧑‍🔬</span>
-    <div class="ov-title" id="ov-title">Молодец!</div>
+    <span class="ov-ico" id="ov-ico">🎉</span>
+    <div class="ov-title" id="ov-title">Правильно!</div>
     <div class="ov-fact" id="ov-fact"></div>
-    <button class="ov-btn" id="ov-btn" onclick="closeSuccess()">Следующий уровень ▶</button>
+    <button class="ov-btn" id="ov-btn" onclick="closeSuccess()">Следующая задача ➡️</button>
   </div>
 </div>
 
-<!-- FAIL BADGE -->
-<div class="fail-badge" id="fail-badge">
-  <div class="fail-text" id="fail-text">Почти! Попробуй переставить элементы 🔧</div>
-  <button class="fail-retry" onclick="retryLevel2()">Попробовать снова</button>
+<!-- FINISH OVERLAY -->
+<div class="finish-ov" id="finish-ov">
+  <div class="finish-ico">🏆</div>
+  <div class="finish-title">Уровень пройден!</div>
+  <div class="finish-sub" id="finish-sub"></div>
+  <button class="finish-btn" onclick="finishToMenu()">← К уровням</button>
 </div>
 
-<!-- CONFETTI -->
-<canvas id="confetti-canvas"></canvas>
-
 <script>
-'use strict';
-
-// ==================== UTILS ====================
-function $(id){ return document.getElementById(id); }
+// ===================== UTILS =====================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showLevelSelect(){showScreen('levelselect');}
+function goBack(){
+  if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
+  showScreen('levelselect');
+}
+function startLevel(n){
+  if(n===1)initFall();
+  else if(n===2)initGB();
+  else initPend();
+  showScreen('level'+n);
+}
 
 function burst(x,y,syms){
   syms.forEach((s,i)=>{
     const p=document.createElement('div');
-    const angle=(i/syms.length)*Math.PI*2;
-    const dist=55+Math.random()*55;
-    p.style.cssText=`position:fixed;left:${x}px;top:${y}px;font-size:${20+Math.random()*18}px;pointer-events:none;z-index:999;transition:all .8s cubic-bezier(.2,0,.8,1);`;
+    const a=(i/syms.length)*Math.PI*2;
+    const d=55+Math.random()*55;
+    p.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;font-size:'+(20+Math.random()*14)+'px;pointer-events:none;z-index:999;transition:all .75s ease-out;';
     p.textContent=s;
     document.body.appendChild(p);
     requestAnimationFrame(()=>{
-      p.style.transform=`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-55}px) rotate(${Math.random()*360}deg)`;
+      p.style.transform='translate('+(Math.cos(a)*d)+'px,'+(Math.sin(a)*d-50)+'px)';
       p.style.opacity='0';
     });
-    setTimeout(()=>p.remove(),900);
+    setTimeout(()=>p.remove(),800);
   });
 }
 
-// Confetti
-const confCanvas=$('confetti-canvas');
-const confCtx=confCanvas.getContext('2d');
-let confParticles=[];
-function resizeConf(){ confCanvas.width=window.innerWidth; confCanvas.height=window.innerHeight; }
-resizeConf();
-window.addEventListener('resize',resizeConf);
-
-function launchConfetti(){
-  confParticles=[];
-  for(let i=0;i<200;i++){
-    confParticles.push({
-      x:Math.random()*confCanvas.width, y:-20-Math.random()*100,
-      vx:(Math.random()-.5)*5, vy:3+Math.random()*4,
-      color:`hsl(${Math.random()*360},90%,60%)`,
-      w:8+Math.random()*8, h:4+Math.random()*4,
-      rot:Math.random()*360, rotV:(Math.random()-.5)*8
-    });
-  }
-  animConf();
+let ovCallback=null;
+function showSuccess(ico,title,fact,btnText,cb){
+  document.getElementById('ov-ico').textContent=ico;
+  document.getElementById('ov-title').textContent=title;
+  document.getElementById('ov-fact').innerHTML=fact;
+  document.getElementById('ov-btn').textContent=btnText||'Следующая задача ➡️';
+  ovCallback=cb||null;
+  document.getElementById('success-ov').classList.add('show');
 }
-function animConf(){
-  confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);
-  confParticles=confParticles.filter(p=>p.y<confCanvas.height+20);
-  confParticles.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV; p.vy+=0.07;
-    confCtx.save();
-    confCtx.translate(p.x,p.y);
-    confCtx.rotate(p.rot*Math.PI/180);
-    confCtx.fillStyle=p.color;
-    confCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-    confCtx.restore();
-  });
-  if(confParticles.length) requestAnimationFrame(animConf);
+function closeSuccess(){
+  document.getElementById('success-ov').classList.remove('show');
+  if(ovCallback){const f=ovCallback;ovCallback=null;f();}
 }
-
-function showSuccess(sci,title,fact,btnLabel,nextFn){
-  $('ov-scientist').textContent=sci;
-  $('ov-title').textContent=title;
-  $('ov-fact').textContent=fact;
-  const btn=$('ov-btn');
-  btn.textContent=btnLabel||'К выбору уровней ▶';
-  btn.onclick=()=>{ closeSuccess(); if(nextFn) nextFn(); else showLevelSelect(); };
-  $('success-ov').classList.add('show');
-  launchConfetti();
+function showFinish(sub){
+  document.getElementById('finish-sub').textContent=sub;
+  document.getElementById('finish-ov').classList.add('show');
 }
-function closeSuccess(){ $('success-ov').classList.remove('show'); }
-
-// ==================== SCREENS ====================
-function showLevelSelect(){
-  $('intro').style.display='none';
-  $('level-select').style.display='flex';
-  $('game').style.display='none';
-  stopAll();
+function finishToMenu(){
+  document.getElementById('finish-ov').classList.remove('show');
+  if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
+  showLevelSelect();
 }
-function backToMenu(){ showLevelSelect(); }
-
-// ==================== INTRO STARS ====================
-(function(){
-  const ic=$('intro-canvas');
-  ic.width=window.innerWidth; ic.height=window.innerHeight;
-  const ctx2=ic.getContext('2d');
-  const stars=Array.from({length:100},()=>({x:Math.random()*ic.width,y:Math.random()*ic.height,r:.5+Math.random()*2,a:Math.random()}));
-  function draw(){
-    ctx2.clearRect(0,0,ic.width,ic.height);
-    const t=Date.now()/1000;
-    stars.forEach(s=>{
-      ctx2.beginPath(); ctx2.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx2.fillStyle=`rgba(255,255,255,${.3+.5*Math.abs(Math.sin(t+s.a*10))})`;
-      ctx2.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-// ==================== CANVAS ====================
-const canvas=$('main-canvas');
-const ctx=canvas.getContext('2d');
-let W=0,H=0;
-
-function resizeCanvas(){
-  const wrap=$('canvas-wrap');
-  W=canvas.width=wrap.clientWidth;
-  H=canvas.height=wrap.clientHeight;
-}
-
-let currentLevel=0;
-let rafId=null;
-
-function stopAll(){
-  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
-  l1Stop(); l2Stop(); l3Stop();
-}
-
-function startLevel(n){
-  stopAll();
-  currentLevel=n;
-  $('level-select').style.display='none';
-  $('game').style.display='flex';
-  $('game').style.flexDirection='column';
-  $('toolbar').style.display='none';
-  $('l2-launch-btn').style.display='none';
-  $('l2-scenarios').style.display='none';
-  $('pendulum-panel').style.display='none';
-  $('l3-launch-btn').style.display='none';
-  $('canvas-hint').textContent='';
-  $('fail-badge').classList.remove('show');
-  resizeCanvas();
-  if(n===1) initLevel1();
-  else if(n===2) initLevel2();
-  else if(n===3) initLevel3();
-}
-
-// ==================== LEVEL 1 — GRAVITY ====================
-const GRAV=0.45;
-const GND_RATIO=0.87;
-let l1Items=[], l1Running=false, l1FirstTap=false;
-let l1LandedCount=0, l1Squash=[], l1Dust=[];
-
-function l1Stop(){ l1Running=false; canvas.onclick=null; canvas.ontouchstart=null; }
-
-function makeItems(){
-  return [
-    {emoji:'🍎', x:W*.22, y:H*.30, vx:0,vy:0, falling:false,landed:false, r:30, slow:false, angle:0, trail:[]},
-    {emoji:'🪨', x:W*.55, y:H*.22, vx:0,vy:0, falling:false,landed:false, r:28, slow:false, angle:0, trail:[]},
-    {emoji:'🪶', x:W*.36, y:H*.14, vx:0,vy:0, falling:false,landed:false, r:25, slow:true,  angle:0, trail:[]},
-    {emoji:'🏀', x:W*.72, y:H*.32, vx:0,vy:0, falling:false,landed:false, r:30, slow:false, angle:0, trail:[]},
-    {emoji:'📦', x:W*.13, y:H*.44, vx:0,vy:0, falling:false,landed:false, r:28, slow:false, angle:0, trail:[]},
-    {emoji:'🌸', x:W*.84, y:H*.18, vx:0,vy:0, falling:false,landed:false, r:26, slow:false, angle:0, trail:[]},
-  ];
-}
-
-function initLevel1(){
-  $('game-title').textContent='🍎 Всё падает!';
-  $('game-counter').textContent='';
-  $('canvas-hint').textContent='🍎 Тапни — и всё упадёт!';
-  l1Items=makeItems();
-  l1LandedCount=0; l1FirstTap=false; l1Squash=[]; l1Dust=[];
-  l1Running=true;
-  canvas.addEventListener('click',l1Tap);
-  canvas.addEventListener('touchstart',l1Touch,{passive:false});
-  rafId=requestAnimationFrame(loop1);
-}
-
-function l1Touch(e){
-  e.preventDefault();
-  const r=canvas.getBoundingClientRect();
-  l1HandleTap(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top);
-}
-function l1Tap(e){
-  const r=canvas.getBoundingClientRect();
-  l1HandleTap(e.clientX-r.left, e.clientY-r.top);
-}
-function l1HandleTap(tx,ty){
-  let hit=false;
-  l1Items.forEach(item=>{
-    if(item.falling||item.landed) return;
-    const dx=tx-item.x, dy=ty-item.y;
-    if(Math.sqrt(dx*dx+dy*dy)<item.r+22){
-      item.falling=true;
-      item.vx=(Math.random()-.5)*2;
-      hit=true;
-    }
-  });
-  if(hit&&!l1FirstTap){ l1FirstTap=true; $('canvas-hint').textContent=''; }
-}
-
-function loop1(){
-  if(!l1Running) return;
-  rafId=requestAnimationFrame(loop1);
-  const gY=H*GND_RATIO;
-
-  l1Items.forEach(item=>{
-    if(!item.falling||item.landed) return;
-    item.trail.unshift({x:item.x,y:item.y});
-    if(item.trail.length>4) item.trail.pop();
-    item.vy += item.slow ? GRAV*.28 : GRAV;
-    item.x+=item.vx; item.y+=item.vy;
-    item.angle += item.slow ? 1.5 : 4;
-    if(item.x<item.r){ item.x=item.r; item.vx=Math.abs(item.vx)*.5; }
-    if(item.x>W-item.r){ item.x=W-item.r; item.vx=-Math.abs(item.vx)*.5; }
-    if(item.y+item.r>=gY){
-      item.y=gY-item.r; item.vy*=-.35; item.vx*=.7;
-      if(Math.abs(item.vy)<1.2&&!item.landed){
-        item.landed=true; item.vy=0; item.vx=0;
-        l1OnLanded(item,gY);
-      }
-    }
-  });
-
-  l1Squash=l1Squash.filter(s=>{ s.t+=16; return s.t<300; });
-  l1Dust=l1Dust.filter(d=>{ d.x+=d.vx; d.y+=d.vy; d.vy+=.1; d.life--; return d.life>0; });
-
-  draw1(gY);
-}
-
-function l1OnLanded(item,gY){
-  l1LandedCount++;
-  $('game-counter').textContent=`${l1LandedCount} / 6 упало`;
-  l1Squash.push({item,t:0});
-  for(let i=0;i<5;i++){
-    l1Dust.push({x:item.x,y:gY,vx:(Math.random()-.5)*4,vy:-2-Math.random()*2,r:3+Math.random()*4,life:25});
-  }
-  const rect=canvas.getBoundingClientRect();
-  burst(rect.left+item.x, rect.top+item.y, ['💨','⭐','✨','💛']);
-  if(l1LandedCount===6){
-    setTimeout(()=>showSuccess(
-      '🧑‍🔬','⚡ Открытие Галилея!',
-      'В 1589 году Галилей доказал: тяжёлые и лёгкие предметы падают с одинаковым ускорением! Только воздух замедляет лёгкие вещи — как перо 🪶',
-      'Следующий уровень ▶', ()=>startLevel(2)
-    ),600);
+function makeDots(containerId,total,current){
+  const c=document.getElementById(containerId);
+  c.innerHTML='';
+  for(let i=0;i<total;i++){
+    const d=document.createElement('div');
+    d.className='pdot'+(i<current?' done':i===current?' active':'');
+    c.appendChild(d);
   }
 }
 
-function draw1(gY){
-  // Sky
-  const sk=ctx.createLinearGradient(0,0,0,H);
-  sk.addColorStop(0,'#87CEEB'); sk.addColorStop(1,'#E0F4FF');
-  ctx.fillStyle=sk; ctx.fillRect(0,0,W,H);
-
-  // Sun
-  const sp=1+.05*Math.sin(Date.now()/600);
-  ctx.save(); ctx.translate(W-70,65); ctx.scale(sp,sp);
-  ctx.strokeStyle='#FFD700'; ctx.lineWidth=3;
-  for(let i=0;i<8;i++){ const a=i*Math.PI/4; ctx.beginPath(); ctx.moveTo(Math.cos(a)*38,Math.sin(a)*38); ctx.lineTo(Math.cos(a)*52,Math.sin(a)*52); ctx.stroke(); }
-  const sg=ctx.createRadialGradient(0,0,0,0,0,32);
-  sg.addColorStop(0,'#FFF176'); sg.addColorStop(1,'#FFB300');
-  ctx.beginPath(); ctx.arc(0,0,32,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
-  ctx.restore();
-
-  // Clouds
-  const t=Date.now()/9000;
-  [[.1+t%1,55,1.0],[.42+t%1,40,.85],[.73+t%1,68,.9]].forEach(([cx,cy,sc])=>{
-    drawCloud(((cx%1)*W*1.3-90), cy, sc);
-  });
-
-  // Tree
-  const tx=W*.17, ty=gY;
-  const tg=ctx.createLinearGradient(tx-15,ty-130,tx+15,ty);
-  tg.addColorStop(0,'#8D6E63'); tg.addColorStop(1,'#5D4037');
-  ctx.fillStyle=tg; ctx.fillRect(tx-15,ty-130,30,130);
-  const cg=ctx.createRadialGradient(tx,ty-165,8,tx,ty-155,78);
-  cg.addColorStop(0,'#81C784'); cg.addColorStop(1,'#388E3C');
-  ctx.beginPath(); ctx.arc(tx,ty-160,78,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
-  // Small apple on tree
-  ctx.font='28px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('🍃',tx+30,ty-190);
-
-  // Ground
-  const gg=ctx.createLinearGradient(0,gY,0,H);
-  gg.addColorStop(0,'#5D8A3C'); gg.addColorStop(1,'#4a6e2f');
-  ctx.fillStyle=gg; ctx.fillRect(0,gY,W,H-gY);
-  ctx.fillStyle='rgba(0,0,0,.07)';
-  for(let i=0;i<10;i++){
-    const px=(i*143)%W, py=gY+12+(i*57)%(H-gY-22);
-    ctx.beginPath(); ctx.ellipse(px,py,20,9,0,0,Math.PI*2); ctx.fill();
-  }
-  // Grass
-  ctx.fillStyle='#7CB343';
-  for(let i=0;i<Math.floor(W/16);i++){
-    const gx=i*16+3;
-    ctx.beginPath(); ctx.moveTo(gx,gY); ctx.lineTo(gx+5,gY-12); ctx.lineTo(gx+10,gY); ctx.fill();
-  }
-
-  // Dust
-  l1Dust.forEach(d=>{
-    ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(180,160,120,${d.life/25})`; ctx.fill();
-  });
-
-  // Items
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  l1Items.forEach(item=>{
-    // trail
-    item.trail.forEach((pt,i)=>{
-      ctx.globalAlpha=.12*(1-i/4);
-      ctx.font=`${item.r*2*.9}px serif`;
-      ctx.fillText(item.emoji,pt.x,pt.y);
-    });
-    ctx.globalAlpha=1;
-
-    // squash
-    let sy=1,sx=1;
-    const sq=l1Squash.find(s=>s.item===item);
-    if(sq){
-      const p=sq.t/300;
-      if(p<.33){ sy=1-.3*(p/.33); sx=1+.15*(p/.33); }
-      else{ sy=.7+.3*((p-.33)/.67); sx=1.15-.15*((p-.33)/.67); }
-    }
-
-    ctx.save();
-    ctx.translate(item.x,item.y);
-    ctx.rotate(item.angle*Math.PI/180);
-    ctx.scale(sx,sy);
-    ctx.font=`${item.r*2}px serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(item.emoji,0,0);
-    ctx.restore();
-  });
-
-  // Hint hand
-  if(!l1FirstTap){
-    const target=l1Items.find(it=>!it.falling&&!it.landed);
-    if(target){
-      const alpha=.35+.65*((Math.sin(Date.now()/800)+1)/2);
-      ctx.globalAlpha=alpha;
-      ctx.font='38px serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('👆',target.x,target.y+55);
-      ctx.globalAlpha=1;
-    }
-  }
-
-  // Counter pill
-  if(l1LandedCount>0){
-    ctx.fillStyle='rgba(0,0,0,.5)';
-    ctx.beginPath(); ctx.roundRect(W/2-68,H-34,136,26,13); ctx.fill();
-    ctx.fillStyle='#FFE141';
-    ctx.font='bold 15px Space Grotesk';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(`${l1LandedCount} / 6 упало`,W/2,H-21);
-  }
-}
-
-function drawCloud(x,y,sc){
-  ctx.save(); ctx.translate(x,y); ctx.scale(sc,sc);
-  ctx.fillStyle='rgba(255,255,255,.88)';
-  [[-22,0,36],[12,0,30],[28,-6,24],[2,-13,28]].forEach(([cx,cy,r])=>{
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
-  });
-  ctx.restore();
-}
-
-// ==================== LEVEL 2 — GOLDBERG ====================
-let l2Running=false, l2Elements=[], l2SimRunning=false;
-let l2CurrentScenario=0, l2SelectedTool='ramp';
-let l2Ball={x:0,y:0,vx:0,vy:0,active:false,r:24,age:0};
-let l2DragEl=null, l2DragOff={x:0,y:0}, l2TapStart=null, l2LPTimer=null;
-
-const SCENARIOS=[
-  {goal:'🐱', gx:.85, gy:.85, label:'Разбуди кота'},
-  {goal:'🌸', gx:.72, gy:.78, label:'Полей цветок'},
-  {goal:'🔔', gx:.88, gy:.14, label:'Звони в колокол'},
+// ===================== LEVEL 1: FALL =====================
+const FALL_TASKS=[
+  {left:{e:'🪨',label:'Камень'},right:{e:'🪶',label:'Перо'},answer:'same',
+   fact:'<strong>Галилей доказал:</strong> в вакууме все тела падают одинаково! В воздухе перо тормозит из-за сопротивления.'},
+  {left:{e:'⚽',label:'Мяч'},right:{e:'🎈',label:'Шарик'},answer:'left',
+   fact:'<strong>Воздушный шарик</strong> очень лёгкий — воздух тормозит его намного сильнее. Мяч летит вперёд!'},
+  {left:{e:'🍎',label:'Яблоко'},right:{e:'📚',label:'Книга'},answer:'same',
+   fact:'<strong>Галилей сбрасывал шары</strong> с Пизанской башни! Разная масса — падают вместе.'},
+  {left:{e:'🔨',label:'Молоток'},right:{e:'🏓',label:'Мячик'},answer:'left',
+   fact:'<strong>Форма важна!</strong> Молоток компактный — меньше сопротивление воздуха. Побеждает!'},
+  {left:{e:'🪨',label:'Камень ×1'},right:{e:'🪨',label:'Камень ×2'},answer:'same',
+   fact:'<strong>Масса не важна!</strong> Земля тянет сильнее — но и двигать тяжелее. Всё сходится! Галилей был прав.'},
 ];
 
-function l2Stop(){
-  l2Running=false;
-  ['mousedown','mousemove','mouseup','touchstart','touchmove','touchend','contextmenu'].forEach(ev=>{
-    canvas.removeEventListener(ev,null);
+let fallIdx=0;
+let fallBusy=false;
+
+function initFall(){
+  fallIdx=0;
+  fallBusy=false;
+  renderFallTask();
+}
+
+function renderFallTask(){
+  makeDots('fall-dots',FALL_TASKS.length,fallIdx);
+  const t=FALL_TASKS[fallIdx];
+
+  ['btn-left','btn-same','btn-right'].forEach(id=>{
+    const b=document.getElementById(id);
+    b.classList.remove('correct-flash','wrong-flash');
+    b.disabled=false;
   });
+  document.getElementById('fall-task-text').textContent='Что упадёт БЫСТРЕЕ?';
+
+  const lEl=document.getElementById('fall-left');
+  const rEl=document.getElementById('fall-right');
+
+  // reset position no transition
+  lEl.style.transition='none';
+  rEl.style.transition='none';
+  lEl.style.top='24px';
+  rEl.style.top='24px';
+  lEl.style.left='calc(25% - 45px)';
+  rEl.style.left='calc(75% - 45px)';
+
+  lEl.innerHTML='<span>'+t.left.e+'</span><span class="fall-item-label">'+t.left.label+'</span>';
+  rEl.innerHTML='<span>'+t.right.e+'</span><span class="fall-item-label">'+t.right.label+'</span>';
+
+  // bounce in animation
+  lEl.classList.remove('bounce-in');
+  rEl.classList.remove('bounce-in');
+  void lEl.offsetWidth;
+  lEl.classList.add('bounce-in');
+  void rEl.offsetWidth;
+  rEl.classList.add('bounce-in');
+
+  fallBusy=false;
 }
 
-function selectTool(t){
-  l2SelectedTool=t;
-  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('selected'));
-  document.querySelector(`.tool-btn[data-type="${t}"]`).classList.add('selected');
-}
-function setScenario(idx){
-  l2CurrentScenario=idx;
-  document.querySelectorAll('.scen-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.scen-btn[data-s="${idx}"]`).classList.add('active');
-  l2Elements=[]; l2SimRunning=false; l2Ball.active=false;
-  $('fail-badge').classList.remove('show');
-}
+function fallGuess(guess){
+  if(fallBusy)return;
+  fallBusy=true;
 
-function initLevel2(){
-  $('game-title').textContent='⚙️ Машина Голдберга';
-  $('game-counter').textContent='';
-  $('canvas-hint').textContent='Размести элементы и нажми ПУСК';
-  $('toolbar').style.display='flex';
-  $('l2-launch-btn').style.display='block';
-  $('l2-scenarios').style.display='flex';
-  l2Elements=[]; l2SimRunning=false; l2CurrentScenario=0; l2SelectedTool='ramp';
-  l2Ball.active=false;
-  l2Running=true;
-  document.querySelectorAll('.scen-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
-  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('selected'));
-  document.querySelector('.tool-btn[data-type="ramp"]').classList.add('selected');
+  // disable buttons
+  ['btn-left','btn-same','btn-right'].forEach(id=>document.getElementById(id).disabled=true);
 
-  canvas.addEventListener('mousedown',l2MD);
-  canvas.addEventListener('mousemove',l2MM);
-  canvas.addEventListener('mouseup',l2MU);
-  canvas.addEventListener('touchstart',l2TS,{passive:false});
-  canvas.addEventListener('touchmove',l2TM,{passive:false});
-  canvas.addEventListener('touchend',l2TE);
-  canvas.addEventListener('contextmenu',l2CM);
-  rafId=requestAnimationFrame(loop2);
-}
+  const t=FALL_TASKS[fallIdx];
+  const correct=guess===t.answer;
+  const map={left:'btn-left',same:'btn-same',right:'btn-right'};
 
-function l2Pos(e){
-  const r=canvas.getBoundingClientRect();
-  if(e.touches) return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top};
-  return {x:e.clientX-r.left, y:e.clientY-r.top};
-}
-function l2Find(x,y){ return l2Elements.find(el=>{ const dx=x-el.x,dy=y-el.y; return Math.sqrt(dx*dx+dy*dy)<55; }); }
+  if(correct){
+    document.getElementById(map[guess]).classList.add('correct-flash');
+  } else {
+    document.getElementById(map[guess]).classList.add('wrong-flash');
+    document.getElementById(map[t.answer]).classList.add('correct-flash');
+  }
 
-function l2MD(e){ if(l2SimRunning) return; const p=l2Pos(e); const el=l2Find(p.x,p.y); if(el){ l2DragEl=el; l2DragOff={x:p.x-el.x,y:p.y-el.y}; } else l2TapStart=p; }
-function l2MM(e){ if(!l2DragEl) return; const p=l2Pos(e); l2DragEl.x=p.x-l2DragOff.x; l2DragEl.y=p.y-l2DragOff.y; }
-function l2MU(e){ if(l2DragEl){ l2DragEl=null; return; } if(l2TapStart){ const p=l2Pos(e); const dx=p.x-l2TapStart.x,dy=p.y-l2TapStart.y; if(Math.sqrt(dx*dx+dy*dy)<10) l2Place(l2TapStart.x,l2TapStart.y); l2TapStart=null; } }
-function l2TS(e){ e.preventDefault(); if(l2SimRunning) return; const p=l2Pos(e); const el=l2Find(p.x,p.y); if(el){ l2DragEl=el; l2DragOff={x:p.x-el.x,y:p.y-el.y}; l2LPTimer=setTimeout(()=>{ l2Elements=l2Elements.filter(x=>x!==el); l2DragEl=null; },600); } else l2TapStart=p; }
-function l2TM(e){ e.preventDefault(); clearTimeout(l2LPTimer); if(!l2DragEl) return; const p=l2Pos(e); l2DragEl.x=p.x-l2DragOff.x; l2DragEl.y=p.y-l2DragOff.y; }
-function l2TE(e){ clearTimeout(l2LPTimer); if(l2DragEl){ l2DragEl=null; return; } if(l2TapStart){ const r=canvas.getBoundingClientRect(); const lx=e.changedTouches[0].clientX-r.left,ly=e.changedTouches[0].clientY-r.top; const dx=lx-l2TapStart.x,dy=ly-l2TapStart.y; if(Math.sqrt(dx*dx+dy*dy)<14) l2Place(l2TapStart.x,l2TapStart.y); l2TapStart=null; } }
-function l2CM(e){ e.preventDefault(); const p=l2Pos(e); const el=l2Find(p.x,p.y); if(el) l2Elements=l2Elements.filter(x=>x!==el); }
-function l2Place(x,y){ if(l2Elements.length>=12) return; l2Elements.push({type:l2SelectedTool,x,y,state:0}); }
+  // animate fall
+  const scene=document.getElementById('fall-scene');
+  const sceneH=scene.offsetHeight;
+  const grassH=Math.round(sceneH*0.18)+4;
+  const bottomPos=sceneH-grassH-90-4;
 
-function launchLevel2(){
-  if(l2SimRunning) return;
-  l2SimRunning=true;
-  l2Ball={x:44,y:H*.12,vx:3.2,vy:0,active:true,r:24,age:0};
-  l2Elements.forEach(el=>{ el.state=0; });
-  $('canvas-hint').textContent=''; $('fail-badge').classList.remove('show');
-}
-function retryLevel2(){
-  $('fail-badge').classList.remove('show');
-  l2SimRunning=false; l2Ball.active=false;
-  l2Elements.forEach(el=>{ el.state=0; });
-}
+  const lEl=document.getElementById('fall-left');
+  const rEl=document.getElementById('fall-right');
 
-function loop2(){
-  if(!l2Running) return;
-  rafId=requestAnimationFrame(loop2);
-  const gY=H*GND_RATIO;
-  const sc=SCENARIOS[l2CurrentScenario];
+  if(t.answer==='same'){
+    lEl.style.transition='top 1.2s cubic-bezier(0.25,0.46,0.45,0.94)';
+    rEl.style.transition='top 1.2s cubic-bezier(0.25,0.46,0.45,0.94)';
+    lEl.style.top=bottomPos+'px';
+    rEl.style.top=bottomPos+'px';
+  } else if(t.answer==='left'){
+    lEl.style.transition='top 1.1s cubic-bezier(0.25,0.46,0.45,0.94)';
+    rEl.style.transition='top 1.6s cubic-bezier(0.25,0.46,0.45,0.94)';
+    lEl.style.top=bottomPos+'px';
+    setTimeout(()=>{rEl.style.top=bottomPos+'px';},150);
+  } else {
+    rEl.style.transition='top 1.1s cubic-bezier(0.25,0.46,0.45,0.94)';
+    lEl.style.transition='top 1.6s cubic-bezier(0.25,0.46,0.45,0.94)';
+    rEl.style.top=bottomPos+'px';
+    setTimeout(()=>{lEl.style.top=bottomPos+'px';},150);
+  }
 
-  if(l2SimRunning&&l2Ball.active){
-    l2Ball.vy+=0.38;
-    l2Ball.x+=l2Ball.vx; l2Ball.y+=l2Ball.vy;
-    l2Ball.age++;
-
-    // Element collisions
-    l2Elements.forEach(el=>{
-      const dx=l2Ball.x-el.x, dy=l2Ball.y-el.y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<65){
-        if(el.type==='ramp'){
-          const nx=Math.sin(-.5), ny=-Math.cos(-.5);
-          const dot=l2Ball.vx*nx+l2Ball.vy*ny;
-          if(dot<0){ l2Ball.vx-=2*dot*nx*.6; l2Ball.vy-=2*dot*ny*.6; }
-          l2Ball.vy+=.4;
-        }
-        if(el.type==='domino'&&el.state===0){
-          el.state=1;
-          l2Ball.vx*=.5; l2Ball.vy=-3;
-          setTimeout(()=>{
-            l2Elements.forEach(e2=>{ if(e2!==el&&e2.type==='domino'&&e2.state===0&&Math.sqrt((e2.x-el.x)**2+(e2.y-el.y)**2)<90) { e2.state=1; } });
-          },250);
-        }
-        if(el.type==='lever'&&el.state===0){ el.state=1; l2Ball.vy=-9; l2Ball.vx+=2; }
-        if(el.type==='spring'&&el.state<2){ el.state++; l2Ball.vy=-11; l2Ball.vx+=3; }
-        if(el.type==='wall'&&dist<50){ l2Ball.vx*=-.75; l2Ball.x=el.x+(l2Ball.x<el.x?-1:1)*52; }
-      }
-    });
-
-    // Ground
-    if(l2Ball.y+l2Ball.r>gY){ l2Ball.y=gY-l2Ball.r; l2Ball.vy*=-.4; l2Ball.vx*=.78; }
-    // Walls
-    if(l2Ball.x<l2Ball.r){ l2Ball.x=l2Ball.r; l2Ball.vx=Math.abs(l2Ball.vx)*.75; }
-    if(l2Ball.x>W-l2Ball.r){ l2Ball.x=W-l2Ball.r; l2Ball.vx=-Math.abs(l2Ball.vx)*.75; }
-
-    // Goal check
-    const gx=sc.gx*W, gy=sc.gy*H;
-    if(Math.sqrt((l2Ball.x-gx)**2+(l2Ball.y-gy)**2)<65){
-      l2SimRunning=false; l2Ball.active=false;
-      const rect=canvas.getBoundingClientRect();
-      burst(rect.left+gx,rect.top+gy,['🎉','⭐','🌟','💥','✨','🎊','💛']);
-      setTimeout(()=>showSuccess('🧠','Энергия передана!',
-        'Машина Голдберга превращает одно движение в цепочку действий. Каждый элемент передаёт энергию следующему — закон сохранения энергии в действии!',
-        'Следующий уровень ▶', ()=>startLevel(3)), 400);
+  setTimeout(()=>{
+    if(correct){
+      burst(window.innerWidth/2,window.innerHeight*0.4,['🎉','⭐','✨','🌟','💫','🎊']);
+      showSuccess('✅','Правильно!',t.fact,'Следующая задача ➡️',nextFallTask);
+    } else {
+      showSuccess('💡','Вот как это работает!',t.fact,'Понял, дальше! ➡️',nextFallTask);
     }
-    // Fail: ball below screen
-    if(l2Ball.y>H+30){ l2SimRunning=false; l2Ball.active=false; $('fail-badge').classList.add('show'); }
-    // Timeout
-    if(l2Ball.age>800){ l2SimRunning=false; l2Ball.active=false; $('fail-badge').classList.add('show'); }
-  }
-
-  draw2(gY,sc);
+  },1500);
 }
 
-function draw2(gY,sc){
-  const sk=ctx.createLinearGradient(0,0,0,H);
-  sk.addColorStop(0,'#87CEEB'); sk.addColorStop(1,'#E0F4FF');
-  ctx.fillStyle=sk; ctx.fillRect(0,0,W,H);
-
-  // Ground
-  ctx.fillStyle='#5D8A3C'; ctx.fillRect(0,gY,W,H-gY);
-  ctx.fillStyle='#7CB343';
-  for(let i=0;i<Math.floor(W/14);i++){
-    const gx=i*14+2;
-    ctx.beginPath(); ctx.moveTo(gx,gY); ctx.lineTo(gx+5,gY-10); ctx.lineTo(gx+10,gY); ctx.fill();
+function nextFallTask(){
+  fallIdx++;
+  if(fallIdx>=FALL_TASKS.length){
+    showFinish('Ты познал закон Галилея! 🍎');
+    return;
   }
+  renderFallTask();
+}
 
-  // START
-  ctx.fillStyle='rgba(255,255,255,.7)'; ctx.beginPath(); ctx.roundRect(20,H*.12-34,70,24,12); ctx.fill();
-  ctx.fillStyle='#3B82F6'; ctx.font='bold 13px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('СТАРТ',55,H*.12-22);
+// ===================== LEVEL 2: GOLDBERG =====================
+const GB_ELEMENTS=[
+  {id:'ramp',  emoji:'📐',label:'Горка',     color:'#FF8C42'},
+  {id:'spring',emoji:'🌀',label:'Пружина',   color:'#7B2FFF'},
+  {id:'bounce',emoji:'🎯',label:'Отбойник',  color:'#00C27C'},
+  {id:'fan',   emoji:'💨',label:'Вентилятор',color:'#3B82F6'},
+];
 
-  // Goal
-  const gx=sc.gx*W, gy=sc.gy*H;
-  ctx.font='52px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(sc.goal,gx,gy);
-  const p=.5+.5*Math.sin(Date.now()/600);
-  ctx.strokeStyle=`rgba(59,130,246,${.4+.3*p})`; ctx.lineWidth=3;
-  ctx.setLineDash([6,4]);
-  ctx.beginPath(); ctx.arc(gx,gy,46+p*4,0,Math.PI*2); ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Elements
-  l2Elements.forEach(el=>drawEl(el));
-
-  // Ball
+// Scenarios: slots with positions (% of 360x210), solution map, path keyframes
+const GB_SCENARIOS=[
   {
-    const bx=l2Ball.active?l2Ball.x:44;
-    const by=l2Ball.active?l2Ball.y:H*.12;
-    const bg=ctx.createRadialGradient(bx-8,by-8,2,bx,by,l2Ball.r);
-    bg.addColorStop(0,'#93C5FD'); bg.addColorStop(1,'#1D4ED8');
-    ctx.beginPath(); ctx.arc(bx,by,l2Ball.r,0,Math.PI*2);
-    ctx.fillStyle=bg; ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=2; ctx.stroke();
-    // shine
-    ctx.beginPath(); ctx.arc(bx-7,by-7,7,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fill();
-  }
+    goal:'Доставь ⚽ к ⭐ — направь шар вправо!',
+    ballEmoji:'⚽',
+    ballStart:{px:0.08,py:0.22},
+    starPos:{px:0.9,py:0.76},
+    slots:[
+      {id:'s0',px:0.17,py:0.22,label:'Слот 1'},
+      {id:'s1',px:0.5, py:0.45,label:'Слот 2'},
+    ],
+    solution:{s0:'ramp',s1:'bounce'},
+    pathGood:[
+      {px:0.08,py:0.22},{px:0.28,py:0.38},{px:0.55,py:0.55},{px:0.9,py:0.76}
+    ],
+    pathBad:[
+      {px:0.08,py:0.22},{px:0.22,py:0.45},{px:0.22,py:1.05}
+    ],
+    fact:'Горка превращает падение в движение вперёд! Потенциальная энергия → кинетическая.'
+  },
+  {
+    goal:'Ускорь ⚽ вентилятором и горкой к ⭐!',
+    ballEmoji:'⚽',
+    ballStart:{px:0.05,py:0.48},
+    starPos:{px:0.9,py:0.65},
+    slots:[
+      {id:'s0',px:0.15,py:0.48,label:'Слот 1'},
+      {id:'s1',px:0.48,py:0.35,label:'Слот 2'},
+    ],
+    solution:{s0:'fan',s1:'ramp'},
+    pathGood:[
+      {px:0.05,py:0.48},{px:0.28,py:0.42},{px:0.55,py:0.32},{px:0.9,py:0.65}
+    ],
+    pathBad:[
+      {px:0.05,py:0.48},{px:0.28,py:0.5},{px:0.28,py:1.05}
+    ],
+    fact:'Сила + наклон = ускорение. Второй закон Ньютона в действии!'
+  },
+  {
+    goal:'Подбрось ⚽ пружиной к ⭐ вверху!',
+    ballEmoji:'⚽',
+    ballStart:{px:0.08,py:0.8},
+    starPos:{px:0.88,py:0.17},
+    slots:[
+      {id:'s0',px:0.15,py:0.8,label:'Слот 1'},
+      {id:'s1',px:0.5, py:0.5,label:'Слот 2'},
+    ],
+    solution:{s0:'spring',s1:'bounce'},
+    pathGood:[
+      {px:0.08,py:0.8},{px:0.25,py:0.35},{px:0.55,py:0.22},{px:0.88,py:0.17}
+    ],
+    pathBad:[
+      {px:0.08,py:0.8},{px:0.25,py:0.8},{px:0.25,py:1.05}
+    ],
+    fact:'Пружина накапливает энергию и отдаёт её одним толчком! Упругая → кинетическая энергия.'
+  },
+];
 
-  // Hint
-  if(l2Elements.length===0&&!l2SimRunning){
-    ctx.fillStyle='rgba(0,0,0,.45)';
-    ctx.beginPath(); ctx.roundRect(W/2-145,H/2-22,290,44,22); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='bold 14px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('👆 Тапни экран, чтобы разместить элемент',W/2,H/2);
-  }
+let gbIdx=0;
+let gbSelected=null;
+let gbPlaced={};
+let gbBusy=false;
+
+function initGB(){
+  gbIdx=0;
+  gbBusy=false;
+  renderGBScenario();
 }
 
-function drawEl(el){
-  ctx.save(); ctx.translate(el.x,el.y);
-  switch(el.type){
-    case 'ramp':
-      const rg=ctx.createLinearGradient(-52,22,52,-22);
-      rg.addColorStop(0,'#92400E'); rg.addColorStop(1,'#D97706');
-      ctx.fillStyle=rg;
-      ctx.beginPath(); ctx.moveTo(-52,22); ctx.lineTo(52,-22); ctx.lineTo(52,28); ctx.lineTo(-52,28); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle='#78350F'; ctx.lineWidth=3; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(-52,22); ctx.lineTo(52,-22); ctx.stroke();
-      break;
-    case 'domino':
-      ctx.rotate(el.state===1?Math.PI/2:0);
-      ctx.fillStyle='#4E342E';
-      ctx.beginPath(); ctx.roundRect(-10,-32,20,64,5); ctx.fill();
-      ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(-10,0); ctx.lineTo(10,0); ctx.stroke();
-      ctx.fillStyle='#fff';
-      [[-4,-20],[4,-20],[0,-10],[-4,10],[4,10],[0,22]].forEach(([dx,dy])=>{ ctx.beginPath(); ctx.arc(dx,dy,3,0,Math.PI*2); ctx.fill(); });
-      break;
-    case 'lever':
-      ctx.rotate(el.state===1?-.45:.1);
-      ctx.strokeStyle='#065F46'; ctx.lineWidth=8; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(-42,0); ctx.lineTo(42,0); ctx.stroke();
-      ctx.fillStyle='#059669';
-      ctx.beginPath(); ctx.moveTo(-8,0); ctx.lineTo(8,0); ctx.lineTo(0,30); ctx.closePath(); ctx.fill();
-      ctx.fillStyle='#6EE7B7'; ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2); ctx.fill();
-      break;
-    case 'spring':
-      const comp=el.state>0?.65:1;
-      ctx.strokeStyle='#7C3AED'; ctx.lineWidth=4; ctx.lineCap='round';
-      ctx.beginPath();
-      for(let i=0;i<=8;i++){
-        const yy=-28*comp+i*7*comp, xx=i%2===0?-14:14;
-        if(i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
-      }
-      ctx.stroke();
-      ctx.strokeStyle='#C4B5FD'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(-14,-28*comp); ctx.lineTo(14,-28*comp); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-14,28*comp); ctx.lineTo(14,28*comp); ctx.stroke();
-      break;
-    case 'wall':
-      ctx.fillStyle='#6B7280'; ctx.beginPath(); ctx.roundRect(-9,-42,18,84,5); ctx.fill();
-      ctx.fillStyle='#9CA3AF';
-      for(let r=0;r<4;r++){ ctx.fillRect(-7,-40+r*21,14,1.5); if(r%2===0) ctx.fillRect(-7,-30+r*21,7,1); }
-      break;
-  }
-  // drag handle
-  ctx.fillStyle='rgba(255,255,255,.45)'; ctx.beginPath(); ctx.arc(0,0,7,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-}
+function renderGBScenario(){
+  makeDots('gb-dots',GB_SCENARIOS.length,gbIdx);
+  const sc=GB_SCENARIOS[gbIdx];
+  gbSelected=null;
+  gbPlaced={};
+  gbBusy=false;
 
-// ==================== LEVEL 3 — PENDULUM ====================
-let l3Running=false, l3Launched=false, l3StartTime=0;
-let l3RevealDone=false, l3CustomDone=false;
-let l3CustomLen=140;
-let l3Pends=[], l3Custom={}, l3Metro={};
+  document.getElementById('gb-goal').textContent=sc.goal;
+  document.getElementById('gb-status').textContent='Выбери деталь снизу и помести в слот';
+  document.getElementById('gb-launch').disabled=true;
 
-function l3Stop(){ l3Running=false; canvas.removeEventListener('click',l3Tap); canvas.removeEventListener('touchstart',l3Touch); }
+  const field=document.getElementById('gb-field');
+  const W=field.offsetWidth||360;
+  const H=field.offsetHeight||210;
 
-function initLevel3(){
-  $('game-title').textContent='🕰️ Маятник Галилея';
-  $('game-counter').textContent='';
-  $('canvas-hint').textContent='Тапни на шар чтобы раскачать';
-  $('pendulum-panel').style.display='block';
-  $('l3-launch-btn').style.display='block';
-  l3Running=true; l3Launched=false; l3RevealDone=false; l3CustomDone=false;
-  l3CustomLen=140; $('pendulum-slider').value=140; $('slider-val').textContent='140px';
+  // SVG dashed guide path
+  const svg=document.getElementById('gb-svg');
+  svg.innerHTML='';
+  const pts=sc.pathGood.map(f=>(f.px*W)+','+(f.py*H)).join(' ');
+  const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  pl.setAttribute('points',pts);
+  pl.setAttribute('stroke','#E2E8F0');
+  pl.setAttribute('stroke-width','3');
+  pl.setAttribute('stroke-dasharray','8,6');
+  pl.setAttribute('fill','none');
+  pl.setAttribute('stroke-linecap','round');
+  svg.appendChild(pl);
 
-  // Scale lengths to screen
-  const lS=Math.min(H*0.32, 125);
-  const lL=Math.min(H*0.50, 210);
+  // ball
+  const ball=document.getElementById('gb-ball');
+  ball.style.transition='none';
+  ball.style.left=(sc.ballStart.px*W-18)+'px';
+  ball.style.top=(sc.ballStart.py*H-18)+'px';
+  ball.textContent=sc.ballEmoji;
 
-  l3Pends=[
-    {x:W*.22,L:lS,mass:16,color:'#FF5038',emoji:'🔴',label:'Лёгкий\nкороткий',angle:0,omega:0,active:false},
-    {x:W*.5, L:lL,mass:28,color:'#3B82F6',emoji:'🔵',label:'Тяжёлый\nдлинный', angle:0,omega:0,active:false},
-    {x:W*.78,L:lS,mass:28,color:'#00C27C',emoji:'🟢',label:'Тяжёлый\nкороткий',angle:0,omega:0,active:false},
-  ];
-  l3Custom={x:W*.5,L:l3CustomLen,mass:20,color:'#FF9800',emoji:'🟡',angle:.4,omega:0,active:false,visible:false};
-  l3Metro={angle:.4,omega:0,L:lS,active:false};
+  // star
+  const star=document.getElementById('gb-star');
+  star.style.left=(sc.starPos.px*W-15)+'px';
+  star.style.top=(sc.starPos.py*H-15)+'px';
 
-  canvas.addEventListener('click',l3Tap);
-  canvas.addEventListener('touchstart',l3Touch,{passive:false});
-  rafId=requestAnimationFrame(loop3);
-}
+  // remove old slots
+  field.querySelectorAll('.gb-slot').forEach(s=>s.remove());
 
-function updateCustomPendulum(){
-  l3CustomLen=parseInt($('pendulum-slider').value);
-  $('slider-val').textContent=l3CustomLen+'px';
-  l3Custom.L=l3CustomLen; l3Custom.angle=.4; l3Custom.omega=0;
-}
+  // create slots
+  sc.slots.forEach(sl=>{
+    const div=document.createElement('div');
+    div.className='gb-slot';
+    div.id='gbslot-'+sl.id;
+    div.style.left=(sl.px*W-31)+'px';
+    div.style.top=(sl.py*H-31)+'px';
+    div.innerHTML='<span class="gb-slot-emoji">＋</span><span class="gb-slot-label">'+sl.label+'</span>';
+    div.onclick=()=>gbSlotClick(sl.id);
+    field.appendChild(div);
+  });
 
-function l3Touch(e){ e.preventDefault(); const r=canvas.getBoundingClientRect(); l3Hit(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top); }
-function l3Tap(e){ const r=canvas.getBoundingClientRect(); l3Hit(e.clientX-r.left,e.clientY-r.top); }
-function l3Hit(tx,ty){
-  const beamY=24;
-  [...l3Pends, l3Custom.visible?l3Custom:null].filter(Boolean).forEach(p=>{
-    const bx=p.x+Math.sin(p.angle)*p.L, by=beamY+Math.cos(p.angle)*p.L;
-    const dx=tx-bx, dy=ty-by;
-    if(Math.sqrt(dx*dx+dy*dy)<p.mass+22){ p.angle=.45; p.omega=0; p.active=true; }
+  // toolbar
+  const tb=document.getElementById('gb-toolbar');
+  tb.innerHTML='';
+  GB_ELEMENTS.forEach(el=>{
+    const btn=document.createElement('button');
+    btn.className='gb-tool';
+    btn.id='gbtool-'+el.id;
+    btn.innerHTML='<span>'+el.emoji+'</span><span class="gb-tool-label">'+el.label+'</span>';
+    btn.style.borderColor=el.color;
+    btn.onclick=()=>gbToolClick(el.id);
+    tb.appendChild(btn);
   });
 }
 
-function launchAllPendulums(){
-  l3Pends.forEach(p=>{ p.angle=.4; p.omega=0; p.active=true; });
-  l3Custom.visible=true; l3Custom.active=true; l3Custom.angle=.4; l3Custom.omega=0;
-  l3Metro.active=true; l3Metro.angle=.4; l3Metro.omega=0;
-  l3Launched=true; l3StartTime=Date.now(); l3RevealDone=false;
-  $('canvas-hint').textContent='';
+function gbToolClick(id){
+  if(gbBusy)return;
+  document.querySelectorAll('.gb-tool').forEach(b=>b.classList.remove('selected'));
+  if(gbSelected===id){gbSelected=null;return;}
+  gbSelected=id;
+  document.getElementById('gbtool-'+id).classList.add('selected');
+  document.getElementById('gb-status').textContent='Тапни на слот чтобы разместить деталь';
 }
 
-const G_SIM=9800;
-function pendStep(p){
-  if(!p.active) return;
-  const L=Math.max(p.L,30);
-  const alpha=-(G_SIM/L)*Math.sin(p.angle)*.00000256;
-  p.omega=(p.omega+alpha)*.9994;
-  p.angle+=p.omega;
+function gbSlotClick(slotId){
+  if(gbBusy)return;
+  const sc=GB_SCENARIOS[gbIdx];
+  const slotEl=document.getElementById('gbslot-'+slotId);
+  const slotDef=sc.slots.find(s=>s.id===slotId);
+
+  if(gbPlaced[slotId]){
+    // return element to toolbar
+    const retId=gbPlaced[slotId];
+    delete gbPlaced[slotId];
+    slotEl.innerHTML='<span class="gb-slot-emoji">＋</span><span class="gb-slot-label">'+slotDef.label+'</span>';
+    slotEl.classList.remove('filled');
+    slotEl.style.borderColor='';
+    document.getElementById('gbtool-'+retId).classList.remove('used');
+    slotEl.classList.add('shake');
+    setTimeout(()=>slotEl.classList.remove('shake'),400);
+    gbCheckReady();
+    return;
+  }
+  if(!gbSelected){
+    document.getElementById('gb-status').textContent='Сначала выбери деталь снизу!';
+    slotEl.classList.add('shake');
+    setTimeout(()=>slotEl.classList.remove('shake'),400);
+    return;
+  }
+  // place element
+  const el=GB_ELEMENTS.find(e=>e.id===gbSelected);
+  gbPlaced[slotId]=gbSelected;
+  slotEl.innerHTML='<span class="gb-slot-emoji" style="animation:pop-small .3s cubic-bezier(.34,1.56,.64,1)">'+el.emoji+'</span><span class="gb-slot-label">'+el.label+'</span>';
+  slotEl.classList.add('filled');
+  slotEl.style.borderColor=el.color;
+  document.getElementById('gbtool-'+gbSelected).classList.add('used');
+  gbSelected=null;
+  document.querySelectorAll('.gb-tool').forEach(b=>b.classList.remove('selected'));
+  gbCheckReady();
 }
 
-function loop3(){
-  if(!l3Running) return;
-  rafId=requestAnimationFrame(loop3);
-  l3Pends.forEach(pendStep);
-  pendStep(l3Custom);
-  if(l3Metro.active){ pendStep(l3Metro); if(Math.abs(l3Metro.angle)<.02&&Math.abs(l3Metro.omega)<.001) l3Metro.omega=.12; }
+function gbCheckReady(){
+  const sc=GB_SCENARIOS[gbIdx];
+  const needed=sc.slots.length;
+  const placed=Object.keys(gbPlaced).length;
+  const ready=placed>=needed;
+  document.getElementById('gb-launch').disabled=!ready;
+  document.getElementById('gb-status').textContent=ready?'Готово! Нажми Запустить':'Размещено: '+placed+' / '+needed;
+}
 
-  if(l3Launched&&!l3RevealDone&&Date.now()-l3StartTime>4000){
-    l3RevealDone=true; showPendReveal();
+function gbLaunch(){
+  if(gbBusy)return;
+  gbBusy=true;
+  const sc=GB_SCENARIOS[gbIdx];
+  const field=document.getElementById('gb-field');
+  const W=field.offsetWidth||360;
+  const H=field.offsetHeight||210;
+  const ball=document.getElementById('gb-ball');
+
+  // check correctness
+  const correct=sc.slots.every(sl=>gbPlaced[sl.id]===sc.solution[sl.id]);
+  const frames=correct?sc.pathGood:sc.pathBad;
+  const durations=correct?[350,350,400]:[350,350];
+
+  function animStep(i){
+    if(i>=frames.length){
+      if(correct){
+        const bRect=ball.getBoundingClientRect();
+        burst(bRect.left+18,bRect.top+18,['⭐','🎉','✨','🚀','💫','⚙️']);
+        setTimeout(()=>{
+          showSuccess('⚙️','Машина работает!',sc.fact,'Следующая задача ➡️',()=>{
+            gbIdx++;
+            if(gbIdx>=GB_SCENARIOS.length){showFinish('Ты собрал все машины Голдберга! ⚙️');return;}
+            renderGBScenario();
+          });
+        },300);
+      } else {
+        ball.classList.add('shake');
+        setTimeout(()=>ball.classList.remove('shake'),400);
+        document.getElementById('gb-status').textContent='❌ Шар упал! Попробуй другую комбинацию';
+        gbBusy=false;
+      }
+      return;
+    }
+    const f=frames[i];
+    const dur=durations[i]||350;
+    ball.style.transition='left '+dur+'ms ease-in-out, top '+dur+'ms ease-in-out';
+    ball.style.left=(f.px*W-18)+'px';
+    ball.style.top=(f.py*H-18)+'px';
+    setTimeout(()=>animStep(i+1),dur);
+  }
+  animStep(0);
+}
+
+// ===================== LEVEL 3: PENDULUM =====================
+const PEND_TASKS=[
+  {emoji:'🎯',task:'Сбей правую мишень',hint:'Качни вправо!',
+   targets:[{angle:0.52,avoid:false}],avoids:[]},
+  {emoji:'🎯🎯',task:'Сбей ОБЕ мишени',hint:'Качни сильно!',
+   targets:[{angle:-0.48,avoid:false},{angle:0.48,avoid:false}],avoids:[]},
+  {emoji:'⚖️',task:'Качнись ровно 5 раз',hint:'Туда-обратно = 1 качание',
+   swingGoal:5,targets:[],avoids:[]},
+  {emoji:'🎯',task:'Сбей левую — НЕ задень правую!',hint:'Слабый толчок влево',
+   targets:[{angle:-0.45,avoid:false}],avoids:[{angle:0.45}]},
+  {emoji:'🔬',task:'Открытие! Двигай ползунок длины верёвки',hint:'Найди разницу в скорости!',
+   isDiscovery:true,targets:[],avoids:[]},
+];
+
+let pendIdx=0;
+let pendAngle=0.05;
+let pendVelocity=0;
+let pendLength=120;
+let pendPower='strong';
+let pendRAF=null;
+let pendTargets=[];
+let pendHitCount=0;
+let pendSwingCount=0;
+let pendLastSign=0;
+let pendBusy=false;
+
+function initPend(){
+  pendIdx=0;
+  pendBusy=false;
+  const canvas=document.getElementById('pend-canvas');
+  const wrap=document.getElementById('pend-wrap');
+  const W=wrap.offsetWidth||360;
+  const H=Math.round(Math.min(220,W*0.52));
+  canvas.width=W;
+  canvas.height=H;
+  canvas.style.height=H+'px';
+  pendLength=Math.round(H*0.52);
+  if(pendRAF)cancelAnimationFrame(pendRAF);
+  renderPendTask();
+  pendRAF=requestAnimationFrame(pendLoop);
+}
+
+function renderPendTask(){
+  makeDots('pend-dots',PEND_TASKS.length,pendIdx);
+  const t=PEND_TASKS[pendIdx];
+  document.getElementById('pend-emoji').textContent=t.emoji;
+  document.getElementById('pend-task-text').textContent=t.task;
+  document.getElementById('pend-task-hint').textContent=t.hint||'';
+  document.getElementById('pend-counter').textContent='';
+
+  pendAngle=0.05;
+  pendVelocity=0;
+  pendHitCount=0;
+  pendSwingCount=0;
+  pendLastSign=0;
+  pendBusy=false;
+
+  const canvas=document.getElementById('pend-canvas');
+  const W=canvas.width;
+  const H=canvas.height;
+  const pivotX=W/2;
+  const pivotY=16;
+
+  // build targets array
+  pendTargets=[];
+  if(t.targets){
+    t.targets.forEach(tg=>{
+      pendTargets.push({angle:tg.angle,avoid:false,hit:false,
+        x:pivotX+Math.sin(tg.angle)*pendLength,
+        y:pivotY+Math.cos(tg.angle)*pendLength});
+    });
+  }
+  if(t.avoids){
+    t.avoids.forEach(av=>{
+      pendTargets.push({angle:av.angle,avoid:true,hit:false,
+        x:pivotX+Math.sin(av.angle)*pendLength,
+        y:pivotY+Math.cos(av.angle)*pendLength});
+    });
   }
 
-  // Match check — target length = same as l3Pends[0].L
-  if(l3Custom.active&&l3Custom.visible&&!l3CustomDone){
-    if(Math.abs(l3Custom.L-l3Pends[0].L)<22){
-      l3CustomDone=true;
-      const rect=canvas.getBoundingClientRect();
-      burst(rect.left+l3Custom.x, rect.top+24+l3Custom.L*.5, ['✨','⭐','🎉','💛','🌟']);
-      setTimeout(()=>showSuccess('🕰️','Галилей был прав!',
-        'Период маятника зависит только от длины нити! В 1583 году Галилей заметил это, наблюдая за люстрой в соборе Пизы. Масса груза — не важна!',
-        'К выбору уровней ▶', null), 600);
+  // discovery slider
+  const sw=document.getElementById('pend-slider-wrap');
+  if(t.isDiscovery){
+    sw.classList.remove('hidden');
+    document.getElementById('pend-len-slider').value=pendLength;
+    document.getElementById('pend-len-val').textContent=pendLength;
+  } else {
+    sw.classList.add('hidden');
+  }
+
+  // reset power indicator
+  document.getElementById('pow-strong').style.outline='3px solid #FFE141';
+  document.getElementById('pow-weak').style.outline='';
+}
+
+function setPendPower(p){
+  pendPower=p;
+  document.getElementById('pow-strong').style.outline=p==='strong'?'3px solid #FFE141':'';
+  document.getElementById('pow-weak').style.outline=p==='weak'?'3px solid #FFE141':'';
+}
+
+function pendSwing(dir){
+  if(pendBusy)return;
+  const amp=pendPower==='strong'?0.06:0.025;
+  pendVelocity+=(dir==='left'?-1:1)*amp;
+}
+
+function pendChangeLen(val){
+  pendLength=parseInt(val);
+  document.getElementById('pend-len-val').textContent=val;
+  // update target positions
+  const canvas=document.getElementById('pend-canvas');
+  const pivotX=canvas.width/2;
+  const pivotY=16;
+  pendTargets.forEach(tg=>{
+    tg.x=pivotX+Math.sin(tg.angle)*pendLength;
+    tg.y=pivotY+Math.cos(tg.angle)*pendLength;
+  });
+}
+
+function pendLoop(){
+  if(!document.getElementById('level3').classList.contains('active')){
+    pendRAF=requestAnimationFrame(pendLoop);
+    return;
+  }
+  // physics
+  const g=0.003;
+  pendVelocity+=(-g*Math.sin(pendAngle))*(100/pendLength);
+  pendVelocity*=0.996;
+  pendAngle+=pendVelocity;
+
+  // count swings (zero crossings)
+  const sign=pendAngle>=0?1:-1;
+  if(pendLastSign!==0&&sign!==pendLastSign){
+    pendSwingCount++;
+    const t=PEND_TASKS[pendIdx];
+    if(t.swingGoal){
+      document.getElementById('pend-counter').textContent='Качаний: '+pendSwingCount+' / '+t.swingGoal;
     }
   }
-  draw3();
+  pendLastSign=sign;
+
+  drawPendulum();
+  checkPendHits();
+  pendRAF=requestAnimationFrame(pendLoop);
 }
 
-function showPendReveal(){
-  const d=document.createElement('div');
-  d.style.cssText='position:fixed;inset:0;z-index:250;display:flex;align-items:center;justify-content:center;pointer-events:none;';
-  d.innerHTML=`<div style="background:rgba(10,15,40,.85);backdrop-filter:blur(10px);border-radius:28px;padding:28px 32px;text-align:center;max-width:310px;width:88%;animation:cardPop .4s cubic-bezier(.34,1.56,.64,1);">
-    <div style="font-size:48px;margin-bottom:10px;">⚡</div>
-    <div style="font-size:20px;font-weight:800;color:#FFE141;margin-bottom:12px;">Открытие Галилея!</div>
-    <div style="font-size:14px;color:#E2E8F0;line-height:1.7;">
-      🔴 Красный = 🟢 Зелёный<br><span style="color:#A5B4FC;">(одинаковая длина → одинаковый ритм!)</span><br><br>
-      🔵 Синий медленнее — он длиннее!<br><br>
-      <strong style="color:#FFE141;font-size:16px;">Масса не важна!</strong>
-    </div>
-  </div>`;
-  document.body.appendChild(d);
-  setTimeout(()=>{ d.style.transition='opacity .5s'; d.style.opacity='0'; setTimeout(()=>d.remove(),600); }, 3500);
-}
+function drawPendulum(){
+  const canvas=document.getElementById('pend-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width;
+  const H=canvas.height;
+  ctx.clearRect(0,0,W,H);
 
-function draw3(){
-  ctx.fillStyle='#FFF8F0'; ctx.fillRect(0,0,W,H);
+  const pivotX=W/2;
+  const pivotY=16;
+  const ballX=pivotX+Math.sin(pendAngle)*pendLength;
+  const ballY=pivotY+Math.cos(pendAngle)*pendLength;
 
-  // Decorative edge
-  ctx.strokeStyle='rgba(180,130,80,.18)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
-  ctx.strokeRect(8,8,W-16,H-16); ctx.setLineDash([]);
-
-  // Beam
-  const bg2=ctx.createLinearGradient(0,0,0,24);
-  bg2.addColorStop(0,'#6D4C41'); bg2.addColorStop(1,'#4E342E');
-  ctx.fillStyle=bg2; ctx.fillRect(0,0,W,24);
-  ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=36){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+18,24); ctx.stroke(); }
-
-  // Footer label
-  ctx.fillStyle='rgba(140,90,50,.45)'; ctx.font='bold 12px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('Пиза, 1583 год', W/2, H-14);
-
-  // Main pendulums
-  l3Pends.forEach(p=>{
-    const bx=p.x+Math.sin(p.angle)*p.L, by=24+Math.cos(p.angle)*p.L;
-    // shadow
-    ctx.save(); ctx.globalAlpha=.12;
-    ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(bx,H*GND_RATIO,p.mass*.9,7,0,0,Math.PI*2); ctx.fill();
+  // draw targets
+  pendTargets.forEach(tg=>{
+    if(tg.hit)return;
+    ctx.save();
+    ctx.font='28px serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.globalAlpha=tg.avoid?0.55:1;
+    ctx.fillText(tg.avoid?'🚫':'🎯',tg.x,tg.y);
     ctx.restore();
-    // string
-    ctx.strokeStyle='rgba(100,70,50,.8)'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(p.x,24); ctx.lineTo(bx,by); ctx.stroke();
-    // nail
-    ctx.fillStyle='#555'; ctx.beginPath(); ctx.arc(p.x,24,5,0,Math.PI*2); ctx.fill();
-    // ball
-    const bg=ctx.createRadialGradient(bx-p.mass*.35,by-p.mass*.35,2,bx,by,p.mass);
-    bg.addColorStop(0,'rgba(255,255,255,.8)'); bg.addColorStop(.4,p.color); bg.addColorStop(1,p.color+'88');
-    ctx.beginPath(); ctx.arc(bx,by,p.mass,0,Math.PI*2); ctx.fillStyle=bg; ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,.4)'; ctx.lineWidth=2; ctx.stroke();
-    // label
-    ctx.fillStyle='rgba(80,50,30,.7)'; ctx.font='bold 11px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='top';
-    p.label.split('\n').forEach((line,li)=>ctx.fillText(line,p.x,H-58+li*15));
-    ctx.font='22px serif'; ctx.textBaseline='middle'; ctx.fillText(p.emoji,p.x,H-28);
   });
 
-  // Custom pendulum
-  if(l3Custom.visible){
-    const cp=l3Custom;
-    const bx=cp.x+Math.sin(cp.angle)*cp.L, by=24+Math.cos(cp.angle)*cp.L;
-    ctx.strokeStyle='#FF9800'; ctx.lineWidth=2.5;
-    ctx.beginPath(); ctx.moveTo(cp.x,24); ctx.lineTo(bx,by); ctx.stroke();
-    ctx.fillStyle='#FF9800'; ctx.beginPath(); ctx.arc(cp.x,24,5,0,Math.PI*2); ctx.fill();
-    const cbg=ctx.createRadialGradient(bx-6,by-6,2,bx,by,20);
-    cbg.addColorStop(0,'#FFF9C4'); cbg.addColorStop(1,'#FF9800');
-    ctx.beginPath(); ctx.arc(bx,by,20,0,Math.PI*2); ctx.fillStyle=cbg; ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=2; ctx.stroke();
-    // guide line
-    ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(255,152,0,.4)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(cp.x+28,24); ctx.lineTo(cp.x+28,24+cp.L); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='#E65100'; ctx.font='bold 11px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='top';
-    ctx.fillText('Твой маятник',cp.x,H-58);
-  }
+  // rope shadow
+  ctx.beginPath();
+  ctx.moveTo(pivotX,pivotY);
+  ctx.lineTo(ballX,ballY);
+  ctx.strokeStyle='rgba(255,255,255,0.15)';
+  ctx.lineWidth=6;
+  ctx.stroke();
 
-  // Metronome reference
-  if(l3Metro.active){
-    const mx=W-52, my=24;
-    const mbx=mx+Math.sin(l3Metro.angle)*l3Metro.L*.45, mby=my+Math.cos(l3Metro.angle)*l3Metro.L*.45;
-    ctx.strokeStyle='rgba(100,80,60,.55)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(mbx,mby); ctx.stroke();
-    ctx.fillStyle='#A0522D'; ctx.beginPath(); ctx.arc(mbx,mby,7,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='rgba(100,70,40,.65)'; ctx.font='bold 10px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='top';
-    ctx.fillText('Цель',mx,my+l3Metro.L*.45+10);
-  }
+  // rope
+  ctx.beginPath();
+  ctx.moveTo(pivotX,pivotY);
+  ctx.lineTo(ballX,ballY);
+  ctx.strokeStyle='rgba(255,255,255,0.85)';
+  ctx.lineWidth=3;
+  ctx.lineCap='round';
+  ctx.stroke();
 
-  // Match hint
-  if(l3Custom.visible&&!l3CustomDone){
-    const matched=Math.abs(l3Custom.L-l3Pends[0].L)<22;
-    ctx.fillStyle=matched?'rgba(0,194,124,.85)':'rgba(0,0,0,.45)';
-    ctx.beginPath(); ctx.roundRect(W/2-132,H*.48-18,264,36,18); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='bold 13px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(matched?'✅ Почти! Запусти всех!':'Настрой длину нитки → совпади с Целью!',W/2,H*.48);
-  }
+  // pivot dot
+  ctx.beginPath();
+  ctx.arc(pivotX,pivotY,7,0,Math.PI*2);
+  ctx.fillStyle='#FFE141';
+  ctx.fill();
 
-  // Not launched hint
-  if(!l3Launched){
-    ctx.fillStyle='rgba(0,0,0,.42)';
-    ctx.beginPath(); ctx.roundRect(W/2-145,H/2-22,290,44,22); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='bold 14px Space Grotesk'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('👆 Тапни на шар или нажми кнопку',W/2,H/2);
-  }
+  // ball glow
+  ctx.beginPath();
+  ctx.arc(ballX,ballY,26,0,Math.PI*2);
+  ctx.fillStyle='rgba(96,165,250,0.18)';
+  ctx.fill();
+
+  // ball
+  const grad=ctx.createRadialGradient(ballX-7,ballY-7,2,ballX,ballY,20);
+  grad.addColorStop(0,'#fff');
+  grad.addColorStop(0.45,'#60A5FA');
+  grad.addColorStop(1,'#1E40AF');
+  ctx.beginPath();
+  ctx.arc(ballX,ballY,20,0,Math.PI*2);
+  ctx.fillStyle=grad;
+  ctx.shadowColor='rgba(0,0,0,0.35)';
+  ctx.shadowBlur=8;
+  ctx.fill();
+  ctx.shadowBlur=0;
 }
+
+function checkPendHits(){
+  if(pendBusy)return;
+  const t=PEND_TASKS[pendIdx];
+  const canvas=document.getElementById('pend-canvas');
+  const W=canvas.width;
+  const H=canvas.height;
+  const pivotX=W/2;
+  const pivotY=16;
+  const ballX=pivotX+Math.sin(pendAngle)*pendLength;
+  const ballY=pivotY+Math.cos(pendAngle)*pendLength;
+
+  // discovery: after enough swings show fact
+  if(t.isDiscovery){
+    if(pendSwingCount>=8){
+      pendBusy=true;
+      cancelAnimationFrame(pendRAF);pendRAF=null;
+      showSuccess('🔬','Ты открыл закон маятника!',
+        '<strong>Галилей открыл это в 1583 году!</strong> Период маятника зависит только от длины верёвки — не от веса шара и не от силы толчка. Длиннее верёвка — медленнее качается.',
+        'Завершить уровень! 🏆',()=>{
+          showFinish('Ты открыл закон Галилея о маятнике! 🔭');
+        });
+    }
+    return;
+  }
+
+  // swing goal
+  if(t.swingGoal&&pendSwingCount>=t.swingGoal&&!pendBusy){
+    pendBusy=true;
+    cancelAnimationFrame(pendRAF);pendRAF=null;
+    burst(W/2,canvas.getBoundingClientRect().top+H/2,['⚖️','✨','⭐','🎉','💫']);
+    showSuccess('⚖️','Отлично! Ровно 5 качаний!',
+      '<strong>Период маятника</strong> зависит только от длины верёвки — не от веса и не от силы толчка! Это открытие Галилея изменило науку.',
+      'Следующая задача ➡️',()=>{
+        pendIdx++;
+        if(pendIdx>=PEND_TASKS.length){showFinish('Маятник покорён! 🎯');return;}
+        renderPendTask();
+        pendBusy=false;
+        pendRAF=requestAnimationFrame(pendLoop);
+      });
+    return;
+  }
+
+  // target hits
+  if(!pendTargets.length)return;
+  pendTargets.forEach(tg=>{
+    if(tg.hit)return;
+    const dist=Math.hypot(ballX-tg.x,ballY-tg.y);
+    if(dist>28)return;
+    tg.hit=true;
+
+    if(tg.avoid){
+      // hit forbidden — fail
+      pendBusy=true;
+      cancelAnimationFrame(pendRAF);pendRAF=null;
+      const wrap=document.getElementById('pend-wrap');
+      wrap.style.background='rgba(239,68,68,0.3)';
+      setTimeout(()=>{wrap.style.background='';},500);
+      showSuccess('❌','Задел запрещённую мишень!',
+        '<strong>Попробуй слабее!</strong> Нажми «🍃 Слабо» и качни влево — маятник не должен достать до правой мишени.',
+        'Попробовать снова',()=>{
+          renderPendTask();
+          pendBusy=false;
+          pendRAF=requestAnimationFrame(pendLoop);
+        });
+      return;
+    }
+
+    // good hit — particles
+    const rect=canvas.getBoundingClientRect();
+    for(let i=0;i<6;i++){
+      const p=document.createElement('div');
+      const a=(i/6)*Math.PI*2;
+      const d=25+Math.random()*25;
+      p.style.cssText='position:fixed;left:'+(rect.left+tg.x)+'px;top:'+(rect.top+tg.y)+'px;font-size:16px;pointer-events:none;z-index:999;transition:all .5s ease-out;';
+      p.textContent=['✨','💥','⭐','🎊','💫','🔥'][i];
+      document.body.appendChild(p);
+      requestAnimationFrame(()=>{
+        p.style.transform='translate('+(Math.cos(a)*d)+'px,'+(Math.sin(a)*d-30)+'px)';
+        p.style.opacity='0';
+      });
+      setTimeout(()=>p.remove(),600);
+    }
+    pendHitCount++;
+
+    // check all good targets hit
+    const goodTargets=pendTargets.filter(x=>!x.avoid);
+    const allHit=goodTargets.every(x=>x.hit);
+    if(allHit&&!pendBusy){
+      pendBusy=true;
+      cancelAnimationFrame(pendRAF);pendRAF=null;
+      const facts=[
+        'Маятник движется по дуге — это <strong>гармоническое колебание</strong>. Гравитация тянет вниз, скорость несёт вперёд!',
+        'При сильном толчке амплитуда больше — но период тот же! Это открытие Галилея.',
+        'Маятник — основа первых <strong>точных часов</strong>! Гюйгенс изобрёл их в 1657 году.',
+        'Чтобы сбить только одну цель — нужна точная сила. Это <strong>управление амплитудой</strong>!',
+      ];
+      setTimeout(()=>{
+        burst(W/2,rect.top+H/2,['🎯','⭐','💫','🎉','✨','🚀']);
+        showSuccess('🎯','Мишень сбита!',facts[pendIdx%facts.length],'Следующая задача ➡️',()=>{
+          pendIdx++;
+          if(pendIdx>=PEND_TASKS.length){showFinish('Маятник покорён! 🎯');return;}
+          renderPendTask();
+          pendBusy=false;
+          pendRAF=requestAnimationFrame(pendLoop);
+        });
+      },300);
+    }
+  });
+}
+
+// resize canvas if window resizes and level3 active
+window.addEventListener('resize',()=>{
+  if(document.getElementById('level3').classList.contains('active')){
+    if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
+    initPend();
+  }
+});
 </script>
 </body>
 </html>
