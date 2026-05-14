@@ -159,23 +159,23 @@ canvas{touch-action:none}
         </div>
         <span class="lc-badge" id="badge1">▶</span>
       </div>
-      <div class="lvl-card locked" id="card2" onclick="startLevel(2)">
+      <div class="lvl-card" id="card2" onclick="startLevel(2)">
         <span class="lc-ico">🔌</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 2</div>
           <div class="lc-name">ЭлектроЛаб</div>
           <div class="lc-desc">Тяни провода, зажигай лампочки</div>
         </div>
-        <span class="lc-badge" id="badge2">🔒</span>
+        <span class="lc-badge" id="badge2">▶</span>
       </div>
-      <div class="lvl-card locked" id="card3" onclick="startLevel(3)">
+      <div class="lvl-card" id="card3" onclick="startLevel(3)">
         <span class="lc-ico">🔴</span>
         <div class="lc-info">
           <div class="lc-num">Уровень 3</div>
           <div class="lc-name">Лазер и Зеркала</div>
           <div class="lc-desc">Поворачивай зеркала — направляй луч</div>
         </div>
-        <span class="lc-badge" id="badge3">🔒</span>
+        <span class="lc-badge" id="badge3">▶</span>
       </div>
     </div>
   </div>
@@ -286,8 +286,6 @@ function goBack(lvl) {
 }
 
 function startLevel(n) {
-  if (n === 2 && document.getElementById('card2').classList.contains('locked')) return;
-  if (n === 3 && document.getElementById('card3').classList.contains('locked')) return;
   showScreen('level' + n);
 }
 
@@ -354,11 +352,9 @@ function applyProgress() {
 function resetAll() {
   progress.lvl1 = false; progress.lvl2 = false; progress.lvl3 = false;
   saveProgress();
-  ['badge1','badge2','badge3'].forEach((id,i) => document.getElementById(id).textContent = i===0?'▶':'🔒');
-  document.getElementById('card1').classList.remove('done');
-  ['card2','card3'].forEach(id => {
+  ['badge1','badge2','badge3'].forEach(id => document.getElementById(id).textContent = '▶');
+  ['card1','card2','card3'].forEach(id => {
     document.getElementById(id).classList.remove('done');
-    document.getElementById(id).classList.add('locked');
   });
   document.querySelectorAll('.star-dot').forEach(s => s.classList.remove('lit'));
   showScreen('levelSelect');
