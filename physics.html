@@ -1,1287 +1,1339 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>КвантУм — Физика | КосмоБаза</title>
-<link href="https://fonts.bunny.net/css?family=fredoka-one:400|nunito:500,700,800" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>КвантУм — КосмоБаза</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@import url('https://fonts.bunny.net/css?family=fredoka-one:400|nunito:500,700,800');
 
 :root {
-  --ak-bg: #FFF3E2;
-  --ak-bg-2: #FFE8CC;
-  --ak-surface: #FFFDF7;
-  --ak-ink: #2D1B45;
-  --ak-ink-2: #6B5680;
-  --ak-ink-3: #A797B8;
-  --ak-line: rgba(45,27,69,.08);
-  --ak-phys-1: #E5DCFF;
-  --ak-phys-2: #B5A1FF;
-  --ak-phys-3: #7C5FE0;
-  --ak-cta-1: #FFEDA8;
-  --ak-cta-2: #FFD262;
-  --ak-cta-3: #D4A22B;
-  --ak-ok-1: #C8F2DD;
-  --ak-ok-2: #5DD9A0;
-  --ak-ok-3: #2BA873;
-  --ak-warn-1: #FFD2C8;
-  --ak-warn-2: #FF8B7A;
-  --ak-warn-3: #D9523F;
-  --ak-r-sm: 10px; --ak-r-md: 18px; --ak-r-lg: 28px; --ak-r-xl: 36px;
+  --ak-bg:        #FFF3E2;
+  --ak-bg-2:      #FFE8CC;
+  --ak-surface:   #FFFDF7;
+  --ak-ink:       #2D1B45;
+  --ak-ink-2:     #6B5680;
+  --ak-ink-3:     #A797B8;
+  --ak-line:      rgba(45,27,69,.08);
+
+  --ak-chem-1:    #DCF7E7;
+  --ak-chem-2:    #7BD9A8;
+  --ak-chem-3:    #3CA876;
+
+  --ak-phys-1:    #E5DCFF;
+  --ak-phys-2:    #B5A1FF;
+  --ak-phys-3:    #7C5FE0;
+
+  --ak-bio-1:     #FFE0CB;
+  --ak-bio-2:     #FFA17A;
+  --ak-bio-3:     #D96D49;
+
+  --ak-geo-1:     #D6ECFA;
+  --ak-geo-2:     #8FCAF0;
+  --ak-geo-3:     #4A93C9;
+
+  --ak-cta-1:     #FFEDA8;
+  --ak-cta-2:     #FFD262;
+  --ak-cta-3:     #D4A22B;
+
+  --ak-ok-1:      #C8F2DD;
+  --ak-ok-2:      #5DD9A0;
+  --ak-ok-3:      #2BA873;
+
+  --ak-warn-1:    #FFD2C8;
+  --ak-warn-2:    #FF8B7A;
+  --ak-warn-3:    #D9523F;
+
+  --ak-star-1:    #FFE49E;
+  --ak-star-2:    #FFC857;
+  --ak-star-3:    #D4972B;
+
+  --ak-r-sm:  10px;
+  --ak-r-md:  18px;
+  --ak-r-lg:  28px;
+  --ak-r-xl:  36px;
+
+  --ak-display: 'Fredoka One', 'Nunito', system-ui, sans-serif;
+  --ak-body:    'Nunito', system-ui, sans-serif;
 }
 
-html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:var(--ak-ink)}
-body{
-  display:flex;flex-direction:column;
-  background:linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%);
-  min-height:100vh;
+html, body { background: #FFF3E2; margin: 0; }
+#root { min-height: 100vh; }
+
+body { margin: 0; font-family: var(--ak-body); color: var(--ak-ink); }
+
+.ak {
+  font-family: var(--ak-body);
+  color: var(--ak-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ===== SCREENS ===== */
-.screen{display:none;flex-direction:column;height:100%;overflow:hidden}
-.screen.active{display:flex}
-
-/* ===== INTRO ===== */
-#intro{
-  background:linear-gradient(160deg,var(--ak-phys-3) 0%,var(--ak-phys-2) 60%,var(--ak-phys-1) 100%);
-  align-items:center;justify-content:center;text-align:center;padding:32px 24px;gap:16px
-}
-.intro-ico{font-size:80px;animation:ak-bob 3.2s ease-in-out infinite}
-.intro-title{font-family:'Fredoka One',sans-serif;font-size:34px;color:#fff;line-height:1.2}
-.intro-sub{font-family:'Nunito',sans-serif;font-size:16px;color:rgba(255,255,255,.85);line-height:1.5;max-width:300px}
-.intro-btn{
-  font-family:'Fredoka One',sans-serif;font-size:19px;border:none;cursor:pointer;
-  padding:17px 52px;border-radius:999px;color:var(--ak-ink);margin-top:8px;
-  background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);
-  box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);
-  transition:transform .08s ease,box-shadow .08s ease;
-}
-.intro-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-cta-3),0 6px 14px -6px rgba(212,162,43,.45),inset 0 2px 0 rgba(255,255,255,.7)}
-
-/* ===== LEVEL SELECT ===== */
-#levelselect{
-  padding:20px 16px;gap:14px;align-items:stretch;overflow-y:auto;
-  background:linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 100%);
-}
-.ls-title{
-  font-family:'Fredoka One',sans-serif;font-size:24px;color:var(--ak-ink);
-  text-align:center;margin-bottom:2px;
-}
-.ls-sub{font-family:'Nunito',sans-serif;font-size:14px;color:var(--ak-ink-2);text-align:center;margin-bottom:6px}
-
-.level-card{
-  background:var(--ak-surface);
-  border-radius:24px;padding:20px;
-  display:flex;align-items:center;gap:16px;cursor:pointer;
-  box-shadow:0 8px 0 rgba(45,27,69,.08),0 18px 32px -10px rgba(45,27,69,.15),inset 0 2px 0 rgba(255,255,255,1),inset 0 -2px 0 rgba(45,27,69,.04);
-  transition:transform .12s cubic-bezier(.34,1.56,.64,1);
-}
-.level-card:hover{transform:translateY(-4px)}
-.level-card:active{transform:translateY(0)}
-.level-card .lc-ico{font-size:48px;flex-shrink:0}
-.level-card .lc-info{}
-.level-card .lc-num{
-  font-family:'Fredoka One',sans-serif;font-size:12px;color:var(--ak-phys-3);
-  text-transform:uppercase;letter-spacing:.5px;
-}
-.level-card .lc-name{
-  font-family:'Fredoka One',sans-serif;font-size:19px;color:var(--ak-ink);margin:2px 0;
-}
-.level-card .lc-desc{font-family:'Nunito',sans-serif;font-size:13px;color:var(--ak-ink-2);line-height:1.4}
-.lc-badge{
-  margin-left:auto;flex-shrink:0;
-  font-family:'Fredoka One',sans-serif;font-size:13px;
-  padding:6px 14px;border-radius:999px;white-space:nowrap;color:#fff;
-  background:linear-gradient(180deg,var(--ak-phys-2) 0%,var(--ak-phys-3) 100%);
-  box-shadow:0 3px 0 #5A3EC0,0 6px 14px -4px rgba(124,95,224,.4);
-}
-.back-btn{
-  background:none;border:none;color:var(--ak-phys-3);font-size:15px;font-weight:700;
-  cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:6px;font-family:'Fredoka One',sans-serif;
+.ak-clay {
+  background: var(--ak-surface);
+  border-radius: var(--ak-r-lg);
+  box-shadow:
+    0 10px 22px -8px rgba(45,27,69,.22),
+    0 4px 10px -4px rgba(45,27,69,.10),
+    inset 0 2px 0 rgba(255,255,255,.9),
+    inset 0 -3px 0 rgba(45,27,69,.06);
 }
 
-/* ===== LEVEL HEADER ===== */
-.level-header{
-  padding:12px 16px 8px;display:flex;align-items:center;gap:12px;
-  background:var(--ak-surface);
-  border-bottom:1.5px solid var(--ak-line);
-  flex-shrink:0;
-  box-shadow:0 2px 8px rgba(45,27,69,.06);
-}
-.level-header .back-btn{font-size:22px;padding:0}
-.level-header-info{flex:1}
-.level-header-info .lh-name{font-family:'Fredoka One',sans-serif;font-size:17px;color:var(--ak-ink)}
-.level-header-info .lh-sub{font-family:'Nunito',sans-serif;font-size:12px;color:var(--ak-ink-2)}
-.progress-dots{display:flex;gap:6px;align-items:center}
-.pdot{
-  width:10px;height:10px;border-radius:50%;
-  background:rgba(45,27,69,.12);transition:background .3s;
-}
-.pdot.done{background:var(--ak-ok-2)}
-.pdot.active{background:var(--ak-phys-2);animation:pulse-dot 1s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
-
-/* ===== LEVEL 1: FALL ===== */
-#level1{background:var(--ak-bg)}
-.fall-scene{
-  flex:1;position:relative;overflow:hidden;
-  background:linear-gradient(180deg,#D8EEFF 0%,#B8DCFF 82%,#7EE8A2 82%,#3BB868 100%)
-}
-.fall-scale{
-  position:absolute;left:50%;transform:translateX(-50%);top:10px;bottom:64px;
-  width:3px;background:rgba(45,27,69,.10);border-radius:2px;
-}
-.fall-item{
-  position:absolute;width:90px;height:90px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:54px;
-  background:rgba(255,253,247,.82);
-  box-shadow:0 6px 20px rgba(45,27,69,.15),inset 0 2px 0 rgba(255,255,255,.9);
-  cursor:default;transition:top 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
-  user-select:none;backdrop-filter:blur(6px);flex-direction:column;
-}
-.fall-item.bounce-in{animation:bounce-in .4s cubic-bezier(.34,1.56,.64,1)}
-@keyframes bounce-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.fall-item-label{
-  font-family:'Fredoka One',sans-serif;font-size:10px;color:var(--ak-phys-3);
-  line-height:1;margin-top:2px;text-align:center;
-}
-.fall-controls{
-  flex-shrink:0;padding:10px 12px 14px;
-  background:var(--ak-surface);
-  border-top:1.5px solid var(--ak-line);
-  display:flex;flex-direction:column;gap:8px;
-}
-.fall-task-text{
-  font-family:'Fredoka One',sans-serif;text-align:center;font-size:15px;
-  color:var(--ak-ink);padding:2px 0;
-}
-.fall-btns{display:flex;gap:8px}
-.fall-btn{
-  flex:1;padding:14px 8px;border:none;border-radius:999px;
-  font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;
-  transition:transform .1s,opacity .1s,box-shadow .08s;
-  color:#fff;
-  background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9881F0 100%);
-  box-shadow:0 5px 0 var(--ak-phys-3),0 10px 20px -6px rgba(124,95,224,.45),inset 0 2px 0 rgba(255,255,255,.55);
-}
-.fall-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ak-phys-3),inset 0 2px 0 rgba(255,255,255,.4)}
-.fall-btn.same{
-  flex:1.4;
-  background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);
-  color:var(--ak-ink);
-  box-shadow:0 5px 0 var(--ak-cta-3),0 10px 20px -6px rgba(212,162,43,.5),inset 0 2px 0 rgba(255,255,255,.85);
-}
-.fall-btn.same:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ak-cta-3)}
-.fall-btn.correct-flash{
-  background:linear-gradient(180deg,#C8F2DD 0%,#5DD9A0 100%)!important;
-  color:var(--ak-ink)!important;box-shadow:0 4px 0 var(--ak-ok-3)!important;
-  transform:translateY(0)!important;
-}
-.fall-btn.wrong-flash{opacity:.32}
-
-/* ===== LEVEL 2: GOLDBERG ===== */
-#level2{background:var(--ak-bg)}
-.gb-header{padding:8px 16px 6px;flex-shrink:0}
-.gb-goal{
-  font-family:'Fredoka One',sans-serif;font-size:17px;color:var(--ak-ink);text-align:center;
-}
-.gb-field{
-  margin:0 12px;
-  background:var(--ak-surface);
-  border-radius:24px;
-  box-shadow:0 8px 0 rgba(45,27,69,.08),0 18px 32px -10px rgba(45,27,69,.14),inset 0 2px 0 rgba(255,255,255,.9);
-  position:relative;overflow:hidden;flex-shrink:0;height:210px;
-}
-.gb-field svg{position:absolute;top:0;left:0;width:100%;height:100%}
-.gb-ball{
-  position:absolute;width:36px;height:36px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#fff 0%,var(--ak-phys-2) 60%,var(--ak-phys-3) 100%);
-  box-shadow:0 3px 12px rgba(124,95,224,.4);
-  z-index:5;display:flex;align-items:center;justify-content:center;font-size:20px;
-}
-.gb-star{position:absolute;font-size:30px;z-index:4;animation:star-pulse 1.5s ease-in-out infinite}
-@keyframes star-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-.gb-slot{
-  position:absolute;width:62px;height:62px;border-radius:18px;
-  border:2.5px dashed var(--ak-phys-2);
-  background:rgba(229,220,255,.25);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;transition:border-color .2s,background .2s;z-index:6;
-}
-.gb-slot.highlight{border-color:var(--ak-phys-3);background:rgba(124,95,224,.10)}
-.gb-slot.filled{border-style:solid;border-color:var(--ak-phys-3);background:rgba(181,161,255,.18)}
-.gb-slot-emoji{font-size:28px;line-height:1}
-.gb-slot-label{font-family:'Fredoka One',sans-serif;font-size:9px;color:var(--ak-ink-2);margin-top:2px}
-.gb-toolbar{padding:8px 12px 4px;display:flex;gap:8px;justify-content:center;flex-shrink:0}
-.gb-tool{
-  width:70px;height:70px;border-radius:20px;
-  border:2.5px solid var(--ak-line);
-  background:var(--ak-surface);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;font-size:28px;
-  box-shadow:0 4px 0 rgba(45,27,69,.08),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.9);
-  transition:border-color .2s,transform .15s,box-shadow .2s;
-}
-.gb-tool:active{transform:scale(.93)}
-.gb-tool.selected{
-  border-color:var(--ak-phys-3);
-  box-shadow:0 4px 0 var(--ak-phys-3),0 0 0 3px rgba(124,95,224,.2),inset 0 2px 0 rgba(255,255,255,.9);
-  background:var(--ak-phys-1);
-}
-.gb-tool.used{opacity:.4;pointer-events:none}
-.gb-tool-label{font-family:'Fredoka One',sans-serif;font-size:9px;color:var(--ak-ink-2);margin-top:3px}
-.gb-launch-btn{
-  margin:6px 12px 8px;padding:15px;border:none;border-radius:999px;
-  font-family:'Fredoka One',sans-serif;font-size:17px;cursor:pointer;
-  color:#fff;
-  background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9881F0 100%);
-  box-shadow:0 6px 0 var(--ak-phys-3),0 12px 24px -6px rgba(124,95,224,.5),inset 0 2px 0 rgba(255,255,255,.55);
-  transition:transform .1s,box-shadow .08s;
-}
-.gb-launch-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-phys-3),0 6px 14px -6px rgba(124,95,224,.4)}
-.gb-launch-btn:disabled{
-  background:linear-gradient(180deg,#D4C9EE 0%,#C0B2DE 100%);
-  box-shadow:0 4px 0 #A797B8;cursor:default;opacity:.65;
-}
-.gb-status{
-  text-align:center;font-family:'Nunito',sans-serif;font-size:13px;
-  color:var(--ak-ink-2);padding:0 12px;flex-shrink:0;min-height:18px;
+.ak-clay--inset {
+  background: linear-gradient(180deg, rgba(45,27,69,.04), rgba(45,27,69,0) 40%);
+  box-shadow:
+    inset 0 3px 6px rgba(45,27,69,.10),
+    inset 0 1px 0 rgba(45,27,69,.05),
+    0 1px 0 rgba(255,255,255,.7);
+  border-radius: var(--ak-r-lg);
 }
 
-/* ===== LEVEL 3: PENDULUM ===== */
-#level3{background:var(--ak-bg)}
-.pend-canvas-wrap{
-  flex-shrink:0;
-  background:linear-gradient(180deg,var(--ak-phys-3) 0%,#5A3EC0 100%);
-  position:relative;
-  border-radius:0 0 24px 24px;
-  overflow:hidden;
-  box-shadow:0 6px 20px rgba(124,95,224,.35);
+.ak-btn {
+  font-family: var(--ak-display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.1px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: transform .08s ease, box-shadow .08s ease, filter .15s ease;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1;
+  padding: 16px 26px;
+  border-radius: 999px;
+  color: var(--ak-ink);
 }
-.pend-canvas-wrap canvas{display:block;width:100%}
-.pend-task-badge{
-  margin:8px 12px;
-  background:var(--ak-surface);
-  border-radius:18px;padding:10px 14px;text-align:center;
-  box-shadow:0 6px 0 rgba(45,27,69,.08),0 12px 22px -8px rgba(45,27,69,.14),inset 0 2px 0 rgba(255,255,255,.9);
-  flex-shrink:0;
-}
-.pend-task-emoji{font-size:20px}
-.pend-task-text{font-family:'Fredoka One',sans-serif;font-size:15px;color:var(--ak-ink);margin-top:2px}
-.pend-task-hint{font-family:'Nunito',sans-serif;font-size:12px;color:var(--ak-ink-2);margin-top:2px}
-.pend-controls{padding:6px 12px 10px;flex-shrink:0}
-.pend-row{display:flex;gap:8px;margin-bottom:8px}
-.pend-btn{
-  flex:1;padding:13px 8px;border:none;border-radius:999px;
-  font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;
-  transition:transform .12s,box-shadow .08s;
-  color:#fff;
-  background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9881F0 100%);
-  box-shadow:0 5px 0 var(--ak-phys-3),0 10px 20px -6px rgba(124,95,224,.45),inset 0 2px 0 rgba(255,255,255,.55);
-}
-.pend-btn.dir:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ak-phys-3)}
-.pend-btn.power-strong{
-  background:linear-gradient(180deg,#FFB2A8 0%,#FF8B7A 55%,#FF6B5B 100%);
-  color:#fff;
-  box-shadow:0 5px 0 var(--ak-warn-3),0 10px 20px -6px rgba(217,82,63,.45),inset 0 2px 0 rgba(255,255,255,.55);
-}
-.pend-btn.power-strong:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ak-warn-3)}
-.pend-btn.power-weak{
-  background:linear-gradient(180deg,#C8F2DD 0%,#5DD9A0 55%,#3DC68A 100%);
-  color:var(--ak-ink);
-  box-shadow:0 5px 0 var(--ak-ok-3),0 10px 20px -6px rgba(43,168,115,.45),inset 0 2px 0 rgba(255,255,255,.7);
-}
-.pend-btn.power-weak:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ak-ok-3)}
-.pend-counter{
-  font-family:'Fredoka One',sans-serif;text-align:center;font-size:14px;color:var(--ak-ink-2);
-}
-.pend-slider-wrap{padding:6px 12px 0;flex-shrink:0}
-.pend-slider-label{
-  font-family:'Fredoka One',sans-serif;font-size:13px;color:var(--ak-ink);
-  margin-bottom:6px;text-align:center;
-}
-.pend-slider{width:100%;accent-color:var(--ak-phys-3);height:6px;cursor:pointer}
+.ak-btn:disabled { cursor: not-allowed; filter: grayscale(.25) opacity(.6); }
 
-/* ===== SUCCESS OVERLAY ===== */
-.success-ov{
-  position:fixed;inset:0;z-index:100;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(45,27,69,.5);backdrop-filter:blur(10px);
-  opacity:0;pointer-events:none;transition:opacity .25s;
+.ak-btn--cta {
+  color: var(--ak-ink);
+  background: linear-gradient(180deg, #FFEDA8 0%, #FFD262 55%, #FFC03A 100%);
+  box-shadow:
+    0 6px 0 var(--ak-cta-3),
+    0 12px 24px -6px rgba(212,162,43,.55),
+    inset 0 2px 0 rgba(255,255,255,.85),
+    inset 0 -2px 0 rgba(212,162,43,.25);
 }
-.success-ov.show{opacity:1;pointer-events:all}
-.ov-bg{position:absolute;inset:0}
-.ov-card{
-  position:relative;
-  background:var(--ak-surface);
-  border-radius:28px;padding:32px 28px;text-align:center;
-  max-width:360px;width:90%;
-  box-shadow:0 12px 0 rgba(124,95,224,.18),0 28px 48px -16px rgba(45,27,69,.30),inset 0 2px 0 rgba(255,255,255,1),inset 0 -3px 0 rgba(45,27,69,.05);
-  animation:ak-pop .42s cubic-bezier(.2,.7,.3,1);
-}
-.ov-ico{font-size:68px;display:block;margin-bottom:4px;line-height:1}
-.ov-title{font-family:'Fredoka One',sans-serif;font-size:24px;color:var(--ak-ink);margin-bottom:8px}
-.ov-fact{
-  font-family:'Nunito',sans-serif;font-size:14px;color:var(--ak-ink-2);
-  line-height:1.65;margin-bottom:20px;text-align:left;
-  background:var(--ak-phys-1);border-radius:16px;padding:12px 14px;
-}
-.ov-fact strong{color:var(--ak-ink)}
-.ov-btn{
-  font-family:'Fredoka One',sans-serif;font-size:17px;border:none;cursor:pointer;
-  padding:15px;border-radius:999px;width:100%;
-  color:var(--ak-ink);
-  background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);
-  box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);
-  transition:transform .08s ease,box-shadow .08s ease;
-}
-.ov-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-cta-3),0 6px 14px -6px rgba(212,162,43,.45)}
+.ak-btn--cta:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ak-cta-3), 0 6px 14px -6px rgba(212,162,43,.45), inset 0 2px 0 rgba(255,255,255,.7); }
 
-/* ===== FINISH OVERLAY ===== */
-.finish-ov{
-  position:fixed;inset:0;z-index:110;display:none;flex-direction:column;
-  align-items:center;justify-content:center;
-  background:linear-gradient(160deg,var(--ak-phys-3),var(--ak-phys-2));
-  text-align:center;padding:32px;gap:14px;
+.ak-btn--ok {
+  color: #fff;
+  background: linear-gradient(180deg, #7CECB5 0%, #5DD9A0 55%, #3FC685 100%);
+  box-shadow:
+    0 6px 0 var(--ak-ok-3),
+    0 12px 24px -6px rgba(43,168,115,.5),
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -2px 0 rgba(43,168,115,.25);
+  text-shadow: 0 1px 0 rgba(43,168,115,.4);
 }
-.finish-ov.show{display:flex}
-.finish-ico{font-size:80px;animation:ak-bob 2s ease-in-out infinite}
-.finish-title{font-family:'Fredoka One',sans-serif;font-size:30px;color:#fff}
-.finish-sub{font-family:'Nunito',sans-serif;font-size:16px;color:rgba(255,255,255,.85)}
-.finish-btn{
-  font-family:'Fredoka One',sans-serif;font-size:18px;border:none;cursor:pointer;
-  padding:16px 44px;border-radius:999px;color:var(--ak-ink);margin-top:8px;
-  background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);
-  box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85);
-  transition:transform .08s ease,box-shadow .08s ease;
+.ak-btn--ok:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ak-ok-3), 0 6px 14px -6px rgba(43,168,115,.4), inset 0 2px 0 rgba(255,255,255,.4); }
+
+.ak-btn--phys {
+  color: #fff;
+  background: linear-gradient(180deg, #C4B5FF 0%, #B5A1FF 55%, #9881F0 100%);
+  box-shadow:
+    0 6px 0 var(--ak-phys-3),
+    0 12px 24px -6px rgba(124,95,224,.5),
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -2px 0 rgba(124,95,224,.25);
+  text-shadow: 0 1px 0 rgba(124,95,224,.4);
 }
-.finish-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-cta-3)}
+.ak-btn--phys:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ak-phys-3), 0 6px 14px -6px rgba(124,95,224,.4), inset 0 2px 0 rgba(255,255,255,.4); }
 
-/* ===== ANIMATIONS ===== */
-@keyframes ak-bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
-@keyframes ak-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px) rotate(-1deg)}40%{transform:translateX(7px) rotate(1deg)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-@keyframes ak-pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}
+.ak-btn--warn {
+  color: #fff;
+  background: linear-gradient(180deg, #FF9F8F 0%, #FF8B7A 55%, #E06A5A 100%);
+  box-shadow:
+    0 6px 0 var(--ak-warn-3),
+    0 12px 24px -6px rgba(217,82,63,.5),
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -2px 0 rgba(217,82,63,.25);
+  text-shadow: 0 1px 0 rgba(217,82,63,.4);
+}
+.ak-btn--warn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ak-warn-3), inset 0 2px 0 rgba(255,255,255,.4); }
 
-/* Legacy aliases for JS that adds .shake */
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.shake{animation:shake .35s ease-in-out}
-@keyframes pop-small{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.ak-btn--soft {
+  color: var(--ak-ink);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF7E8 100%);
+  box-shadow:
+    0 4px 0 rgba(45,27,69,.10),
+    0 8px 18px -6px rgba(45,27,69,.12),
+    inset 0 2px 0 rgba(255,255,255,.95),
+    inset 0 -2px 0 rgba(45,27,69,.05),
+    inset 0 0 0 1px rgba(45,27,69,.06);
+}
+.ak-btn--soft:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(45,27,69,.10), inset 0 2px 0 rgba(255,255,255,.95), inset 0 0 0 1px rgba(45,27,69,.06); }
 
-/* ===== UTILS ===== */
-.hidden{display:none!important}
+.ak-btn--sm { padding: 11px 18px; font-size: 14px; }
+.ak-btn--lg { padding: 20px 32px; font-size: 19px; }
+.ak-btn--icon { width: 56px; height: 56px; padding: 0; border-radius: 50%; }
+.ak-btn--icon.ak-btn--sm { width: 42px; height: 42px; }
+
+.ak-chip {
+  font-family: var(--ak-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px 7px 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  color: var(--ak-ink);
+  box-shadow:
+    0 2px 0 rgba(45,27,69,.06),
+    0 6px 14px -4px rgba(45,27,69,.08),
+    inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+@keyframes ak-bob { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-4px) rotate(1deg); } }
+@keyframes ak-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes ak-shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px) rotate(-1deg); } 40% { transform: translateX(7px) rotate(1deg); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+@keyframes ak-pop { 0% { transform: scale(.7); opacity: 0; } 60% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ak-pour { 0% { transform: scaleY(0); opacity: 0; } 100% { transform: scaleY(1); opacity: 1; } }
+@keyframes ak-spin { to { transform: rotate(360deg); } }
+@keyframes ak-twinkle { 0%,100% { opacity: .35; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.05); } }
+@keyframes ak-slot-pop { 0% { transform: translate(-50%,-50%) scale(0.5); opacity:0; } 60% { transform: translate(-50%,-50%) scale(1.15); } 100% { transform: translate(-50%,-50%) scale(1); opacity:1; } }
+
+.ak-bob { animation: ak-bob 3.2s ease-in-out infinite; }
+.ak-pulse { animation: ak-pulse 2.4s ease-in-out infinite; }
+.ak-shake { animation: ak-shake .45s ease-in-out; }
+.ak-pop { animation: ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards; }
+.ak-pour { transform-origin: bottom; animation: ak-pour .55s cubic-bezier(.2,.7,.3,1) forwards; }
+.ak-spin { animation: ak-spin 30s linear infinite; }
+.ak-twinkle { animation: ak-twinkle 2.4s ease-in-out infinite; }
+
+.ak-num { font-variant-numeric: tabular-nums; font-family: var(--ak-display); }
+
+.ak-tap {
+  cursor: pointer;
+  transition: transform .12s cubic-bezier(.2,.7,.3,1), filter .12s;
+}
+.ak-tap:hover { transform: translateY(-3px); filter: brightness(1.03); }
+.ak-tap:active { transform: translateY(0); }
+
+.ak-subject {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  font-family: var(--ak-display);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ak-ink);
+  background: #fff;
+  box-shadow:
+    0 4px 12px -4px rgba(45,27,69,.15),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
 </style>
 </head>
 <body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+<script type="text/babel">
 
-<!-- INTRO -->
-<div id="intro" class="screen active">
-  <div class="intro-ico">🔭</div>
-  <div class="intro-title">КвантУм<br>Физика</div>
-  <div class="intro-sub">Задачи руками. Видишь — понимаешь. Никаких скучных формул!</div>
-  <button class="intro-btn" onclick="showLevelSelect()">Поехали! 🚀</button>
-</div>
+/* ===== AK_TONES ===== */
+const AK_TONES = {
+  chem: ['#DCF7E7', '#7BD9A8', '#3CA876'],
+  phys: ['#E5DCFF', '#B5A1FF', '#7C5FE0'],
+  bio:  ['#FFE0CB', '#FFA17A', '#D96D49'],
+  geo:  ['#D6ECFA', '#8FCAF0', '#4A93C9'],
+  ok:   ['#C8F2DD', '#5DD9A0', '#2BA873'],
+  cta:  ['#FFEDA8', '#FFD262', '#D4A22B'],
+  star: ['#FFE49E', '#FFC857', '#D4972B'],
+  warn: ['#FFD2C8', '#FF8B7A', '#D9523F'],
+  ink:  ['#E5DCEE', '#6B5680', '#2D1B45'],
+};
 
-<!-- LEVEL SELECT -->
-<div id="levelselect" class="screen">
-  <div class="ls-title">Выбери уровень</div>
-  <div class="ls-sub">Все уровни открыты — начинай с любого!</div>
-  <div class="level-card" onclick="startLevel(1)">
-    <div class="lc-ico">🍎</div>
-    <div class="lc-info">
-      <div class="lc-num">Уровень 1</div>
-      <div class="lc-name">Что упадёт быстрее?</div>
-      <div class="lc-desc">Угадывай и проверяй — кто победит в гонке падения</div>
-    </div>
-    <div class="lc-badge">5 задач</div>
-  </div>
-  <div class="level-card" onclick="startLevel(2)">
-    <div class="lc-ico">⚙️</div>
-    <div class="lc-info">
-      <div class="lc-num">Уровень 2</div>
-      <div class="lc-name">Машина Голдберга</div>
-      <div class="lc-desc">Расставь детали — прокати шар до цели</div>
-    </div>
-    <div class="lc-badge">3 задачи</div>
-  </div>
-  <div class="level-card" onclick="startLevel(3)">
-    <div class="lc-ico">🎯</div>
-    <div class="lc-info">
-      <div class="lc-num">Уровень 3</div>
-      <div class="lc-name">Маятник — Сбей мишени!</div>
-      <div class="lc-desc">Управляй маятником и сбивай цели</div>
-    </div>
-    <div class="lc-badge">5 задач</div>
-  </div>
-</div>
-
-<!-- LEVEL 1 -->
-<div id="level1" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <div class="level-header-info">
-      <div class="lh-name">🍎 Что упадёт быстрее?</div>
-      <div class="lh-sub">Угадай, потом проверь</div>
-    </div>
-    <div class="progress-dots" id="fall-dots"></div>
-  </div>
-  <div class="fall-scene" id="fall-scene">
-    <div class="fall-scale"></div>
-    <div class="fall-item" id="fall-left"></div>
-    <div class="fall-item" id="fall-right"></div>
-  </div>
-  <div class="fall-controls">
-    <div class="fall-task-text" id="fall-task-text">Что упадёт БЫСТРЕЕ?</div>
-    <div class="fall-btns">
-      <button class="fall-btn left" id="btn-left" onclick="fallGuess('left')">⬅️ Левый</button>
-      <button class="fall-btn same" id="btn-same" onclick="fallGuess('same')">🤝 Вместе!</button>
-      <button class="fall-btn right" id="btn-right" onclick="fallGuess('right')">➡️ Правый</button>
-    </div>
-  </div>
-</div>
-
-<!-- LEVEL 2 -->
-<div id="level2" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <div class="level-header-info">
-      <div class="lh-name">⚙️ Машина Голдберга</div>
-      <div class="lh-sub">Расставь детали правильно</div>
-    </div>
-    <div class="progress-dots" id="gb-dots"></div>
-  </div>
-  <div class="gb-header">
-    <div class="gb-goal" id="gb-goal"></div>
-  </div>
-  <div class="gb-field" id="gb-field">
-    <svg id="gb-svg" viewBox="0 0 360 210" preserveAspectRatio="none"></svg>
-    <div class="gb-ball" id="gb-ball"></div>
-    <div class="gb-star" id="gb-star">⭐</div>
-  </div>
-  <div class="gb-status" id="gb-status">Выбери деталь снизу и помести в слот</div>
-  <div class="gb-toolbar" id="gb-toolbar"></div>
-  <button class="gb-launch-btn" id="gb-launch" onclick="gbLaunch()" disabled>▶️ Запустить!</button>
-</div>
-
-<!-- LEVEL 3 -->
-<div id="level3" class="screen">
-  <div class="level-header">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <div class="level-header-info">
-      <div class="lh-name">🎯 Маятник</div>
-      <div class="lh-sub">Сбивай мишени!</div>
-    </div>
-    <div class="progress-dots" id="pend-dots"></div>
-  </div>
-  <div class="pend-canvas-wrap" id="pend-wrap">
-    <canvas id="pend-canvas"></canvas>
-  </div>
-  <div class="pend-task-badge" id="pend-badge">
-    <div class="pend-task-emoji" id="pend-emoji"></div>
-    <div class="pend-task-text" id="pend-task-text"></div>
-    <div class="pend-task-hint" id="pend-task-hint"></div>
-  </div>
-  <div class="pend-controls">
-    <div class="pend-row">
-      <button class="pend-btn dir" onclick="pendSwing('left')">⬅️ Влево</button>
-      <button class="pend-btn dir" onclick="pendSwing('right')">➡️ Вправо</button>
-    </div>
-    <div class="pend-row">
-      <button class="pend-btn power-strong" id="pow-strong" onclick="setPendPower('strong')">💥 Сильно</button>
-      <button class="pend-btn power-weak" id="pow-weak" onclick="setPendPower('weak')">🍃 Слабо</button>
-    </div>
-    <div class="pend-counter" id="pend-counter"></div>
-  </div>
-  <div class="pend-slider-wrap hidden" id="pend-slider-wrap">
-    <div class="pend-slider-label">🔬 Длина верёвки: <span id="pend-len-val">120</span>px</div>
-    <input type="range" class="pend-slider" id="pend-len-slider" min="60" max="190" value="120" oninput="pendChangeLen(this.value)">
-  </div>
-</div>
-
-<!-- SUCCESS OVERLAY -->
-<div class="success-ov" id="success-ov">
-  <div class="ov-bg" onclick="closeSuccess()"></div>
-  <div class="ov-card">
-    <span class="ov-ico" id="ov-ico">🎉</span>
-    <div class="ov-title" id="ov-title">Правильно!</div>
-    <div class="ov-fact" id="ov-fact"></div>
-    <button class="ov-btn" id="ov-btn" onclick="closeSuccess()">Следующая задача ➡️</button>
-  </div>
-</div>
-
-<!-- FINISH OVERLAY -->
-<div class="finish-ov" id="finish-ov">
-  <div class="finish-ico">🏆</div>
-  <div class="finish-title">Уровень пройден!</div>
-  <div class="finish-sub" id="finish-sub"></div>
-  <button class="finish-btn" onclick="finishToMenu()">← К уровням</button>
-</div>
-
-<script>
-// ===================== UTILS =====================
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function showLevelSelect(){showScreen('levelselect');}
-function goBack(){
-  if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
-  showScreen('levelselect');
-}
-function startLevel(n){
-  if(n===1)initFall();
-  else if(n===2)initGB();
-  else initPend();
-  showScreen('level'+n);
+/* ===== AKAtom ===== */
+function AKAtom({ size = 120, tone = 'phys' }) {
+  const [l, m, d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g, '');
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" style={{ display: 'block' }}>
+      <defs>
+        <radialGradient id={`nuc-${id}`} cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#fff" />
+          <stop offset="40%" stopColor={l} />
+          <stop offset="100%" stopColor={d} />
+        </radialGradient>
+        <radialGradient id={`elec-${id}`} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#fff" />
+          <stop offset="60%" stopColor={m} />
+          <stop offset="100%" stopColor={d} />
+        </radialGradient>
+      </defs>
+      <ellipse cx="60" cy="112" rx="30" ry="3.5" fill="rgba(45,27,69,.18)" />
+      <g fill="none" stroke={d} strokeWidth="3" opacity=".55" strokeLinecap="round">
+        <ellipse cx="60" cy="60" rx="44" ry="16" />
+        <ellipse cx="60" cy="60" rx="44" ry="16" transform="rotate(60 60 60)" />
+        <ellipse cx="60" cy="60" rx="44" ry="16" transform="rotate(-60 60 60)" />
+      </g>
+      <g fill="none" stroke="#fff" strokeWidth="1.5" opacity=".7" strokeLinecap="round">
+        <path d="M24 56 Q34 50 50 50" />
+        <path d="M30 38 Q44 38 58 44" transform="rotate(-60 60 60)" />
+      </g>
+      <circle cx="98" cy="50" r="7" fill={`url(#elec-${id})`} stroke={d} strokeWidth="1.5" />
+      <circle cx="96" cy="48" r="2.4" fill="#fff" opacity=".8" />
+      <circle cx="24" cy="78" r="6" fill={`url(#elec-${id})`} stroke={d} strokeWidth="1.5" />
+      <circle cx="22" cy="76" r="2" fill="#fff" opacity=".8" />
+      <circle cx="76" cy="28" r="5" fill={`url(#elec-${id})`} stroke={d} strokeWidth="1.5" />
+      <circle cx="60" cy="60" r="18" fill={`url(#nuc-${id})`} stroke={d} strokeWidth="2" />
+      <ellipse cx="55" cy="53" rx="6" ry="3.5" fill="#fff" opacity=".7" />
+    </svg>
+  );
 }
 
-function burst(x,y,syms){
-  syms.forEach((s,i)=>{
-    const p=document.createElement('div');
-    const a=(i/syms.length)*Math.PI*2;
-    const d=55+Math.random()*55;
-    p.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;font-size:'+(20+Math.random()*14)+'px;pointer-events:none;z-index:999;transition:all .75s ease-out;';
-    p.textContent=s;
-    document.body.appendChild(p);
-    requestAnimationFrame(()=>{
-      p.style.transform='translate('+(Math.cos(a)*d)+'px,'+(Math.sin(a)*d-50)+'px)';
-      p.style.opacity='0';
-    });
-    setTimeout(()=>p.remove(),800);
-  });
-}
-
-let ovCallback=null;
-function showSuccess(ico,title,fact,btnText,cb){
-  document.getElementById('ov-ico').textContent=ico;
-  document.getElementById('ov-title').textContent=title;
-  document.getElementById('ov-fact').innerHTML=fact;
-  document.getElementById('ov-btn').textContent=btnText||'Следующая задача ➡️';
-  ovCallback=cb||null;
-  document.getElementById('success-ov').classList.add('show');
-}
-function closeSuccess(){
-  document.getElementById('success-ov').classList.remove('show');
-  if(ovCallback){const f=ovCallback;ovCallback=null;f();}
-}
-function showFinish(sub){
-  document.getElementById('finish-sub').textContent=sub;
-  document.getElementById('finish-ov').classList.add('show');
-}
-function finishToMenu(){
-  document.getElementById('finish-ov').classList.remove('show');
-  if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
-  showLevelSelect();
-}
-function makeDots(containerId,total,current){
-  const c=document.getElementById(containerId);
-  c.innerHTML='';
-  for(let i=0;i<total;i++){
-    const d=document.createElement('div');
-    d.className='pdot'+(i<current?' done':i===current?' active':'');
-    c.appendChild(d);
+/* ===== AKBlob ===== */
+function AKBlob({ size = 80, kind = 'sphere', tone = 'cta' }) {
+  const [l, m, d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g, '');
+  const grad = (
+    <defs>
+      <radialGradient id={`g-${id}`} cx="40%" cy="32%" r="75%">
+        <stop offset="0%" stopColor="#fff" />
+        <stop offset="28%" stopColor={l} />
+        <stop offset="100%" stopColor={d} />
+      </radialGradient>
+    </defs>
+  );
+  const shadow = <ellipse cx="40" cy="74" rx="22" ry="3" fill="rgba(45,27,69,.2)" />;
+  const shine  = <ellipse cx="30" cy="26" rx="6" ry="10" fill="#fff" opacity=".6" transform="rotate(-20 30 26)" />;
+  let shape;
+  switch (kind) {
+    case 'sphere':
+      shape = <circle cx="40" cy="40" r="28" fill={`url(#g-${id})`} stroke={d} strokeWidth="2" />;
+      break;
+    case 'gear':
+      shape = (
+        <g>
+          <g fill={`url(#g-${id})`} stroke={d} strokeWidth="2" strokeLinejoin="round">
+            {[0,45,90,135,180,225,270,315].map(a => (
+              <rect key={a} x="34" y="6" width="12" height="14" rx="3" transform={`rotate(${a} 40 40)`} />
+            ))}
+            <circle cx="40" cy="40" r="22" />
+          </g>
+          <circle cx="40" cy="40" r="8" fill={d} />
+        </g>
+      );
+      break;
+    default:
+      shape = <circle cx="40" cy="40" r="28" fill={`url(#g-${id})`} stroke={d} strokeWidth="2" />;
   }
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" style={{ display: 'block' }}>
+      {grad}
+      {shadow}
+      {shape}
+      {kind !== 'gear' && shine}
+    </svg>
+  );
 }
 
-// ===================== LEVEL 1: FALL =====================
-const FALL_TASKS=[
-  {left:{e:'🪨',label:'Камень'},right:{e:'🪶',label:'Перо'},answer:'same',
-   fact:'<strong>Галилей доказал:</strong> в вакууме все тела падают одинаково! В воздухе перо тормозит из-за сопротивления.'},
-  {left:{e:'⚽',label:'Мяч'},right:{e:'🎈',label:'Шарик'},answer:'left',
-   fact:'<strong>Воздушный шарик</strong> очень лёгкий — воздух тормозит его намного сильнее. Мяч летит вперёд!'},
-  {left:{e:'🍎',label:'Яблоко'},right:{e:'📚',label:'Книга'},answer:'same',
-   fact:'<strong>Галилей сбрасывал шары</strong> с Пизанской башни! Разная масса — падают вместе.'},
-  {left:{e:'🔨',label:'Молоток'},right:{e:'🏓',label:'Мячик'},answer:'left',
-   fact:'<strong>Форма важна!</strong> Молоток компактный — меньше сопротивление воздуха. Побеждает!'},
-  {left:{e:'🪨',label:'Камень ×1'},right:{e:'🪨',label:'Камень ×2'},answer:'same',
-   fact:'<strong>Масса не важна!</strong> Земля тянет сильнее — но и двигать тяжелее. Всё сходится! Галилей был прав.'},
+/* ===== AKStar ===== */
+function AKStar({ size = 56, filled = true }) {
+  const id = React.useId().replace(/:/g, '');
+  return (
+    <svg width={size} height={size} viewBox="0 0 56 56">
+      <defs>
+        <radialGradient id={`star-${id}`} cx="40%" cy="32%" r="70%">
+          <stop offset="0%" stopColor="#fff" />
+          <stop offset="35%" stopColor="#FFE49E" />
+          <stop offset="100%" stopColor="#D4972B" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="28" cy="52" rx="14" ry="2.5" fill="rgba(45,27,69,.18)" />
+      <path
+        d="M28 5 L34.5 19 L50 21 L38.5 31.5 L42 47 L28 39.5 L14 47 L17.5 31.5 L6 21 L21.5 19 Z"
+        fill={filled ? `url(#star-${id})` : '#E8DCEE'}
+        stroke={filled ? '#C99B3B' : '#B0A0C2'}
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      {filled && (
+        <>
+          <ellipse cx="20" cy="18" rx="3.5" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 20 18)" />
+          <circle cx="36" cy="14" r="1.6" fill="#fff" opacity=".7" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+/* ===== AKPlanet ===== */
+function AKPlanet({ size = 80, tone = 'phys', ring = true }) {
+  const [l, m, d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g, '');
+  return (
+    <svg width={size} height={size * 0.78} viewBox="0 0 100 78">
+      <defs>
+        <radialGradient id={`pl-${id}`} cx="38%" cy="32%" r="70%">
+          <stop offset="0%" stopColor="#fff" />
+          <stop offset="30%" stopColor={l} />
+          <stop offset="100%" stopColor={d} />
+        </radialGradient>
+      </defs>
+      {ring && <ellipse cx="50" cy="40" rx="48" ry="11" fill="none" stroke={d} strokeWidth="3" opacity=".4" />}
+      <circle cx="50" cy="38" r="26" fill={`url(#pl-${id})`} stroke={d} strokeWidth="2" />
+      <ellipse cx="42" cy="28" rx="6" ry="9" fill="#fff" opacity=".55" transform="rotate(-22 42 28)" />
+      {ring && <path d="M 16 47 Q 50 60 84 47" fill="none" stroke={d} strokeWidth="3" opacity=".7" strokeLinecap="round" />}
+    </svg>
+  );
+}
+
+/* ===== AKProgress ===== */
+function AKProgress({ value = 0.5, tone = 'cta', height = 18, label }) {
+  const [l, m, d] = AK_TONES[tone];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {label && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span style={{ fontFamily: 'var(--ak-display)', fontWeight: 600, fontSize: 13, color: 'var(--ak-ink-2)' }}>{label}</span>
+          <span className="ak-num" style={{ fontWeight: 700, fontSize: 14, color: 'var(--ak-ink)' }}>{Math.round(value * 100)}%</span>
+        </div>
+      )}
+      <div style={{
+        height, borderRadius: 999,
+        background: 'rgba(45,27,69,.08)',
+        boxShadow: 'inset 0 2px 4px rgba(45,27,69,.18), inset 0 -1px 0 rgba(255,255,255,.6)',
+        overflow: 'hidden', position: 'relative',
+      }}>
+        <div style={{
+          width: `${Math.max(0, Math.min(1, value)) * 100}%`,
+          height: '100%',
+          background: `linear-gradient(180deg, ${l} 0%, ${m} 50%, ${d} 100%)`,
+          boxShadow: `inset 0 2px 0 rgba(255,255,255,.55), inset 0 -2px 0 ${d}`,
+          borderRadius: 999,
+          transition: 'width .4s cubic-bezier(.2,.7,.3,1)',
+          position: 'relative',
+        }}>
+          <div style={{
+            position: 'absolute', top: 3, left: 8, right: 8, height: 3,
+            background: 'rgba(255,255,255,.55)', borderRadius: 999,
+          }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== AKStatChip ===== */
+function AKStatChip({ icon, value, tone = 'cta' }) {
+  const [l, m, d] = AK_TONES[tone];
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 8,
+      padding: '6px 14px 6px 6px', borderRadius: 999, background: '#fff',
+      boxShadow: '0 3px 0 rgba(45,27,69,.08), 0 6px 14px -4px rgba(45,27,69,.12), inset 0 1px 0 rgba(255,255,255,1)',
+      fontFamily: 'var(--ak-display)', fontWeight: 700, fontSize: 15, color: 'var(--ak-ink)',
+    }}>
+      <div style={{
+        width: 28, height: 28, borderRadius: '50%',
+        background: `radial-gradient(circle at 35% 30%, #fff, ${l} 25%, ${m} 75%, ${d} 100%)`,
+        boxShadow: `inset 0 -2px 0 ${d}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: '#fff', fontSize: 14,
+      }}>{icon}</div>
+      <span className="ak-num">{value}</span>
+    </div>
+  );
+}
+
+/* ===== AKTaskBadge ===== */
+function AKTaskBadge({ children, tone = 'phys' }) {
+  const [l, m, d] = AK_TONES[tone];
+  return (
+    <div className="ak-pulse" style={{
+      display: 'inline-flex', alignItems: 'center', gap: 10,
+      padding: '12px 20px 12px 14px', borderRadius: 999, background: '#fff',
+      boxShadow: '0 4px 0 rgba(45,27,69,.08), 0 10px 22px -6px rgba(45,27,69,.14), inset 0 1px 0 rgba(255,255,255,1)',
+      fontFamily: 'var(--ak-display)', fontWeight: 600, fontSize: 14.5, color: 'var(--ak-ink)',
+    }}>
+      <div style={{
+        width: 10, height: 10, borderRadius: '50%',
+        background: m, boxShadow: `0 0 0 4px ${m}33, inset 0 -1px 0 ${d}`,
+      }} />
+      <span>{children}</span>
+    </div>
+  );
+}
+
+/* ===== AKSuccessCard ===== */
+function AKSuccessCard({ stars = 3, title = 'Отлично!', fact, onNext, ctaLabel = 'Дальше' }) {
+  return (
+    <div className="ak-pop" style={{
+      width: 320, background: '#fff', borderRadius: 32,
+      padding: '28px 24px 24px', textAlign: 'center',
+      boxShadow: `0 12px 0 rgba(43,168,115,.18), 0 24px 48px -12px rgba(45,27,69,.25), inset 0 2px 0 rgba(255,255,255,1), inset 0 -3px 0 rgba(45,27,69,.05)`,
+      fontFamily: 'var(--ak-body)', position: 'relative',
+    }}>
+      <div aria-hidden style={{ position: 'absolute', top: -10, left: -10, right: -10, height: 30, pointerEvents: 'none' }}>
+        {[{l:8,c:'#FFC857',s:8},{l:60,c:'#5DD9A0',s:6},{l:120,c:'#B5A1FF',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#FFC857',s:6}].map((p,i) => (
+          <div key={i} className="ak-twinkle" style={{
+            position:'absolute', left:p.l, top:4+(i%2)*8,
+            width:p.s, height:p.s, borderRadius:2,
+            background:p.c, transform:`rotate(${i*25}deg)`,
+            animationDelay:`${i*0.15}s`,
+          }}/>
+        ))}
+      </div>
+      <div style={{ display:'flex', justifyContent:'center', gap:8, marginBottom:14, marginTop:8 }}>
+        {[0,1,2].map(i => (
+          <div key={i} style={{ transform:`translateY(${i===1?-6:0}px) rotate(${(i-1)*12}deg)` }}>
+            <AKStar size={i===1?70:56} filled={i<stars}/>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontFamily:'var(--ak-display)', fontWeight:700, fontSize:26, letterSpacing:-.4, color:'var(--ak-ink)', marginBottom:8 }}>{title}</div>
+      {fact && <div style={{ fontSize:14, lineHeight:1.5, color:'var(--ak-ink-2)', marginBottom:20, fontWeight:500 }}>{fact}</div>}
+      {onNext && <button className="ak-btn ak-btn--ok" style={{ width:'100%' }} onClick={onNext}>{ctaLabel}</button>}
+    </div>
+  );
+}
+
+/* ===== AKLessonHeader ===== */
+function AKLessonHeader({ progress = 0.4, stars = 240, onClose }) {
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+      <button onClick={onClose} className="ak-btn ak-btn--soft ak-btn--icon ak-btn--sm" aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2 L12 12 M12 2 L2 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
+      </button>
+      <div style={{ flex:1, paddingTop:2 }}>
+        <AKProgress value={progress} tone="ok" height={14}/>
+      </div>
+      <AKStatChip icon={'★'} value={stars} tone="star"/>
+    </div>
+  );
+}
+
+/* ===== AKSubjectCard ===== */
+function AKSubjectCard({ title, subtitle, tone='chem', icon, progress=0, locked=false, onClick }) {
+  const [l, m, d] = AK_TONES[tone];
+  return (
+    <button
+      onClick={locked ? undefined : onClick}
+      className="ak-tap"
+      style={{
+        width:'100%', padding:18, borderRadius:28,
+        background:`linear-gradient(160deg, ${l} 0%, ${m} 100%)`,
+        boxShadow:`0 8px 0 ${d}, 0 18px 30px -8px ${m}aa, inset 0 2px 0 rgba(255,255,255,.6), inset 0 -2px 0 ${d}`,
+        position:'relative', overflow:'hidden',
+        border:'none', cursor: locked ? 'not-allowed' : 'pointer',
+        opacity: locked ? 0.55 : 1, textAlign:'left', marginBottom:16, boxSizing:'border-box',
+      }}
+    >
+      <div style={{ position:'absolute', top:-28, right:-10, width:100, height:100, borderRadius:'50%', background:'rgba(255,255,255,.22)', filter:'blur(2px)' }}/>
+      <div style={{ position:'absolute', bottom:-30, left:-20, width:80, height:80, borderRadius:'50%', background:'rgba(255,255,255,.15)' }}/>
+      <div style={{ position:'relative', display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:16 }}>
+        <div style={{ filter:'drop-shadow(0 4px 8px rgba(45,27,69,.2))' }}>{icon}</div>
+      </div>
+      <div style={{ position:'relative' }}>
+        <div style={{ fontFamily:'var(--ak-display)', fontWeight:600, fontSize:12, color:'rgba(45,27,69,.6)', textTransform:'uppercase', letterSpacing:1, marginBottom:2 }}>{subtitle}</div>
+        <div style={{ fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-ink)', letterSpacing:-.3, lineHeight:1.1, marginBottom:14 }}>{title}</div>
+        <AKProgress value={progress} tone={tone==='chem'?'ok':tone} height={12}/>
+      </div>
+    </button>
+  );
+}
+
+/* =========================================================
+   LEVEL 1 — ЧТО УПАДЁТ БЫСТРЕЕ?
+   ========================================================= */
+const L1_TASKS = [
+  {left:{e:'🪨',label:'Камень',mass:10}, right:{e:'🪶',label:'Перо',mass:.01}, answer:'same', fact:'Галилей: в вакууме всё падает одинаково! В воздухе перо тормозит из-за сопротивления.'},
+  {left:{e:'⚽',label:'Мяч',mass:.4},    right:{e:'🎈',label:'Шарик',mass:.003}, answer:'left', fact:'Воздушный шарик очень лёгкий — воздух сильно тормозит его полёт.'},
+  {left:{e:'🍎',label:'Яблоко',mass:.18},right:{e:'📚',label:'Книга',mass:.5},  answer:'same', fact:'Галилей бросал шары с Пизанской башни — они падали вместе!'},
+  {left:{e:'🔨',label:'Молоток',mass:.5},right:{e:'🏓',label:'Мячик',mass:.03}, answer:'left', fact:'Молоток компактный — меньше площадь и меньше сопротивление воздуха.'},
+  {left:{e:'🪨',label:'Камень 1кг',mass:1},right:{e:'🪨',label:'Камень 2кг',mass:2}, answer:'same', fact:'Масса не важна! Земля сильнее тянет тяжёлый, но и двигать его тяжелее — итог одинаковый.'},
 ];
 
-let fallIdx=0;
-let fallBusy=false;
+function Level1Falling({ onDone }) {
+  const [taskIdx, setTaskIdx] = React.useState(0);
+  const [falling, setFalling] = React.useState(false);
+  const [chosen, setChosen] = React.useState(null);
+  const [correct, setCorrect] = React.useState(null);
+  const [score, setScore] = React.useState(0);
+  const [showFact, setShowFact] = React.useState(false);
+  const [finished, setFinished] = React.useState(false);
+  const [leftFall, setLeftFall] = React.useState(false);
+  const [rightFall, setRightFall] = React.useState(false);
+  const [shakeBtn, setShakeBtn] = React.useState(null);
 
-function initFall(){
-  fallIdx=0;
-  fallBusy=false;
-  renderFallTask();
-}
+  const task = L1_TASKS[taskIdx];
 
-function renderFallTask(){
-  makeDots('fall-dots',FALL_TASKS.length,fallIdx);
-  const t=FALL_TASKS[fallIdx];
+  const choose = (side) => {
+    if (falling) return;
+    setChosen(side);
+    const isCorrect = side === task.answer;
+    setCorrect(isCorrect);
+    if (isCorrect) setScore(s => s + 1);
+    else setShakeBtn(side);
 
-  ['btn-left','btn-same','btn-right'].forEach(id=>{
-    const b=document.getElementById(id);
-    b.classList.remove('correct-flash','wrong-flash');
-    b.disabled=false;
-  });
-  document.getElementById('fall-task-text').textContent='Что упадёт БЫСТРЕЕ?';
+    setFalling(true);
 
-  const lEl=document.getElementById('fall-left');
-  const rEl=document.getElementById('fall-right');
-
-  // reset position no transition
-  lEl.style.transition='none';
-  rEl.style.transition='none';
-  lEl.style.top='24px';
-  rEl.style.top='24px';
-  lEl.style.left='calc(25% - 45px)';
-  rEl.style.left='calc(75% - 45px)';
-
-  lEl.innerHTML='<span>'+t.left.e+'</span><span class="fall-item-label">'+t.left.label+'</span>';
-  rEl.innerHTML='<span>'+t.right.e+'</span><span class="fall-item-label">'+t.right.label+'</span>';
-
-  // bounce in animation
-  lEl.classList.remove('bounce-in');
-  rEl.classList.remove('bounce-in');
-  void lEl.offsetWidth;
-  lEl.classList.add('bounce-in');
-  void rEl.offsetWidth;
-  rEl.classList.add('bounce-in');
-
-  fallBusy=false;
-}
-
-function fallGuess(guess){
-  if(fallBusy)return;
-  fallBusy=true;
-
-  // disable buttons
-  ['btn-left','btn-same','btn-right'].forEach(id=>document.getElementById(id).disabled=true);
-
-  const t=FALL_TASKS[fallIdx];
-  const correct=guess===t.answer;
-  const map={left:'btn-left',same:'btn-same',right:'btn-right'};
-
-  if(correct){
-    document.getElementById(map[guess]).classList.add('correct-flash');
-  } else {
-    document.getElementById(map[guess]).classList.add('wrong-flash');
-    document.getElementById(map[t.answer]).classList.add('correct-flash');
-  }
-
-  // animate fall
-  const scene=document.getElementById('fall-scene');
-  const sceneH=scene.offsetHeight;
-  const grassH=Math.round(sceneH*0.18)+4;
-  const bottomPos=sceneH-grassH-90-4;
-
-  const lEl=document.getElementById('fall-left');
-  const rEl=document.getElementById('fall-right');
-
-  if(t.answer==='same'){
-    lEl.style.transition='top 1.2s cubic-bezier(0.25,0.46,0.45,0.94)';
-    rEl.style.transition='top 1.2s cubic-bezier(0.25,0.46,0.45,0.94)';
-    lEl.style.top=bottomPos+'px';
-    rEl.style.top=bottomPos+'px';
-  } else if(t.answer==='left'){
-    lEl.style.transition='top 1.1s cubic-bezier(0.25,0.46,0.45,0.94)';
-    rEl.style.transition='top 1.6s cubic-bezier(0.25,0.46,0.45,0.94)';
-    lEl.style.top=bottomPos+'px';
-    setTimeout(()=>{rEl.style.top=bottomPos+'px';},150);
-  } else {
-    rEl.style.transition='top 1.1s cubic-bezier(0.25,0.46,0.45,0.94)';
-    lEl.style.transition='top 1.6s cubic-bezier(0.25,0.46,0.45,0.94)';
-    rEl.style.top=bottomPos+'px';
-    setTimeout(()=>{lEl.style.top=bottomPos+'px';},150);
-  }
-
-  setTimeout(()=>{
-    if(correct){
-      burst(window.innerWidth/2,window.innerHeight*0.4,['🎉','⭐','✨','🌟','💫','🎊']);
-      showSuccess('✅','Правильно!',t.fact,'Следующая задача ➡️',nextFallTask);
+    if (task.answer === 'left') {
+      setLeftFall(true);
+      setTimeout(() => setRightFall(true), 300);
+    } else if (task.answer === 'right') {
+      setRightFall(true);
+      setTimeout(() => setLeftFall(true), 300);
     } else {
-      showSuccess('💡','Вот как это работает!',t.fact,'Понял, дальше! ➡️',nextFallTask);
+      setLeftFall(true);
+      setRightFall(true);
     }
-  },1500);
-}
 
-function nextFallTask(){
-  fallIdx++;
-  if(fallIdx>=FALL_TASKS.length){
-    showFinish('Ты познал закон Галилея! 🍎');
-    return;
+    setTimeout(() => {
+      setShowFact(true);
+      setShakeBtn(null);
+    }, 1600);
+  };
+
+  const next = () => {
+    if (taskIdx >= L1_TASKS.length - 1) {
+      setFinished(true);
+    } else {
+      setTaskIdx(i => i + 1);
+      setFalling(false); setChosen(null); setCorrect(null);
+      setShowFact(false); setLeftFall(false); setRightFall(false);
+    }
+  };
+
+  if (finished) {
+    return (
+      <div className="ak" style={{ minHeight:'100vh', background:'linear-gradient(180deg,#BAE6FD,#E0F2FE)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+        <AKSuccessCard
+          stars={score >= 4 ? 3 : score >= 2 ? 2 : 1}
+          title={score === 5 ? 'Гениально! 🎉' : score >= 3 ? 'Молодец!' : 'Попробуй ещё!'}
+          fact={`Ты ответил правильно ${score} из ${L1_TASKS.length}! ${score === 5 ? 'Галилей гордился бы тобой!' : 'Повтори тему гравитации.'}`}
+          onNext={onDone}
+          ctaLabel="В меню уровней"
+        />
+      </div>
+    );
   }
-  renderFallTask();
+
+  return (
+    <div className="ak" style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(180deg,#BAE6FD 0%,#E0F2FE 70%)', position:'relative', overflow:'hidden' }}>
+      <div style={{ padding:'16px 16px 0', flexShrink:0 }}>
+        <AKLessonHeader progress={taskIdx/L1_TASKS.length} stars={score*50} onClose={onDone}/>
+      </div>
+
+      <div style={{ textAlign:'center', padding:'16px 16px 0' }}>
+        <AKTaskBadge tone="phys">Что упадёт первым?</AKTaskBadge>
+      </div>
+
+      <div style={{ display:'flex', justifyContent:'center', gap:8, padding:'12px 0 0' }}>
+        {L1_TASKS.map((_, i) => (
+          <div key={i} style={{
+            width: i===taskIdx ? 24 : 10, height:10, borderRadius:999,
+            background: i<taskIdx ? '#7C5FE0' : i===taskIdx ? '#B5A1FF' : 'rgba(45,27,69,.15)',
+            transition:'all .3s',
+          }}/>
+        ))}
+      </div>
+
+      <div style={{ flex:1, position:'relative', minHeight:300, overflow:'hidden' }}>
+        <div style={{ position:'absolute', top:10, left:'8%', opacity:.6, fontSize:32, pointerEvents:'none' }}>☁️</div>
+        <div style={{ position:'absolute', top:25, right:'12%', opacity:.45, fontSize:24, pointerEvents:'none' }}>☁️</div>
+        <div style={{ position:'absolute', top:8, left:'45%', opacity:.35, fontSize:20, pointerEvents:'none' }}>☁️</div>
+
+        {/* Left object */}
+        <div style={{
+          position:'absolute',
+          left:'18%',
+          top: leftFall ? 'calc(100% - 110px)' : 50,
+          fontSize:52,
+          textAlign:'center',
+          transition: leftFall ? 'top 1.4s cubic-bezier(.3,0,.8,1)' : 'none',
+          userSelect:'none',
+        }}>
+          {task.left.e}
+          <div style={{ fontSize:11, fontFamily:'var(--ak-display)', color:'rgba(45,27,69,.7)', marginTop:2 }}>{task.left.label}</div>
+        </div>
+
+        {/* Right object */}
+        <div style={{
+          position:'absolute',
+          right:'18%',
+          top: rightFall ? 'calc(100% - 110px)' : 50,
+          fontSize:52,
+          textAlign:'center',
+          transition: rightFall ? 'top 1.4s cubic-bezier(.3,0,.8,1)' : 'none',
+          userSelect:'none',
+        }}>
+          {task.right.e}
+          <div style={{ fontSize:11, fontFamily:'var(--ak-display)', color:'rgba(45,27,69,.7)', marginTop:2 }}>{task.right.label}</div>
+        </div>
+
+        {!falling && (
+          <div style={{
+            position:'absolute', top:65, left:'50%', transform:'translateX(-50%)',
+            fontFamily:'var(--ak-display)', fontWeight:700, fontSize:20, color:'rgba(45,27,69,.45)',
+          }}>VS</div>
+        )}
+
+        {/* Grass */}
+        <div style={{
+          position:'absolute', bottom:0, left:0, right:0, height:70,
+          background:'linear-gradient(180deg,#86EFAC,#4ADE80)',
+          borderRadius:'50% 50% 0 0 / 20% 20% 0 0',
+        }}>
+          <div style={{ textAlign:'center', paddingTop:18, fontSize:24, pointerEvents:'none' }}>🌱🌿🌱</div>
+        </div>
+      </div>
+
+      {showFact && (
+        <div style={{
+          position:'absolute', inset:0, background:'rgba(45,27,69,.55)', backdropFilter:'blur(4px)',
+          display:'flex', alignItems:'center', justifyContent:'center', padding:24, zIndex:10,
+        }}>
+          <div style={{
+            background:'#fff', borderRadius:28, padding:'28px 24px', maxWidth:340, textAlign:'center',
+            boxShadow:'0 12px 40px rgba(45,27,69,.3)', animation:'ak-pop .4s cubic-bezier(.2,.7,.3,1) forwards',
+          }}>
+            <div style={{ fontSize:48, marginBottom:12 }}>{correct ? '✅' : '❌'}</div>
+            <div style={{ fontFamily:'var(--ak-display)', fontSize:20, fontWeight:700, color:'var(--ak-ink)', marginBottom:8 }}>
+              {correct ? 'Правильно!' : 'Не совсем!'}
+            </div>
+            <div style={{ fontSize:14, color:'var(--ak-ink-2)', lineHeight:1.6, marginBottom:20 }}>
+              🔬 {task.fact}
+            </div>
+            <button className="ak-btn ak-btn--phys" style={{ width:'100%' }} onClick={next}>
+              {taskIdx >= L1_TASKS.length - 1 ? 'Результаты 🎉' : 'Следующий →'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!falling && (
+        <div style={{ padding:'0 12px 28px', display:'flex', gap:8, flexShrink:0 }}>
+          <button
+            className={`ak-btn ak-btn--phys ak-btn--sm${shakeBtn==='left' ? ' ak-shake':''}`}
+            style={{ flex:1, fontSize:13 }}
+            onClick={() => choose('left')}
+            disabled={!!chosen}
+          >← {task.left.label}</button>
+          <button
+            className="ak-btn ak-btn--soft ak-btn--sm"
+            style={{ flex:1, fontSize:13 }}
+            onClick={() => choose('same')}
+            disabled={!!chosen}
+          >🤝 Вместе!</button>
+          <button
+            className={`ak-btn ak-btn--phys ak-btn--sm${shakeBtn==='right' ? ' ak-shake':''}`}
+            style={{ flex:1, fontSize:13 }}
+            onClick={() => choose('right')}
+            disabled={!!chosen}
+          >{task.right.label} →</button>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// ===================== LEVEL 2: GOLDBERG =====================
-const GB_ELEMENTS=[
-  {id:'ramp',  emoji:'📐',label:'Горка',     color:'#FF8C42'},
-  {id:'spring',emoji:'🌀',label:'Пружина',   color:'#7B2FFF'},
-  {id:'bounce',emoji:'🎯',label:'Отбойник',  color:'#00C27C'},
-  {id:'fan',   emoji:'💨',label:'Вентилятор',color:'#3B82F6'},
+/* =========================================================
+   LEVEL 2 — МАШИНА ГОЛДБЕРГА
+   ========================================================= */
+const L2_ELEMENTS = [
+  {id:'ramp',   emoji:'📐', label:'Горка',     color:'#FFA17A', colorD:'#D96D49'},
+  {id:'spring', emoji:'🌀', label:'Пружина',   color:'#B5A1FF', colorD:'#7C5FE0'},
+  {id:'bounce', emoji:'🎯', label:'Отбойник',  color:'#7BD9A8', colorD:'#3CA876'},
+  {id:'fan',    emoji:'💨', label:'Вентилятор',color:'#8FCAF0', colorD:'#4A93C9'},
 ];
 
-// Scenarios: slots with positions (% of 360x210), solution map, path keyframes
-const GB_SCENARIOS=[
+const L2_SCENARIOS = [
   {
-    goal:'Доставь ⚽ к ⭐ — направь шар вправо!',
-    ballEmoji:'⚽',
-    ballStart:{px:0.08,py:0.22},
-    starPos:{px:0.9,py:0.76},
-    slots:[
-      {id:'s0',px:0.17,py:0.22,label:'Слот 1'},
-      {id:'s1',px:0.5, py:0.45,label:'Слот 2'},
-    ],
-    solution:{s0:'ramp',s1:'bounce'},
-    pathGood:[
-      {px:0.08,py:0.22},{px:0.28,py:0.38},{px:0.55,py:0.55},{px:0.9,py:0.76}
-    ],
-    pathBad:[
-      {px:0.08,py:0.22},{px:0.22,py:0.45},{px:0.22,py:1.05}
-    ],
-    fact:'Горка превращает падение в движение вперёд! Потенциальная энергия → кинетическая.'
+    goal:'Помоги ⚽ добраться до ⭐',
+    hint:'Используй горку и отбойник!',
+    solution:['ramp','bounce'],
+    fact:'Горка превращает падение в движение вперёд! Закон Ньютона в действии.',
   },
   {
-    goal:'Ускорь ⚽ вентилятором и горкой к ⭐!',
-    ballEmoji:'⚽',
-    ballStart:{px:0.05,py:0.48},
-    starPos:{px:0.9,py:0.65},
-    slots:[
-      {id:'s0',px:0.15,py:0.48,label:'Слот 1'},
-      {id:'s1',px:0.48,py:0.35,label:'Слот 2'},
-    ],
-    solution:{s0:'fan',s1:'ramp'},
-    pathGood:[
-      {px:0.05,py:0.48},{px:0.28,py:0.42},{px:0.55,py:0.32},{px:0.9,py:0.65}
-    ],
-    pathBad:[
-      {px:0.05,py:0.48},{px:0.28,py:0.5},{px:0.28,py:1.05}
-    ],
-    fact:'Сила + наклон = ускорение. Второй закон Ньютона в действии!'
+    goal:'Ускорь ⚽ с помощью ветра',
+    hint:'Вентилятор + горка = скорость!',
+    solution:['fan','ramp'],
+    fact:'Сила + наклон = ускорение. Это второй закон Ньютона: F = ma!',
   },
   {
-    goal:'Подбрось ⚽ пружиной к ⭐ вверху!',
-    ballEmoji:'⚽',
-    ballStart:{px:0.08,py:0.8},
-    starPos:{px:0.88,py:0.17},
-    slots:[
-      {id:'s0',px:0.15,py:0.8,label:'Слот 1'},
-      {id:'s1',px:0.5, py:0.5,label:'Слот 2'},
-    ],
-    solution:{s0:'spring',s1:'bounce'},
-    pathGood:[
-      {px:0.08,py:0.8},{px:0.25,py:0.35},{px:0.55,py:0.22},{px:0.88,py:0.17}
-    ],
-    pathBad:[
-      {px:0.08,py:0.8},{px:0.25,py:0.8},{px:0.25,py:1.05}
-    ],
-    fact:'Пружина накапливает энергию и отдаёт её одним толчком! Упругая → кинетическая энергия.'
+    goal:'Подпрыгни к ⭐ с пружиной',
+    hint:'Пружина + отбойник = прыжок!',
+    solution:['spring','bounce'],
+    fact:'Пружина накапливает энергию и отдаёт её одним мощным толчком!',
   },
 ];
 
-let gbIdx=0;
-let gbSelected=null;
-let gbPlaced={};
-let gbBusy=false;
+function Level2Goldberg({ onDone }) {
+  const [scenarioIdx, setScenarioIdx] = React.useState(0);
+  const [slotA, setSlotA] = React.useState(null);
+  const [slotB, setSlotB] = React.useState(null);
+  const [selected, setSelected] = React.useState(null);
+  const [launched, setLaunched] = React.useState(false);
+  const [result, setResult] = React.useState(null);
+  const [score, setScore] = React.useState(0);
+  const [finished, setFinished] = React.useState(false);
+  const [ballPct, setBallPct] = React.useState(5);
+  const [ballTopPct, setBallTopPct] = React.useState(50);
+  const [ballVisible, setBallVisible] = React.useState(true);
+  const [shake, setShake] = React.useState(false);
+  const rafRef = React.useRef(null);
 
-function initGB(){
-  gbIdx=0;
-  gbBusy=false;
-  renderGBScenario();
-}
+  const sc = L2_SCENARIOS[scenarioIdx];
 
-function renderGBScenario(){
-  makeDots('gb-dots',GB_SCENARIOS.length,gbIdx);
-  const sc=GB_SCENARIOS[gbIdx];
-  gbSelected=null;
-  gbPlaced={};
-  gbBusy=false;
+  const getEl = (id) => L2_ELEMENTS.find(e => e.id === id);
 
-  document.getElementById('gb-goal').textContent=sc.goal;
-  document.getElementById('gb-status').textContent='Выбери деталь снизу и помести в слот';
-  document.getElementById('gb-launch').disabled=true;
+  const selectEl = (id) => {
+    if (launched) return;
+    setSelected(id === selected ? null : id);
+  };
 
-  const field=document.getElementById('gb-field');
-  const W=field.offsetWidth||360;
-  const H=field.offsetHeight||210;
+  const fillSlot = (slot) => {
+    if (!selected || launched) return;
+    if (slot === 'A') setSlotA(selected);
+    else setSlotB(selected);
+    setSelected(null);
+  };
 
-  // SVG dashed guide path
-  const svg=document.getElementById('gb-svg');
-  svg.innerHTML='';
-  const pts=sc.pathGood.map(f=>(f.px*W)+','+(f.py*H)).join(' ');
-  const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-  pl.setAttribute('points',pts);
-  pl.setAttribute('stroke','rgba(181,161,255,.5)');
-  pl.setAttribute('stroke-width','3');
-  pl.setAttribute('stroke-dasharray','8,6');
-  pl.setAttribute('fill','none');
-  pl.setAttribute('stroke-linecap','round');
-  svg.appendChild(pl);
+  const launch = () => {
+    if (!slotA || !slotB || launched) return;
+    setLaunched(true);
+    const correct = sc.solution.includes(slotA) && sc.solution.includes(slotB);
+    setBallPct(5); setBallTopPct(50); setBallVisible(true);
 
-  // ball
-  const ball=document.getElementById('gb-ball');
-  ball.style.transition='none';
-  ball.style.left=(sc.ballStart.px*W-18)+'px';
-  ball.style.top=(sc.ballStart.py*H-18)+'px';
-  ball.textContent=sc.ballEmoji;
-
-  // star
-  const star=document.getElementById('gb-star');
-  star.style.left=(sc.starPos.px*W-15)+'px';
-  star.style.top=(sc.starPos.py*H-15)+'px';
-
-  // remove old slots
-  field.querySelectorAll('.gb-slot').forEach(s=>s.remove());
-
-  // create slots
-  sc.slots.forEach(sl=>{
-    const div=document.createElement('div');
-    div.className='gb-slot';
-    div.id='gbslot-'+sl.id;
-    div.style.left=(sl.px*W-31)+'px';
-    div.style.top=(sl.py*H-31)+'px';
-    div.innerHTML='<span class="gb-slot-emoji">＋</span><span class="gb-slot-label">'+sl.label+'</span>';
-    div.onclick=()=>gbSlotClick(sl.id);
-    field.appendChild(div);
-  });
-
-  // toolbar
-  const tb=document.getElementById('gb-toolbar');
-  tb.innerHTML='';
-  GB_ELEMENTS.forEach(el=>{
-    const btn=document.createElement('button');
-    btn.className='gb-tool';
-    btn.id='gbtool-'+el.id;
-    btn.innerHTML='<span>'+el.emoji+'</span><span class="gb-tool-label">'+el.label+'</span>';
-    btn.style.borderColor=el.color;
-    btn.onclick=()=>gbToolClick(el.id);
-    tb.appendChild(btn);
-  });
-}
-
-function gbToolClick(id){
-  if(gbBusy)return;
-  document.querySelectorAll('.gb-tool').forEach(b=>b.classList.remove('selected'));
-  if(gbSelected===id){gbSelected=null;return;}
-  gbSelected=id;
-  document.getElementById('gbtool-'+id).classList.add('selected');
-  document.getElementById('gb-status').textContent='Тапни на слот чтобы разместить деталь';
-}
-
-function gbSlotClick(slotId){
-  if(gbBusy)return;
-  const sc=GB_SCENARIOS[gbIdx];
-  const slotEl=document.getElementById('gbslot-'+slotId);
-  const slotDef=sc.slots.find(s=>s.id===slotId);
-
-  if(gbPlaced[slotId]){
-    // return element to toolbar
-    const retId=gbPlaced[slotId];
-    delete gbPlaced[slotId];
-    slotEl.innerHTML='<span class="gb-slot-emoji">＋</span><span class="gb-slot-label">'+slotDef.label+'</span>';
-    slotEl.classList.remove('filled');
-    slotEl.style.borderColor='';
-    document.getElementById('gbtool-'+retId).classList.remove('used');
-    slotEl.classList.add('shake');
-    setTimeout(()=>slotEl.classList.remove('shake'),400);
-    gbCheckReady();
-    return;
-  }
-  if(!gbSelected){
-    document.getElementById('gb-status').textContent='Сначала выбери деталь снизу!';
-    slotEl.classList.add('shake');
-    setTimeout(()=>slotEl.classList.remove('shake'),400);
-    return;
-  }
-  // place element
-  const el=GB_ELEMENTS.find(e=>e.id===gbSelected);
-  gbPlaced[slotId]=gbSelected;
-  slotEl.innerHTML='<span class="gb-slot-emoji" style="animation:pop-small .3s cubic-bezier(.34,1.56,.64,1)">'+el.emoji+'</span><span class="gb-slot-label">'+el.label+'</span>';
-  slotEl.classList.add('filled');
-  slotEl.style.borderColor=el.color;
-  document.getElementById('gbtool-'+gbSelected).classList.add('used');
-  gbSelected=null;
-  document.querySelectorAll('.gb-tool').forEach(b=>b.classList.remove('selected'));
-  gbCheckReady();
-}
-
-function gbCheckReady(){
-  const sc=GB_SCENARIOS[gbIdx];
-  const needed=sc.slots.length;
-  const placed=Object.keys(gbPlaced).length;
-  const ready=placed>=needed;
-  document.getElementById('gb-launch').disabled=!ready;
-  document.getElementById('gb-status').textContent=ready?'Готово! Нажми Запустить':'Размещено: '+placed+' / '+needed;
-}
-
-function gbLaunch(){
-  if(gbBusy)return;
-  gbBusy=true;
-  const sc=GB_SCENARIOS[gbIdx];
-  const field=document.getElementById('gb-field');
-  const W=field.offsetWidth||360;
-  const H=field.offsetHeight||210;
-  const ball=document.getElementById('gb-ball');
-
-  // check correctness
-  const correct=sc.slots.every(sl=>gbPlaced[sl.id]===sc.solution[sl.id]);
-  const frames=correct?sc.pathGood:sc.pathBad;
-  const durations=correct?[350,350,400]:[350,350];
-
-  function animStep(i){
-    if(i>=frames.length){
-      if(correct){
-        const bRect=ball.getBoundingClientRect();
-        burst(bRect.left+18,bRect.top+18,['⭐','🎉','✨','🚀','💫','⚙️']);
-        setTimeout(()=>{
-          showSuccess('⚙️','Машина работает!',sc.fact,'Следующая задача ➡️',()=>{
-            gbIdx++;
-            if(gbIdx>=GB_SCENARIOS.length){showFinish('Ты собрал все машины Голдберга! ⚙️');return;}
-            renderGBScenario();
-          });
-        },300);
+    let frame = 0;
+    const tick = () => {
+      frame++;
+      if (correct) {
+        setBallPct(p => Math.min(p + 2.8, 88));
+        setBallTopPct(50 + Math.sin(frame * 0.28) * 10);
+        if (frame > 30) {
+          setResult('ok');
+          setScore(s => s + 1);
+          return;
+        }
       } else {
-        ball.classList.add('shake');
-        setTimeout(()=>ball.classList.remove('shake'),400);
-        document.getElementById('gb-status').textContent='❌ Шар упал! Попробуй другую комбинацию';
-        gbBusy=false;
+        if (frame < 16) {
+          setBallPct(p => p + 2);
+          setBallTopPct(p => p + 1.5);
+        } else {
+          setBallTopPct(p => p + 5);
+          if (frame % 2 === 0) setBallVisible(v => !v);
+          if (frame > 24) {
+            setBallVisible(false);
+            setResult('fail');
+            setShake(true);
+            setTimeout(() => setShake(false), 500);
+            return;
+          }
+        }
       }
-      return;
-    }
-    const f=frames[i];
-    const dur=durations[i]||350;
-    ball.style.transition='left '+dur+'ms ease-in-out, top '+dur+'ms ease-in-out';
-    ball.style.left=(f.px*W-18)+'px';
-    ball.style.top=(f.py*H-18)+'px';
-    setTimeout(()=>animStep(i+1),dur);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  React.useEffect(() => () => rafRef.current && cancelAnimationFrame(rafRef.current), []);
+
+  const retry = () => {
+    setSlotA(null); setSlotB(null); setSelected(null);
+    setLaunched(false); setResult(null);
+    setBallPct(5); setBallTopPct(50); setBallVisible(true);
+  };
+
+  const nextScenario = () => {
+    if (scenarioIdx >= L2_SCENARIOS.length - 1) { setFinished(true); return; }
+    setScenarioIdx(i => i + 1);
+    setSlotA(null); setSlotB(null); setSelected(null);
+    setLaunched(false); setResult(null);
+    setBallPct(5); setBallTopPct(50); setBallVisible(true);
+  };
+
+  if (finished) {
+    return (
+      <div className="ak" style={{ minHeight:'100vh', background:'linear-gradient(180deg,#E5DCFF,#FFF3E2)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+        <AKSuccessCard
+          stars={score >= 3 ? 3 : score >= 2 ? 2 : 1}
+          title="Инженер!"
+          fact={`Ты собрал ${score} из ${L2_SCENARIOS.length} машин Голдберга. Настоящий физик!`}
+          onNext={onDone}
+          ctaLabel="В меню уровней"
+        />
+      </div>
+    );
   }
-  animStep(0);
+
+  return (
+    <div className="ak" style={{ minHeight:'100vh', background:'linear-gradient(180deg,#E5DCFF 0%,#FFF3E2 100%)', display:'flex', flexDirection:'column' }}>
+      <div style={{ padding:'16px 16px 0', flexShrink:0 }}>
+        <AKLessonHeader progress={scenarioIdx/L2_SCENARIOS.length} stars={score*80} onClose={onDone}/>
+      </div>
+
+      <div style={{ textAlign:'center', padding:'12px 16px 4px' }}>
+        <AKTaskBadge tone="phys">{sc.goal}</AKTaskBadge>
+        <div style={{ marginTop:8, fontSize:13, color:'var(--ak-ink-2)', fontFamily:'var(--ak-body)', fontWeight:500 }}>
+          💡 {sc.hint}
+        </div>
+      </div>
+
+      {/* Game field */}
+      <div
+        className={shake ? 'ak-shake' : ''}
+        style={{
+          margin:'12px 16px 0', background:'#fff', borderRadius:24, padding:16,
+          boxShadow:'0 8px 20px -6px rgba(45,27,69,.18), inset 0 2px 0 rgba(255,255,255,.9)',
+          position:'relative', height:180, overflow:'hidden',
+        }}
+      >
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(180deg,#F0EBFF,#E8E0FF)', borderRadius:24 }}/>
+
+        <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} viewBox="0 0 300 180" preserveAspectRatio="none">
+          <path d="M20 90 Q75 60 150 90 Q225 120 280 90" fill="none" stroke="#B5A1FF" strokeWidth="3" strokeDasharray="8 8" opacity=".6"/>
+        </svg>
+
+        {ballVisible && (
+          <div style={{
+            position:'absolute',
+            left:`${ballPct}%`,
+            top:`${ballTopPct}%`,
+            transform:'translate(-50%,-50%)',
+            fontSize:28,
+            zIndex:3,
+            transition: launched ? 'left .05s linear, top .05s linear' : 'none',
+            filter: launched ? 'drop-shadow(0 4px 8px rgba(124,95,224,.5))' : 'none',
+          }}>⚽</div>
+        )}
+
+        <div style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:9, color:'#7C5FE0', fontFamily:'var(--ak-display)', fontWeight:600, opacity:.7 }}>START</div>
+        <div style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', fontSize:32 }}>⭐</div>
+
+        {/* Slot A */}
+        <div
+          onClick={() => fillSlot('A')}
+          style={{
+            position:'absolute', left:'30%', top:'50%',
+            transform:'translate(-50%,-50%)',
+            width:54, height:54, borderRadius:16, zIndex:2,
+            background: slotA ? getEl(slotA)?.color : 'rgba(124,95,224,.12)',
+            border:`2.5px dashed ${slotA ? getEl(slotA)?.colorD : '#B5A1FF'}`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize: slotA ? 26 : 18,
+            cursor: launched ? 'default' : 'pointer',
+            transition:'all .2s',
+          }}
+        >{slotA ? getEl(slotA)?.emoji : '?'}</div>
+
+        {/* Slot B */}
+        <div
+          onClick={() => fillSlot('B')}
+          style={{
+            position:'absolute', left:'65%', top:'50%',
+            transform:'translate(-50%,-50%)',
+            width:54, height:54, borderRadius:16, zIndex:2,
+            background: slotB ? getEl(slotB)?.color : 'rgba(124,95,224,.12)',
+            border:`2.5px dashed ${slotB ? getEl(slotB)?.colorD : '#B5A1FF'}`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize: slotB ? 26 : 18,
+            cursor: launched ? 'default' : 'pointer',
+            transition:'all .2s',
+          }}
+        >{slotB ? getEl(slotB)?.emoji : '?'}</div>
+      </div>
+
+      {/* Toolbar */}
+      <div style={{ padding:'12px 16px 0', display:'flex', gap:8, justifyContent:'center' }}>
+        {L2_ELEMENTS.map(el => (
+          <button
+            key={el.id}
+            onClick={() => selectEl(el.id)}
+            disabled={launched}
+            style={{
+              width:66, height:66, borderRadius:18, border:'none', cursor:'pointer',
+              background: selected === el.id ? el.color : `${el.color}88`,
+              boxShadow: selected === el.id
+                ? `0 6px 0 ${el.colorD}, 0 10px 20px -6px ${el.color}`
+                : `0 3px 0 ${el.colorD}44`,
+              transform: selected === el.id ? 'translateY(-4px) scale(1.06)' : 'none',
+              transition:'all .15s',
+              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:2,
+            }}
+          >
+            <span style={{ fontSize:26 }}>{el.emoji}</span>
+            <span style={{ fontSize:9, fontFamily:'var(--ak-display)', fontWeight:600, color:'var(--ak-ink)', opacity:.8 }}>{el.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding:'10px 16px 28px', display:'flex', gap:10 }}>
+        {result === 'fail' ? (
+          <button className="ak-btn ak-btn--warn" style={{ flex:1 }} onClick={retry}>🔄 Ещё раз</button>
+        ) : result === 'ok' ? (
+          <button className="ak-btn ak-btn--ok" style={{ width:'100%' }} onClick={nextScenario}>
+            {scenarioIdx >= L2_SCENARIOS.length - 1 ? 'Результаты 🎉' : 'Следующая машина →'}
+          </button>
+        ) : (
+          <button
+            className="ak-btn ak-btn--phys"
+            style={{ width:'100%' }}
+            onClick={launch}
+            disabled={!slotA || !slotB || launched}
+          >
+            {!slotA || !slotB ? '← Поставь элементы в слоты' : '▶ Запустить!'}
+          </button>
+        )}
+      </div>
+
+      {result === 'ok' && (
+        <div style={{
+          position:'fixed', inset:0, background:'rgba(45,27,69,.55)', backdropFilter:'blur(4px)',
+          display:'flex', alignItems:'center', justifyContent:'center', padding:24, zIndex:20,
+        }}>
+          <div className="ak-pop" style={{ background:'#fff', borderRadius:28, padding:'28px 24px', maxWidth:340, textAlign:'center', boxShadow:'0 12px 40px rgba(45,27,69,.3)' }}>
+            <div style={{ fontSize:52, marginBottom:12 }}>⭐</div>
+            <div style={{ fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', marginBottom:8 }}>Машина работает!</div>
+            <div style={{ fontSize:14, color:'var(--ak-ink-2)', lineHeight:1.6, marginBottom:20 }}>🔬 {sc.fact}</div>
+            <button className="ak-btn ak-btn--phys" style={{ width:'100%' }} onClick={nextScenario}>
+              {scenarioIdx >= L2_SCENARIOS.length - 1 ? 'Результаты 🎉' : 'Следующая →'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// ===================== LEVEL 3: PENDULUM =====================
-const PEND_TASKS=[
-  {emoji:'🎯',task:'Сбей правую мишень',hint:'Качни вправо!',
-   targets:[{angle:0.52,avoid:false}],avoids:[]},
-  {emoji:'🎯🎯',task:'Сбей ОБЕ мишени',hint:'Качни сильно!',
-   targets:[{angle:-0.48,avoid:false},{angle:0.48,avoid:false}],avoids:[]},
-  {emoji:'⚖️',task:'Качнись ровно 5 раз',hint:'Туда-обратно = 1 качание',
-   swingGoal:5,targets:[],avoids:[]},
-  {emoji:'🎯',task:'Сбей левую — НЕ задень правую!',hint:'Слабый толчок влево',
-   targets:[{angle:-0.45,avoid:false}],avoids:[{angle:0.45}]},
-  {emoji:'🔬',task:'Открытие! Двигай ползунок длины верёвки',hint:'Найди разницу в скорости!',
-   isDiscovery:true,targets:[],avoids:[]},
+/* =========================================================
+   LEVEL 3 — МАЯТНИК (Canvas)
+   ========================================================= */
+const L3_TASKS = [
+  { emoji:'🎯',   text:'Сбей правую мишень',      tip:'Нажми Вправо чтобы раскачаться', checkFn: s => s.hitRight },
+  { emoji:'🎯🎯', text:'Сбей обе мишени',          tip:'Сначала влево, потом вправо!',    checkFn: s => s.hitLeft && s.hitRight },
+  { emoji:'⚖️',  text:'5 качаний подряд',          tip:'Просто качайся туда-сюда',        checkFn: s => s.swingCount >= 5 },
+  { emoji:'🎯',   text:'Сбей ТОЛЬКО левую',         tip:'Один толчок влево, не качайся!', checkFn: s => s.hitLeft && !s.hitRight },
+  { emoji:'📏',   text:'Открытие: длина верёвки',   tip:'Подвигай ползунок — смотри на период', checkFn: s => s.discovery, isDiscovery: true },
 ];
 
-let pendIdx=0;
-let pendAngle=0.05;
-let pendVelocity=0;
-let pendLength=120;
-let pendPower='strong';
-let pendRAF=null;
-let pendTargets=[];
-let pendHitCount=0;
-let pendSwingCount=0;
-let pendLastSign=0;
-let pendBusy=false;
+function Level3Pendulum({ onDone }) {
+  const canvasRef = React.useRef(null);
+  const physRef   = React.useRef({ angle:0.35, vel:0, hitLeft:false, hitRight:false, swingCount:0, discovery:false });
+  const rafRef    = React.useRef(null);
+  const lastCrossRef = React.useRef(0);
+  const prevAngleRef = React.useRef(0.35);
 
-function initPend(){
-  pendIdx=0;
-  pendBusy=false;
-  const canvas=document.getElementById('pend-canvas');
-  const wrap=document.getElementById('pend-wrap');
-  const W=wrap.offsetWidth||360;
-  const H=Math.round(Math.min(220,W*0.52));
-  canvas.width=W;
-  canvas.height=H;
-  canvas.style.height=H+'px';
-  pendLength=Math.round(H*0.52);
-  if(pendRAF)cancelAnimationFrame(pendRAF);
-  renderPendTask();
-  pendRAF=requestAnimationFrame(pendLoop);
-}
+  const [taskIdx,  setTaskIdx]  = React.useState(0);
+  const [taskDone, setTaskDone] = React.useState(false);
+  const [score,    setScore]    = React.useState(0);
+  const [finished, setFinished] = React.useState(false);
+  const [ropeLen,  setRopeLen]  = React.useState(130);
+  const [periodMs, setPeriodMs] = React.useState(null);
+  const [swingDisplay, setSwingDisplay] = React.useState(0);
 
-function renderPendTask(){
-  makeDots('pend-dots',PEND_TASKS.length,pendIdx);
-  const t=PEND_TASKS[pendIdx];
-  document.getElementById('pend-emoji').textContent=t.emoji;
-  document.getElementById('pend-task-text').textContent=t.task;
-  document.getElementById('pend-task-hint').textContent=t.hint||'';
-  document.getElementById('pend-counter').textContent='';
+  const task = L3_TASKS[taskIdx];
+  const ropeLenRef = React.useRef(ropeLen);
+  ropeLenRef.current = ropeLen;
+  const taskDoneRef = React.useRef(taskDone);
+  taskDoneRef.current = taskDone;
+  const taskRef = React.useRef(task);
+  taskRef.current = task;
+  const setTaskDoneRef = React.useRef(setTaskDone);
+  setTaskDoneRef.current = setTaskDone;
 
-  pendAngle=0.05;
-  pendVelocity=0;
-  pendHitCount=0;
-  pendSwingCount=0;
-  pendLastSign=0;
-  pendBusy=false;
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
 
-  const canvas=document.getElementById('pend-canvas');
-  const W=canvas.width;
-  const H=canvas.height;
-  const pivotX=W/2;
-  const pivotY=16;
+    const draw = () => {
+      const s = physRef.current;
+      const len = ropeLenRef.current;
+      const W = canvas.width;
+      const H = canvas.height;
+      const pivot = { x: W/2, y: 42 };
+      const bx = pivot.x + Math.sin(s.angle) * len;
+      const by = pivot.y + Math.cos(s.angle) * len;
+      const targetR = 20;
+      const lT = { x: W*0.14, y: pivot.y + len + 12 };
+      const rT = { x: W*0.86, y: pivot.y + len + 12 };
 
-  // build targets array
-  pendTargets=[];
-  if(t.targets){
-    t.targets.forEach(tg=>{
-      pendTargets.push({angle:tg.angle,avoid:false,hit:false,
-        x:pivotX+Math.sin(tg.angle)*pendLength,
-        y:pivotY+Math.cos(tg.angle)*pendLength});
-    });
-  }
-  if(t.avoids){
-    t.avoids.forEach(av=>{
-      pendTargets.push({angle:av.angle,avoid:true,hit:false,
-        x:pivotX+Math.sin(av.angle)*pendLength,
-        y:pivotY+Math.cos(av.angle)*pendLength});
-    });
-  }
+      const prevA = prevAngleRef.current;
+      s.vel += -0.0038 * Math.sin(s.angle);
+      s.vel *= 0.996;
+      s.angle += s.vel;
 
-  // discovery slider
-  const sw=document.getElementById('pend-slider-wrap');
-  if(t.isDiscovery){
-    sw.classList.remove('hidden');
-    document.getElementById('pend-len-slider').value=pendLength;
-    document.getElementById('pend-len-val').textContent=pendLength;
-  } else {
-    sw.classList.add('hidden');
-  }
+      // swing count — crosses zero
+      if ((prevA < 0 && s.angle >= 0) || (prevA > 0 && s.angle <= 0)) {
+        s.swingCount++;
+        setSwingDisplay(s.swingCount);
+        const now = Date.now();
+        if (lastCrossRef.current) setPeriodMs(Math.round((now - lastCrossRef.current)*2));
+        lastCrossRef.current = now;
+      }
+      prevAngleRef.current = s.angle;
 
-  // reset power indicator
-  document.getElementById('pow-strong').style.outline='3px solid '+getComputedStyle(document.documentElement).getPropertyValue('--ak-cta-2');
-  document.getElementById('pow-weak').style.outline='';
-}
+      // hit detection
+      const leftHit  = Math.hypot(bx - lT.x, by - lT.y) < targetR + 12;
+      const rightHit = Math.hypot(bx - rT.x, by - rT.y) < targetR + 12;
+      if (leftHit  && !s.hitLeft)  s.hitLeft  = true;
+      if (rightHit && !s.hitRight) s.hitRight = true;
+      if (taskRef.current.isDiscovery && s.swingCount >= 3) s.discovery = true;
 
-function setPendPower(p){
-  pendPower=p;
-  const cta2=getComputedStyle(document.documentElement).getPropertyValue('--ak-cta-2');
-  document.getElementById('pow-strong').style.outline=p==='strong'?'3px solid '+cta2:'';
-  document.getElementById('pow-weak').style.outline=p==='weak'?'3px solid '+cta2:'';
-}
+      if (!taskDoneRef.current && taskRef.current.checkFn(s)) {
+        setTaskDoneRef.current(true);
+      }
 
-function pendSwing(dir){
-  if(pendBusy)return;
-  const amp=pendPower==='strong'?0.06:0.025;
-  pendVelocity+=(dir==='left'?-1:1)*amp;
-}
+      // Draw
+      ctx.clearRect(0, 0, W, H);
+      const bg = ctx.createLinearGradient(0,0,0,H);
+      bg.addColorStop(0,'#EDE8FF'); bg.addColorStop(1,'#F8F5FF');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
 
-function pendChangeLen(val){
-  pendLength=parseInt(val);
-  document.getElementById('pend-len-val').textContent=val;
-  // update target positions
-  const canvas=document.getElementById('pend-canvas');
-  const pivotX=canvas.width/2;
-  const pivotY=16;
-  pendTargets.forEach(tg=>{
-    tg.x=pivotX+Math.sin(tg.angle)*pendLength;
-    tg.y=pivotY+Math.cos(tg.angle)*pendLength;
-  });
-}
+      // Draw target
+      const drawTgt = (tx, ty, hit, col, colD) => {
+        if (hit) {
+          // burst
+          ctx.fillStyle = '#FFD262';
+          for (let i=0;i<8;i++) {
+            const a=(Math.PI*2/8)*i;
+            ctx.beginPath(); ctx.arc(tx+Math.cos(a)*30, ty+Math.sin(a)*30, 4, 0, Math.PI*2); ctx.fill();
+          }
+          ctx.fillStyle = colD; ctx.font='22px serif';
+          ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText('💥', tx, ty);
+        } else {
+          ctx.beginPath(); ctx.arc(tx,ty,targetR,0,Math.PI*2);
+          ctx.fillStyle = col; ctx.fill();
+          ctx.beginPath(); ctx.arc(tx,ty,targetR*.65,0,Math.PI*2);
+          ctx.fillStyle = colD; ctx.fill();
+          ctx.beginPath(); ctx.arc(tx,ty,targetR*.28,0,Math.PI*2);
+          ctx.fillStyle = '#fff'; ctx.fill();
+          ctx.strokeStyle = 'rgba(45,27,69,.2)'; ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      };
+      drawTgt(lT.x, lT.y, s.hitLeft,  '#7BD9A8','#3CA876');
+      drawTgt(rT.x, rT.y, s.hitRight, '#FFA17A','#D96D49');
 
-function pendLoop(){
-  if(!document.getElementById('level3').classList.contains('active')){
-    pendRAF=requestAnimationFrame(pendLoop);
-    return;
-  }
-  // physics
-  const g=0.003;
-  pendVelocity+=(-g*Math.sin(pendAngle))*(100/pendLength);
-  pendVelocity*=0.996;
-  pendAngle+=pendVelocity;
+      // rope
+      ctx.beginPath(); ctx.moveTo(pivot.x,pivot.y); ctx.lineTo(bx,by);
+      ctx.strokeStyle='#6B5680'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.stroke();
 
-  // count swings (zero crossings)
-  const sign=pendAngle>=0?1:-1;
-  if(pendLastSign!==0&&sign!==pendLastSign){
-    pendSwingCount++;
-    const t=PEND_TASKS[pendIdx];
-    if(t.swingGoal){
-      document.getElementById('pend-counter').textContent='Качаний: '+pendSwingCount+' / '+t.swingGoal;
-    }
-  }
-  pendLastSign=sign;
+      // pivot pin
+      ctx.beginPath(); ctx.arc(pivot.x,pivot.y,7,0,Math.PI*2);
+      ctx.fillStyle='#2D1B45'; ctx.fill();
+      ctx.beginPath(); ctx.arc(pivot.x-2,pivot.y-2,2.5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.55)'; ctx.fill();
 
-  drawPendulum();
-  checkPendHits();
-  pendRAF=requestAnimationFrame(pendLoop);
-}
+      // ball
+      const grd = ctx.createRadialGradient(bx-7,by-7,2,bx,by,16);
+      grd.addColorStop(0,'#fff'); grd.addColorStop(0.3,'#C4B5FF'); grd.addColorStop(1,'#7C5FE0');
+      ctx.beginPath(); ctx.arc(bx,by,16,0,Math.PI*2);
+      ctx.fillStyle=grd; ctx.fill();
+      ctx.strokeStyle='#5B3EC8'; ctx.lineWidth=2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx-5,by-5,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.65)'; ctx.fill();
 
-function drawPendulum(){
-  const canvas=document.getElementById('pend-canvas');
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width;
-  const H=canvas.height;
-  ctx.clearRect(0,0,W,H);
+      rafRef.current = requestAnimationFrame(draw);
+    };
 
-  const pivotX=W/2;
-  const pivotY=16;
-  const ballX=pivotX+Math.sin(pendAngle)*pendLength;
-  const ballY=pivotY+Math.cos(pendAngle)*pendLength;
+    rafRef.current = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [taskIdx]);
 
-  // draw targets
-  pendTargets.forEach(tg=>{
-    if(tg.hit)return;
-    ctx.save();
-    ctx.font='28px serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.globalAlpha=tg.avoid?0.55:1;
-    ctx.fillText(tg.avoid?'🚫':'🎯',tg.x,tg.y);
-    ctx.restore();
-  });
+  const push = (dir, power) => { physRef.current.vel += dir * power; };
 
-  // rope shadow
-  ctx.beginPath();
-  ctx.moveTo(pivotX,pivotY);
-  ctx.lineTo(ballX,ballY);
-  ctx.strokeStyle='rgba(255,255,255,0.15)';
-  ctx.lineWidth=6;
-  ctx.stroke();
+  const resetPhys = () => {
+    physRef.current = { angle:0.35, vel:0, hitLeft:false, hitRight:false, swingCount:0, discovery:false };
+    prevAngleRef.current = 0.35;
+    lastCrossRef.current = 0;
+    setSwingDisplay(0);
+    setPeriodMs(null);
+    setTaskDone(false);
+  };
 
-  // rope
-  ctx.beginPath();
-  ctx.moveTo(pivotX,pivotY);
-  ctx.lineTo(ballX,ballY);
-  ctx.strokeStyle='rgba(255,255,255,0.85)';
-  ctx.lineWidth=3;
-  ctx.lineCap='round';
-  ctx.stroke();
+  const nextTask = () => {
+    setScore(s => s + 1);
+    if (taskIdx >= L3_TASKS.length - 1) { setFinished(true); return; }
+    setTaskIdx(i => i + 1);
+    resetPhys();
+  };
 
-  // pivot dot
-  ctx.beginPath();
-  ctx.arc(pivotX,pivotY,7,0,Math.PI*2);
-  ctx.fillStyle='#FFD262';
-  ctx.fill();
-
-  // ball glow
-  ctx.beginPath();
-  ctx.arc(ballX,ballY,26,0,Math.PI*2);
-  ctx.fillStyle='rgba(181,161,255,0.22)';
-  ctx.fill();
-
-  // ball
-  const grad=ctx.createRadialGradient(ballX-7,ballY-7,2,ballX,ballY,20);
-  grad.addColorStop(0,'#fff');
-  grad.addColorStop(0.45,'#B5A1FF');
-  grad.addColorStop(1,'#7C5FE0');
-  ctx.beginPath();
-  ctx.arc(ballX,ballY,20,0,Math.PI*2);
-  ctx.fillStyle=grad;
-  ctx.shadowColor='rgba(124,95,224,0.45)';
-  ctx.shadowBlur=8;
-  ctx.fill();
-  ctx.shadowBlur=0;
-}
-
-function checkPendHits(){
-  if(pendBusy)return;
-  const t=PEND_TASKS[pendIdx];
-  const canvas=document.getElementById('pend-canvas');
-  const W=canvas.width;
-  const H=canvas.height;
-  const pivotX=W/2;
-  const pivotY=16;
-  const ballX=pivotX+Math.sin(pendAngle)*pendLength;
-  const ballY=pivotY+Math.cos(pendAngle)*pendLength;
-
-  // discovery: after enough swings show fact
-  if(t.isDiscovery){
-    if(pendSwingCount>=8){
-      pendBusy=true;
-      cancelAnimationFrame(pendRAF);pendRAF=null;
-      showSuccess('🔬','Ты открыл закон маятника!',
-        '<strong>Галилей открыл это в 1583 году!</strong> Период маятника зависит только от длины верёвки — не от веса шара и не от силы толчка. Длиннее верёвка — медленнее качается.',
-        'Завершить уровень! 🏆',()=>{
-          showFinish('Ты открыл закон Галилея о маятнике! 🔭');
-        });
-    }
-    return;
+  if (finished) {
+    return (
+      <div className="ak" style={{ minHeight:'100vh', background:'linear-gradient(180deg,#E5DCFF,#FFF3E2)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+        <AKSuccessCard
+          stars={score >= 4 ? 3 : score >= 2 ? 2 : 1}
+          title="Физик-мастер!"
+          fact={`Ты выполнил ${score} из ${L3_TASKS.length} задач маятника. Галилей изобрёл маятниковые часы в 1602!`}
+          onNext={onDone}
+          ctaLabel="В меню уровней"
+        />
+      </div>
+    );
   }
 
-  // swing goal
-  if(t.swingGoal&&pendSwingCount>=t.swingGoal&&!pendBusy){
-    pendBusy=true;
-    cancelAnimationFrame(pendRAF);pendRAF=null;
-    burst(W/2,canvas.getBoundingClientRect().top+H/2,['⚖️','✨','⭐','🎉','💫']);
-    showSuccess('⚖️','Отлично! Ровно 5 качаний!',
-      '<strong>Период маятника</strong> зависит только от длины верёвки — не от веса и не от силы толчка! Это открытие Галилея изменило науку.',
-      'Следующая задача ➡️',()=>{
-        pendIdx++;
-        if(pendIdx>=PEND_TASKS.length){showFinish('Маятник покорён! 🎯');return;}
-        renderPendTask();
-        pendBusy=false;
-        pendRAF=requestAnimationFrame(pendLoop);
-      });
-    return;
-  }
+  return (
+    <div className="ak" style={{ minHeight:'100vh', background:'linear-gradient(180deg,#EDE8FF 0%,#F8F5FF 100%)', display:'flex', flexDirection:'column' }}>
+      <div style={{ padding:'16px 16px 0', flexShrink:0 }}>
+        <AKLessonHeader progress={taskIdx/L3_TASKS.length} stars={score*60} onClose={onDone}/>
+      </div>
 
-  // target hits
-  if(!pendTargets.length)return;
-  pendTargets.forEach(tg=>{
-    if(tg.hit)return;
-    const dist=Math.hypot(ballX-tg.x,ballY-tg.y);
-    if(dist>28)return;
-    tg.hit=true;
+      <div style={{ textAlign:'center', padding:'12px 16px 0' }}>
+        <AKTaskBadge tone="phys">{task.emoji} {task.text}</AKTaskBadge>
+        <div style={{ marginTop:6, fontSize:13, color:'var(--ak-ink-2)', fontWeight:500 }}>💡 {task.tip}</div>
+      </div>
 
-    if(tg.avoid){
-      // hit forbidden — fail
-      pendBusy=true;
-      cancelAnimationFrame(pendRAF);pendRAF=null;
-      const wrap=document.getElementById('pend-wrap');
-      wrap.style.background='rgba(217,82,63,0.3)';
-      setTimeout(()=>{wrap.style.background='';},500);
-      showSuccess('❌','Задел запрещённую мишень!',
-        '<strong>Попробуй слабее!</strong> Нажми «🍃 Слабо» и качни влево — маятник не должен достать до правой мишени.',
-        'Попробовать снова',()=>{
-          renderPendTask();
-          pendBusy=false;
-          pendRAF=requestAnimationFrame(pendLoop);
-        });
-      return;
-    }
+      <canvas
+        ref={canvasRef}
+        width={340} height={260}
+        style={{
+          display:'block', margin:'12px auto 0', borderRadius:20,
+          boxShadow:'0 8px 20px -6px rgba(45,27,69,.2)',
+          width:'calc(100% - 32px)', maxWidth:380, height:'auto',
+        }}
+      />
 
-    // good hit — particles
-    const rect=canvas.getBoundingClientRect();
-    for(let i=0;i<6;i++){
-      const p=document.createElement('div');
-      const a=(i/6)*Math.PI*2;
-      const d=25+Math.random()*25;
-      p.style.cssText='position:fixed;left:'+(rect.left+tg.x)+'px;top:'+(rect.top+tg.y)+'px;font-size:16px;pointer-events:none;z-index:999;transition:all .5s ease-out;';
-      p.textContent=['✨','💥','⭐','🎊','💫','🔥'][i];
-      document.body.appendChild(p);
-      requestAnimationFrame(()=>{
-        p.style.transform='translate('+(Math.cos(a)*d)+'px,'+(Math.sin(a)*d-30)+'px)';
-        p.style.opacity='0';
-      });
-      setTimeout(()=>p.remove(),600);
-    }
-    pendHitCount++;
+      {/* Stats */}
+      <div style={{ display:'flex', justifyContent:'center', gap:12, padding:'8px 0 4px' }}>
+        {!task.isDiscovery && (
+          <span style={{ fontFamily:'var(--ak-display)', fontSize:14, color:'var(--ak-ink-2)' }}>
+            Качаний: <strong style={{ color:'#7C5FE0' }}>{swingDisplay}</strong>
+          </span>
+        )}
+        {task.isDiscovery && periodMs && (
+          <span style={{ fontFamily:'var(--ak-display)', fontSize:14, color:'var(--ak-ink-2)' }}>
+            Период: <strong style={{ color:'#7C5FE0' }}>~{(periodMs/1000).toFixed(1)}с</strong>
+          </span>
+        )}
+      </div>
 
-    // check all good targets hit
-    const goodTargets=pendTargets.filter(x=>!x.avoid);
-    const allHit=goodTargets.every(x=>x.hit);
-    if(allHit&&!pendBusy){
-      pendBusy=true;
-      cancelAnimationFrame(pendRAF);pendRAF=null;
-      const facts=[
-        'Маятник движется по дуге — это <strong>гармоническое колебание</strong>. Гравитация тянет вниз, скорость несёт вперёд!',
-        'При сильном толчке амплитуда больше — но период тот же! Это открытие Галилея.',
-        'Маятник — основа первых <strong>точных часов</strong>! Гюйгенс изобрёл их в 1657 году.',
-        'Чтобы сбить только одну цель — нужна точная сила. Это <strong>управление амплитудой</strong>!',
-      ];
-      setTimeout(()=>{
-        burst(W/2,rect.top+H/2,['🎯','⭐','💫','🎉','✨','🚀']);
-        showSuccess('🎯','Мишень сбита!',facts[pendIdx%facts.length],'Следующая задача ➡️',()=>{
-          pendIdx++;
-          if(pendIdx>=PEND_TASKS.length){showFinish('Маятник покорён! 🎯');return;}
-          renderPendTask();
-          pendBusy=false;
-          pendRAF=requestAnimationFrame(pendLoop);
-        });
-      },300);
-    }
-  });
+      {/* Discovery rope slider */}
+      {task.isDiscovery && (
+        <div style={{ padding:'0 24px 4px', textAlign:'center' }}>
+          <div style={{ fontFamily:'var(--ak-display)', fontSize:13, color:'var(--ak-ink-2)', marginBottom:6 }}>
+            📏 Длина верёвки: <strong style={{ color:'#7C5FE0' }}>{ropeLen}</strong>
+          </div>
+          <input
+            type="range" min={60} max={200} value={ropeLen}
+            onChange={e => { setRopeLen(+e.target.value); resetPhys(); }}
+            style={{ width:'80%', accentColor:'#7C5FE0' }}
+          />
+          <div style={{ fontSize:12, color:'var(--ak-ink-3)', marginTop:4 }}>
+            Длиннее верёвка → медленнее качается → больший период!
+          </div>
+        </div>
+      )}
+
+      {/* Controls */}
+      <div style={{ padding:'4px 12px 4px', display:'flex', gap:6, justifyContent:'center', flexWrap:'wrap' }}>
+        <button className="ak-btn ak-btn--cta ak-btn--sm" onClick={() => push(-1, 0.14)}>💥 ←</button>
+        <button className="ak-btn ak-btn--phys ak-btn--sm" onClick={() => push(-1, 0.07)}>← Влево</button>
+        <button className="ak-btn ak-btn--soft ak-btn--sm" onClick={resetPhys}>🔄</button>
+        <button className="ak-btn ak-btn--phys ak-btn--sm" onClick={() => push(1, 0.07)}>Вправо →</button>
+        <button className="ak-btn ak-btn--cta ak-btn--sm" onClick={() => push(1, 0.14)}>→ 💥</button>
+      </div>
+
+      {taskDone && (
+        <div style={{
+          position:'fixed', inset:0, background:'rgba(45,27,69,.55)', backdropFilter:'blur(4px)',
+          display:'flex', alignItems:'center', justifyContent:'center', padding:24, zIndex:20,
+        }}>
+          <div className="ak-pop" style={{ background:'#fff', borderRadius:28, padding:'28px 24px', maxWidth:320, textAlign:'center', boxShadow:'0 12px 40px rgba(45,27,69,.3)' }}>
+            <div style={{ fontSize:52, marginBottom:12 }}>🎉</div>
+            <div style={{ fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', marginBottom:8 }}>Задача выполнена!</div>
+            <div style={{ fontSize:14, color:'var(--ak-ink-2)', lineHeight:1.6, marginBottom:20 }}>
+              {task.isDiscovery
+                ? 'Ты открыл закон маятника! Чем длиннее верёвка, тем медленнее качается — именно это открыл Галилей в 1602!'
+                : 'Отличное управление! Ты чувствуешь физику как настоящий учёный!'
+              }
+            </div>
+            <button className="ak-btn ak-btn--phys" style={{ width:'100%' }} onClick={nextTask}>
+              {taskIdx >= L3_TASKS.length - 1 ? 'Результаты 🎉' : 'Следующая задача →'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// resize canvas if window resizes and level3 active
-window.addEventListener('resize',()=>{
-  if(document.getElementById('level3').classList.contains('active')){
-    if(pendRAF){cancelAnimationFrame(pendRAF);pendRAF=null;}
-    initPend();
-  }
-});
+/* =========================================================
+   LEVEL SELECT
+   ========================================================= */
+function LevelSelect({ onSelect }) {
+  return (
+    <div className="ak" style={{
+      minHeight: '100vh',
+      background: 'radial-gradient(80% 50% at 50% 0%, #E5DCFF 0%, transparent 60%), linear-gradient(180deg,#FFF8EA,#FFF3E2)',
+      padding: '60px 18px 40px',
+      boxSizing: 'border-box',
+    }}>
+      <div style={{ textAlign:'center', marginBottom:32, position:'relative' }}>
+        <div style={{ position:'absolute', top:-20, right:0, opacity:.6 }}>
+          <AKPlanet size={80} tone="phys" ring/>
+        </div>
+        <div className="ak-bob" style={{ display:'inline-block' }}>
+          <AKAtom size={100} tone="phys"/>
+        </div>
+        <div style={{ fontFamily:'var(--ak-display)', fontSize:32, fontWeight:700, color:'var(--ak-ink)', marginTop:12 }}>КвантУм</div>
+        <div style={{ fontSize:15, color:'var(--ak-ink-2)', fontFamily:'var(--ak-body)', fontWeight:600 }}>Физика · КосмоБаза</div>
+        <div style={{ display:'flex', justifyContent:'center', gap:12, marginTop:12 }}>
+          <AKStatChip icon="⚡" value="Физика" tone="phys"/>
+          <AKStatChip icon="🏆" value="3 уровня" tone="star"/>
+        </div>
+      </div>
+
+      <AKSubjectCard
+        tone="phys"
+        title="Что упадёт быстрее?"
+        subtitle="Физика · Уровень 1"
+        progress={0}
+        icon={<AKBlob kind="sphere" tone="phys" size={64}/>}
+        onClick={() => onSelect('level1')}
+      />
+      <AKSubjectCard
+        tone="phys"
+        title="Машина Голдберга"
+        subtitle="Физика · Уровень 2"
+        progress={0}
+        icon={<AKBlob kind="gear" tone="phys" size={64}/>}
+        onClick={() => onSelect('level2')}
+      />
+      <AKSubjectCard
+        tone="phys"
+        title="Маятник"
+        subtitle="Физика · Уровень 3"
+        progress={0}
+        icon={<AKBlob kind="sphere" tone="phys" size={64}/>}
+        onClick={() => onSelect('level3')}
+      />
+
+      <div style={{ textAlign:'center', marginTop:20, fontSize:12, color:'var(--ak-ink-3)' }}>
+        КосмоБаза · Образовательная платформа
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
+function App() {
+  const [screen, setScreen] = React.useState('menu');
+  const goMenu = () => setScreen('menu');
+  if (screen === 'level1') return <Level1Falling onDone={goMenu}/>;
+  if (screen === 'level2') return <Level2Goldberg onDone={goMenu}/>;
+  if (screen === 'level3') return <Level3Pendulum onDone={goMenu}/>;
+  return <LevelSelect onSelect={setScreen}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
