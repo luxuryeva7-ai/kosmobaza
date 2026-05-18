@@ -1,1610 +1,672 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Химия — КосмоБаза</title>
-<link href="https://fonts.bunny.net/css?family=fredoka-one:400|nunito:500,700,800" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Хемо Лаб — КосмоБаза</title>
 <style>
-/* ══════════════════════════════════════
-   CSS VARIABLES — AKADEMIYA CLAY
-══════════════════════════════════════ */
+@import url('https://fonts.bunny.net/css?family=fredoka-one:400|nunito:500,700,800');
 :root {
-  --ak-bg: #FFF3E2;
-  --ak-bg-2: #FFE8CC;
-  --ak-surface: #FFFDF7;
-  --ak-ink: #2D1B45;
-  --ak-ink-2: #6B5680;
-  --ak-ink-3: #A797B8;
-  --ak-line: rgba(45,27,69,.08);
-  --ak-chem-1: #DCF7E7;
-  --ak-chem-2: #7BD9A8;
-  --ak-chem-3: #3CA876;
-  --ak-cta-1: #FFEDA8;
-  --ak-cta-2: #FFD262;
-  --ak-cta-3: #D4A22B;
-  --ak-ok-1: #C8F2DD;
-  --ak-ok-2: #5DD9A0;
-  --ak-ok-3: #2BA873;
-  --ak-warn-1: #FFD2C8;
-  --ak-warn-2: #FF8B7A;
-  --ak-warn-3: #D9523F;
-  --ak-r-sm: 10px;
-  --ak-r-md: 18px;
-  --ak-r-lg: 28px;
-  --ak-r-xl: 36px;
-}
-
-/* ══════════════════════════════════════
-   RESET & BASE
-══════════════════════════════════════ */
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-
-body {
-  background: linear-gradient(180deg, #FFF8EA 0%, #FFF3E2 60%, #F4E9D8 100%);
-  min-height: 100vh;
-  font-family: 'Nunito', sans-serif;
-  color: var(--ak-ink);
-  overflow-x: hidden;
-}
-
-/* ══════════════════════════════════════
-   ANIMATIONS
-══════════════════════════════════════ */
-@keyframes ak-bob { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-4px) rotate(1deg)} }
-@keyframes ak-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px) rotate(-1deg)} 40%{transform:translateX(7px) rotate(1deg)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
-@keyframes ak-pop { 0%{transform:scale(.7);opacity:0} 60%{transform:scale(1.06);opacity:1} 100%{transform:scale(1)} }
-@keyframes ak-pour { 0%{transform:scaleY(0);opacity:0} 100%{transform:scaleY(1);opacity:1} }
-@keyframes float { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-10px) rotate(1deg)} }
-@keyframes rainbowGlow{0%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 18px rgba(255,200,0,.9))}100%{filter:drop-shadow(0 0 6px rgba(255,200,0,.4))}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
-
-.ak-bob { animation: ak-bob 3.2s ease-in-out infinite; }
-.ak-shake { animation: ak-shake .45s ease-in-out; }
-.ak-pop { animation: ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards; }
-.rainbow-glow{animation:rainbowGlow 1.2s ease forwards;}
-
-/* ══════════════════════════════════════
-   SCREENS
-══════════════════════════════════════ */
-.screen{display:none;}
-.screen.active{display:flex;flex-direction:column;min-height:100vh;}
-
-/* ══════════════════════════════════════
-   NAV
-══════════════════════════════════════ */
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: var(--ak-surface);
-  border-bottom: 2px solid var(--ak-line);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: 0 2px 12px -4px rgba(45,27,69,.12);
-}
-.nav-back {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFF7E8 100%);
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 999px;
-  color: var(--ak-ink);
-  box-shadow: 0 3px 0 rgba(45,27,69,.10), 0 6px 14px -6px rgba(45,27,69,.12), inset 0 2px 0 rgba(255,255,255,.95), inset 0 0 0 1px rgba(45,27,69,.06);
-  font-family: 'Fredoka One', sans-serif;
-  transition: transform .08s ease;
-}
-.nav-back:active { transform: translateY(2px); }
-.nav-title {
-  font-size: 17px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-}
-.nav-badge {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 14px;
-  border-radius: 999px;
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 14px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, var(--ak-cta-1) 0%, var(--ak-cta-2) 100%);
-  box-shadow: 0 3px 0 var(--ak-cta-3), inset 0 2px 0 rgba(255,255,255,.7);
-}
-
-/* ══════════════════════════════════════
-   BUTTONS
-══════════════════════════════════════ */
-.btn-cta {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-  padding: 16px 26px;
-  border-radius: 999px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, #FFEDA8 0%, #FFD262 55%, #FFC03A 100%);
-  box-shadow: 0 6px 0 #D4A22B, 0 12px 24px -6px rgba(212,162,43,.55), inset 0 2px 0 rgba(255,255,255,.85), inset 0 -2px 0 rgba(212,162,43,.25);
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.btn-cta:active { transform: translateY(4px); box-shadow: 0 2px 0 #D4A22B, 0 6px 14px -6px rgba(212,162,43,.45), inset 0 2px 0 rgba(255,255,255,.7); }
-
-.btn-ok {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-  padding: 16px 26px;
-  border-radius: 999px;
-  color: #fff;
-  background: linear-gradient(180deg, #7CECB5 0%, #5DD9A0 55%, #3FC685 100%);
-  box-shadow: 0 6px 0 #2BA873, 0 12px 24px -6px rgba(43,168,115,.5), inset 0 2px 0 rgba(255,255,255,.55), inset 0 -2px 0 rgba(43,168,115,.25);
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.btn-ok:active { transform: translateY(4px); box-shadow: 0 2px 0 #2BA873, inset 0 2px 0 rgba(255,255,255,.4); }
-
-.btn-soft {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-  padding: 16px 26px;
-  border-radius: 999px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFF7E8 100%);
-  box-shadow: 0 4px 0 rgba(45,27,69,.10), 0 8px 18px -6px rgba(45,27,69,.12), inset 0 2px 0 rgba(255,255,255,.95), inset 0 -2px 0 rgba(45,27,69,.05), inset 0 0 0 1px rgba(45,27,69,.06);
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.btn-soft:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(45,27,69,.10), inset 0 2px 0 rgba(255,255,255,.95), inset 0 0 0 1px rgba(45,27,69,.06); }
-
-/* ══════════════════════════════════════
-   CARD
-══════════════════════════════════════ */
-.card {
-  background: var(--ak-surface);
-  border-radius: var(--ak-r-lg);
-  box-shadow:
-    0 10px 22px -8px rgba(45,27,69,.22),
-    0 4px 10px -4px rgba(45,27,69,.10),
-    inset 0 2px 0 rgba(255,255,255,.9),
-    inset 0 -3px 0 rgba(45,27,69,.06);
-}
-
-/* ══════════════════════════════════════
-   TASK BADGE
-══════════════════════════════════════ */
-.task-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 15px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, var(--ak-chem-1) 0%, var(--ak-chem-2) 100%);
-  box-shadow: 0 4px 0 var(--ak-chem-3), 0 8px 18px -6px rgba(60,168,118,.4), inset 0 2px 0 rgba(255,255,255,.7);
-}
-.task-badge.done {
-  background: linear-gradient(180deg, var(--ak-ok-1) 0%, var(--ak-ok-2) 100%);
-  box-shadow: 0 4px 0 var(--ak-ok-3), 0 8px 18px -6px rgba(43,168,115,.4), inset 0 2px 0 rgba(255,255,255,.7);
-}
-
-/* ══════════════════════════════════════
-   PROGRESS BAR
-══════════════════════════════════════ */
-.progress-track {
-  height: 14px;
-  border-radius: 999px;
-  background: rgba(45,27,69,.08);
-  box-shadow: inset 0 2px 4px rgba(45,27,69,.18), inset 0 -1px 0 rgba(255,255,255,.6);
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #7CECB5 0%, #5DD9A0 55%, #3FC685 100%);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.55), inset 0 -2px 0 #2BA873;
-  transition: width .4s cubic-bezier(.2,.7,.3,1);
-  position: relative;
-}
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 2px; left: 6px; right: 6px; height: 3px;
-  background: rgba(255,255,255,.5);
-  border-radius: 999px;
-}
-
-/* ══════════════════════════════════════
-   INTRO SCREEN
-══════════════════════════════════════ */
-#intro {
-  background: linear-gradient(160deg, var(--ak-chem-1) 0%, #b6f0d0 100%);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 32px 24px;
-  min-height: 100vh;
-}
-.intro-ico {
-  font-size: 96px;
-  margin-bottom: 16px;
-  display: block;
-  animation: float 3s ease-in-out infinite;
-}
-.intro-title {
-  font-size: 32px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  margin-bottom: 8px;
-}
-.intro-sub {
-  font-size: 16px;
-  color: var(--ak-ink-2);
-  margin-bottom: 32px;
-  line-height: 1.55;
-}
-.btn-start {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  padding: 18px 48px;
-  border-radius: 999px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, #FFEDA8 0%, #FFD262 55%, #FFC03A 100%);
-  box-shadow: 0 8px 0 #D4A22B, 0 16px 28px -8px rgba(212,162,43,.6), inset 0 2px 0 rgba(255,255,255,.85);
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.btn-start:active { transform: translateY(6px); box-shadow: 0 2px 0 #D4A22B, inset 0 2px 0 rgba(255,255,255,.7); }
-
-/* ══════════════════════════════════════
-   LEVEL SELECT
-══════════════════════════════════════ */
-#levelSelect { padding: 0; }
-#levelSelect .screen-inner {
-  padding: 20px 16px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  flex: 1;
-  background: linear-gradient(180deg, #FFF8EA 0%, #FFF3E2 100%);
-}
-.ls-header {
-  font-size: 22px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  margin-bottom: 2px;
-}
-.ls-sub {
-  font-size: 14px;
-  color: var(--ak-ink-2);
-  margin-bottom: 8px;
-}
-
-/* Level cards */
-.level-card {
-  background: var(--ak-surface);
-  border-radius: 24px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  cursor: pointer;
-  box-shadow:
-    0 8px 0 rgba(45,27,69,.08),
-    0 18px 32px -10px rgba(45,27,69,.15),
-    inset 0 2px 0 rgba(255,255,255,1),
-    inset 0 -2px 0 rgba(45,27,69,.04);
-  transition: transform .12s cubic-bezier(.34,1.56,.64,1);
-}
-.level-card:hover { transform: translateY(-4px); }
-.level-card:active { transform: translateY(0) scale(.98); }
-
-.lc-ico {
-  font-size: 52px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 4px 8px rgba(45,27,69,.18));
-}
-.lc-title {
-  font-size: 19px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-}
-.lc-sub {
-  font-size: 13px;
-  color: var(--ak-ink-2);
-  margin-top: 3px;
-}
-
-/* Level number badge on cards */
-.level-num {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 22px;
-  color: #fff;
-  background: linear-gradient(160deg, #DCF7E7, #7BD9A8 50%, #3CA876);
-  box-shadow: 0 4px 0 #2A9068, inset 0 2px 0 rgba(255,255,255,.5);
-  flex-shrink: 0;
-}
-
-/* ══════════════════════════════════════
-   LEVEL HEADER
-══════════════════════════════════════ */
-.lvl-header {
-  background: var(--ak-surface);
-  border-bottom: 2px solid var(--ak-line);
-  padding: 12px 16px;
-  box-shadow: 0 2px 8px -4px rgba(45,27,69,.08);
-}
-
-/* ══════════════════════════════════════
-   LEVEL 1 — DENSITY TOWER
-══════════════════════════════════════ */
-#level1 { padding: 0; }
-.l1-body { display: flex; flex-direction: column; flex: 1; }
-.l1-top { display: flex; justify-content: center; align-items: flex-end; gap: 16px; padding: 12px 16px 0; flex: 1; }
-
-.target-strip { display: flex; flex-direction: column; gap: 3px; justify-content: flex-end; padding-bottom: 8px; }
-.target-label {
-  font-size: 10px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink-3);
-  text-align: center;
-  margin-bottom: 4px;
-  letter-spacing: .06em;
-}
-.target-slot {
-  width: 34px;
-  height: 26px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  box-shadow: 0 2px 6px rgba(45,27,69,.15), inset 0 1px 0 rgba(255,255,255,.5);
-}
-
-.cylinder-wrap { display: flex; flex-direction: column; align-items: center; }
-
-/* Bottle tray */
-.l1-bottom {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 8px;
-  padding: 12px 12px 14px;
-  background: rgba(255,255,255,.55);
-  backdrop-filter: blur(8px);
-  border-top: 2px solid var(--ak-line);
-  box-shadow: inset 0 2px 6px rgba(45,27,69,.04);
-}
-
-/* Bottles */
-.bottle {
-  height: 120px;
-  border-radius: 16px 16px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 10px;
-  cursor: pointer;
-  position: relative;
-  overflow: visible;
-  box-shadow:
-    0 8px 0 rgba(45,27,69,.12),
-    0 14px 24px -8px rgba(45,27,69,.22),
-    inset 0 2px 0 rgba(255,255,255,.55),
-    inset 0 -2px 0 rgba(0,0,0,.08);
-  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
-  border: 1.5px solid rgba(255,255,255,.35);
-}
-.bottle:not(.used):hover { transform: translateY(-6px) scale(1.05); }
-.bottle:not(.used):active { transform: translateY(0) scale(.97); }
-.bottle.used { opacity: .28; pointer-events: none; filter: grayscale(.4); }
-.bottle.shaking { animation: shake .4s ease; }
-
-.bottle-neck {
-  position: absolute;
-  top: -13px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 26px;
-  height: 14px;
-  border-radius: 5px 5px 0 0;
-  box-shadow: 0 -2px 4px rgba(0,0,0,.12);
-}
-.bottle-shine {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  width: 14px;
-  height: 44px;
-  background: linear-gradient(rgba(255,255,255,.5),transparent);
-  border-radius: 8px;
-  pointer-events: none;
-}
-.bottle-emoji { font-size: 28px; position: relative; z-index: 1; }
-.bottle-label {
-  font-size: 11px;
-  font-family: 'Fredoka One', sans-serif;
-  color: rgba(255,255,255,.95);
-  text-shadow: 0 1px 3px rgba(0,0,0,.35);
-  position: relative;
-  z-index: 1;
-}
-
-/* Object chips */
-.l1-objects { display: flex; justify-content: center; gap: 16px; padding: 10px 16px; }
-.obj-chip {
-  background: var(--ak-surface);
-  border-radius: var(--ak-r-md);
-  padding: 10px 14px;
-  text-align: center;
-  cursor: pointer;
-  box-shadow:
-    0 6px 0 rgba(45,27,69,.08),
-    0 10px 22px -8px rgba(45,27,69,.18),
-    inset 0 2px 0 rgba(255,255,255,1),
-    inset 0 -2px 0 rgba(45,27,69,.04),
-    inset 0 0 0 1px rgba(45,27,69,.05);
-  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
-}
-.obj-chip:active { transform: scale(.93); }
-.obj-chip.dropped { opacity: .35; pointer-events: none; }
-.density-badge {
-  font-size: 11px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink-2);
-  background: linear-gradient(180deg, var(--ak-chem-1), var(--ak-chem-2));
-  border-radius: 8px;
-  padding: 2px 8px;
-  display: block;
-  margin-bottom: 4px;
-  box-shadow: 0 2px 0 var(--ak-chem-3);
-}
-.obj-ico { font-size: 28px; display: block; }
-.obj-name { font-size: 12px; font-family: 'Fredoka One', sans-serif; color: var(--ak-ink); }
-
-/* Answer buttons */
-.l1-answers { display: flex; gap: 8px; padding: 0 14px 14px; }
-.ans-btn {
-  flex: 1;
-  padding: 14px 0;
-  border-radius: var(--ak-r-md);
-  border: none;
-  background: var(--ak-surface);
-  font-size: 14px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  cursor: pointer;
-  box-shadow:
-    0 4px 0 rgba(45,27,69,.10),
-    0 8px 18px -6px rgba(45,27,69,.14),
-    inset 0 2px 0 rgba(255,255,255,.95),
-    inset 0 0 0 1px rgba(45,27,69,.06);
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.ans-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(45,27,69,.10), inset 0 2px 0 rgba(255,255,255,.95), inset 0 0 0 1px rgba(45,27,69,.06); }
-.ans-btn.correct {
-  background: linear-gradient(180deg, var(--ak-ok-1) 0%, var(--ak-ok-2) 100%);
-  color: #fff;
-  box-shadow: 0 4px 0 var(--ak-ok-3), inset 0 2px 0 rgba(255,255,255,.55);
-}
-.ans-btn.wrong {
-  background: linear-gradient(180deg, var(--ak-warn-1) 0%, var(--ak-warn-2) 100%);
-  color: #fff;
-  box-shadow: 0 4px 0 var(--ak-warn-3), inset 0 2px 0 rgba(255,255,255,.4);
-  animation: shake .3s ease;
-}
-
-/* ══════════════════════════════════════
-   LEVEL 2 — REACTIONS
-══════════════════════════════════════ */
-#level2 { padding: 0; }
-.l2-body { display: flex; flex-direction: column; flex: 1; padding: 10px; }
-.l2-arena { display: flex; gap: 10px; align-items: flex-end; flex: 1; }
-.l2-reagents { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: center; }
-
-.reagent-btn {
-  border-radius: var(--ak-r-md);
-  padding: 10px 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  border: 1.5px solid rgba(255,255,255,.4);
-  box-shadow:
-    0 6px 0 rgba(45,27,69,.12),
-    0 12px 24px -8px rgba(45,27,69,.20),
-    inset 0 2px 0 rgba(255,255,255,.5),
-    inset 0 -2px 0 rgba(0,0,0,.06);
-  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
-  position: relative;
-  overflow: hidden;
-}
-.reagent-btn:not(.used-r):active { transform: scale(.9) rotate(-3deg); }
-.reagent-btn.used-r { opacity: .3; pointer-events: none; filter: grayscale(.5); }
-.reagent-btn.shaking { animation: shake .4s ease; }
-
-.r-shine {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 12px;
-  height: 36px;
-  background: linear-gradient(rgba(255,255,255,.45),transparent);
-  border-radius: 6px;
-}
-.r-emoji { font-size: 26px; }
-.r-label {
-  font-size: 11px;
-  font-family: 'Fredoka One', sans-serif;
-  color: rgba(255,255,255,.95);
-  text-shadow: 0 1px 3px rgba(0,0,0,.4);
-  text-align: center;
-}
-
-.l2-flask-col { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 0 0 auto; }
-.l2-target {
-  text-align: center;
-  font-size: 13px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink-2);
-}
-.l2-target-ico { font-size: 40px; display: block; }
-
-.mix-btn {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  padding: 12px 16px;
-  border-radius: var(--ak-r-md);
-  color: #fff;
-  background: linear-gradient(180deg, #9b8af0 0%, #7B6FE0 55%, #5E52C0 100%);
-  box-shadow: 0 5px 0 #4340A0, 0 10px 20px -6px rgba(91,82,192,.5), inset 0 2px 0 rgba(255,255,255,.4);
-  width: 100%;
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.mix-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #4340A0, inset 0 2px 0 rgba(255,255,255,.3); }
-.mix-btn:disabled { opacity: .35; pointer-events: none; }
-
-.l2-added-row {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  flex-wrap: wrap;
-  min-height: 32px;
-  margin-bottom: 4px;
-  padding: 0 8px;
-}
-.added-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, var(--ak-chem-1) 0%, var(--ak-chem-2) 100%);
-  box-shadow: 0 3px 0 var(--ak-chem-3), inset 0 2px 0 rgba(255,255,255,.7);
-}
-
-/* ══════════════════════════════════════
-   LEVEL 3 — STATES OF WATER
-══════════════════════════════════════ */
-#level3 { padding: 0; }
-.l3-body { display: flex; flex-direction: column; flex: 1; }
-
-.l3-camera {
-  width: 100%;
-  height: 200px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 0 0 var(--ak-r-lg) var(--ak-r-lg);
-  box-shadow: 0 6px 18px -6px rgba(45,27,69,.20);
-}
-.l3-camera canvas { width: 100%; height: 100%; display: block; }
-.state-label {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255,253,247,.88);
-  backdrop-filter: blur(8px);
-  border-radius: 999px;
-  padding: 6px 18px;
-  font-size: 14px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  white-space: nowrap;
-  box-shadow: 0 3px 0 rgba(45,27,69,.08), inset 0 2px 0 rgba(255,255,255,.9);
-}
-
-.l3-mid {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
-}
-.thermo-wrap { flex-shrink: 0; }
-.temp-display {
-  font-size: 40px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink);
-  min-width: 90px;
-}
-.task-hint {
-  font-size: 13px;
-  font-family: 'Nunito', sans-serif;
-  color: var(--ak-ink-2);
-  margin-top: 2px;
-}
-
-.l3-slider-wrap { padding: 0 16px 12px; }
-input[type=range] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 18px;
-  border-radius: 999px;
-  background: linear-gradient(to right,
-    #DBEAFE 0%,
-    #60A5FA 25%,
-    #3B82F6 40%,
-    #F87171 60%,
-    #EF4444 80%,
-    #DC2626 100%
-  );
-  outline: none;
-  box-shadow: inset 0 2px 4px rgba(45,27,69,.18), 0 2px 0 rgba(255,255,255,.6);
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--ak-surface);
-  border: 4px solid #3B82F6;
-  box-shadow: 0 4px 0 rgba(59,130,246,.35), 0 8px 16px -6px rgba(45,27,69,.28), inset 0 2px 0 rgba(255,255,255,.95);
-  cursor: pointer;
-}
-
-.l3-tasks-row {
-  display: flex;
-  gap: 8px;
-  padding: 0 16px 16px;
-  overflow-x: auto;
-}
-.task-pill {
-  flex-shrink: 0;
-  background: var(--ak-surface);
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-family: 'Fredoka One', sans-serif;
-  color: var(--ak-ink-3);
-  box-shadow: 0 3px 0 rgba(45,27,69,.07), inset 0 2px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(45,27,69,.06);
-  transition: all .2s;
-}
-.task-pill.active-task {
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, var(--ak-cta-1) 0%, var(--ak-cta-2) 100%);
-  box-shadow: 0 3px 0 var(--ak-cta-3), inset 0 2px 0 rgba(255,255,255,.7);
-}
-.task-pill.done-task {
-  color: #fff;
-  background: linear-gradient(180deg, var(--ak-ok-2) 0%, var(--ak-ok-3) 100%);
-  box-shadow: 0 3px 0 #1e8a59, inset 0 2px 0 rgba(255,255,255,.35);
-}
-
-/* ══════════════════════════════════════
-   SUCCESS OVERLAY
-══════════════════════════════════════ */
-.success-ov {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(45,27,69,.5);
-  backdrop-filter: blur(10px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s;
-}
-.success-ov.show { opacity: 1; pointer-events: all; }
-
-.ov-card {
-  background: var(--ak-surface);
-  border-radius: var(--ak-r-lg);
-  padding: 32px 28px;
-  text-align: center;
-  max-width: 360px;
-  width: 90%;
-  box-shadow:
-    0 12px 0 rgba(60,168,118,.18),
-    0 28px 48px -16px rgba(45,27,69,.30),
-    inset 0 2px 0 rgba(255,255,255,1),
-    inset 0 -3px 0 rgba(45,27,69,.05);
-  animation: ak-pop .4s cubic-bezier(.34,1.56,.64,1);
-}
-
-.ov-stars {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.ov-star {
-  font-size: 36px;
-  filter: drop-shadow(0 3px 6px rgba(212,162,43,.5));
-}
-
-.ov-ico { font-size: 72px; display: block; margin-bottom: 6px; }
-.ov-title {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 26px;
-  color: var(--ak-ink);
-  margin-bottom: 8px;
-}
-.ov-fact {
-  font-size: 14px;
-  font-family: 'Nunito', sans-serif;
-  color: var(--ak-ink-2);
-  line-height: 1.65;
-  margin-bottom: 22px;
-}
-.ov-btn {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-  padding: 16px;
-  border-radius: 999px;
-  color: var(--ak-ink);
-  background: linear-gradient(180deg, #FFEDA8 0%, #FFD262 55%, #FFC03A 100%);
-  box-shadow: 0 6px 0 #D4A22B, 0 12px 24px -6px rgba(212,162,43,.55), inset 0 2px 0 rgba(255,255,255,.85);
-  width: 100%;
-  transition: transform .08s ease, box-shadow .08s ease;
-}
-.ov-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #D4A22B, inset 0 2px 0 rgba(255,255,255,.7); }
+  --ak-bg:#FFF3E2; --ak-bg-2:#FFE8CC; --ak-surface:#FFFDF7;
+  --ak-ink:#2D1B45; --ak-ink-2:#6B5680; --ak-ink-3:#A797B8;
+  --ak-chem-1:#DCF7E7; --ak-chem-2:#7BD9A8; --ak-chem-3:#3CA876;
+  --ak-phys-1:#E5DCFF; --ak-phys-2:#B5A1FF; --ak-phys-3:#7C5FE0;
+  --ak-bio-1:#FFE0CB; --ak-bio-2:#FFA17A; --ak-bio-3:#D96D49;
+  --ak-geo-1:#D6ECFA; --ak-geo-2:#8FCAF0; --ak-geo-3:#4A93C9;
+  --ak-cta-1:#FFEDA8; --ak-cta-2:#FFD262; --ak-cta-3:#D4A22B;
+  --ak-ok-1:#C8F2DD; --ak-ok-2:#5DD9A0; --ak-ok-3:#2BA873;
+  --ak-warn-1:#FFD2C8; --ak-warn-2:#FF8B7A; --ak-warn-3:#D9523F;
+  --ak-star-1:#FFE49E; --ak-star-2:#FFC857; --ak-star-3:#D4972B;
+  --ak-r-sm:10px; --ak-r-md:18px; --ak-r-lg:28px; --ak-r-xl:36px;
+  --ak-display:'Fredoka One','Nunito',system-ui,sans-serif;
+  --ak-body:'Nunito',system-ui,sans-serif;
+}
+html,body{background:#FFF3E2;margin:0;}
+#root{min-height:100vh;}
+body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
+.ak{font-family:var(--ak-body);color:var(--ak-ink);-webkit-font-smoothing:antialiased;}
+.ak-btn{font-family:var(--ak-display);font-weight:600;font-size:17px;border:none;cursor:pointer;position:relative;transition:transform .08s ease,box-shadow .08s ease,filter .15s ease;user-select:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;padding:16px 26px;border-radius:999px;color:var(--ak-ink);}
+.ak-btn:disabled{cursor:not-allowed;filter:grayscale(.25) opacity(.6);}
+.ak-btn--cta{color:var(--ak-ink);background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);}
+.ak-btn--cta:active{transform:translateY(4px);}
+.ak-btn--ok{color:#fff;background:linear-gradient(180deg,#7CECB5 0%,#5DD9A0 55%,#3FC685 100%);box-shadow:0 6px 0 var(--ak-ok-3),0 12px 24px -6px rgba(43,168,115,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(43,168,115,.25);}
+.ak-btn--ok:active{transform:translateY(4px);}
+.ak-btn--soft{color:var(--ak-ink);background:linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(45,27,69,.05),inset 0 0 0 1px rgba(45,27,69,.06);}
+.ak-btn--soft:active{transform:translateY(3px);}
+.ak-btn--sm{padding:11px 18px;font-size:14px;}
+.ak-btn--lg{padding:20px 32px;font-size:19px;}
+.ak-btn--icon{width:56px;height:56px;padding:0;border-radius:50%;}
+.ak-btn--icon.ak-btn--sm{width:42px;height:42px;}
+@keyframes ak-bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-4px) rotate(1deg);}}
+@keyframes ak-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+@keyframes ak-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px) rotate(-1deg);}40%{transform:translateX(7px) rotate(1deg);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+@keyframes ak-pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.06);opacity:1;}100%{transform:scale(1);}}
+@keyframes ak-pour{0%{transform:scaleY(0);opacity:0;}100%{transform:scaleY(1);opacity:1;}}
+@keyframes ak-twinkle{0%,100%{opacity:.35;transform:scale(.85);}50%{opacity:1;transform:scale(1.05);}}
+.ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
+.ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
+.ak-shake{animation:ak-shake .45s ease-in-out;}
+.ak-pop{animation:ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards;}
+.ak-pour{transform-origin:bottom;animation:ak-pour .55s cubic-bezier(.2,.7,.3,1) forwards;}
+.ak-twinkle{animation:ak-twinkle 2.4s ease-in-out infinite;}
+.ak-num{font-variant-numeric:tabular-nums;font-family:var(--ak-display);}
+.ak-tap{cursor:pointer;transition:transform .12s cubic-bezier(.2,.7,.3,1),filter .12s;}
+.ak-tap:hover{transform:translateY(-3px);filter:brightness(1.03);}
+.ak-tap:active{transform:translateY(0);}
+.ak ::-webkit-scrollbar{display:none;}
+.ak{scrollbar-width:none;}
+input[type=range]{-webkit-appearance:none;width:100%;height:14px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
+input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:999px;background:transparent;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.12),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;transition:transform .1s;}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);}
 </style>
 </head>
 <body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+<script type="text/babel">
+/* ============================================================
+   AK ICONS
+   ============================================================ */
+const AK_TONES = {
+  chem: ['#DCF7E7','#7BD9A8','#3CA876'],
+  phys: ['#E5DCFF','#B5A1FF','#7C5FE0'],
+  bio:  ['#FFE0CB','#FFA17A','#D96D49'],
+  geo:  ['#D6ECFA','#8FCAF0','#4A93C9'],
+  ok:   ['#C8F2DD','#5DD9A0','#2BA873'],
+  cta:  ['#FFEDA8','#FFD262','#D4A22B'],
+  star: ['#FFE49E','#FFC857','#D4972B'],
+  warn: ['#FFD2C8','#FF8B7A','#D9523F'],
+  ink:  ['#E5DCEE','#6B5680','#2D1B45'],
+};
 
-<!-- INTRO -->
-<div id="intro" class="screen active">
-  <span class="intro-ico">🧪</span>
-  <div class="intro-title">КосмоБаза: Химия</div>
-  <div class="intro-sub">Смешивай, заливай, нагревай —<br>и узнай как устроена материя!</div>
-  <button class="btn-start" onclick="showScreen('levelSelect')">Начать ✨</button>
-</div>
+function AKFlask({ size=120, tone='chem', fillLevel=0.6, bubbles=true }) {
+  const [l,m,d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" style={{display:'block'}}>
+      <defs>
+        <linearGradient id={`fg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.95"/>
+          <stop offset="100%" stopColor="#fff" stopOpacity="0.55"/>
+        </linearGradient>
+        <linearGradient id={`fl-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={l}/>
+          <stop offset="60%" stopColor={m}/>
+          <stop offset="100%" stopColor={d}/>
+        </linearGradient>
+        <linearGradient id={`fc-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.6"/>
+          <stop offset="100%" stopColor="#fff" stopOpacity="0"/>
+        </linearGradient>
+        <clipPath id={`fcp-${id}`}>
+          <path d="M50 22 L50 48 L24 96 Q22 108 34 108 L86 108 Q98 108 96 96 L70 48 L70 22 Z"/>
+        </clipPath>
+      </defs>
+      <ellipse cx="60" cy="112" rx="34" ry="4" fill="rgba(45,27,69,.22)"/>
+      <path d="M50 22 L50 48 L24 96 Q22 108 34 108 L86 108 Q98 108 96 96 L70 48 L70 22 Z"
+        fill={`url(#fg-${id})`} stroke="rgba(45,27,69,.18)" strokeWidth="2.2"/>
+      <g clipPath={`url(#fcp-${id})`}>
+        <rect x="20" y={48+(60*(1-fillLevel))} width="80" height="80" fill={`url(#fl-${id})`}/>
+        <ellipse cx="60" cy={48+(60*(1-fillLevel))} rx="26" ry="3" fill={m}/>
+        <ellipse cx="60" cy={48+(60*(1-fillLevel))} rx="22" ry="1.4" fill="#fff" opacity=".5"/>
+        {bubbles&&<g><circle cx="46" cy="86" r="3" fill="#fff" opacity=".5"/><circle cx="72" cy="92" r="2.4" fill="#fff" opacity=".4"/><circle cx="58" cy="98" r="2" fill="#fff" opacity=".35"/></g>}
+      </g>
+      <path d="M54 30 L54 52 L34 90" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" opacity=".75" fill="none"/>
+      <ellipse cx="60" cy="22" rx="11" ry="3.5" fill="rgba(45,27,69,.18)"/>
+      <ellipse cx="60" cy="21" rx="11" ry="2.5" fill="#fff" opacity=".85"/>
+      <rect x="46" y="10" width="28" height="14" rx="5" fill={d}/>
+      <rect x="48" y="11" width="24" height="4" rx="2" fill={`url(#fc-${id})`}/>
+    </svg>
+  );
+}
 
-<!-- LEVEL SELECT -->
-<div id="levelSelect" class="screen">
-  <nav class="nav">
-    <button class="nav-back" onclick="showScreen('intro')">←</button>
-    <span class="nav-title">🧪 Химия</span>
-  </nav>
-  <div class="screen-inner">
-    <div class="ls-header">Выбери уровень</div>
-    <div class="ls-sub">Все открыты — исследуй в любом порядке!</div>
-    <div class="level-card" onclick="startLevel(1)">
-      <span class="lc-ico">🌈</span>
-      <div><div class="lc-title">Башня плотности</div><div class="lc-sub">Заливай жидкости, строй радугу слоёв</div></div>
-    </div>
-    <div class="level-card" onclick="startLevel(2)">
-      <span class="lc-ico">⚗️</span>
-      <div><div class="lc-title">Реакции в колбе</div><div class="lc-sub">Смешивай вещества, получай эффекты</div></div>
-    </div>
-    <div class="level-card" onclick="startLevel(3)">
-      <span class="lc-ico">🌡️</span>
-      <div><div class="lc-title">Состояния воды</div><div class="lc-sub">Управляй температурой и наблюдай молекулы</div></div>
-    </div>
-  </div>
-</div>
+function AKStarSmall({ filled=true }) {
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14">
+      <defs><linearGradient id={`ss-${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#FFC857"/></linearGradient></defs>
+      <path d="M7 1.2 L8.7 5 L13 5.4 L9.7 8.2 L10.7 12.3 L7 10.2 L3.3 12.3 L4.3 8.2 L1 5.4 L5.3 5 Z"
+        fill={filled?`url(#ss-${id})`:'#E8DCEE'} stroke={filled?'#D4972B':'#B0A0C2'} strokeWidth="1.2" strokeLinejoin="round"/>
+    </svg>
+  );
+}
 
-<!-- LEVEL 1 -->
-<div id="level1" class="screen">
-  <nav class="nav">
-    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
-    <span class="nav-title">🌈 Башня плотности</span>
-    <span class="nav-badge" id="l1-badge">1/3</span>
-  </nav>
-  <div class="l1-body">
-    <div class="lvl-header">
-      <div id="l1-task-badge" class="task-badge">🌊 Залей от тяжёлой к лёгкой</div>
-    </div>
-    <div class="l1-top">
-      <div class="target-strip" id="l1-target"></div>
-      <div class="cylinder-wrap">
-        <svg id="l1-svg" width="110" height="260" viewBox="0 0 110 260" style="overflow:visible;">
-          <defs>
-            <clipPath id="cylClip">
-              <rect x="10" y="20" width="90" height="225" rx="6"/>
-            </clipPath>
-          </defs>
-          <g id="cyl-layers" clip-path="url(#cylClip)"></g>
-          <g id="cyl-objects" clip-path="url(#cylClip)"></g>
-          <rect x="10" y="20" width="90" height="225" rx="6" fill="rgba(200,230,255,0.08)" stroke="rgba(100,180,255,0.7)" stroke-width="3"/>
-          <rect x="38" y="4" width="34" height="20" rx="4" fill="rgba(200,230,255,0.1)" stroke="rgba(100,180,255,0.6)" stroke-width="2"/>
-          <rect x="14" y="22" width="18" height="220" rx="8" fill="rgba(255,255,255,0.18)" pointer-events="none"/>
-          <line x1="10" y1="76" x2="16" y2="76" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
-          <line x1="10" y1="132" x2="16" y2="132" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
-          <line x1="10" y1="188" x2="16" y2="188" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
-        </svg>
-      </div>
-    </div>
-    <div class="l1-objects" id="l1-objects" style="display:none;"></div>
-    <div class="l1-answers" id="l1-answers" style="display:none;"></div>
-    <div id="l1-t3-obj" style="display:none;text-align:center;padding:6px 16px;font-size:13px;font-family:'Fredoka One',sans-serif;color:var(--ak-ink-2);"></div>
-    <div class="l1-bottom" id="l1-bottles"></div>
-  </div>
-</div>
+function AKStar({ size=56, filled=true }) {
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <svg width={size} height={size} viewBox="0 0 56 56">
+      <defs><radialGradient id={`st-${id}`} cx="40%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="35%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#D4972B"/></radialGradient></defs>
+      <ellipse cx="28" cy="52" rx="14" ry="2.5" fill="rgba(45,27,69,.18)"/>
+      <path d="M28 5 L34.5 19 L50 21 L38.5 31.5 L42 47 L28 39.5 L14 47 L17.5 31.5 L6 21 L21.5 19 Z"
+        fill={filled?`url(#st-${id})`:'#E8DCEE'} stroke={filled?'#C99B3B':'#B0A0C2'} strokeWidth="2.2" strokeLinejoin="round"/>
+      {filled&&<><ellipse cx="20" cy="18" rx="3.5" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 20 18)"/><circle cx="36" cy="14" r="1.6" fill="#fff" opacity=".7"/></>}
+    </svg>
+  );
+}
 
-<!-- LEVEL 2 -->
-<div id="level2" class="screen">
-  <nav class="nav">
-    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
-    <span class="nav-title">⚗️ Реакции в колбе</span>
-    <span class="nav-badge" id="l2-badge">1/4</span>
-  </nav>
-  <div class="l2-body">
-    <div class="lvl-header">
-      <div id="l2-task-badge" class="task-badge">Получи нужный результат!</div>
-    </div>
-    <div class="l2-added-row" id="l2-added"></div>
-    <div class="l2-arena">
-      <div class="l2-reagents" id="l2-reagents"></div>
-      <div class="l2-flask-col">
-        <div class="l2-target">Цель:<br><span class="l2-target-ico" id="l2-target-ico">?</span></div>
-        <svg id="l2-flask-svg" width="120" height="240" viewBox="0 0 160 300" style="overflow:visible;flex-shrink:0;">
-          <defs>
-            <clipPath id="flaskClip">
-              <path d="M55,0 L55,85 Q55,100 35,120 L8,210 Q0,240 0,265 L160,265 Q160,240 152,210 L125,120 Q105,100 105,85 L105,0 Z"/>
-            </clipPath>
-            <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
-              <stop offset="25%" stop-color="rgba(255,255,255,0)"/>
-              <stop offset="100%" stop-color="rgba(255,255,255,0.15)"/>
-            </linearGradient>
-          </defs>
-          <g clip-path="url(#flaskClip)">
-            <rect id="flask-liq" x="0" y="265" width="160" height="0" fill="rgba(100,180,255,0.4)" style="transition:height .5s ease,fill .6s ease,y .5s ease;"/>
-            <rect id="flask-liq2" x="0" y="265" width="160" height="0" fill="rgba(255,255,0,0.35)"/>
-            <g id="flask-bubbles"></g>
-            <g id="flask-precipitate"></g>
-          </g>
-          <path d="M55,0 L55,85 Q55,100 35,120 L8,210 Q0,240 0,265 L160,265 Q160,240 152,210 L125,120 Q105,100 105,85 L105,0 Z"
-            fill="none" stroke="rgba(100,180,255,0.65)" stroke-width="3"/>
-          <g clip-path="url(#flaskClip)">
-            <rect x="0" y="0" width="160" height="300" fill="url(#glassGrad)" pointer-events="none"/>
-          </g>
-        </svg>
-        <div style="width:120px;">
-          <button class="mix-btn" id="mix-btn" onclick="doMix()" disabled>🌀 Смешать!</button>
+function AKPlanet({ size=80, tone='phys', ring=true }) {
+  const [l,m,d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <svg width={size} height={size*0.78} viewBox="0 0 100 78">
+      <defs><radialGradient id={`pl-${id}`} cx="38%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="30%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>
+      {ring&&<ellipse cx="50" cy="40" rx="48" ry="11" fill="none" stroke={d} strokeWidth="3" opacity=".4"/>}
+      <circle cx="50" cy="38" r="26" fill={`url(#pl-${id})`} stroke={d} strokeWidth="2"/>
+      <ellipse cx="42" cy="28" rx="6" ry="9" fill="#fff" opacity=".55" transform="rotate(-22 42 28)"/>
+      {ring&&<path d="M 16 47 Q 50 60 84 47" fill="none" stroke={d} strokeWidth="3" opacity=".7" strokeLinecap="round"/>}
+    </svg>
+  );
+}
+
+function AKBlob({ size=80, kind='sphere', tone='cta' }) {
+  const [l,m,d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g,'');
+  let shape;
+  if (kind==='droplet') shape=<path d="M40 8 C24 30 18 44 22 56 C26 70 54 70 58 56 C62 44 56 30 40 8 Z" fill={`url(#bg-${id})`} stroke={d} strokeWidth="2" strokeLinejoin="round"/>;
+  else shape=<circle cx="40" cy="40" r="28" fill={`url(#bg-${id})`} stroke={d} strokeWidth="2"/>;
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" style={{display:'block'}}>
+      <defs><radialGradient id={`bg-${id}`} cx="40%" cy="32%" r="75%"><stop offset="0%" stopColor="#fff"/><stop offset="28%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>
+      <ellipse cx="40" cy="74" rx="22" ry="3" fill="rgba(45,27,69,.2)"/>
+      {shape}
+      <ellipse cx="30" cy="26" rx="6" ry="10" fill="#fff" opacity=".6" transform="rotate(-20 30 26)"/>
+    </svg>
+  );
+}
+
+function AKCylinder({ layers=[], capacity=4, width=160, height=360 }) {
+  const id = React.useId().replace(/:/g,'');
+  const layerH = (height-70)/capacity;
+  const top=40, bottom=height-30, inL=18, inR=width-18;
+  const bodyPath = `M ${inL} ${top} Q ${inL} ${top-10} ${inL+14} ${top-10} L ${inR-14} ${top-10} Q ${inR} ${top-10} ${inR} ${top} L ${inR} ${bottom-16} Q ${inR} ${bottom} ${inR-16} ${bottom} L ${inL+16} ${bottom} Q ${inL} ${bottom} ${inL} ${bottom-16} Z`;
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <defs>
+        <linearGradient id={`cg-${id}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.9"/><stop offset="20%" stopColor="#fff" stopOpacity="0.2"/>
+          <stop offset="80%" stopColor="#fff" stopOpacity="0.05"/><stop offset="100%" stopColor="#fff" stopOpacity="0.45"/>
+        </linearGradient>
+        <clipPath id={`cc-${id}`}><path d={bodyPath}/></clipPath>
+      </defs>
+      <ellipse cx={width/2} cy={bottom+12} rx={width/2-18} ry="5" fill="rgba(45,27,69,.2)"/>
+      <path d={`M ${inL} ${top+4} L ${inR} ${top+4} L ${inR} ${bottom-12} Q ${inR} ${bottom+4} ${inR-16} ${bottom+4} L ${inL+16} ${bottom+4} Q ${inL} ${bottom+4} ${inL} ${bottom-12} Z`} fill="rgba(45,27,69,.18)"/>
+      <path d={bodyPath} fill="rgba(255,255,255,.8)" stroke="rgba(45,27,69,.18)" strokeWidth="2.5"/>
+      <g clipPath={`url(#cc-${id})`}>
+        {layers.map((L,i)=>{
+          const y=bottom-(i+1)*layerH;
+          const isTop=i===layers.length-1;
+          return (
+            <g key={i} className={L.fresh?'ak-pour':''} style={{transformOrigin:`0px ${bottom}px`}}>
+              <defs><linearGradient id={`cl-${id}-${i}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={L.color} stopOpacity=".75"/><stop offset="100%" stopColor={L.color} stopOpacity="1"/></linearGradient></defs>
+              <rect x={inL} y={y} width={inR-inL} height={layerH+1} fill={`url(#cl-${id}-${i})`}/>
+              <rect x={inL} y={y+4} width={inR-inL} height="6" fill="#fff" opacity=".28"/>
+              <rect x={inL} y={y+layerH-8} width={inR-inL} height="6" fill="#000" opacity=".10"/>
+              {isTop&&<><ellipse cx={width/2} cy={y} rx={(inR-inL)/2} ry="4" fill={L.color}/><ellipse cx={width/2} cy={y} rx={(inR-inL)/2-4} ry="2" fill="#fff" opacity=".4"/></>}
+            </g>
+          );
+        })}
+      </g>
+      <ellipse cx={width/2} cy={top-10} rx={(inR-inL)/2} ry="6" fill="rgba(45,27,69,.16)"/>
+      <ellipse cx={width/2} cy={top-11} rx={(inR-inL)/2-2} ry="4" fill="#fff" opacity=".9"/>
+      <path d={`M ${inL+8} ${top+14} L ${inL+8} ${bottom-22}`} stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity=".8"/>
+      <path d={`M ${inR-6} ${top+30} L ${inR-6} ${bottom-50}`} stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity=".45"/>
+      <path d={`M ${inL} ${top} L ${inR} ${top} L ${inR} ${bottom-16} Q ${inR} ${bottom} ${inR-16} ${bottom} L ${inL+16} ${bottom} Q ${inL} ${bottom} ${inL} ${bottom-16} Z`} fill={`url(#cg-${id})`} pointerEvents="none"/>
+      {[...Array(capacity)].map((_,i)=>(
+        <g key={i}><line x1={inR+4} y1={bottom-(i+1)*layerH} x2={inR+12} y2={bottom-(i+1)*layerH} stroke="rgba(45,27,69,.3)" strokeWidth="2" strokeLinecap="round"/></g>
+      ))}
+    </svg>
+  );
+}
+
+function AKBottle({ size=90, color='#7BD9A8', label, used=false, onClick }) {
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <button type="button" onClick={used?undefined:onClick} className="ak-tap" aria-label={label}
+      style={{background:'none',border:'none',padding:0,cursor:used?'not-allowed':'pointer',opacity:used?.4:1,filter:used?'grayscale(.4)':'none',display:'inline-flex',flexDirection:'column',alignItems:'center',gap:6}}>
+      <svg width={size} height={size*1.55} viewBox="0 0 90 140">
+        <defs>
+          <linearGradient id={`bl-${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity=".75"/><stop offset="100%" stopColor={color} stopOpacity="1"/></linearGradient>
+          <linearGradient id={`bg2-${id}`} x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#fff" stopOpacity=".7"/><stop offset="35%" stopColor="#fff" stopOpacity=".05"/><stop offset="100%" stopColor="#fff" stopOpacity=".3"/></linearGradient>
+          <clipPath id={`bc-${id}`}><path d="M22 44 Q22 34 30 32 L30 20 Q30 14 36 14 L54 14 Q60 14 60 20 L60 32 Q68 34 68 44 L68 118 Q68 132 54 132 L36 132 Q22 132 22 118 Z"/></clipPath>
+        </defs>
+        <ellipse cx="45" cy="135" rx="22" ry="3" fill="rgba(45,27,69,.22)"/>
+        <rect x="32" y="4" width="26" height="14" rx="4" fill="#2D1B45"/>
+        <rect x="34" y="5" width="22" height="4" rx="2" fill="#fff" opacity=".3"/>
+        <path d="M22 44 Q22 34 30 32 L30 20 Q30 14 36 14 L54 14 Q60 14 60 20 L60 32 Q68 34 68 44 L68 118 Q68 132 54 132 L36 132 Q22 132 22 118 Z" fill="rgba(255,255,255,.6)" stroke="rgba(45,27,69,.2)" strokeWidth="2.2"/>
+        <g clipPath={`url(#bc-${id})`}>
+          <rect x="20" y="56" width="50" height="80" fill={`url(#bl-${id})`}/>
+          <ellipse cx="45" cy="56" rx="22" ry="3" fill={color}/>
+          <ellipse cx="45" cy="56" rx="18" ry="1.6" fill="#fff" opacity=".4"/>
+        </g>
+        <path d="M30 48 Q30 38 36 36 L36 120" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" opacity=".75" fill="none"/>
+        <path d="M22 44 Q22 34 30 32 L30 20 Q30 14 36 14 L54 14 Q60 14 60 20 L60 32 Q68 34 68 44 L68 118 Q68 132 54 132 L36 132 Q22 132 22 118 Z" fill={`url(#bg2-${id})`} pointerEvents="none"/>
+      </svg>
+      {label&&<div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:11,color:'var(--ak-ink-2)',textTransform:'uppercase',letterSpacing:.7}}>{label}</div>}
+    </button>
+  );
+}
+
+/* ============================================================
+   AK COMPONENTS
+   ============================================================ */
+function AKProgress({ value=0.5, tone='cta', height=18, label }) {
+  const [l,m,d] = AK_TONES[tone];
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:6}}>
+      {label&&<div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+        <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-2)'}}>{label}</span>
+        <span className="ak-num" style={{fontWeight:700,fontSize:14,color:'var(--ak-ink)'}}>{Math.round(value*100)}%</span>
+      </div>}
+      <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18),inset 0 -1px 0 rgba(255,255,255,.6)',overflow:'hidden',position:'relative'}}>
+        <div style={{width:`${Math.max(0,Math.min(1,value))*100}%`,height:'100%',background:`linear-gradient(180deg,${l} 0%,${m} 50%,${d} 100%)`,boxShadow:`inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 ${d}`,borderRadius:999,transition:'width .4s cubic-bezier(.2,.7,.3,1)',position:'relative'}}>
+          <div style={{position:'absolute',top:3,left:8,right:8,height:3,background:'rgba(255,255,255,.55)',borderRadius:999}}/>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  );
+}
 
-<!-- LEVEL 3 -->
-<div id="level3" class="screen">
-  <nav class="nav">
-    <button class="nav-back" onclick="showScreen('levelSelect')">←</button>
-    <span class="nav-title">🌡️ Состояния воды</span>
-    <span class="nav-badge" id="l3-badge">1/5</span>
-  </nav>
-  <div class="l3-body">
-    <div class="l3-camera">
-      <canvas id="mol-canvas"></canvas>
-      <div class="state-label" id="state-label">❄️ Лёд</div>
+function AKStatChip({ icon, value, tone='cta' }) {
+  const [l,m,d] = AK_TONES[tone];
+  return (
+    <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'6px 14px 6px 6px',borderRadius:999,background:'#fff',boxShadow:'0 3px 0 rgba(45,27,69,.08),0 6px 14px -4px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'var(--ak-ink)'}}>
+      <div style={{width:28,height:28,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${l} 25%,${m} 75%,${d} 100%)`,boxShadow:`inset 0 -2px 0 ${d}`,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:14}}>{icon}</div>
+      <span className="ak-num">{value}</span>
     </div>
-    <div class="l3-mid">
-      <div class="thermo-wrap">
-        <svg id="thermo-svg" width="40" height="130" viewBox="0 0 40 130">
-          <rect x="14" y="4" width="8" height="100" rx="4" fill="rgba(45,27,69,.10)"/>
-          <rect id="thermo-fill" x="14" y="104" width="8" height="0" rx="4" fill="#3B82F6"/>
-          <circle cx="18" cy="116" r="12" fill="#3B82F6" id="thermo-bulb"/>
-          <line x1="22" y1="29" x2="30" y2="29" stroke="rgba(45,27,69,.3)" stroke-width="1.5"/>
-          <line x1="22" y1="72" x2="30" y2="72" stroke="rgba(45,27,69,.3)" stroke-width="1.5"/>
-          <text x="32" y="32" font-size="9" fill="var(--ak-ink-2)" font-family="Nunito,sans-serif">100°</text>
-          <text x="32" y="75" font-size="9" fill="var(--ak-ink-2)" font-family="Nunito,sans-serif">0°</text>
-        </svg>
+  );
+}
+
+function AKSubjectCard({ title, subtitle, tone='chem', icon, progress=0, locked=false, onClick }) {
+  const [l,m,d] = AK_TONES[tone];
+  return (
+    <button onClick={locked?undefined:onClick} className="ak-tap"
+      style={{width:'100%',padding:18,borderRadius:28,background:`linear-gradient(160deg,${l} 0%,${m} 100%)`,boxShadow:`0 8px 0 ${d},0 18px 30px -8px ${m}aa,inset 0 2px 0 rgba(255,255,255,.6),inset 0 -2px 0 ${d}`,position:'relative',overflow:'hidden',border:'none',cursor:locked?'not-allowed':'pointer',opacity:locked?.55:1,filter:locked?'grayscale(.4)':'none',textAlign:'left',boxSizing:'border-box',marginBottom:16}}>
+      <div style={{position:'absolute',top:-28,right:-10,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,.22)',filter:'blur(2px)'}}/>
+      <div style={{position:'absolute',bottom:-30,left:-20,width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,.15)'}}/>
+      <div style={{position:'relative',display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
+        <div style={{filter:'drop-shadow(0 4px 8px rgba(45,27,69,.2))'}}>{icon}</div>
+        {locked&&<div style={{background:'rgba(45,27,69,.25)',borderRadius:999,padding:'5px 10px',fontFamily:'var(--ak-display)',fontSize:11,fontWeight:600,color:'#fff',letterSpacing:.5}}>СКОРО</div>}
       </div>
-      <div style="flex:1;">
-        <div class="temp-display" id="temp-display">-50°C</div>
-        <div id="l3-task-hint" class="task-hint">Задание: ❄️ Заморозь воду</div>
+      <div style={{position:'relative'}}>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:12,color:'rgba(45,27,69,.6)',textTransform:'uppercase',letterSpacing:1,marginBottom:2}}>{subtitle}</div>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',letterSpacing:-.3,lineHeight:1.1,marginBottom:14}}>{title}</div>
+        <AKProgress value={progress} tone={tone==='chem'?'ok':tone} height={12}/>
       </div>
+    </button>
+  );
+}
+
+function AKTaskBadge({ children, tone='chem' }) {
+  const [l,m,d] = AK_TONES[tone];
+  return (
+    <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'12px 20px 12px 14px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -6px rgba(45,27,69,.14),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14.5,color:'var(--ak-ink)'}}>
+      <div style={{width:10,height:10,borderRadius:'50%',background:m,boxShadow:`0 0 0 4px ${m}33,inset 0 -1px 0 ${d}`}}/>
+      <span>{children}</span>
     </div>
-    <div class="l3-slider-wrap">
-      <input type="range" id="temp-slider" min="-50" max="150" value="-50" oninput="onTempChange(this.value)">
+  );
+}
+
+function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabel='Дальше' }) {
+  return (
+    <div className="ak-pop" style={{width:340,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(43,168,115,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1),inset 0 -3px 0 rgba(45,27,69,.05)',fontFamily:'var(--ak-body)',position:'relative'}}>
+      <div aria-hidden style={{position:'absolute',top:-10,left:-10,right:-10,height:30,pointerEvents:'none'}}>
+        {[{l:8,c:'#FFC857',s:8},{l:60,c:'#5DD9A0',s:6},{l:120,c:'#B5A1FF',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#FFC857',s:6}].map((p,i)=>(
+          <div key={i} className="ak-twinkle" style={{position:'absolute',left:p.l,top:4+(i%2)*8,width:p.s,height:p.s,borderRadius:2,background:p.c,transform:`rotate(${i*25}deg)`,animationDelay:`${i*.15}s`}}/>
+        ))}
+      </div>
+      <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:14,marginTop:8}}>
+        {[0,1,2].map(i=>(
+          <div key={i} style={{transform:`translateY(${i===1?-6:0}px) rotate(${(i-1)*12}deg)`}}>
+            <AKStar size={i===1?70:56} filled={i<stars}/>
+          </div>
+        ))}
+      </div>
+      <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:26,letterSpacing:-.4,color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
+      {fact&&<div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{fact}</div>}
+      {onNext&&<button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={onNext}>{ctaLabel}</button>}
     </div>
-    <div class="l3-tasks-row" id="l3-tasks-row"></div>
-  </div>
-</div>
+  );
+}
 
-<!-- SUCCESS OVERLAY -->
-<div class="success-ov" id="success-ov">
-  <div class="ov-card">
-    <div class="ov-stars">
-      <span class="ov-star">⭐</span>
-      <span class="ov-star">⭐</span>
-      <span class="ov-star">⭐</span>
+function AKLessonHeader({ progress=0.4, stars=240, onClose }) {
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:10}}>
+      <button onClick={onClose} className="ak-btn ak-btn--soft ak-btn--icon ak-btn--sm" aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2 L12 12 M12 2 L2 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
+      </button>
+      <div style={{flex:1,paddingTop:2}}><AKProgress value={progress} tone="ok" height={14}/></div>
+      <AKStatChip icon="★" value={stars} tone="star"/>
     </div>
-    <span class="ov-ico" id="ov-ico">🎉</span>
-    <div class="ov-title" id="ov-title">Отлично!</div>
-    <div class="ov-fact" id="ov-fact"></div>
-    <button class="ov-btn" id="ov-btn" onclick="closeSuccess()">Дальше →</button>
-  </div>
-</div>
-
-<script>
-'use strict';
-/* ═══════════════════════════════════════
-   GLOBALS
-═══════════════════════════════════════ */
-let _successCb = null;
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'levelSelect') {
-    if (_l3Raf) { cancelAnimationFrame(_l3Raf); _l3Raf = null; }
-  }
+  );
 }
 
-function startLevel(n) {
-  showScreen('level' + n);
-  if (n === 1) initL1();
-  else if (n === 2) initL2();
-  else if (n === 3) initL3();
-}
-
-function showSuccess(ico, title, fact, cb) {
-  document.getElementById('ov-ico').textContent = ico;
-  document.getElementById('ov-title').textContent = title;
-  document.getElementById('ov-fact').textContent = fact;
-  _successCb = cb || null;
-  document.getElementById('success-ov').classList.add('show');
-}
-
-function closeSuccess() {
-  document.getElementById('success-ov').classList.remove('show');
-  const cb = _successCb; _successCb = null;
-  if (cb) cb();
-}
-
-function burst(x, y, syms) {
-  syms.forEach((s, i) => {
-    const p = document.createElement('div');
-    const a = (i / syms.length) * Math.PI * 2;
-    const d = 55 + Math.random() * 55;
-    p.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:${20 + Math.random() * 14}px;pointer-events:none;z-index:999;transition:all .75s ease-out;`;
-    p.textContent = s;
-    document.body.appendChild(p);
-    requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(a)*d}px,${Math.sin(a)*d-50}px)`;
-      p.style.opacity = '0';
-    });
-    setTimeout(() => p.remove(), 850);
-  });
-}
-
-function shakeEl(el) {
-  el.classList.add('shaking');
-  setTimeout(() => el.classList.remove('shaking'), 460);
-}
-
-/* ═══════════════════════════════════════
-   LEVEL 1 — DENSITY TOWER
-═══════════════════════════════════════ */
-const LIQUIDS = [
-  {id:'honey',   emoji:'🍯', label:'Мёд',   density:1.4,  color:'#E8860A', bg:'linear-gradient(180deg,#FFB347 0%,#E8860A 60%,#C47000 100%)'},
-  {id:'water',   emoji:'💧', label:'Вода',  density:1.0,  color:'#2196F3', bg:'linear-gradient(180deg,#64B5F6 0%,#2196F3 60%,#1565C0 100%)'},
-  {id:'oil',     emoji:'🫙', label:'Масло', density:0.8,  color:'#FDD835', bg:'linear-gradient(180deg,#FFF176 0%,#FDD835 60%,#F57F17 100%)'},
-  {id:'alcohol', emoji:'🍾', label:'Спирт', density:0.79, color:'#AB47BC', bg:'linear-gradient(180deg,#CE93D8 0%,#AB47BC 60%,#6A1B9A 100%)'},
-];
-// Correct pour order: heaviest → lightest
-const CORRECT_ORDER = ['honey','water','oil','alcohol'];
-
-let _l1Task = 1, _l1Queue = [], _l1ObjCount = 0, _l1T3Idx = 0;
-
-function initL1() {
-  _l1Task = 1; _l1Queue = []; _l1ObjCount = 0; _l1T3Idx = 0;
-  document.getElementById('cyl-layers').innerHTML = '';
-  document.getElementById('cyl-objects').innerHTML = '';
-  document.getElementById('l1-objects').style.display = 'none';
-  document.getElementById('l1-answers').style.display = 'none';
-  document.getElementById('l1-t3-obj').style.display = 'none';
-  document.getElementById('l1-badge').textContent = '1/3';
-  document.getElementById('l1-task-badge').textContent = '🌊 Залей от тяжёлой к лёгкой';
-  document.getElementById('l1-task-badge').className = 'task-badge';
-  document.getElementById('l1-svg').classList.remove('rainbow-glow');
-  renderL1Target();
-  renderL1Bottles();
-}
-
-function renderL1Target() {
-  const strip = document.getElementById('l1-target');
-  strip.innerHTML = '<div class="target-label">ПОРЯДОК</div>';
-  // Top = lightest, bottom = heaviest (visual order in filled cylinder)
-  ['alcohol','oil','water','honey'].forEach(id => {
-    const liq = LIQUIDS.find(l => l.id === id);
-    const div = document.createElement('div');
-    div.className = 'target-slot';
-    div.style.background = liq.bg;
-    div.textContent = liq.emoji;
-    strip.appendChild(div);
-  });
-}
-
-function renderL1Bottles() {
-  const row = document.getElementById('l1-bottles');
-  row.innerHTML = '';
-  const shuffled = [...LIQUIDS].sort(() => Math.random() - 0.5);
-  shuffled.forEach(liq => {
-    const div = document.createElement('div');
-    div.className = 'bottle';
-    div.id = 'bottle-' + liq.id;
-    div.style.background = liq.bg;
-    div.dataset.id = liq.id;
-    div.innerHTML = `<div class="bottle-neck" style="background:${liq.color};"></div><div class="bottle-shine"></div><span class="bottle-emoji">${liq.emoji}</span><span class="bottle-label">${liq.label}</span>`;
-    div.onclick = () => l1PourBottle(liq.id, div);
-    row.appendChild(div);
-  });
-}
-
-function l1PourBottle(id, el) {
-  if (_l1Task !== 1) return;
-  const expected = CORRECT_ORDER[_l1Queue.length];
-  if (id !== expected) {
-    shakeEl(el);
-    // Pulse expected slot in target strip
-    const slots = document.querySelectorAll('.target-slot');
-    const expIdx = ['alcohol','oil','water','honey'].indexOf(expected);
-    // reverse: honey=index3 visually from bottom, displayed idx from top
-    const dispIdx = 3 - CORRECT_ORDER.indexOf(expected); // honey=3→0 from bottom visually, top of strip=alcohol
-    // simpler: pulse the bottle that IS expected
-    const expBottle = document.getElementById('bottle-' + expected);
-    if (expBottle) {
-      expBottle.style.outline = '3px solid #7BD9A8';
-      setTimeout(() => { expBottle.style.outline = ''; }, 700);
-    }
-    return;
-  }
-  el.classList.add('used');
-  _l1Queue.push(id);
-  const liq = LIQUIDS.find(l => l.id === id);
-  // Tilt animation
-  el.style.transform = 'rotate(-35deg)';
-  setTimeout(() => { el.style.transform = ''; }, 700);
-  // Add layer
-  setTimeout(() => addCylLayer(liq), 400);
-
-  if (_l1Queue.length === LIQUIDS.length) {
-    setTimeout(() => {
-      document.getElementById('l1-svg').classList.add('rainbow-glow');
-      burst(window.innerWidth/2, 200, ['🌈','✨','🎉','⭐','💫','🌟']);
-      setTimeout(() => {
-        showSuccess('🌈','Башня построена!','Мёд тяжелее воды в 1.4 раза! Жидкости с плотностью > 1 тонут в воде, с плотностью < 1 — плавают.', () => startL1Task2());
-      }, 600);
-    }, 700);
-  }
-}
-
-function addCylLayer(liq) {
-  const g = document.getElementById('cyl-layers');
-  const layerH = 56;
-  const idx = _l1Queue.length - 1; // 0=bottom=honey
-  // SVG cylinder: y=20 top, y=245 bottom (20+225)
-  const yBottom = 245;
-  const y = yBottom - (idx + 1) * layerH;
-  const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-  rect.setAttribute('id','cyl-layer-' + liq.id);
-  rect.setAttribute('x','10'); rect.setAttribute('width','90');
-  rect.setAttribute('fill', liq.color + 'CC');
-  rect.setAttribute('y', String(y + layerH));
-  rect.setAttribute('height','0');
-  rect.style.transition = 'y .5s ease, height .5s ease';
-  g.appendChild(rect);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    rect.setAttribute('y', String(y));
-    rect.setAttribute('height', String(layerH));
-  }));
-}
-
-/* Task 2: drop objects */
-const L1_OBJS = [
-  {emoji:'🪙', label:'Монета',   density:8.9,  targetId:'honey',   fact:'Плотность монеты 8.9 г/см³ > мёда (1.4). Тонет на самое дно!'},
-  {emoji:'🍇', label:'Виноград', density:1.1,  targetId:'water',   fact:'Плотность винограда 1.1 г/см³ — между водой и мёдом. Останавливается там!'},
-  {emoji:'🪵', label:'Пробка',   density:0.24, targetId:'alcohol', fact:'Пробка (0.24 г/см³) легче всех жидкостей — плывёт на самом верху!'},
-];
-
-function startL1Task2() {
-  _l1Task = 2; _l1ObjCount = 0;
-  document.getElementById('l1-badge').textContent = '2/3';
-  document.getElementById('l1-task-badge').textContent = '🎯 Нажми предмет — куда он упадёт?';
-  document.querySelectorAll('.bottle').forEach(b => { b.onclick = null; b.style.cursor = 'default'; });
-  const row = document.getElementById('l1-objects');
-  row.style.display = 'flex';
-  row.innerHTML = '';
-  L1_OBJS.forEach((obj, i) => {
-    const chip = document.createElement('div');
-    chip.className = 'obj-chip';
-    chip.id = 'obj-chip-' + i;
-    chip.innerHTML = `<span class="density-badge">${obj.density} г/см³</span><span class="obj-ico">${obj.emoji}</span><span class="obj-name">${obj.label}</span>`;
-    chip.onclick = () => l1DropObj(i, chip);
-    row.appendChild(chip);
-  });
-}
-
-function l1DropObj(idx, chip) {
-  chip.classList.add('dropped');
-  const obj = L1_OBJS[idx];
-  const g = document.getElementById('cyl-objects');
-  // Animate emoji falling in SVG
-  const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-  txt.setAttribute('x','55'); txt.setAttribute('y','22');
-  txt.setAttribute('font-size','20'); txt.setAttribute('text-anchor','middle');
-  txt.textContent = obj.emoji;
-  g.appendChild(txt);
-  // Target Y: layer index from bottom
-  const layerIdx = CORRECT_ORDER.indexOf(obj.targetId); // 0=honey bottom
-  const layerH = 56;
-  const targetY = 245 - layerIdx * layerH - layerH / 2;
-  let curY = 22;
-  function step() {
-    const diff = targetY - curY;
-    curY += diff > 30 ? 5 : 2;
-    txt.setAttribute('y', String(curY));
-    if (curY < targetY) requestAnimationFrame(step);
-    else {
-      txt.setAttribute('y', String(targetY));
-      burst(window.innerWidth/2, 220, ['💦','💧','✨']);
-      _l1ObjCount++;
-      setTimeout(() => {
-        showSuccess(obj.emoji, obj.label + '!', obj.fact, () => {
-          if (_l1ObjCount >= L1_OBJS.length) setTimeout(startL1Task3, 200);
-        });
-      }, 350);
-    }
-  }
-  requestAnimationFrame(step);
-}
-
-/* Task 3: guess layer */
-const L1_T3 = [
-  {emoji:'🥚', label:'Яйцо',       density:1.03, correct:1, fact:'Яйцо (1.03 г/см³) чуть плотнее воды — опускается к слою воды!'},
-  {emoji:'🍓', label:'Клубника',   density:0.92, correct:2, fact:'Клубника (0.92) легче воды, но тяжелее масла — плывёт между ними!'},
-  {emoji:'🧊', label:'Кубик льда', density:0.92, correct:2, fact:'Лёд (0.92) легче воды — поэтому айсберги плавают на поверхности!'},
-];
-const L1_T3_OPTS = ['Дно (мёд)', 'Вода', 'Верх (масло)'];
-
-function startL1Task3() {
-  _l1Task = 3; _l1T3Idx = 0;
-  document.getElementById('cyl-objects').innerHTML = '';
-  document.getElementById('l1-objects').style.display = 'none';
-  document.getElementById('l1-badge').textContent = '3/3';
-  document.getElementById('l1-task-badge').textContent = '🤔 В каком слое остановится?';
-  document.getElementById('l1-answers').style.display = 'flex';
-  document.getElementById('l1-t3-obj').style.display = 'block';
-  renderL1T3();
-}
-
-function renderL1T3() {
-  const obj = L1_T3[_l1T3Idx];
-  document.getElementById('l1-t3-obj').innerHTML = `${obj.emoji} <strong>${obj.label}</strong> — плотность ${obj.density} г/см³`;
-  const row = document.getElementById('l1-answers');
-  row.innerHTML = '';
-  L1_T3_OPTS.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'ans-btn';
-    btn.textContent = opt;
-    btn.onclick = () => l1AnswerT3(i, btn, obj);
-    row.appendChild(btn);
-  });
-}
-
-function l1AnswerT3(chosen, btn, obj) {
-  document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
-  if (chosen === obj.correct) {
-    btn.classList.add('correct');
-    burst(btn.getBoundingClientRect().left + btn.offsetWidth/2, btn.getBoundingClientRect().top, ['⭐','✨','🎉']);
-    setTimeout(() => {
-      showSuccess(obj.emoji,'Правильно!', obj.fact, () => {
-        _l1T3Idx++;
-        if (_l1T3Idx < L1_T3.length) renderL1T3();
-        else {
-          document.getElementById('l1-answers').style.display = 'none';
-          document.getElementById('l1-t3-obj').style.display = 'none';
-          document.getElementById('l1-task-badge').textContent = '🏆 Все задания выполнены!';
-          document.getElementById('l1-task-badge').className = 'task-badge done';
-          burst(window.innerWidth/2, 200, ['🌈','🏆','⭐','✨','🎊','💫']);
-        }
-      });
-    }, 300);
-  } else {
-    btn.classList.add('wrong');
-    setTimeout(() => {
-      showSuccess('❌','Не совсем...', obj.fact, () => {
-        btn.classList.remove('wrong');
-        document.querySelectorAll('.ans-btn').forEach((b, i) => b.onclick = () => l1AnswerT3(i, b, obj));
-      });
-    }, 400);
-  }
-}
-
-/* ═══════════════════════════════════════
-   LEVEL 2 — REACTIONS
-═══════════════════════════════════════ */
-const REACTIONS = [
-  {name:'Вулкан!',           reagents:['🍶 Уксус','🧂 Сода','🔴 Краситель','🫧 Мыло'],           correct:['🍶 Уксус','🧂 Сода'],              result:'volcano',     targetEmoji:'🌋', startColor:'rgba(220,50,50,0.5)',     fact:'CO₂ газ создаёт пену! Та же реакция в школьных огнетушителях.'},
-  {name:'Синий → фиолетовый',reagents:['🔵 Синий р-р','🔴 Красный р-р','🟡 Жёлтый р-р','🟢 Зелёный р-р'],correct:['🔵 Синий р-р','🔴 Красный р-р'],result:'mix_purple', targetEmoji:'🟣', startColor:'rgba(66,133,244,0.5)',    fact:'Синий + красный = фиолетовый. Так работает смешение цветов!'},
-  {name:'Масло и вода',       reagents:['💧 Вода','🫙 Масло','🧂 Соль','🍋 Лимон'],                correct:['💧 Вода','🫙 Масло'],               result:'layers',      targetEmoji:'🌊', startColor:'rgba(100,180,255,0.5)', fact:'Масло и вода не смешиваются — разная полярность молекул!'},
-  {name:'Голубой осадок',     reagents:['🔷 Купорос','⬜ Сода','🟨 Соляная к-та','💧 Вода'],        correct:['🔷 Купорос','⬜ Сода'],              result:'precipitate', targetEmoji:'💎', startColor:'rgba(33,150,243,0.5)',  fact:'Cu(OH)₂ — голубой осадок, признак ионов меди в растворе!'},
-];
-
-const R_COLORS = {
-  '🍶 Уксус':        'linear-gradient(180deg,#FFF9C4,#F9A825)',
-  '🧂 Сода':         'linear-gradient(180deg,#F5F5F5,#BDBDBD)',
-  '🔴 Краситель':    'linear-gradient(180deg,#EF9A9A,#E53935)',
-  '🫧 Мыло':         'linear-gradient(180deg,#E8F5E9,#66BB6A)',
-  '🔵 Синий р-р':    'linear-gradient(180deg,#90CAF9,#1565C0)',
-  '🔴 Красный р-р':  'linear-gradient(180deg,#EF9A9A,#C62828)',
-  '🟡 Жёлтый р-р':   'linear-gradient(180deg,#FFF59D,#F9A825)',
-  '🟢 Зелёный р-р':  'linear-gradient(180deg,#A5D6A7,#2E7D32)',
-  '💧 Вода':         'linear-gradient(180deg,#90CAF9,#1565C0)',
-  '🫙 Масло':        'linear-gradient(180deg,#FFF9C4,#F57F17)',
-  '🧂 Соль':         'linear-gradient(180deg,#F5F5F5,#9E9E9E)',
-  '🍋 Лимон':        'linear-gradient(180deg,#FFF59D,#FFD600)',
-  '🔷 Купорос':      'linear-gradient(180deg,#80DEEA,#00838F)',
-  '⬜ Сода':          'linear-gradient(180deg,#ECEFF1,#B0BEC5)',
-  '🟨 Соляная к-та': 'linear-gradient(180deg,#FFF59D,#F9A825)',
+/* ============================================================
+   LEVEL 1 — БАШНЯ ПЛОТНОСТЕЙ
+   ============================================================ */
+const AK_LIQUIDS = {
+  honey:   { color:'#E8A23C', label:'МЁД'   },
+  water:   { color:'#5A9EE3', label:'ВОДА'  },
+  oil:     { color:'#F2D147', label:'МАСЛО' },
+  alcohol: { color:'#A981E6', label:'СПИРТ' },
 };
+const AK_ORDER = ['honey','water','oil','alcohol'];
 
-let _l2Idx = 0, _l2Added = [], _l2Mixing = false;
-
-function initL2() {
-  _l2Idx = 0;
-  renderL2();
+function LessonScreen({ onDone=()=>{} }) {
+  const [poured, setPoured] = React.useState([]);
+  const [shake, setShake] = React.useState(false);
+  const [won, setWon] = React.useState(false);
+  const used = new Set(poured);
+  const expected = AK_ORDER[poured.length];
+  const handlePour = (k) => {
+    if (won) return;
+    if (k===expected) {
+      const next=[...poured,k];
+      setPoured(next);
+      if (next.length===AK_ORDER.length) setTimeout(()=>setWon(true),600);
+    } else {
+      setShake(true);
+      setTimeout(()=>setShake(false),450);
+    }
+  };
+  const reset = () => { setPoured([]); setWon(false); };
+  const layers = poured.map((k,i)=>({color:AK_LIQUIDS[k].color,fresh:i===poured.length-1}));
+  return (
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 100%,#DCF7E7 0%,transparent 70%),linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'60px 18px 22px',boxSizing:'border-box',position:'relative',overflow:'hidden',display:'flex',flexDirection:'column'}}>
+      <AKLessonHeader progress={poured.length/AK_ORDER.length} stars={240} onClose={onDone}/>
+      <div style={{display:'flex',justifyContent:'center',marginTop:18,marginBottom:6}}>
+        <AKTaskBadge tone="chem">Налей по порядку — от тяжёлого к лёгкому</AKTaskBadge>
+      </div>
+      <div style={{display:'flex',justifyContent:'center',gap:6,marginBottom:10}}>
+        {AK_ORDER.map((k,i)=>(
+          <React.Fragment key={k}>
+            <div style={{width:22,height:22,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${AK_LIQUIDS[k].color} 30%,${AK_LIQUIDS[k].color} 100%)`,boxShadow:'inset 0 -2px 0 rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.6)',opacity:i<poured.length?1:.35,filter:i<poured.length?'none':'grayscale(.5)',transition:'all .3s'}}/>
+            {i<AK_ORDER.length-1&&<span style={{color:'var(--ak-ink-3)',alignSelf:'center',fontSize:12,fontWeight:700}}>→</span>}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className={shake?'ak-shake':''} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-end',position:'relative',minHeight:380}}>
+        <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:220,height:24,borderRadius:'50%',background:'radial-gradient(ellipse at center,rgba(45,27,69,.22) 0%,rgba(45,27,69,0) 70%)'}}/>
+        <AKCylinder layers={layers} capacity={4} width={160} height={360}/>
+      </div>
+      <div style={{marginTop:8,padding:'12px 8px 10px',borderRadius:28,background:'rgba(255,255,255,.55)',boxShadow:'inset 0 2px 6px rgba(45,27,69,.06),0 1px 0 rgba(255,255,255,.9)',display:'flex',justifyContent:'space-around',alignItems:'flex-end',backdropFilter:'blur(8px)'}}>
+        {AK_ORDER.map(k=><AKBottle key={k} color={AK_LIQUIDS[k].color} label={AK_LIQUIDS[k].label} used={used.has(k)} onClick={()=>handlePour(k)} size={72}/>)}
+      </div>
+      {won&&(
+        <div style={{position:'absolute',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
+          <AKSuccessCard stars={3} title="Идеальная башня!" fact="Самая плотная жидкость опускается на дно. Мёд тяжелее воды, а спирт легче масла — поэтому слои не смешиваются." onNext={()=>{reset();onDone();}} ctaLabel="Следующий уровень →"/>
+        </div>
+      )}
+    </div>
+  );
 }
 
-function renderL2() {
-  const rx = REACTIONS[_l2Idx];
-  _l2Added = []; _l2Mixing = false;
-  document.getElementById('l2-badge').textContent = `${_l2Idx+1}/4`;
-  document.getElementById('l2-task-badge').textContent = `🎯 ${rx.name}`;
-  document.getElementById('l2-target-ico').textContent = rx.targetEmoji;
-  document.getElementById('l2-added').innerHTML = '';
-  // Reset flask
-  const liq = document.getElementById('flask-liq');
-  liq.setAttribute('y','265'); liq.setAttribute('height','0'); liq.style.fill = rx.startColor;
-  const liq2 = document.getElementById('flask-liq2');
-  liq2.setAttribute('y','265'); liq2.setAttribute('height','0');
-  document.getElementById('flask-bubbles').innerHTML = '';
-  document.getElementById('flask-precipitate').innerHTML = '';
-  document.getElementById('mix-btn').disabled = true;
-  // Render reagents
-  const grid = document.getElementById('l2-reagents');
-  grid.innerHTML = '';
-  [...rx.reagents].sort(() => Math.random()-0.5).forEach(r => {
-    const btn = document.createElement('div');
-    btn.className = 'reagent-btn';
-    btn.dataset.name = r;
-    btn.style.background = R_COLORS[r] || 'linear-gradient(180deg,#ccc,#999)';
-    const parts = r.split(' ');
-    const emoji = parts[0];
-    const label = parts.slice(1).join(' ');
-    btn.innerHTML = `<div class="r-shine"></div><span class="r-emoji">${emoji}</span><span class="r-label">${label}</span>`;
-    btn.onclick = () => l2AddReagent(r, btn);
-    grid.appendChild(btn);
-  });
-}
-
-function l2AddReagent(name, btn) {
-  if (_l2Mixing || _l2Added.includes(name) || _l2Added.length >= 2) return;
-  btn.classList.add('used-r');
-  _l2Added.push(name);
-  const chip = document.createElement('span');
-  chip.className = 'added-chip';
-  chip.textContent = name;
-  document.getElementById('l2-added').appendChild(chip);
-  // Raise liquid
-  const liq = document.getElementById('flask-liq');
-  const newH = _l2Added.length * 80;
-  liq.setAttribute('y', String(265 - newH));
-  liq.setAttribute('height', String(newH));
-  if (_l2Added.length >= 2) document.getElementById('mix-btn').disabled = false;
-}
-
-function doMix() {
-  if (_l2Mixing) return;
-  _l2Mixing = true;
-  const rx = REACTIONS[_l2Idx];
-  const ok = _l2Added.length === rx.correct.length && _l2Added.every(a => rx.correct.includes(a));
-  if (!ok) {
-    const svg = document.getElementById('l2-flask-svg');
-    shakeEl(svg);
-    document.getElementById('flask-liq').style.fill = 'rgba(150,150,150,0.5)';
-    setTimeout(() => renderL2(), 900);
-    return;
-  }
-  playReaction(rx);
-}
-
-function playReaction(rx) {
-  const liq = document.getElementById('flask-liq');
-  const bub = document.getElementById('flask-bubbles');
-  const pre = document.getElementById('flask-precipitate');
-  switch(rx.result) {
-    case 'volcano':
-      liq.style.fill = 'rgba(220,50,50,0.7)';
-      liq.setAttribute('y','80'); liq.setAttribute('height','185');
-      for(let i=0;i<14;i++) setTimeout(()=>{
-        const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-        c.setAttribute('cx',String(20+Math.random()*120));
-        c.setAttribute('cy','260'); c.setAttribute('r',String(3+Math.random()*7));
-        c.setAttribute('fill','rgba(255,80,40,0.65)');
-        c.style.transition='cy 1.1s ease,opacity 1.1s ease';
-        bub.appendChild(c);
-        requestAnimationFrame(()=>{c.setAttribute('cy','60');c.style.opacity='0';});
-        setTimeout(()=>c.remove(),1200);
-      },i*80);
-      setTimeout(()=>finishRx(rx),1500);
-      break;
-    case 'mix_purple':
-      liq.style.transition='fill 1.2s ease';
-      liq.style.fill='rgba(156,39,176,0.75)';
-      setTimeout(()=>finishRx(rx),1400);
-      break;
-    case 'layers':
-      liq.style.fill='rgba(100,180,255,0.65)';
-      liq.setAttribute('y','185'); liq.setAttribute('height','80');
-      const liq2=document.getElementById('flask-liq2');
-      liq2.style.fill='rgba(253,216,53,0.7)';
-      liq2.setAttribute('y','105'); liq2.setAttribute('height','80');
-      setTimeout(()=>finishRx(rx),1200);
-      break;
-    case 'precipitate':
-      liq.style.fill='rgba(33,150,243,0.5)';
-      for(let i=0;i<16;i++) setTimeout(()=>{
-        const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
-        r.setAttribute('x',String(15+Math.random()*130)); r.setAttribute('y','90');
-        r.setAttribute('width','7'); r.setAttribute('height','7');
-        r.setAttribute('fill','rgba(0,131,143,0.85)');
-        r.style.transition=`y ${0.7+Math.random()*0.6}s ease`;
-        pre.appendChild(r);
-        requestAnimationFrame(()=>r.setAttribute('y',String(242+Math.random()*15)));
-      },i*65);
-      setTimeout(()=>finishRx(rx),1700);
-      break;
-  }
-}
-
-function finishRx(rx) {
-  const rect = document.getElementById('l2-flask-svg').getBoundingClientRect();
-  burst(rect.left+rect.width/2, rect.top+rect.height/2, ['⭐','✨','🎉','💥','🌟']);
-  setTimeout(()=>{
-    showSuccess(rx.targetEmoji, rx.name, rx.fact, ()=>{
-      _l2Idx++;
-      if(_l2Idx < REACTIONS.length) renderL2();
-      else {
-        document.getElementById('l2-task-badge').textContent='🏆 Все реакции изучены!';
-        document.getElementById('l2-task-badge').className='task-badge done';
-        burst(window.innerWidth/2,200,['⚗️','🏆','✨','🎊','💫','⭐']);
-      }
-    });
-  },350);
-}
-
-/* ═══════════════════════════════════════
-   LEVEL 3 — STATES OF WATER
-═══════════════════════════════════════ */
-const L3_TASKS = [
-  {id:'freeze',emoji:'❄️',label:'Заморозь воду',     check:t=>t<0,          hint:'Опусти ниже 0°C',     fact:'При 0°C молекулы воды выстраиваются в кристаллическую решётку — лёд!'},
-  {id:'melt',  emoji:'💧',label:'Растопи лёд',       check:t=>t>0&&t<60,    hint:'Подними выше 0°C',    fact:'При 0°C решётка разрушается, молекулы начинают свободно двигаться.'},
-  {id:'boil',  emoji:'♨️',label:'Вскипяти воду',     check:t=>t>=100,       hint:'Нагрей до 100°C',     fact:'При 100°C молекулы вырываются из жидкости — рождается пар!'},
-  {id:'steam', emoji:'☁️',label:'Максимум пара',     check:t=>t>=140,       hint:'Выше 140°C',          fact:'Перегретый пар используется в турбинах — он невидим, но очень мощный!'},
-  {id:'range', emoji:'⚖️',label:'Ровно 0°C (±2°)',  check:t=>t>=-2&&t<=2,  hint:'Попади точно на 0°C', fact:'Точка замерзания воды — ровно 0°C. Это международный эталон температуры!'},
+/* ============================================================
+   LEVEL 2 — РЕАКЦИИ В КОЛБЕ
+   ============================================================ */
+const REACTIONS = [
+  {id:1,name:'Вулкан!',reagents:['🍶 Уксус','🧂 Сода','🔴 Краситель','🫧 Мыло'],correct:['🍶 Уксус','🧂 Сода'],resultColor:'#FF8B7A',tone:'warn',emoji:'🌋',fact:'CO₂ создаёт пену! Та же реакция работает в огнетушителях.'},
+  {id:2,name:'Фиолетовый!',reagents:['🔵 Синий р-р','🔴 Красный р-р','🟡 Жёлтый р-р','🟢 Зелёный р-р'],correct:['🔵 Синий р-р','🔴 Красный р-р'],resultColor:'#B5A1FF',tone:'phys',emoji:'🟣',fact:'Синий + красный = фиолетовый. Так работает смешение красок!'},
+  {id:3,name:'Масло и вода',reagents:['💧 Вода','🫙 Масло','🧂 Соль','🍋 Лимон'],correct:['💧 Вода','🫙 Масло'],resultColor:'#FDD835',tone:'cta',emoji:'🌊',fact:'Масло и вода не смешиваются — разная полярность молекул!'},
+  {id:4,name:'Синий осадок',reagents:['🔷 Купорос','⬜ Сода','🟨 Кислота','💧 Вода'],correct:['🔷 Купорос','⬜ Сода'],resultColor:'#8FCAF0',tone:'geo',emoji:'💎',fact:'Cu(OH)₂ — голубой осадок. Признак ионов меди в растворе!'},
 ];
 
-let _l3TaskIdx=0, _l3Done=[], _l3Temp=-50, _l3Raf=null, _l3Mols=[], _l3Checked=false;
+function Level2Reactions({ onDone=()=>{} }) {
+  const [currentIdx, setCurrentIdx] = React.useState(0);
+  const [selected, setSelected] = React.useState([]);
+  const [mixed, setMixed] = React.useState(false);
+  const [shake, setShake] = React.useState(false);
+  const [reactionDone, setReactionDone] = React.useState(false);
+  const [allDone, setAllDone] = React.useState(false);
+  const [score, setScore] = React.useState(0);
+  const reaction = REACTIONS[currentIdx];
+  const flaskTone = mixed ? reaction.tone : 'chem';
+  const flaskFill = mixed ? 0.75 : 0.15;
 
-function initL3() {
-  _l3TaskIdx=0; _l3Done=[]; _l3Temp=-50; _l3Checked=false;
-  document.getElementById('temp-slider').value=-50;
-  if(_l3Raf){cancelAnimationFrame(_l3Raf);_l3Raf=null;}
-  renderL3Tasks();
-  initMols();
-  updateL3UI(-50);
-}
+  const toggleReagent = (r) => {
+    if (mixed||shake) return;
+    if (selected.includes(r)) setSelected(selected.filter(x=>x!==r));
+    else if (selected.length<2) setSelected([...selected,r]);
+  };
 
-function renderL3Tasks() {
-  const row=document.getElementById('l3-tasks-row');
-  row.innerHTML='';
-  L3_TASKS.forEach((t,i)=>{
-    const pill=document.createElement('div');
-    const isDone=_l3Done.includes(t.id);
-    const isAct=i===_l3TaskIdx&&!isDone;
-    pill.className='task-pill'+(isAct?' active-task':'')+(isDone?' done-task':'');
-    pill.id='l3pill-'+t.id;
-    pill.textContent=t.emoji+' '+t.label;
-    row.appendChild(pill);
-  });
-  document.getElementById('l3-badge').textContent=`${Math.min(_l3TaskIdx+1,5)}/5`;
-  if(_l3TaskIdx<L3_TASKS.length){
-    const t=L3_TASKS[_l3TaskIdx];
-    document.getElementById('l3-task-hint').textContent=`${t.emoji} ${t.label} — ${t.hint}`;
-  }
-}
-
-function initMols() {
-  const cv=document.getElementById('mol-canvas');
-  cv.width=cv.offsetWidth||360; cv.height=200;
-  _l3Mols=[];
-  for(let i=0;i<16;i++){
-    _l3Mols.push({
-      x:20+Math.random()*(cv.width-40),
-      y:20+Math.random()*160,
-      vx:(Math.random()-.5)*2,
-      vy:(Math.random()-.5)*2,
-    });
-  }
-  drawMols();
-}
-
-function drawMols() {
-  const cv=document.getElementById('mol-canvas');
-  if(!cv||!document.getElementById('level3').classList.contains('active'))return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height,t=_l3Temp;
-
-  // Background
-  let bg;
-  if(t<0) bg=`hsl(215,${65+Math.abs(t)*.3}%,${85-Math.abs(t)*.1}%)`;
-  else if(t<100) bg=`hsl(${205-t*.8},${50+t*.3}%,${90-t*.05}%)`;
-  else bg=`hsl(${15-Math.min(t-100,15)},70%,${82}%)`;
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-
-  const speed=t<0?0:t<100?(t/100)*2.8:5;
-  const isIce=t<0, isSteam=t>=100;
-
-  // Ice: grid
-  if(isIce){
-    const cols=4,rows=4;
-    const gapX=(W-cols*38)/2, gapY=(H-rows*38)/2;
-    _l3Mols.forEach((m,i)=>{
-      const gx=gapX+(i%cols)*38+19, gy=gapY+Math.floor(i/cols)*38+19;
-      m.x+=(gx-m.x)*.1; m.y+=(gy-m.y)*.1;
-    });
-    // Bonds
-    ctx.strokeStyle='rgba(100,180,255,0.28)'; ctx.lineWidth=1.5;
-    _l3Mols.forEach((m,i)=>{
-      if(i%4<3){const n=_l3Mols[i+1];ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(n.x,n.y);ctx.stroke();}
-      if(i+4<16){const n=_l3Mols[i+4];ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(n.x,n.y);ctx.stroke();}
-    });
-    // Snowflakes
-    ctx.fillStyle='rgba(150,200,255,0.55)'; ctx.font='16px serif';
-    [16,W-24,W/2-8].forEach((fx,i)=>ctx.fillText(['❄','❅','❆'][i],fx,18));
-  } else {
-    _l3Mols.forEach(m=>{
-      if(isSteam){m.vy-=0.06;m.vx+=(Math.random()-.5)*.3;}
-      else{m.vx+=(Math.random()-.5)*.18;m.vy+=(Math.random()-.5)*.18;}
-      const spd=Math.sqrt(m.vx*m.vx+m.vy*m.vy);
-      if(spd>speed+.1){m.vx=m.vx/spd*(speed+.1);m.vy=m.vy/spd*(speed+.1);}
-      m.x+=m.vx; m.y+=m.vy;
-      if(isSteam){
-        if(m.x<0||m.x>W||m.y<-40){m.x=20+Math.random()*(W-40);m.y=H;m.vx=(Math.random()-.5)*3;m.vy=-2-Math.random()*2;}
-      } else {
-        if(m.x<12){m.x=12;m.vx=Math.abs(m.vx);}
-        if(m.x>W-12){m.x=W-12;m.vx=-Math.abs(m.vx);}
-        if(m.y<12){m.y=12;m.vy=Math.abs(m.vy);}
-        if(m.y>H-12){m.y=H-12;m.vy=-Math.abs(m.vy);}
-      }
-    });
-    // Steam clouds
-    if(isSteam){
-      ctx.globalAlpha=.35+Math.sin(Date.now()/280)*.07;
-      ctx.font='26px serif';
-      ['☁','☁','☁'].forEach((c,i)=>ctx.fillText(c,W/4*(i+.5)-13,22+Math.sin(Date.now()/380+i)*7));
-      ctx.globalAlpha=1;
+  const handleMix = () => {
+    if (selected.length!==2) return;
+    const isCorrect = reaction.correct.every(c=>selected.includes(c))&&selected.length===2;
+    if (isCorrect) {
+      setMixed(true); setScore(s=>s+1);
+      setTimeout(()=>setReactionDone(true),900);
+    } else {
+      setShake(true);
+      setTimeout(()=>{ setShake(false); setSelected([]); },450);
     }
-  }
+  };
 
-  // Draw molecules
-  const r=11;
-  _l3Mols.forEach(m=>{
-    const alpha=isSteam?.35+Math.random()*.25:.85;
-    const g=ctx.createRadialGradient(m.x-3,m.y-3,2,m.x,m.y,r);
-    g.addColorStop(0,'rgba(255,255,255,0.9)');
-    g.addColorStop(.4,`rgba(100,180,255,${alpha})`);
-    g.addColorStop(1,`rgba(30,100,220,${alpha*.6})`);
-    ctx.beginPath(); ctx.arc(m.x,m.y,r,0,Math.PI*2);
-    ctx.fillStyle=g; ctx.fill();
-    // H atoms
-    [[r*.78,r*.58],[r*.78,-r*.58]].forEach(([dx,dy])=>{
-      ctx.beginPath(); ctx.arc(m.x+dx,m.y+dy,4,0,Math.PI*2);
-      ctx.fillStyle=`rgba(200,230,255,${alpha})`; ctx.fill();
-    });
-  });
+  const nextReaction = () => {
+    const next=currentIdx+1;
+    if (next>=REACTIONS.length) setAllDone(true);
+    else { setCurrentIdx(next); setSelected([]); setMixed(false); setReactionDone(false); }
+  };
 
-  _l3Raf=requestAnimationFrame(drawMols);
+  const totalProgress = (currentIdx+(reactionDone?1:0))/REACTIONS.length;
+
+  return (
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 0%,#E5DCFF 0%,transparent 60%),linear-gradient(180deg,#FFF8EA,#FFF3E2)',padding:'60px 18px 32px',boxSizing:'border-box',display:'flex',flexDirection:'column',position:'relative'}}>
+      <AKLessonHeader progress={totalProgress} stars={240+score*20} onClose={onDone}/>
+      <div style={{display:'flex',justifyContent:'center',marginTop:18,marginBottom:8}}>
+        <AKTaskBadge tone="phys">Реакция {currentIdx+1}&nbsp;/&nbsp;{REACTIONS.length}: {reaction.name}</AKTaskBadge>
+      </div>
+      <div className={shake?'ak-shake':''} style={{display:'flex',justifyContent:'center',alignItems:'center',margin:'16px 0',position:'relative'}}>
+        <div style={{position:'relative'}}>
+          <AKFlask size={180} tone={flaskTone} fillLevel={flaskFill} bubbles={mixed}/>
+          {mixed&&<div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',fontSize:36,animation:'ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards'}}>{reaction.emoji}</div>}
+        </div>
+      </div>
+      {!mixed&&<div style={{textAlign:'center',marginBottom:12,fontFamily:'var(--ak-display)',fontSize:14,color:'var(--ak-ink-2)'}}>Выбери 2 реагента и нажми «Смешать!»</div>}
+      {!mixed&&(
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:16}}>
+          {reaction.reagents.map(r=>{
+            const isSel=selected.includes(r);
+            return (
+              <button key={r} className="ak-tap" onClick={()=>toggleReagent(r)}
+                style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,padding:'14px 10px',borderRadius:18,border:'none',cursor:'pointer',background:isSel?'linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 100%)':'linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%)',color:isSel?'#fff':'var(--ak-ink)',boxShadow:isSel?'0 4px 0 #7C5FE0,0 8px 18px -6px rgba(124,95,224,.4),inset 0 2px 0 rgba(255,255,255,.4)':'0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(45,27,69,.06)',transition:'all .15s',transform:isSel?'translateY(2px)':'none'}}>
+                {r}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {!mixed&&selected.length===2&&<div style={{display:'flex',justifyContent:'center'}}><button className="ak-btn ak-btn--cta ak-btn--lg" onClick={handleMix}>🌀 Смешать!</button></div>}
+      {mixed&&!reactionDone&&<div style={{display:'flex',justifyContent:'center',marginTop:12,fontFamily:'var(--ak-display)',fontSize:16,color:'var(--ak-ink-2)'}}>✨ Реакция идёт...</div>}
+      {reactionDone&&!allDone&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
+          <AKSuccessCard stars={3} title={reaction.name} fact={reaction.fact} onNext={nextReaction} ctaLabel={currentIdx<REACTIONS.length-1?'Следующая реакция →':'Финал! 🎉'}/>
+        </div>
+      )}
+      {allDone&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
+          <AKSuccessCard stars={3} title="Химик года! 🧪" fact={`Ты провёл все ${REACTIONS.length} реакции! Химия — это наука превращений.`} onNext={onDone} ctaLabel="На главную →"/>
+        </div>
+      )}
+    </div>
+  );
 }
 
-function onTempChange(val) {
-  _l3Temp=parseInt(val);
-  updateL3UI(_l3Temp);
-  checkL3();
-}
+/* ============================================================
+   LEVEL 3 — СОСТОЯНИЯ ВОДЫ
+   ============================================================ */
+const WATER_TASKS = [
+  {id:1,text:'Заморозь воду: опусти ниже 0°C',check:t=>t<0},
+  {id:2,text:'Растопи лёд: нагрей выше 0°C',check:t=>t>0},
+  {id:3,text:'Вскипяти воду: нагрей до 100°C',check:t=>t>=100},
+  {id:4,text:'Макс пар: нагрей выше 120°C',check:t=>t>120},
+  {id:5,text:'Точно 0°C: установи температуру плавления',check:t=>t===0},
+];
 
-function updateL3UI(t) {
-  document.getElementById('temp-display').textContent=t+'°C';
-  let stateText,stateColor;
-  if(t<0){stateText='❄️ Лёд';stateColor='#1D4ED8';}
-  else if(t<100){stateText='💧 Вода';stateColor='#0369A1';}
-  else{stateText='☁️ Пар';stateColor='#B91C1C';}
-  const sl=document.getElementById('state-label');
-  sl.textContent=stateText; sl.style.color=stateColor;
-  // Thermometer: range -50..150 = 200 deg, tube height 100px
-  const pct=(t-(-50))/200;
-  const fillH=Math.round(pct*100);
-  const tf=document.getElementById('thermo-fill');
-  tf.setAttribute('y',String(104-fillH)); tf.setAttribute('height',String(fillH));
-  const hue=t<0?215:Math.max(0,215-t*2.2);
-  const col=`hsl(${hue},75%,50%)`;
-  tf.setAttribute('fill',col);
-  document.getElementById('thermo-bulb').setAttribute('fill',col);
-  // Slider thumb border color
-  document.querySelector('input[type=range]').style.setProperty('--c',col);
-}
+function Level3WaterStates({ onDone=()=>{} }) {
+  const canvasRef = React.useRef(null);
+  const molsRef = React.useRef([]);
+  const animRef = React.useRef(null);
+  const [temp, setTemp] = React.useState(20);
+  const [taskIdx, setTaskIdx] = React.useState(0);
+  const [taskDone, setTaskDone] = React.useState(false);
+  const [allDone, setAllDone] = React.useState(false);
+  const task = WATER_TASKS[taskIdx];
 
-function checkL3() {
-  if(_l3TaskIdx>=L3_TASKS.length||_l3Checked)return;
-  const task=L3_TASKS[_l3TaskIdx];
-  if(task.check(_l3Temp)){
-    _l3Checked=true;
-    _l3Done.push(task.id);
-    const pill=document.getElementById('l3pill-'+task.id);
-    if(pill)pill.className='task-pill done-task';
-    burst(window.innerWidth/2,250,['⭐','✨','🎉',task.emoji,'💫']);
-    setTimeout(()=>{
-      showSuccess(task.emoji,'Выполнено!',task.fact,()=>{
-        _l3TaskIdx++;
-        _l3Checked=false;
-        if(_l3TaskIdx<L3_TASKS.length)renderL3Tasks();
-        else{
-          document.getElementById('l3-task-hint').textContent='🏆 Все задания выполнены!';
-          document.getElementById('l3-badge').textContent='5/5';
-          burst(window.innerWidth/2,200,['🌡️','🏆','✨','🎊','💫','⭐']);
+  React.useEffect(()=>{
+    const N=16;
+    molsRef.current = Array.from({length:N},(_,i)=>({
+      x:30+(i%4)*62, y:40+Math.floor(i/4)*48,
+      vx:(Math.random()-.5)*2, vy:(Math.random()-.5)*2,
+      baseX:30+(i%4)*62, baseY:40+Math.floor(i/4)*48,
+    }));
+  },[]);
+
+  React.useEffect(()=>{
+    const canvas=canvasRef.current; if (!canvas) return;
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width, H=canvas.height;
+    const tick=()=>{
+      ctx.clearRect(0,0,W,H);
+      let bgColor = temp<0?'#D6ECFA':temp>100?'#FFE0CB':'#E5DCFF';
+      ctx.fillStyle=bgColor+'55'; ctx.fillRect(0,0,W,H);
+      const mols=molsRef.current;
+      const speed=temp<0?0:temp>100?(temp-100)*0.04+2.5:(temp/100)*1.5;
+      mols.forEach(m=>{
+        if (temp<0) { m.x+=(m.baseX-m.x)*.15; m.y+=(m.baseY-m.y)*.15; }
+        else if (temp>100) {
+          m.vx+=(Math.random()-.5)*.4; m.vy-=0.08+(temp-100)*.003; m.vy+=(Math.random()-.5)*.2;
+          m.x+=m.vx; m.y+=m.vy;
+          if (m.y<-20){m.y=H+10;m.x=20+Math.random()*(W-40);m.vy=0;}
+          if (m.x<0)m.x=W; if (m.x>W)m.x=0;
+        } else {
+          m.vx+=(Math.random()-.5)*.3; m.vy+=(Math.random()-.5)*.3; m.vx*=.9; m.vy*=.9;
+          const mag=Math.sqrt(m.vx*m.vx+m.vy*m.vy);
+          if (mag>speed){m.vx=m.vx/mag*speed;m.vy=m.vy/mag*speed;}
+          m.x+=m.vx; m.y+=m.vy;
+          if (m.x<10){m.x=10;m.vx*=-1;} if (m.x>W-10){m.x=W-10;m.vx*=-1;}
+          if (m.y<10){m.y=10;m.vy*=-1;} if (m.y>H-10){m.y=H-10;m.vy*=-1;}
+        }
+        const r=9;
+        const grad=ctx.createRadialGradient(m.x-3,m.y-3,1,m.x,m.y,r);
+        if (temp<0){grad.addColorStop(0,'#fff');grad.addColorStop(.4,'#8FCAF0');grad.addColorStop(1,'#4A93C9');}
+        else if (temp>100){grad.addColorStop(0,'#fff');grad.addColorStop(.4,'#FFB6A0');grad.addColorStop(1,'#D96D49');}
+        else{grad.addColorStop(0,'#fff');grad.addColorStop(.4,'#B5A1FF');grad.addColorStop(1,'#7C5FE0');}
+        ctx.beginPath();ctx.arc(m.x,m.y,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+        ctx.strokeStyle='rgba(45,27,69,.2)';ctx.lineWidth=1;ctx.stroke();
+        if (temp<0){
+          ctx.strokeStyle='rgba(74,147,201,.3)';ctx.lineWidth=1;
+          mols.forEach(m2=>{const dx=m2.x-m.x,dy=m2.y-m.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<75&&dist>0){ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(m2.x,m2.y);ctx.stroke();}});
         }
       });
-    },350);
-  }
+      let lbl=temp<0?'❄️ Лёд':temp>100?'💨 Пар':temp===0?'🌊 Граница плавления':'💧 Вода';
+      let lc=temp<0?'#4A93C9':temp>100?'#D96D49':'#7C5FE0';
+      ctx.fillStyle=lc;ctx.font='bold 15px "Fredoka One",system-ui';ctx.textAlign='center';ctx.fillText(lbl,W/2,22);ctx.textAlign='left';
+      animRef.current=requestAnimationFrame(tick);
+    };
+    animRef.current=requestAnimationFrame(tick);
+    return ()=>cancelAnimationFrame(animRef.current);
+  },[temp]);
+
+  React.useEffect(()=>{ if (!taskDone&&task&&task.check(temp)) setTaskDone(true); },[temp]);
+
+  const handleNext=()=>{
+    const next=taskIdx+1;
+    if (next>=WATER_TASKS.length) setAllDone(true);
+    else {setTaskIdx(next);setTaskDone(false);}
+  };
+
+  const tempProgress=(taskIdx+(taskDone?1:0))/WATER_TASKS.length;
+  const trackBg=temp<0?'linear-gradient(90deg,#D6ECFA,#8FCAF0)':temp>100?'linear-gradient(90deg,#E5DCFF,#D96D49)':'linear-gradient(90deg,#8FCAF0,#7C5FE0,#D96D49)';
+
+  return (
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 0%,#E5DCFF 0%,transparent 60%),linear-gradient(180deg,#FFF8EA,#FFF3E2)',padding:'60px 18px 32px',boxSizing:'border-box',display:'flex',flexDirection:'column'}}>
+      <AKLessonHeader progress={tempProgress} stars={320} onClose={onDone}/>
+      <div style={{display:'flex',justifyContent:'center',marginTop:18,marginBottom:16}}>
+        <AKTaskBadge tone="phys">{task?task.text:'🎉 Готово!'}</AKTaskBadge>
+      </div>
+      <div style={{borderRadius:24,overflow:'hidden',margin:'0 auto',boxShadow:'0 8px 24px -8px rgba(45,27,69,.18),inset 0 2px 0 rgba(255,255,255,.8)',background:'#FFFDF7',width:'100%',maxWidth:320}}>
+        <canvas ref={canvasRef} width={300} height={220} style={{display:'block',width:'100%'}}/>
+      </div>
+      <div style={{textAlign:'center',margin:'16px 0 8px',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:32,color:'var(--ak-ink)'}}>
+        <span className="ak-num">{temp}</span><span style={{fontSize:20,color:'var(--ak-ink-2)'}}>°C</span>
+      </div>
+      <div style={{padding:'0 8px',marginBottom:8}}>
+        <div style={{position:'relative',paddingTop:8}}>
+          <div style={{position:'absolute',left:0,right:0,top:16,height:14,borderRadius:999,background:trackBg,boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',transition:'background .5s'}}/>
+          <input type="range" min="-50" max="150" step="1" value={temp} onChange={e=>setTemp(Number(e.target.value))} style={{position:'relative',width:'100%',background:'transparent'}}/>
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',fontFamily:'var(--ak-display)',fontSize:12,color:'var(--ak-ink-3)',marginTop:4}}>
+          <span>−50°</span><span>0°</span><span>100°</span><span>150°</span>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:8,justifyContent:'center',marginBottom:16}}>
+        {[{label:'❄️ Лёд',range:'< 0°',bg:'#D6ECFA',c:'#4A93C9'},{label:'💧 Вода',range:'0–100°',bg:'#E5DCFF',c:'#7C5FE0'},{label:'💨 Пар',range:'> 100°',bg:'#FFE0CB',c:'#D96D49'}].map(s=>(
+          <div key={s.label} style={{padding:'6px 10px',borderRadius:12,background:s.bg,color:s.c,fontFamily:'var(--ak-display)',fontWeight:600,fontSize:11,boxShadow:'0 2px 0 rgba(45,27,69,.06)',textAlign:'center'}}>
+            {s.label}<br/><span style={{fontSize:10,opacity:.7}}>{s.range}</span>
+          </div>
+        ))}
+      </div>
+      {taskDone&&!allDone&&<div style={{display:'flex',justifyContent:'center',marginTop:8}}><button className="ak-btn ak-btn--ok ak-btn--lg ak-pop" onClick={handleNext}>✅ Следующее задание →</button></div>}
+      {allDone&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
+          <AKSuccessCard stars={3} title="Физик-химик! 🌡️" fact="Вода — единственное вещество, которое в природе существует во всех трёх состояниях: лёд, жидкость и пар." onNext={onDone} ctaLabel="На главную →"/>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// Resize mol canvas
-window.addEventListener('resize',()=>{
-  const cv=document.getElementById('mol-canvas');
-  if(cv&&document.getElementById('level3').classList.contains('active')){
-    cv.width=cv.offsetWidth; cv.height=200;
-  }
-});
+/* ============================================================
+   LEVEL SELECT
+   ============================================================ */
+function LevelSelect({ onSelect, progress }) {
+  const levels = [
+    {id:1,title:'Башня плотностей',sub:'Химия · Глава 1',tone:'chem',icon:<AKFlask size={64} tone="chem" fillLevel={0.55}/>},
+    {id:2,title:'Реакции в колбе',sub:'Химия · Глава 2',tone:'phys',icon:<AKFlask size={64} tone="phys" fillLevel={0.7}/>},
+    {id:3,title:'Состояния воды',sub:'Химия · Глава 3',tone:'geo',icon:<AKBlob size={64} kind="droplet" tone="geo"/>},
+  ];
+  return (
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 0%,#DCF7E7 0%,transparent 60%),linear-gradient(180deg,#FFF8EA,#FFF3E2)',padding:'60px 18px 40px',boxSizing:'border-box'}}>
+      <div aria-hidden style={{position:'fixed',top:60,right:-16,opacity:.6,transform:'rotate(12deg)',pointerEvents:'none'}}><AKPlanet size={80} tone="chem" ring/></div>
+      <div aria-hidden style={{position:'fixed',bottom:120,left:-12,opacity:.4,transform:'rotate(-8deg)',pointerEvents:'none'}}><AKPlanet size={56} tone="phys" ring={false}/></div>
+      <div style={{textAlign:'center',marginBottom:36}}>
+        <div className="ak-bob" style={{display:'inline-block',filter:'drop-shadow(0 8px 16px rgba(60,168,118,.3))'}}>
+          <AKFlask size={100} tone="chem" fillLevel={0.65}/>
+        </div>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:30,fontWeight:700,color:'var(--ak-ink)',marginTop:12,letterSpacing:-.5}}>Хемо Лаб</div>
+        <div style={{fontSize:14,color:'var(--ak-ink-2)',marginTop:4,fontFamily:'var(--ak-display)'}}>Химия · КосмоБаза</div>
+        <div style={{maxWidth:260,margin:'16px auto 0'}}><AKProgress value={progress.total} tone="ok" height={14} label="Прогресс"/></div>
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:0}}>
+        {levels.map(l=><AKSubjectCard key={l.id} title={l.title} subtitle={l.sub} tone={l.tone} icon={l.icon} progress={progress[`level${l.id}`]||0} onClick={()=>onSelect(`level${l.id}`)}/>)}
+      </div>
+      <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:24}}>
+        <AKStatChip icon="⭐" value="3 урока" tone="star"/>
+        <AKStatChip icon="🧪" value="Химия" tone="chem"/>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   APP
+   ============================================================ */
+function App() {
+  const [screen, setScreen] = React.useState('menu');
+  const [progress, setProgress] = React.useState({level1:0,level2:0,level3:0,total:0});
+  const markDone = (key) => {
+    setProgress(p=>{const n={...p,[key]:1};const done=(n.level1+n.level2+n.level3)/3;return {...n,total:done};});
+    setScreen('menu');
+  };
+  if (screen==='level1') return <LessonScreen onDone={()=>markDone('level1')}/>;
+  if (screen==='level2') return <Level2Reactions onDone={()=>markDone('level2')}/>;
+  if (screen==='level3') return <Level3WaterStates onDone={()=>markDone('level3')}/>;
+  return <LevelSelect onSelect={setScreen} progress={progress}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
