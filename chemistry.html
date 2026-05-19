@@ -339,130 +339,110 @@ function getTempColor(temp) {
   return `rgb(${r},${g},${b})`;
 }
 
-function MoleculeCanvas({ temp, missionIdx }) {
+function MoleculeCanvas({ tempRef, missionIdx }) {
   const canvasRef = React.useRef(null);
   const particlesRef = React.useRef(null);
   const animRef = React.useRef(null);
 
-  const isChocolate = missionIdx === 4;
-  const phase = isChocolate ? getPhaseForMission(4, temp) : getPhase(temp);
-
-  const SOLID_COLOR  = isChocolate ? '#8B4513' : '#A8D8FF';
-  const LIQUID_COLOR = isChocolate ? '#D2691E' : '#7BD9A8';
-  const GAS_COLOR    = isChocolate ? '#F4A460' : '#FFD262';
+  const isMobile = window.innerWidth < 600;
+  const N = isMobile ? 25 : 35;
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const W = canvas.width, H = canvas.height;
-    const N = 40;
 
-    if (!particlesRef.current) {
-      particlesRef.current = Array.from({length: N}, (_, i) => {
-        const col = i % 8, row = Math.floor(i / 8);
-        return {
-          x: 30 + col * 28,
-          y: 30 + row * 28,
-          vx: (Math.random()-0.5)*2,
-          vy: (Math.random()-0.5)*2,
-          baseX: 30 + col * 28,
-          baseY: 30 + row * 28,
-        };
-      });
-    }
+    const isChoc = missionIdx === 4;
+    const SOLID_COLOR  = isChoc ? '#8B4513' : '#A8D8FF';
+    const LIQUID_COLOR = isChoc ? '#D2691E' : '#7BD9A8';
+    const GAS_COLOR    = isChoc ? '#F4A460' : '#FFD262';
+
+    const cols = isMobile ? 5 : 7;
+    particlesRef.current = Array.from({length: N}, (_, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      return {
+        x: 20 + col * (W - 40) / (cols - 1),
+        y: 20 + row * (H - 40) / (Math.ceil(N / cols) - 1 || 1),
+        vx: (Math.random()-0.5)*2,
+        vy: (Math.random()-0.5)*2,
+        baseX: 20 + col * (W - 40) / (cols - 1),
+        baseY: 20 + row * (H - 40) / (Math.ceil(N / cols) - 1 || 1),
+      };
+    });
 
     const particles = particlesRef.current;
 
+    // Cache gradient
+    let lastPhase = null;
+    let bgGrad = null;
+
     const draw = () => {
+      const t = tempRef.current;
+      const phase = missionIdx === 4
+        ? (t < 32 ? 'solid' : 'liquid')
+        : (t < 0 ? 'solid' : t < 100 ? 'liquid' : 'gas');
+
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, W, H);
 
-      // Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      if (phase === 'solid') {
-        bgGrad.addColorStop(0, '#E8F4FF');
-        bgGrad.addColorStop(1, '#C8E8FF');
-      } else if (phase === 'gas') {
-        bgGrad.addColorStop(0, '#FFF8E0');
-        bgGrad.addColorStop(1, '#FFE8B0');
-      } else {
-        bgGrad.addColorStop(0, '#E8FFF4');
-        bgGrad.addColorStop(1, '#C8F0DC');
+      // Background (cached per phase)
+      if (phase !== lastPhase) {
+        bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+        if (phase === 'solid')       { bgGrad.addColorStop(0,'#E8F4FF'); bgGrad.addColorStop(1,'#C8E8FF'); }
+        else if (phase === 'gas')    { bgGrad.addColorStop(0,'#FFF8E0'); bgGrad.addColorStop(1,'#FFE8B0'); }
+        else                         { bgGrad.addColorStop(0,'#E8FFF4'); bgGrad.addColorStop(1,'#C8F0DC'); }
+        lastPhase = phase;
       }
       ctx.fillStyle = bgGrad;
-      ctx.roundRect(0, 0, W, H, 16);
-      ctx.fill();
+      ctx.beginPath(); ctx.roundRect(0, 0, W, H, 16); ctx.fill();
 
-      const speed = phase === 'solid'
-        ? 0.3
-        : phase === 'gas'
-          ? 2 + (temp - 100) * 0.04
-          : 0.4 + temp * 0.015;
-
+      const speed = phase === 'solid' ? 0.3
+        : phase === 'gas' ? 2 + (t - 100) * 0.04
+        : 0.4 + t * 0.012;
       const color = phase === 'solid' ? SOLID_COLOR : phase === 'liquid' ? LIQUID_COLOR : GAS_COLOR;
+      const r = phase === 'gas' ? 4 : phase === 'liquid' ? 5 : 5;
+
+      // Grid lines for solid (batch)
+      if (phase === 'solid') {
+        ctx.strokeStyle = SOLID_COLOR + '55';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        particles.forEach((p, i) => {
+          const next = particles[i + 1];
+          if (next && i % cols < cols - 1) { ctx.moveTo(p.x, p.y); ctx.lineTo(next.x, next.y); }
+          const below = particles[i + cols];
+          if (below) { ctx.moveTo(p.x, p.y); ctx.lineTo(below.x, below.y); }
+        });
+        ctx.stroke();
+      }
 
       particles.forEach(p => {
         if (phase === 'solid') {
-          // vibrate around base position
-          p.x = p.baseX + (Math.random()-0.5) * 2.5;
-          p.y = p.baseY + (Math.random()-0.5) * 2.5;
+          p.x = p.baseX + (Math.random()-0.5) * 2;
+          p.y = p.baseY + (Math.random()-0.5) * 2;
         } else {
-          // move freely
-          p.x += p.vx * speed;
-          p.y += p.vy * speed;
-          if (p.x < 8) { p.x = 8; p.vx = Math.abs(p.vx); }
+          p.x += p.vx * speed; p.y += p.vy * speed;
+          if (p.x < 8)   { p.x = 8;   p.vx =  Math.abs(p.vx); }
           if (p.x > W-8) { p.x = W-8; p.vx = -Math.abs(p.vx); }
-          if (p.y < 8) { p.y = 8; p.vy = Math.abs(p.vy); }
+          if (p.y < 8)   { p.y = 8;   p.vy =  Math.abs(p.vy); }
           if (p.y > H-8) { p.y = H-8; p.vy = -Math.abs(p.vy); }
         }
-
-        // Draw particle
-        const r = phase === 'gas' ? 4.5 : phase === 'liquid' ? 5.5 : 5;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fillStyle = color; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.2; ctx.stroke();
         // Shine
-        ctx.beginPath();
-        ctx.arc(p.x - r*0.3, p.y - r*0.3, r*0.35, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x - r*0.3, p.y - r*0.3, r*0.3, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
       });
 
-      // Grid lines for solid
-      if (phase === 'solid') {
-        ctx.strokeStyle = `${SOLID_COLOR}55`;
-        ctx.lineWidth = 1;
-        particles.forEach((p, i) => {
-          if (i % 8 < 7) {
-            const next = particles[i+1];
-            if (next && Math.abs(next.baseX - p.baseX) < 35) {
-              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(next.x, next.y); ctx.stroke();
-            }
-          }
-          if (i < N - 8) {
-            const below = particles[i+8];
-            if (below) {
-              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(below.x, below.y); ctx.stroke();
-            }
-          }
-        });
-      }
-
-      // Steam wisps for gas
+      // Steam wisps
       if (phase === 'gas') {
-        const t = Date.now() * 0.001;
-        ctx.strokeStyle = 'rgba(255,210,98,0.4)';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 3; i++) {
-          const sx = 40 + i * 90;
-          ctx.beginPath();
-          ctx.moveTo(sx, H);
-          ctx.bezierCurveTo(sx + Math.sin(t + i)*15, H*0.6, sx - Math.sin(t+i)*15, H*0.3, sx + Math.sin(t*1.3+i)*10, 0);
+        const ts = Date.now() * 0.001;
+        ctx.strokeStyle = 'rgba(255,210,98,0.35)'; ctx.lineWidth = 2;
+        for (let i = 0; i < 2; i++) {
+          const sx = 60 + i * 140;
+          ctx.beginPath(); ctx.moveTo(sx, H);
+          ctx.bezierCurveTo(sx+Math.sin(ts+i)*12,H*0.6, sx-Math.sin(ts+i)*12,H*0.3, sx,0);
           ctx.stroke();
         }
       }
@@ -472,7 +452,7 @@ function MoleculeCanvas({ temp, missionIdx }) {
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [temp, phase, missionIdx]);
+  }, [missionIdx]);
 
   return (
     <canvas ref={canvasRef} width={280} height={175}
@@ -483,15 +463,28 @@ function MoleculeCanvas({ temp, missionIdx }) {
 
 function Level1TempMachine({ onDone }) {
   const [missionIdx, setMissionIdx] = React.useState(0);
-  const [temp, setTemp]             = React.useState(20);
+  const tempRef = React.useRef(20);            // for canvas — no re-renders
+  const [displayTemp, setDisplayTemp] = React.useState(20); // for UI only
+  const rafUI = React.useRef(null);
   const [celebrating, setCelebrating] = React.useState(false);
   const [done, setDone]             = React.useState(false);
   const [completedCount, setCompletedCount] = React.useState(0);
 
+  const temp    = displayTemp; // alias for UI
   const mission = L1_MISSIONS[missionIdx];
   const total   = L1_MISSIONS.length;
   const phase   = missionIdx === 4 ? getPhaseForMission(4, temp) : getPhase(temp);
   const inRange = temp >= mission.targetMin && temp <= mission.targetMax;
+
+  const handleSlider = React.useCallback((e) => {
+    tempRef.current = Number(e.target.value);
+    if (!rafUI.current) {
+      rafUI.current = requestAnimationFrame(() => {
+        setDisplayTemp(tempRef.current);
+        rafUI.current = null;
+      });
+    }
+  }, []);
 
   const PHASE_LABELS = { solid: 'ТВЁРДОЕ 🧱', liquid: 'ЖИДКОЕ 💧', gas: 'ГАЗ 💨' };
   const PHASE_COLORS = { solid: '#7C5FE0', liquid: '#3CA876', gas: '#D4A22B' };
@@ -512,7 +505,8 @@ function Level1TempMachine({ onDone }) {
       setDone(true);
     } else {
       setMissionIdx(nextIdx);
-      setTemp(20);
+      tempRef.current = 20;
+      setDisplayTemp(20);
     }
   };
 
@@ -534,7 +528,7 @@ function Level1TempMachine({ onDone }) {
       </div>
 
       {/* Canvas */}
-      <MoleculeCanvas temp={temp} missionIdx={missionIdx} />
+      <MoleculeCanvas tempRef={tempRef} missionIdx={missionIdx} />
 
       {/* Phase badge + temp display */}
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,padding:'0 4px'}}>
@@ -574,7 +568,7 @@ function Level1TempMachine({ onDone }) {
         <div style={{position:'relative',borderRadius:999,background:'linear-gradient(90deg,#60B5E8 0%,#7BD9A8 40%,#FFD262 70%,#FF6B35 100%)',height:18,boxShadow:'inset 0 2px 4px rgba(45,27,69,.2)'}}>
           <input
             type="range" min="-30" max="130" value={temp}
-            onChange={e => setTemp(Number(e.target.value))}
+            onChange={handleSlider}
             style={{position:'absolute',inset:0,width:'100%',opacity:0,height:'100%',cursor:'pointer',zIndex:2}}
           />
           <div style={{
@@ -586,7 +580,6 @@ function Level1TempMachine({ onDone }) {
             borderRadius:'50%',
             background:'linear-gradient(180deg,#fff 0%,#FFF7E8 100%)',
             boxShadow:'0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95)',
-            transition:'left .05s',
             pointerEvents:'none',
           }}/>
         </div>
