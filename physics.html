@@ -51,6 +51,7 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 @keyframes heat-flow{0%{left:-100%;}100%{left:100%;}}
 @keyframes ak-rise{0%{transform:translateY(0);opacity:.9;}100%{transform:translateY(-32px);opacity:0;}}
 @keyframes ak-radiate-out{0%{transform:scale(0);opacity:.8;}100%{transform:scale(3.5);opacity:0;}}
+@keyframes laser-pulse{0%,100%{opacity:.85;}50%{opacity:1;}}
 .ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
 .ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
 .ak-shake{animation:ak-shake .45s ease-in-out;}
@@ -63,12 +64,13 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 .ak-tap:active{transform:translateY(0);}
 .ak ::-webkit-scrollbar{display:none;}
 .ak{scrollbar-width:none;}
+.laser-pulse{animation:laser-pulse .8s ease-in-out infinite;}
 input[type=range]{-webkit-appearance:none;width:100%;height:18px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
 input[type=range]::-webkit-slider-runnable-track{height:18px;border-radius:999px;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;}
 .heat-anim-bar{position:absolute;top:0;left:-100%;width:60%;height:100%;border-radius:99px;background:linear-gradient(90deg,transparent,rgba(255,139,122,.7),rgba(255,80,60,.85),rgba(255,139,122,.7),transparent);animation:heat-flow 1.5s ease-in-out forwards;}
-.rise-arrow{animation:ak-rise 1.2s ease-out infinite;}
-.radiate-ring{position:absolute;top:50%;left:50%;width:40px;height:40px;margin-left:-20px;margin-top:-20px;border-radius:50%;border:3px solid #FFD262;box-sizing:border-box;animation:ak-radiate-out 1.5s ease-out forwards;}
+.mirror-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(180deg,#E5DCFF,#B5A1FF);box-shadow:0 4px 0 #7C5FE0,inset 0 2px 0 rgba(255,255,255,.6);font-size:16px;font-weight:700;color:#2D1B45;display:flex;align-items:center;justify-content:center;transition:transform .08s;}
+.mirror-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #7C5FE0;}
 </style>
 </head>
 <body>
@@ -205,209 +207,194 @@ function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabe
 }
 
 /* ============================================================
-   LEVEL 1 — "Поймай луч!" (Light & Mirrors)
+   LEVEL 1 — "Лазерный Лабиринт" (Laser Maze)
+   Teaching: закон отражения, угол падения = углу отражения
    ============================================================ */
 const L1_PUZZLES = [
-  { mirror:{cx:204,cy:152,len:74}, target:{x:300,y:59},  startAngle:45,  hint:'Поверни зеркало — луч отразится в цель!' },
-  { mirror:{cx:170,cy:94, len:79}, target:{x:306,y:235}, startAngle:135, hint:'Направь луч вниз-вправо к цели' },
-  { mirror:{cx:227,cy:176,len:68}, target:{x:57, y:59},  startAngle:30,  hint:'Отправь луч назад!' },
-  { mirror:{cx:181,cy:117,len:91}, target:{x:306,y:152}, startAngle:90,  hint:'Почти прямо — совсем чуть-чуть поверни' },
-  { mirror:{cx:204,cy:141,len:79}, target:{x:300,y:258}, startAngle:60,  hint:'Последний! Ты знаешь закон отражения!' },
+  {mirrors:[{cx:100,cy:130,len:70,angle:45},{cx:200,cy:70,len:65,angle:135},{cx:250,cy:190,len:60,angle:45}],target:{x:310,y:70},hint:'Угол падения = угол отражения!'},
+  {mirrors:[{cx:90,cy:60,len:70,angle:135},{cx:190,cy:160,len:65,angle:45},{cx:270,cy:80,len:60,angle:90}],target:{x:310,y:160},hint:'Каждое зеркало меняет направление луча'},
+  {mirrors:[{cx:100,cy:200,len:70,angle:45},{cx:220,cy:100,len:65,angle:135},{cx:150,cy:60,len:60,angle:90}],target:{x:50,y:60},hint:'Луч можно отправить назад!'},
+  {mirrors:[{cx:120,cy:80,len:70,angle:60},{cx:240,cy:180,len:65,angle:120},{cx:170,cy:130,len:60,angle:45}],target:{x:310,y:240},hint:'Три отражения — ты настоящий физик!'},
+  {mirrors:[{cx:90,cy:180,len:75,angle:45},{cx:200,cy:60,len:70,angle:135},{cx:280,cy:170,len:65,angle:90}],target:{x:50,y:240},hint:'Последняя задача — самая интересная!'},
 ];
 
 const L1_FACTS = [
-  'Угол падения = угол отражения! Это главный закон оптики.',
-  'Зеркала используются в телескопах — они собирают свет звёзд.',
-  'Перископ в подводной лодке работает на двух зеркалах!',
-  'Луч лазера в магазинах использует тот же закон отражения.',
-  'Кошки видят в темноте благодаря зеркальному слою за сетчаткой!',
+  'Закон отражения открыл Евклид 2300 лет назад — угол падения = углу отражения!',
+  'Зеркала в телескопе Хаббла использовали этот закон для съёмки галактик!',
+  'Перископ подводной лодки работает на двух зеркалах под 45°',
+  'Лазер в супермаркете сканирует штрих-код — используя отражение!',
+  'Кошки видят в темноте — за их сетчаткой есть зеркальный слой!',
 ];
 
-function traceRay(startX, startY, dirX, dirY, mirror, W, H, maxBounces) {
-  const points = [{x:startX, y:startY}];
-  let x=startX, y=startY, dx=dirX, dy=dirY;
-  const len0=Math.sqrt(dx*dx+dy*dy);
-  dx/=len0; dy/=len0;
-
-  for(let b=0; b<maxBounces; b++){
-    const ang = mirror.angle * Math.PI / 180;
-    const ml = mirror.len / 2;
-    const mx1 = mirror.cx - Math.cos(ang)*ml;
-    const my1 = mirror.cy - Math.sin(ang)*ml;
-    const mx2 = mirror.cx + Math.cos(ang)*ml;
-    const my2 = mirror.cy + Math.sin(ang)*ml;
-    const mdx = mx2-mx1, mdy = my2-my1;
-    const denom = dx*mdy - dy*mdx;
-
-    let tMirror = Infinity, hx=0, hy=0, hitMirror=false;
-    if(Math.abs(denom) > 0.001){
-      const t = ((mx1-x)*mdy - (my1-y)*mdx)/denom;
-      const u = ((mx1-x)*dy  - (my1-y)*dx )/denom;
-      if(t > 1.0 && u >= 0 && u <= 1){
-        tMirror = t;
-        hx = x+dx*t; hy = y+dy*t;
-        hitMirror = true;
+function traceRay(x0,y0,dx0,dy0, mirrors, W, H, maxBounce=8) {
+  const pts=[{x:x0,y:y0}];
+  let x=x0,y=y0,dx=dx0,dy=dy0;
+  const L=Math.sqrt(dx*dx+dy*dy); dx/=L; dy/=L;
+  for(let b=0;b<maxBounce;b++){
+    let tMin=Infinity,hx=0,hy=0,bestMirror=null;
+    for(const m of mirrors){
+      const ang=m.angle*Math.PI/180, ml=m.len/2;
+      const mx1=m.cx-Math.cos(ang)*ml, my1=m.cy-Math.sin(ang)*ml;
+      const mx2=m.cx+Math.cos(ang)*ml, my2=m.cy+Math.sin(ang)*ml;
+      const mdx=mx2-mx1, mdy=my2-my1;
+      const denom=dx*mdy-dy*mdx;
+      if(Math.abs(denom)>0.001){
+        const t=((mx1-x)*mdy-(my1-y)*mdx)/denom;
+        const u=((mx1-x)*dy-(my1-y)*dx)/denom;
+        if(t>1&&u>=0&&u<=1&&t<tMin){tMin=t;hx=x+dx*t;hy=y+dy*t;bestMirror=m;}
       }
     }
-
-    // Wall intersections
-    const walls=[
-      {nx:1,  ny:0,  d:0},
-      {nx:-1, ny:0,  d:-W},
-      {nx:0,  ny:1,  d:0},
-      {nx:0,  ny:-1, d:-H},
-    ];
-    let tWall=Infinity, wnx=0, wny=0;
+    const walls=[{nx:1,ny:0,d:0},{nx:-1,ny:0,d:-W},{nx:0,ny:1,d:0},{nx:0,ny:-1,d:-H}];
+    let tWall=Infinity,wnx=0,wny=0;
     for(const w of walls){
       const d2=dx*w.nx+dy*w.ny;
       if(Math.abs(d2)<0.001) continue;
       const t=(-(x*w.nx+y*w.ny+w.d))/d2;
-      if(t>0.5 && t<tWall){ tWall=t; wnx=w.nx; wny=w.ny; }
+      if(t>0.5&&t<tWall){tWall=t;wnx=w.nx;wny=w.ny;}
     }
-
-    if(hitMirror && tMirror < tWall){
-      points.push({x:hx, y:hy});
-      const nRawX = -mdy, nRawY = mdx;
-      const nLen = Math.sqrt(nRawX*nRawX+nRawY*nRawY);
-      const nx = nRawX/nLen, ny = nRawY/nLen;
-      const dot = dx*nx + dy*ny;
-      dx = dx - 2*dot*nx;
-      dy = dy - 2*dot*ny;
-      x=hx; y=hy;
+    if(bestMirror&&tMin<tWall){
+      pts.push({x:hx,y:hy});
+      const ang=bestMirror.angle*Math.PI/180;
+      const nRawX=-Math.sin(ang), nRawY=Math.cos(ang);
+      const dot=dx*nRawX+dy*nRawY;
+      dx=dx-2*dot*nRawX; dy=dy-2*dot*nRawY;
+      x=hx;y=hy;
     } else {
-      points.push({x: x+dx*tWall, y: y+dy*tWall});
-      break;
+      pts.push({x:x+dx*tWall,y:y+dy*tWall}); break;
     }
   }
-  return points;
+  return pts;
 }
 
 function Level1Light({ onDone }) {
-  const [missionIdx, setMissionIdx] = React.useState(0);
+  const [puzzleIdx, setPuzzleIdx] = React.useState(0);
   const [starsEarned, setStarsEarned] = React.useState(0);
   const [celebrating, setCelebrating] = React.useState(false);
   const [done, setDone] = React.useState(false);
 
-  const mirrorAngleRef = React.useRef(L1_PUZZLES[0].startAngle);
-  const [displayAngle, setDisplayAngle] = React.useState(L1_PUZZLES[0].startAngle);
-  const pendingRef = React.useRef(false);
+  const puz = L1_PUZZLES[puzzleIdx];
+  const initAngles = puz.mirrors.map(m => m.angle);
+  const [angles, setAngles] = React.useState(initAngles);
+  const mirrorAnglesRef = React.useRef([...initAngles]);
+  const [displayAngles, setDisplayAngles] = React.useState([...initAngles]);
   const canvasRef = React.useRef(null);
   const animRef = React.useRef(null);
   const hitRef = React.useRef(false);
   const celebRef = React.useRef(false);
+  const pendingRef = React.useRef(false);
 
-  const W=340, H=310;
+  const W=340, H=260;
 
+  // Reset on puzzle change
   React.useEffect(()=>{
-    mirrorAngleRef.current = L1_PUZZLES[missionIdx].startAngle;
-    setDisplayAngle(L1_PUZZLES[missionIdx].startAngle);
+    const p = L1_PUZZLES[puzzleIdx];
+    const a = p.mirrors.map(m=>m.angle);
+    mirrorAnglesRef.current = [...a];
+    setDisplayAngles([...a]);
     hitRef.current = false;
     celebRef.current = false;
+  },[puzzleIdx]);
 
+  React.useEffect(()=>{
     const canvas = canvasRef.current;
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
-    const puz = L1_PUZZLES[missionIdx];
+    const p = L1_PUZZLES[puzzleIdx];
 
     const draw = ()=>{
-      const ang = mirrorAngleRef.current;
-      const mirror = {cx:puz.mirror.cx, cy:puz.mirror.cy, len:puz.mirror.len, angle:ang};
-
       ctx.clearRect(0,0,W,H);
 
-      // Dark room background
-      const bg = ctx.createLinearGradient(0,0,0,H);
-      bg.addColorStop(0,'#1A1040');
-      bg.addColorStop(1,'#0D0A2A');
-      ctx.fillStyle = bg;
-      ctx.beginPath();
-      if(ctx.roundRect) ctx.roundRect(0,0,W,H,14);
-      else { ctx.rect(0,0,W,H); }
-      ctx.fill();
+      // Background
+      const bg = ctx.createRadialGradient(W/2,H/2,20,W/2,H/2,Math.max(W,H));
+      bg.addColorStop(0,'#16104A');
+      bg.addColorStop(1,'#050316');
+      ctx.fillStyle=bg;
+      ctx.fillRect(0,0,W,H);
 
-      // Subtle floor line
-      ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(0,H-35); ctx.lineTo(W,H-35); ctx.stroke();
+      // Grid dots (subtle)
+      ctx.fillStyle='rgba(255,255,255,.04)';
+      for(let gx=20;gx<W;gx+=40) for(let gy=20;gy<H;gy+=40){
+        ctx.beginPath(); ctx.arc(gx,gy,1.5,0,Math.PI*2); ctx.fill();
+      }
 
-      // Flashlight body
-      const srcX=14, srcY=H/2;
+      // Build mirror array from current angles
+      const mirrors = p.mirrors.map((m,i)=>({...m, angle: mirrorAnglesRef.current[i]}));
+
+      // Laser source at x=10, y=130
+      const srcX=10, srcY=130;
       ctx.save();
-      ctx.shadowColor='#FFD262'; ctx.shadowBlur=20;
-      ctx.fillStyle='#D4A22B';
-      ctx.fillRect(2, srcY-11, 10, 22);
-      ctx.fillStyle='#FFD262';
-      ctx.fillRect(4, srcY-9, 6, 18);
+      ctx.shadowColor='#00FF88'; ctx.shadowBlur=14;
+      ctx.fillStyle='#00FF88';
+      ctx.fillRect(0, srcY-6, 8, 12);
       ctx.restore();
 
-      // Beam cone
-      const cone=ctx.createLinearGradient(srcX,srcY,srcX+60,srcY);
-      cone.addColorStop(0,'rgba(255,210,98,.25)');
-      cone.addColorStop(1,'rgba(255,210,98,0)');
-      ctx.fillStyle=cone;
-      ctx.beginPath();
-      ctx.moveTo(srcX+6,srcY);
-      ctx.lineTo(srcX+60,srcY-24);
-      ctx.lineTo(srcX+60,srcY+24);
-      ctx.closePath();
-      ctx.fill();
-
       // Trace ray
-      const pts = traceRay(srcX+6, srcY, 1, 0, mirror, W, H, 5);
+      const pts = traceRay(srcX+8, srcY, 1, 0, mirrors, W, H, 8);
       const last = pts[pts.length-1];
 
-      // Hit check (radius 32)
-      const ddx=last.x-puz.target.x, ddy=last.y-puz.target.y;
+      // Hit check radius 28
+      const ddx=last.x-p.target.x, ddy=last.y-p.target.y;
       const dist=Math.sqrt(ddx*ddx+ddy*ddy);
-      const hit = dist < 32;
+      const hit = dist < 28;
 
-      // Draw ray
+      // Draw laser beam
       ctx.save();
-      ctx.shadowColor='#FFD262'; ctx.shadowBlur=14;
-      ctx.strokeStyle='#FFD262'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
+      ctx.shadowColor='#00FF88'; ctx.shadowBlur=18;
+      ctx.strokeStyle='#00FF88'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.lineJoin='round';
       ctx.beginPath();
-      pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+      pts.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+      ctx.stroke();
+      // Inner bright core
+      ctx.shadowBlur=6;
+      ctx.strokeStyle='rgba(220,255,240,.9)'; ctx.lineWidth=1.2;
+      ctx.beginPath();
+      pts.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
       ctx.stroke();
       ctx.restore();
 
-      // Mirror line — 6px white gradient with glow
-      const mAng = ang*Math.PI/180;
-      const ml = puz.mirror.len/2;
-      const mx1=puz.mirror.cx-Math.cos(mAng)*ml, my1=puz.mirror.cy-Math.sin(mAng)*ml;
-      const mx2=puz.mirror.cx+Math.cos(mAng)*ml, my2=puz.mirror.cy+Math.sin(mAng)*ml;
-      ctx.save();
-      ctx.shadowColor='rgba(255,255,255,.6)'; ctx.shadowBlur=10;
-      const mGrad=ctx.createLinearGradient(mx1,my1,mx2,my2);
-      mGrad.addColorStop(0,'rgba(255,255,255,.45)');
-      mGrad.addColorStop(0.5,'#ffffff');
-      mGrad.addColorStop(1,'rgba(255,255,255,.45)');
-      ctx.strokeStyle=mGrad; ctx.lineWidth=6; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(mx1,my1); ctx.lineTo(mx2,my2); ctx.stroke();
-      // Purple pivot dot
-      ctx.shadowColor='#B5A1FF'; ctx.shadowBlur=12;
-      ctx.fillStyle='#B5A1FF';
-      ctx.beginPath(); ctx.arc(puz.mirror.cx,puz.mirror.cy,7,0,Math.PI*2); ctx.fill();
-      ctx.restore();
+      // Draw mirrors
+      mirrors.forEach((m,i)=>{
+        const mAng = m.angle*Math.PI/180;
+        const ml = m.len/2;
+        const mx1=m.cx-Math.cos(mAng)*ml, my1=m.cy-Math.sin(mAng)*ml;
+        const mx2=m.cx+Math.cos(mAng)*ml, my2=m.cy+Math.sin(mAng)*ml;
+        ctx.save();
+        ctx.shadowColor='rgba(180,160,255,.6)'; ctx.shadowBlur=8;
+        const mGrad=ctx.createLinearGradient(mx1,my1,mx2,my2);
+        mGrad.addColorStop(0,'rgba(255,255,255,.5)');
+        mGrad.addColorStop(0.5,'#ffffff');
+        mGrad.addColorStop(1,'rgba(255,255,255,.5)');
+        ctx.strokeStyle=mGrad; ctx.lineWidth=5; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(mx1,my1); ctx.lineTo(mx2,my2); ctx.stroke();
+        // Pivot
+        ctx.shadowColor='#B5A1FF'; ctx.shadowBlur=10;
+        ctx.fillStyle='#B5A1FF';
+        ctx.beginPath(); ctx.arc(m.cx,m.cy,6,0,Math.PI*2); ctx.fill();
+        // Number label
+        ctx.shadowBlur=0;
+        ctx.fillStyle='rgba(255,255,255,.7)';
+        ctx.font='bold 11px Nunito,sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(i+1, m.cx, m.cy);
+        ctx.restore();
+      });
 
-      // Target — 3 concentric rings
-      const tx=puz.target.x, ty=puz.target.y;
-      const ts=Date.now()*0.002;
+      // Target bullseye
+      const tx=p.target.x, ty=p.target.y;
       ctx.save();
-      if(hit){ ctx.shadowColor='#FFD262'; ctx.shadowBlur=32; }
+      if(hit){ ctx.shadowColor='gold'; ctx.shadowBlur=30; }
       ctx.translate(tx,ty);
-      // outer ring r=22 red/orange
-      ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2);
-      ctx.fillStyle=hit?'#FFD262':'rgba(220,60,40,0.85)'; ctx.fill();
-      // mid ring r=14 white
-      ctx.beginPath(); ctx.arc(0,0,14,0,Math.PI*2);
-      ctx.fillStyle=hit?'rgba(255,255,180,.9)':'rgba(255,255,255,0.9)'; ctx.fill();
-      // inner ring r=8 orange
-      ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2);
-      ctx.fillStyle=hit?'#FFD262':'#FF8020'; ctx.fill();
-      if(hit){
-        ctx.shadowColor='#FFD262'; ctx.shadowBlur=40;
-        ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2);
-        ctx.strokeStyle='#FFD262'; ctx.lineWidth=3; ctx.stroke();
-      }
+      // outer ring r=20
+      ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2);
+      ctx.fillStyle=hit?'rgba(255,215,0,.25)':'rgba(220,60,40,0.20)'; ctx.fill();
+      ctx.strokeStyle=hit?'gold':'rgba(220,60,40,0.8)'; ctx.lineWidth=2; ctx.stroke();
+      // mid ring r=12
+      ctx.beginPath(); ctx.arc(0,0,12,0,Math.PI*2);
+      ctx.fillStyle=hit?'rgba(255,200,0,.4)':'rgba(255,100,20,.35)'; ctx.fill();
+      ctx.strokeStyle=hit?'gold':'rgba(255,100,20,.7)'; ctx.lineWidth=1.5; ctx.stroke();
+      // inner r=6
+      ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2);
+      ctx.fillStyle=hit?'gold':'rgba(255,140,0,.8)'; ctx.fill();
       ctx.restore();
 
       if(hit && !hitRef.current){ hitRef.current=true; }
@@ -415,8 +402,8 @@ function Level1Light({ onDone }) {
     };
 
     draw();
-    return ()=>cancelAnimationFrame(animRef.current);
-  },[missionIdx]);
+    return()=>cancelAnimationFrame(animRef.current);
+  },[puzzleIdx]);
 
   // Poll for hit
   React.useEffect(()=>{
@@ -430,68 +417,747 @@ function Level1Light({ onDone }) {
     return()=>clearInterval(iv);
   },[celebrating,done]);
 
-  const handleSlider=React.useCallback((e)=>{
-    mirrorAngleRef.current=Number(e.target.value);
-    hitRef.current=false;
+  const rotMirror = React.useCallback((idx, delta)=>{
+    mirrorAnglesRef.current = mirrorAnglesRef.current.map((a,i)=>i===idx?(a+delta+360)%360:a);
+    hitRef.current = false;
     if(!pendingRef.current){
       pendingRef.current=true;
       requestAnimationFrame(()=>{
-        setDisplayAngle(mirrorAngleRef.current);
+        setDisplayAngles([...mirrorAnglesRef.current]);
         pendingRef.current=false;
       });
     }
   },[]);
 
-  const handleNext=()=>{
+  const handleNext = ()=>{
     setCelebrating(false);
     celebRef.current=false;
     hitRef.current=false;
-    if(missionIdx>=L1_PUZZLES.length-1){
+    if(puzzleIdx>=L1_PUZZLES.length-1){
       setDone(true);
     } else {
       setStarsEarned(s=>s+1);
-      setMissionIdx(m=>m+1);
+      setPuzzleIdx(i=>i+1);
     }
   };
 
   if(done){
     return(
       <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Закон отражения!" fact="Угол падения всегда равен углу отражения. Это открыл Евклид более 2000 лет назад!" onNext={onDone} ctaLabel="На главную 🏠"/>
+        <AKSuccessCard stars={3} title="Закон отражения!" fact="Угол падения всегда равен углу отражения. Евклид открыл это 2300 лет назад!" onNext={onDone} ctaLabel="На главную 🏠"/>
       </div>
     );
   }
 
-  const puz=L1_PUZZLES[missionIdx];
+  const p=L1_PUZZLES[puzzleIdx];
 
   return(
     <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
-      <AKLessonHeader progress={missionIdx/L1_PUZZLES.length} stars={starsEarned} onClose={onDone}/>
-      <div style={{height:18}}/>
-      <AKTaskBadge tone="phys">{puz.hint}</AKTaskBadge>
+      <AKLessonHeader progress={puzzleIdx/L1_PUZZLES.length} stars={starsEarned} onClose={onDone}/>
       <div style={{height:16}}/>
+      <AKTaskBadge tone="phys">{p.hint}</AKTaskBadge>
+      <div style={{height:14}}/>
 
       <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)'}}>
         <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
       </div>
 
-      <div style={{height:22}}/>
+      <div style={{height:16}}/>
 
-      <div style={{background:'#fff',borderRadius:20,padding:'18px 20px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-          <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-ink-2)'}}>Угол зеркала</span>
-          <span className="ak-num" style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'var(--ak-phys-3)'}}>{Math.round(displayAngle)}°</span>
+      {/* Mirror controls */}
+      <div style={{background:'#fff',borderRadius:20,padding:'14px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-3)',marginBottom:10}}>🪞 Управление зеркалами</div>
+        {[0,1,2].map(i=>(
+          <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:i<2?'1px solid rgba(45,27,69,.06)':'none'}}>
+            <button className="mirror-btn" onClick={()=>rotMirror(i,-5)}>◀</button>
+            <span style={{flex:1,fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-ink)',textAlign:'center'}}>
+              🪞 Зеркало {i+1}: {Math.round(displayAngles[i])}°
+            </span>
+            <button className="mirror-btn" onClick={()=>rotMirror(i,+5)}>▶</button>
+          </div>
+        ))}
+      </div>
+
+      <div style={{height:10}}/>
+      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
+        Задача {puzzleIdx+1} из {L1_PUZZLES.length}
+      </div>
+
+      {celebrating&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(5,3,22,.82)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
+            <div style={{fontSize:52,marginBottom:10}}>🎯</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Попал!</div>
+            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{L1_FACTS[puzzleIdx]}</div>
+            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
+              {puzzleIdx>=L1_PUZZLES.length-1?'Завершить! 🎉':'Дальше →'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   LEVEL 2 — "Рычаг Архимеда"
+   Teaching: закон рычага, F×d = F×d
+   ============================================================ */
+const L2_CHALLENGES = [
+  {leftWeights:[{mass:30,dist:80,color:'#B5A1FF'}], rightMass:30, startPos:40, hint:'Поставь такой же груз на такое же расстояние!', fact:'Рычаг уравновешен! F×d слева = F×d справа — открытие Архимеда!'},
+  {leftWeights:[{mass:60,dist:60,color:'#FF8B7A'}], rightMass:30, startPos:30, hint:'Груз вдвое легче — поставь его вдвое дальше!', fact:'Архимед сказал: "Дайте мне точку опоры — и я переверну Землю!"'},
+  {leftWeights:[{mass:30,dist:50,color:'#5DD9A0'},{mass:30,dist:90,color:'#FFD262'}], rightMass:60, startPos:40, hint:'Два груза слева суммируются. Один тяжёлый справа.', fact:'Несколько сил заменяются одной равнодействующей — это суперпозиция!'},
+  {leftWeights:[{mass:50,dist:70,color:'#60B8E8'}], rightMass:70, startPos:80, hint:'Тяжёлый груз — ближе к центру!', fact:'Тяжёлые грузы требуют меньшего расстояния от точки опоры!'},
+  {leftWeights:[{mass:40,dist:90,color:'#FFA17A'}], rightMass:20, startPos:50, hint:'Лёгкий груз — дальше от центра!', fact:'Простые машины (рычаг, блок, колесо) используют этот закон — они меняют силу или расстояние!'},
+];
+
+function Level2Lever({ onDone }) {
+  const [chalIdx, setChalIdx] = React.useState(0);
+  const [starsEarned, setStarsEarned] = React.useState(0);
+  const [done, setDone] = React.useState(false);
+  const [celebrating, setCelebrating] = React.useState(false);
+
+  const chal = L2_CHALLENGES[chalIdx];
+  const [rightPos, setRightPos] = React.useState(chal.startPos);
+  const rightPosRef = React.useRef(chal.startPos);
+  const draggingRef = React.useRef(false);
+  const canvasRef = React.useRef(null);
+  const animRef = React.useRef(null);
+  const balancedFrames = React.useRef(0);
+  const celebRef = React.useRef(false);
+
+  const W=340, H=280;
+  const pivotX=170, pivotY=200;
+  const beamHalfW=150;
+
+  React.useEffect(()=>{
+    const c = L2_CHALLENGES[chalIdx];
+    rightPosRef.current = c.startPos;
+    setRightPos(c.startPos);
+    balancedFrames.current = 0;
+    celebRef.current = false;
+    setCelebrating(false);
+  },[chalIdx]);
+
+  // Display state (throttled from ref)
+  const [displayTorque, setDisplayTorque] = React.useState({left:0,right:0});
+
+  React.useEffect(()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const c = L2_CHALLENGES[chalIdx];
+
+    const draw = ()=>{
+      const rp = rightPosRef.current;
+      const leftTorque = c.leftWeights.reduce((s,w)=>s+w.mass*w.dist,0);
+      const rightTorque = c.rightMass * rp;
+      const netTorque = leftTorque - rightTorque;
+      const beamAngle = Math.max(-0.45,Math.min(0.45,netTorque/500));
+      const isBalanced = Math.abs(netTorque) < 20;
+
+      ctx.clearRect(0,0,W,H);
+
+      // Warm cream background
+      ctx.fillStyle='#FFF8EA';
+      ctx.fillRect(0,0,W,H);
+
+      // Ground shadow
+      ctx.fillStyle='rgba(45,27,69,.06)';
+      ctx.fillRect(0,H-20,W,20);
+
+      // Pivot triangle
+      ctx.save();
+      ctx.fillStyle='#8B7355';
+      ctx.shadowColor='rgba(45,27,69,.2)'; ctx.shadowBlur=6;
+      ctx.beginPath();
+      ctx.moveTo(pivotX, pivotY-18);
+      ctx.lineTo(pivotX-18, pivotY+4);
+      ctx.lineTo(pivotX+18, pivotY+4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Beam (rotated around pivot)
+      ctx.save();
+      ctx.translate(pivotX, pivotY-14);
+      ctx.rotate(beamAngle);
+
+      // Beam body
+      const beamGrad = ctx.createLinearGradient(0,-7,0,7);
+      beamGrad.addColorStop(0,'#D4A46A');
+      beamGrad.addColorStop(0.3,'#C4914A');
+      beamGrad.addColorStop(1,'#A07030');
+      ctx.fillStyle = beamGrad;
+      ctx.shadowColor='rgba(45,27,69,.18)'; ctx.shadowBlur=8;
+      ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
+      // Beam highlight
+      ctx.fillStyle='rgba(255,255,255,.35)';
+      ctx.fillRect(-beamHalfW,-7,beamHalfW*2,3);
+
+      // Draw left weights
+      c.leftWeights.forEach(w=>{
+        const wx = -w.dist;
+        ctx.save();
+        ctx.shadowColor='rgba(45,27,69,.25)'; ctx.shadowBlur=8;
+        ctx.fillStyle = w.color;
+        ctx.beginPath();
+        ctx.arc(wx,-14-16,14,0,Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,.35)';
+        ctx.beginPath();
+        ctx.ellipse(wx-4,-14-22,5,6,Math.PI*0.3,0,Math.PI*2);
+        ctx.fill();
+        // Mass label
+        ctx.fillStyle='#fff';
+        ctx.font='bold 10px Nunito,sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(w.mass+'г', wx, -14-16);
+        ctx.restore();
+      });
+
+      // Draw right weight (draggable)
+      const rwx = rp;
+      ctx.save();
+      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=10;
+      ctx.fillStyle='#FFD262';
+      ctx.beginPath();
+      ctx.arc(rwx,-14-16,16,0,Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.4)';
+      ctx.beginPath();
+      ctx.ellipse(rwx-5,-14-22,6,7,Math.PI*0.3,0,Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle='#2D1B45';
+      ctx.font='bold 10px Nunito,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(c.rightMass+'г', rwx, -14-16);
+      // Drag indicator
+      ctx.fillStyle='rgba(45,27,69,.3)';
+      ctx.font='9px sans-serif';
+      ctx.fillText('↔', rwx, -14-16+22);
+      ctx.restore();
+
+      // End markers
+      [-beamHalfW+4, beamHalfW-4].forEach(ex=>{
+        ctx.save();
+        ctx.fillStyle='rgba(139,115,85,.5)';
+        ctx.fillRect(ex-3,-12,6,24);
+        ctx.restore();
+      });
+
+      ctx.restore(); // end beam rotation
+
+      // Balance indicator glow
+      if(isBalanced){
+        ctx.save();
+        ctx.strokeStyle='#5DD9A0'; ctx.lineWidth=3;
+        ctx.shadowColor='#5DD9A0'; ctx.shadowBlur=16;
+        ctx.strokeRect(4,4,W-8,H-8);
+        ctx.restore();
+        balancedFrames.current++;
+        if(balancedFrames.current>60 && !celebRef.current){
+          celebRef.current=true;
+          setCelebrating(true);
+        }
+      } else {
+        balancedFrames.current=0;
+      }
+
+      setDisplayTorque({left:leftTorque,right:Math.round(c.rightMass*rp)});
+      animRef.current=requestAnimationFrame(draw);
+    };
+    draw();
+    return()=>cancelAnimationFrame(animRef.current);
+  },[chalIdx]);
+
+  // Pointer events for dragging the right weight
+  const getCanvasPos = (canvas, e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    return (clientX - rect.left) * (W / rect.width);
+  };
+
+  const handlePointerDown = React.useCallback(e=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const cx = getCanvasPos(canvas, e);
+    // Convert canvas x to beam local x: cx - pivotX ≈ rightPosRef.current
+    const bx = cx - pivotX;
+    const rp = rightPosRef.current;
+    if(Math.abs(bx - rp) < 28){ draggingRef.current=true; e.preventDefault(); }
+  },[]);
+
+  const handlePointerMove = React.useCallback(e=>{
+    if(!draggingRef.current) return;
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const cx = getCanvasPos(canvas, e);
+    const bx = cx - pivotX;
+    rightPosRef.current = Math.max(10, Math.min(155, bx));
+    e.preventDefault();
+  },[]);
+
+  const handlePointerUp = React.useCallback(e=>{
+    if(!draggingRef.current) return;
+    draggingRef.current=false;
+    setRightPos(rightPosRef.current);
+  },[]);
+
+  React.useEffect(()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    canvas.addEventListener('mousedown', handlePointerDown);
+    canvas.addEventListener('mousemove', handlePointerMove);
+    canvas.addEventListener('mouseup', handlePointerUp);
+    canvas.addEventListener('touchstart', handlePointerDown, {passive:false});
+    canvas.addEventListener('touchmove', handlePointerMove, {passive:false});
+    canvas.addEventListener('touchend', handlePointerUp);
+    return()=>{
+      canvas.removeEventListener('mousedown', handlePointerDown);
+      canvas.removeEventListener('mousemove', handlePointerMove);
+      canvas.removeEventListener('mouseup', handlePointerUp);
+      canvas.removeEventListener('touchstart', handlePointerDown);
+      canvas.removeEventListener('touchmove', handlePointerMove);
+      canvas.removeEventListener('touchend', handlePointerUp);
+    };
+  },[handlePointerDown,handlePointerMove,handlePointerUp]);
+
+  const handleNext = ()=>{
+    setCelebrating(false);
+    celebRef.current=false;
+    balancedFrames.current=0;
+    if(chalIdx>=L2_CHALLENGES.length-1){
+      setDone(true);
+    } else {
+      setStarsEarned(s=>s+1);
+      setChalIdx(i=>i+1);
+    }
+  };
+
+  if(done){
+    return(
+      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
+        <AKSuccessCard stars={3} title="Рычаг Архимеда!" fact="F×d слева = F×d справа — вот закон рычага! Архимед обещал перевернуть Землю, имея точку опоры." onNext={onDone} ctaLabel="На главную 🏠"/>
+      </div>
+    );
+  }
+
+  const c = L2_CHALLENGES[chalIdx];
+  const leftTorque = c.leftWeights.reduce((s,w)=>s+w.mass*w.dist,0);
+
+  return(
+    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
+      <AKLessonHeader progress={chalIdx/L2_CHALLENGES.length} stars={starsEarned} onClose={onDone}/>
+      <div style={{height:16}}/>
+      <AKTaskBadge tone="phys">{c.hint}</AKTaskBadge>
+      <div style={{height:14}}/>
+
+      <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)',cursor:'grab'}}>
+        <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
+      </div>
+
+      <div style={{height:16}}/>
+
+      {/* Torque display */}
+      <div style={{background:'#fff',borderRadius:20,padding:'14px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'#B5A1FF'}}>← {leftTorque} Н·см</div>
+          <div style={{fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>Момент силы</div>
+          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'#FFD262'}}>{displayTorque.right} Н·см →</div>
+        </div>
+        {/* Balance bar */}
+        <div style={{height:12,borderRadius:999,background:'rgba(45,27,69,.08)',overflow:'hidden',position:'relative'}}>
+          {(()=>{
+            const rp2 = rightPosRef.current;
+            const rt = c.rightMass * rp2;
+            const ratio = leftTorque===0 ? 0.5 : Math.min(1,Math.max(0, rt / (leftTorque*2)));
+            const balanced = Math.abs(leftTorque - rt) < 20;
+            return <div style={{position:'absolute',left:`${ratio*100}%`,top:0,width:4,height:'100%',background:balanced?'#5DD9A0':'#FF8B7A',borderRadius:999,transform:'translateX(-50%)',boxShadow:`0 0 8px ${balanced?'#5DD9A0':'#FF8B7A'}`}}/>;
+          })()}
+          <div style={{position:'absolute',left:'50%',top:0,width:2,height:'100%',background:'rgba(45,27,69,.2)',borderRadius:999,transform:'translateX(-50%)'}}/>
+        </div>
+        <div style={{textAlign:'center',marginTop:8,fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>
+          Перетащи жёлтый груз для баланса ← →
+        </div>
+      </div>
+
+      <div style={{height:10}}/>
+      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
+        Задача {chalIdx+1} из {L2_CHALLENGES.length}
+      </div>
+
+      {celebrating&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
+            <div style={{fontSize:52,marginBottom:10}}>⚖️</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Равновесие!</div>
+            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{c.fact}</div>
+            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
+              {chalIdx>=L2_CHALLENGES.length-1?'Завершить! 🎉':'Дальше →'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   LEVEL 3 — "Пушка Галилея"
+   Teaching: траектория тела, угол бросания, гравитация
+   ============================================================ */
+const L3_TARGETS = [
+  {x:180, hint:'Постарайся попасть! Попробуй угол около 45°', fact:'Гравитация тянет мяч вниз — поэтому траектория изогнута!'},
+  {x:240, hint:'Цель дальше — попробуй угол побольше!', fact:'Угол 45° даёт максимальную дальность. Открытие Галилея — 1590 год!'},
+  {x:130, hint:'Цель ближе — какой угол нужен?', fact:'Угол 30° и угол 60° дают ОДИНАКОВУЮ дальность — красивая симметрия!'},
+  {x:290, hint:'Очень далеко! Ближе к 45°', fact:'Горизонтальная скорость постоянна, вертикальная замедляется гравитацией!'},
+  {x:100, hint:'Совсем рядом — малый угол', fact:'На Луне бросок в 6 раз дальше — гравитация там в 6 раз меньше!'},
+];
+
+const GRAVITY = 0.12;
+const SPEED = 7;
+
+function Level3Cannon({ onDone }) {
+  const [targetIdx, setTargetIdx] = React.useState(0);
+  const [starsEarned, setStarsEarned] = React.useState(0);
+  const [done, setDone] = React.useState(false);
+  const [angle, setAngle] = React.useState(45);
+  const [attempts, setAttempts] = React.useState(0);
+  const [celebrating, setCelebrating] = React.useState(false);
+  const [showFact, setShowFact] = React.useState(false);
+  const [fired, setFired] = React.useState(false);
+  const [trailPoints, setTrailPoints] = React.useState([]);
+
+  const canvasRef = React.useRef(null);
+  const animRef = React.useRef(null);
+  const ballRef = React.useRef(null); // {x,y,vx,vy} or null
+  const trailRef = React.useRef([]);
+  const angleRef = React.useRef(45);
+  const firedRef = React.useRef(false);
+  const hitRef = React.useRef(false);
+
+  const W=340, H=280;
+  const GROUND_Y = H-30;
+  const CANNON_X = 30;
+  const CANNON_Y = GROUND_Y;
+
+  React.useEffect(()=>{
+    setAttempts(0);
+    setFired(false);
+    setTrailPoints([]);
+    trailRef.current=[];
+    ballRef.current=null;
+    hitRef.current=false;
+    setCelebrating(false);
+    setShowFact(false);
+    firedRef.current=false;
+  },[targetIdx]);
+
+  React.useEffect(()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const tgt = L3_TARGETS[targetIdx];
+
+    const draw = ()=>{
+      ctx.clearRect(0,0,W,H);
+
+      // Sky gradient
+      const sky = ctx.createLinearGradient(0,0,0,GROUND_Y);
+      sky.addColorStop(0,'#87CEEB');
+      sky.addColorStop(1,'#C8E8F5');
+      ctx.fillStyle=sky;
+      ctx.fillRect(0,0,W,GROUND_Y);
+
+      // Sun
+      ctx.save();
+      ctx.fillStyle='#FFE066';
+      ctx.shadowColor='#FFD262'; ctx.shadowBlur=20;
+      ctx.beginPath(); ctx.arc(W-30,28,16,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+
+      // Clouds
+      [[60,30,0.5],[180,20,0.35],[280,40,0.4]].forEach(([cx,cy,op])=>{
+        ctx.save(); ctx.globalAlpha=op;
+        ctx.fillStyle='#fff';
+        ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
+        ctx.arc(cx+16,cy-4,14,0,Math.PI*2);
+        ctx.arc(cx-14,cy-2,12,0,Math.PI*2);
+        ctx.fill(); ctx.restore();
+      });
+
+      // Ground
+      ctx.fillStyle='#5AAF4F';
+      ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+      ctx.fillStyle='#6CC460';
+      ctx.fillRect(0,GROUND_Y,W,6);
+
+      // Distance markers on ground
+      for(let mx=50;mx<W-10;mx+=50){
+        ctx.fillStyle='rgba(45,80,30,.25)';
+        ctx.fillRect(mx,GROUND_Y,1,8);
+        ctx.fillStyle='rgba(45,80,30,.4)';
+        ctx.font='9px sans-serif';
+        ctx.textAlign='center';
+        ctx.fillText(mx+'px',mx,GROUND_Y+18);
+      }
+
+      // Trail (dotted arc from previous shot)
+      if(trailRef.current.length>1){
+        ctx.save();
+        ctx.setLineDash([4,6]);
+        ctx.strokeStyle='rgba(100,60,200,.25)'; ctx.lineWidth=2;
+        ctx.beginPath();
+        trailRef.current.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+
+      // Target bucket
+      const tx = tgt.x;
+      const ty = GROUND_Y-2;
+      ctx.save();
+      ctx.fillStyle='#FF8B7A';
+      ctx.shadowColor='rgba(220,80,60,.4)'; ctx.shadowBlur=8;
+      // Trapezoid bucket
+      ctx.beginPath();
+      ctx.moveTo(tx-16,ty-24);
+      ctx.lineTo(tx+16,ty-24);
+      ctx.lineTo(tx+12,ty);
+      ctx.lineTo(tx-12,ty);
+      ctx.closePath();
+      ctx.fill();
+      // Rim
+      ctx.fillStyle='#D9523F';
+      ctx.fillRect(tx-18,ty-28,36,6);
+      ctx.restore();
+
+      // Cannon wheel
+      ctx.save();
+      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=8;
+      ctx.fillStyle='#4A3A2A';
+      ctx.beginPath(); ctx.arc(CANNON_X,CANNON_Y,14,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#6A5A4A';
+      ctx.beginPath(); ctx.arc(CANNON_X,CANNON_Y,9,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#3A2A1A'; ctx.lineWidth=2;
+      [0,60,120].forEach(a=>{
+        const ar=a*Math.PI/180;
+        ctx.beginPath();
+        ctx.moveTo(CANNON_X+Math.cos(ar)*4,CANNON_Y+Math.sin(ar)*4);
+        ctx.lineTo(CANNON_X+Math.cos(ar)*12,CANNON_Y+Math.sin(ar)*12);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      // Cannon barrel
+      const aRad = angleRef.current * Math.PI / 180;
+      ctx.save();
+      ctx.translate(CANNON_X, CANNON_Y);
+      ctx.rotate(-aRad);
+      const barrelGrad = ctx.createLinearGradient(0,-10,0,10);
+      barrelGrad.addColorStop(0,'#6A5A4A');
+      barrelGrad.addColorStop(0.5,'#4A3A2A');
+      barrelGrad.addColorStop(1,'#2A1A0A');
+      ctx.fillStyle=barrelGrad;
+      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=6;
+      ctx.fillRect(0,-10,50,20);
+      // Barrel tip
+      ctx.fillStyle='#3A2A1A';
+      ctx.fillRect(46,-11,6,22);
+      ctx.restore();
+
+      // Angle label near cannon
+      ctx.save();
+      ctx.fillStyle='#2D1B45';
+      ctx.font='bold 13px Fredoka One,sans-serif';
+      ctx.textAlign='left';
+      ctx.fillText(`${Math.round(angleRef.current)}°`, CANNON_X+20, CANNON_Y-20);
+      ctx.restore();
+
+      // Ball idle position at barrel tip (when not fired)
+      if(!firedRef.current || (!ballRef.current && trailRef.current.length===0)){
+        const bx = CANNON_X + Math.cos(aRad)*52;
+        const by = CANNON_Y - Math.sin(aRad)*52;
+        ctx.save();
+        const ballGrad = ctx.createRadialGradient(bx-4,by-4,2,bx,by,8);
+        ballGrad.addColorStop(0,'#FF9A6A');
+        ballGrad.addColorStop(1,'#C84820');
+        ctx.fillStyle=ballGrad;
+        ctx.shadowColor='rgba(200,72,32,.5)'; ctx.shadowBlur=8;
+        ctx.beginPath(); ctx.arc(bx,by,8,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+
+      // Flying ball
+      if(ballRef.current){
+        const {x,y,vx,vy} = ballRef.current;
+        // Physics step
+        const nvx = vx;
+        const nvy = vy + GRAVITY;
+        const nx = x + nvx;
+        const ny = y + nvy;
+
+        trailRef.current.push({x,y});
+
+        // Check hit bucket
+        if(Math.abs(x - tgt.x) < 28 && y >= GROUND_Y - 55 && y <= GROUND_Y){
+          hitRef.current = true;
+          ballRef.current = null;
+          firedRef.current = false;
+          setFired(false);
+          return;
+        }
+
+        // Check ground
+        if(ny >= GROUND_Y){
+          ballRef.current = null;
+          firedRef.current = false;
+          setFired(false);
+          setAttempts(prev=>{
+            const na = prev+1;
+            if(na>=3){ setShowFact(true); }
+            return na;
+          });
+          animRef.current = requestAnimationFrame(draw);
+          return;
+        }
+
+        // Check walls
+        if(nx > W || nx < 0){
+          ballRef.current = null;
+          firedRef.current = false;
+          setFired(false);
+          setAttempts(prev=>{
+            const na = prev+1;
+            if(na>=3){ setShowFact(true); }
+            return na;
+          });
+          animRef.current = requestAnimationFrame(draw);
+          return;
+        }
+
+        ballRef.current = {x:nx, y:ny, vx:nvx, vy:nvy};
+
+        // Draw ball
+        ctx.save();
+        const ballGrad2 = ctx.createRadialGradient(nx-3,ny-3,2,nx,ny,8);
+        ballGrad2.addColorStop(0,'#FF9A6A');
+        ballGrad2.addColorStop(1,'#C84820');
+        ctx.fillStyle=ballGrad2;
+        ctx.shadowColor='rgba(200,72,32,.6)'; ctx.shadowBlur=10;
+        ctx.beginPath(); ctx.arc(nx,ny,8,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+
+      if(hitRef.current){
+        // Show hit celebration
+        ctx.save();
+        ctx.fillStyle='rgba(93,217,160,.15)';
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle='#2BA873';
+        ctx.font='bold 22px Fredoka One,sans-serif';
+        ctx.textAlign='center';
+        ctx.shadowColor='#5DD9A0'; ctx.shadowBlur=16;
+        ctx.fillText('🎯 Попал!', W/2, H/2-10);
+        ctx.restore();
+        // Show success after brief pause
+        setTimeout(()=>{
+          hitRef.current=false;
+          setCelebrating(true);
+        },800);
+        return; // stop RAF
+      }
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return()=>cancelAnimationFrame(animRef.current);
+  },[targetIdx,fired]);
+
+  const handleFire = ()=>{
+    if(firedRef.current || celebrating || showFact) return;
+    if(attempts>=3) return;
+    trailRef.current=[];
+    hitRef.current=false;
+    const aRad = angleRef.current * Math.PI / 180;
+    const bx = CANNON_X + Math.cos(aRad)*52;
+    const by = CANNON_Y - Math.sin(aRad)*52;
+    ballRef.current = {
+      x: bx, y: by,
+      vx: SPEED * Math.cos(aRad),
+      vy: -SPEED * Math.sin(aRad),
+    };
+    firedRef.current = true;
+    setFired(true);
+  };
+
+  const handleReset = ()=>{
+    cancelAnimationFrame(animRef.current);
+    ballRef.current=null;
+    firedRef.current=false;
+    hitRef.current=false;
+    trailRef.current=[];
+    setFired(false);
+  };
+
+  const handleNext = ()=>{
+    setCelebrating(false);
+    setShowFact(false);
+    if(targetIdx>=L3_TARGETS.length-1){
+      setDone(true);
+    } else {
+      setStarsEarned(s=>s+1);
+      setTargetIdx(i=>i+1);
+    }
+  };
+
+  if(done){
+    return(
+      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
+        <AKSuccessCard stars={3} title="Пушка Галилея!" fact="Угол 45° даёт максимальную дальность. Галилей открыл законы баллистики в 1590 году!" onNext={onDone} ctaLabel="На главную 🏠"/>
+      </div>
+    );
+  }
+
+  const tgt = L3_TARGETS[targetIdx];
+
+  return(
+    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
+      <AKLessonHeader progress={targetIdx/L3_TARGETS.length} stars={starsEarned} onClose={onDone}/>
+      <div style={{height:16}}/>
+      <AKTaskBadge tone="phys">{tgt.hint}</AKTaskBadge>
+      <div style={{height:14}}/>
+
+      <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)'}}>
+        <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
+      </div>
+
+      <div style={{height:16}}/>
+
+      {/* Controls */}
+      <div style={{background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+          <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-ink-2)'}}>Угол выстрела</span>
+          <span className="ak-num" style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'#7C5FE0'}}>{angle}°</span>
         </div>
         <div style={{position:'relative',height:18}}>
           <div style={{position:'absolute',inset:0,borderRadius:999,background:'linear-gradient(90deg,#E5DCFF,#B5A1FF,#7C5FE0)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)'}}/>
-          <input type="range" min={0} max={180} step={1}
-            value={Math.round(displayAngle)}
-            onChange={handleSlider}
+          <input type="range" min={10} max={80} step={1}
+            value={angle}
+            onChange={e=>{
+              const v=Number(e.target.value);
+              setAngle(v);
+              angleRef.current=v;
+              handleReset();
+            }}
             style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',zIndex:3,margin:0,width:'100%',height:'100%'}}
           />
           <div style={{
             position:'absolute',top:'50%',
-            left:`calc(${(displayAngle/180)*100}% - 18px)`,
+            left:`calc(${((angle-10)/70)*100}% - 18px)`,
             transform:'translateY(-50%)',
             width:36,height:36,borderRadius:'50%',
             background:'linear-gradient(180deg,#fff 0%,#FFF7E8 100%)',
@@ -500,671 +1166,55 @@ function Level1Light({ onDone }) {
           }}/>
         </div>
         <div style={{display:'flex',justifyContent:'space-between',marginTop:8,fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>
-          <span>0°</span><span>90°</span><span>180°</span>
+          <span>10°</span><span>45°</span><span>80°</span>
+        </div>
+
+        <div style={{height:14}}/>
+        <div style={{display:'flex',gap:12}}>
+          <button className="ak-btn ak-btn--cta" style={{flex:1,fontSize:16}}
+            onClick={handleFire}
+            disabled={fired||attempts>=3||celebrating||showFact}>
+            💥 Огонь!
+          </button>
+          <button className="ak-btn ak-btn--soft ak-btn--sm"
+            onClick={handleReset}
+            disabled={!fired}>
+            Сброс
+          </button>
+        </div>
+
+        <div style={{textAlign:'center',marginTop:10,fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
+          Попытка {Math.min(attempts+1,3)} из 3 · Задача {targetIdx+1}/{L3_TARGETS.length}
         </div>
       </div>
 
-      <div style={{height:12}}/>
-      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Задача {missionIdx+1} из {L1_PUZZLES.length}
-      </div>
+      {/* Fact overlay after all attempts */}
+      {showFact&&!celebrating&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
+            <div style={{fontSize:48,marginBottom:10}}>💥</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',marginBottom:10}}>Попробуй ещё!</div>
+            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{tgt.fact}</div>
+            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
+              {targetIdx>=L3_TARGETS.length-1?'Завершить! 🎉':'Следующая цель →'}
+            </button>
+          </div>
+        </div>
+      )}
 
+      {/* Hit celebration */}
       {celebrating&&(
         <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
           <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
             <div style={{fontSize:52,marginBottom:10}}>🎯</div>
             <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Попал!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{L1_FACTS[missionIdx]}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-              {missionIdx>=L1_PUZZLES.length-1?'Завершить! 🎉':'Дальше →'}
+            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{tgt.fact}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+              {targetIdx>=L3_TARGETS.length-1?'Завершить! 🎉':'Следующая цель →'}
             </button>
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL 2 — SVG component renderers
-   ============================================================ */
-function SvgBattery({ color, size=1 }) {
-  const w=52*size, h=28*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 52 28">
-      {/* Body */}
-      <rect x="1" y="4" width="44" height="20" rx="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1.5"/>
-      {/* Positive terminal */}
-      <rect x="46" y="10" width="5" height="8" rx="2" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
-      {/* Internal lines */}
-      {[10,17,24,31].map((x,i)=>(
-        <rect key={i} x={x} y={i%2===0?7:9} width="3" height={i%2===0?14:10} rx="1.5" fill="rgba(255,255,255,.7)"/>
-      ))}
-      {/* Shine */}
-      <rect x="3" y="6" width="40" height="4" rx="2" fill="rgba(255,255,255,.35)"/>
-    </svg>
-  );
-}
-
-function SvgBulb({ color, glowing=false, size=1 }) {
-  const w=36*size, h=46*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 36 46">
-      {glowing && (
-        <ellipse cx="18" cy="18" rx="16" ry="16" fill="#FFD262" opacity="0.18"/>
-      )}
-      {/* Glass round top */}
-      <circle cx="18" cy="18" r="14" fill={glowing?'#FFFDE0':color} stroke="rgba(0,0,0,.10)" strokeWidth="1.5"/>
-      {/* X filament */}
-      <line x1="12" y1="12" x2="24" y2="24" stroke={glowing?'#FFA020':'rgba(45,27,69,.4)'} strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="24" y1="12" x2="12" y2="24" stroke={glowing?'#FFA020':'rgba(45,27,69,.4)'} strokeWidth="1.8" strokeLinecap="round"/>
-      {/* Highlight */}
-      <ellipse cx="12" cy="12" rx="3" ry="4" fill="rgba(255,255,255,.55)" transform="rotate(-30 12 12)"/>
-      {/* Stepped base */}
-      <rect x="12" y="30" width="12" height="5" rx="1" fill="rgba(100,80,130,.5)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
-      <rect x="14" y="35" width="8" height="4" rx="1" fill="rgba(100,80,130,.45)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
-      <rect x="13" y="39" width="10" height="4" rx="1" fill="rgba(100,80,130,.4)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
-      {/* Glow overlay */}
-      {glowing && <circle cx="18" cy="18" r="14" fill="rgba(255,220,100,.15)"/>}
-    </svg>
-  );
-}
-
-function SvgSwitch({ color, size=1 }) {
-  const w=52*size, h=28*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 52 28">
-      {/* Connecting lines */}
-      <line x1="0" y1="20" x2="14" y2="20" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="38" y1="20" x2="52" y2="20" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
-      {/* Left terminal circle */}
-      <circle cx="14" cy="20" r="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
-      {/* Right terminal circle */}
-      <circle cx="38" cy="20" r="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
-      {/* Diagonal lever line */}
-      <line x1="14" y1="20" x2="38" y2="8" stroke={color} strokeWidth="3" strokeLinecap="round"/>
-      {/* Pivot dot */}
-      <circle cx="14" cy="20" r="3" fill="#fff" stroke={color} strokeWidth="1.5"/>
-    </svg>
-  );
-}
-
-function SvgWire({ color, size=1 }) {
-  const w=52*size, h=28*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 52 28">
-      {/* S-curve wavy line */}
-      <path d="M2,14 C8,4 16,24 26,14 C36,4 44,24 50,14"
-        fill="none" stroke={color} strokeWidth="3" strokeLinecap="round"/>
-    </svg>
-  );
-}
-
-function SvgResistor({ color, size=1 }) {
-  const w=52*size, h=28*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 52 28">
-      {/* Lead lines */}
-      <line x1="0" y1="14" x2="10" y2="14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="42" y1="14" x2="52" y2="14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
-      {/* IEC rectangle body */}
-      <rect x="10" y="8" width="32" height="12" rx="2" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1.5"/>
-      {/* Zigzag inside */}
-      <polyline points="13,14 17,8 21,20 25,8 29,20 33,8 37,14 39,14"
-        fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round"/>
-      {/* Shine */}
-      <rect x="12" y="9" width="28" height="3" rx="1.5" fill="rgba(255,255,255,.3)"/>
-    </svg>
-  );
-}
-
-function SvgMagnet({ color, size=1 }) {
-  const w=44*size, h=44*size;
-  return (
-    <svg width={w} height={h} viewBox="0 0 44 44">
-      {/* U-shaped arc */}
-      <path d="M6,8 L6,28 Q6,38 16,38 Q22,38 22,38 Q28,38 28,28 L28,8"
-        fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Red pole (left) */}
-      <rect x="2" y="6" width="8" height="10" rx="2" fill="#FF6B6B"/>
-      {/* Blue pole (right) */}
-      <rect x="24" y="6" width="8" height="10" rx="2" fill="#6BA0FF"/>
-      {/* N label area */}
-      <text x="4" y="15" fontFamily="sans-serif" fontSize="6" fontWeight="bold" fill="white">N</text>
-      <text x="26" y="15" fontFamily="sans-serif" fontSize="6" fontWeight="bold" fill="white">S</text>
-    </svg>
-  );
-}
-
-/* ============================================================
-   LEVEL 2 — "Собери цепь!" (Electric Circuit Builder)
-   ============================================================ */
-const COMPONENTS = [
-  { id:'battery',  label:'Батарейка',   color:'#5DD9A0', SvgComp: SvgBattery },
-  { id:'switch',   label:'Выключатель', color:'#FFD262', SvgComp: SvgSwitch },
-  { id:'bulb',     label:'Лампочка',    color:'#FFE083', SvgComp: SvgBulb },
-  { id:'wire',     label:'Провод',      color:'#B0BEC5', SvgComp: SvgWire },
-  { id:'resistor', label:'Резистор',    color:'#FFA17A', SvgComp: SvgResistor },
-  { id:'magnet',   label:'Магнит',      color:'#B5A1FF', SvgComp: SvgMagnet },
-];
-
-const L2_CHALLENGES = [
-  { goal:'Зажги одну лампочку!',
-    required:{A:'battery',B:'switch',C:'bulb',D:'wire'},
-    fact:'Замкнутая цепь позволяет току течь. Разомкни — и свет погаснет!' },
-  { goal:'Только провода и батарейка нужны?',
-    required:{A:'battery',B:'wire',C:'bulb',D:'wire'},
-    fact:'Выключатель — это просто разрыв в цепи. Замкни его — ток потёк!' },
-  { goal:'Поставь источник питания правильно',
-    required:{A:'battery',B:'wire',C:'bulb',D:'switch'},
-    fact:'Ток всегда течёт от + к − через всю цепь. Это изобрёл Вольта в 1800 году!' },
-  { goal:'Другой порядок — работает?',
-    required:{A:'battery',B:'bulb',C:'switch',D:'wire'},
-    fact:'Порядок компонентов в последовательной цепи не важен — ток всё равно пройдёт!' },
-  { goal:'Собери любую рабочую цепь!',
-    required:{A:'battery',C:'bulb'}, anyOk:true,
-    fact:'Электричество — поток электронов по проводнику. Без него нет света, тепла, интернета!' },
-];
-
-const SLOT_LABELS = {A:'Источник',B:'Элемент',C:'Лампочка',D:'Провод'};
-const SLOT_GHOST  = {A:'battery', B:'switch', C:'bulb', D:'wire'};
-
-function SlotCard({ id, placed, label, shaking, circuitOn, onClick, selected }) {
-  const comp = placed ? COMPONENTS.find(c=>c.id===placed) : null;
-  const ghostId = SLOT_GHOST[id];
-  const ghostComp = COMPONENTS.find(c=>c.id===ghostId);
-  const canPlace = !!selected && !placed;
-
-  return(
-    <div onClick={onClick}
-      className={shaking?'ak-shake':''}
-      style={{
-        background: comp ? (circuitOn?'#FFF8D0':'#fff') : canPlace?'rgba(181,161,255,.15)':'rgba(255,255,255,.07)',
-        borderRadius:12,
-        border: canPlace?'2px dashed #B5A1FF':'2px solid rgba(255,255,255,.12)',
-        display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-        minHeight:64,padding:'6px 5px',cursor:'pointer',
-        boxShadow: circuitOn&&comp?'0 0 16px #FFD26088':'none',
-        transition:'box-shadow .5s,background .3s',
-        textAlign:'center',minWidth:64,position:'relative',overflow:'hidden',
-      }}>
-      {comp ? (
-        <>
-          <comp.SvgComp color={comp.color} size={0.55} glowing={circuitOn && comp.id==='bulb'}/>
-          <span style={{fontFamily:'var(--ak-body)',fontSize:9,fontWeight:700,
-            color:circuitOn?'#7C5F00':'var(--ak-ink-2)',lineHeight:1.2,marginTop:2}}>{comp.label}</span>
-        </>
-      ) : (
-        <>
-          {ghostComp && (
-            <div style={{opacity:0.2,filter:'grayscale(1)'}}>
-              <ghostComp.SvgComp color="#888" size={0.5}/>
-            </div>
-          )}
-          <span style={{fontSize:9,color:'rgba(255,255,255,.5)',fontFamily:'var(--ak-body)',fontWeight:600,lineHeight:1.2,padding:'0 3px',marginTop:2}}>{label}</span>
-        </>
-      )}
-    </div>
-  );
-}
-
-function Level2Circuit({ onDone }) {
-  const [challIdx, setChallIdx] = React.useState(0);
-  const [placed, setPlaced] = React.useState({A:null,B:null,C:null,D:null});
-  const [selected, setSelected] = React.useState(null);
-  const [circuitOn, setCircuitOn] = React.useState(false);
-  const [shaking, setShaking] = React.useState(null);
-  const [popup, setPopup] = React.useState(false);
-  const [starsEarned, setStarsEarned] = React.useState(0);
-  const [done, setDone] = React.useState(false);
-  const [sparks, setSparks] = React.useState(false);
-
-  const chall = L2_CHALLENGES[challIdx];
-
-  const checkCircuit=(p)=>{
-    const req=chall.required;
-    if(chall.anyOk) return p.A===req.A && p.C===req.C;
-    return Object.keys(req).every(k=>p[k]===req[k]);
-  };
-
-  const handleSlotTap=(slotId)=>{
-    if(circuitOn||popup) return;
-    if(placed[slotId]){
-      setPlaced(p=>({...p,[slotId]:null}));
-      return;
-    }
-    if(!selected) return;
-    const newPlaced={...placed,[slotId]:selected};
-    setPlaced(newPlaced);
-    setSelected(null);
-    if(checkCircuit(newPlaced)){
-      setTimeout(()=>{
-        setCircuitOn(true);
-        setSparks(true);
-        setTimeout(()=>{ setSparks(false); setPopup(true); },1800);
-      },300);
-    } else {
-      const req=chall.required;
-      if(!chall.anyOk && req[slotId] && selected!==req[slotId]){
-        setShaking(slotId);
-        setTimeout(()=>{ setShaking(null); setPlaced(p=>({...p,[slotId]:null})); },500);
-      }
-    }
-  };
-
-  const handleCompTap=(id)=>{
-    if(circuitOn||popup) return;
-    setSelected(s=>s===id?null:id);
-  };
-
-  const handleNext=()=>{
-    setPopup(false);
-    setCircuitOn(false);
-    setPlaced({A:null,B:null,C:null,D:null});
-    setSelected(null);
-    if(challIdx>=L2_CHALLENGES.length-1){
-      setDone(true);
-    } else {
-      setStarsEarned(s=>s+1);
-      setChallIdx(c=>c+1);
-    }
-  };
-
-  if(done){
-    return(
-      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Цепь замкнута!" fact="Электрическая цепь — основа всех гаджетов. В твоём смартфоне миллиарды таких цепей!" onNext={onDone} ctaLabel="На главную 🏠"/>
-      </div>
-    );
-  }
-
-  const strokeColor = circuitOn ? '#FFD262' : '#3D2D7A';
-  const strokeW = circuitOn ? 4 : 2.5;
-
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box'}}>
-      <AKLessonHeader progress={challIdx/L2_CHALLENGES.length} stars={starsEarned} onClose={onDone}/>
-      <div style={{height:18}}/>
-      <AKTaskBadge tone="phys">{chall.goal}</AKTaskBadge>
-      <div style={{height:16}}/>
-
-      {/* Circuit board */}
-      <div style={{background:'#130E38',borderRadius:22,padding:'16px',boxShadow:'0 8px 0 rgba(45,27,69,.15),0 18px 36px -12px rgba(45,27,69,.25)',position:'relative',overflow:'hidden',minHeight:280}}>
-        {/* SVG circuit */}
-        <svg width="100%" height="210" viewBox="0 0 280 210" style={{display:'block',position:'absolute',inset:'20px'}}>
-          <defs>
-            <filter id="circglow">
-              <feGaussianBlur stdDeviation="2.5" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <rect x="40" y="25" width="200" height="160" rx="10"
-            fill="none"
-            stroke={strokeColor}
-            strokeWidth={strokeW}
-            style={{transition:'stroke .6s,stroke-width .3s'}}
-            filter={circuitOn?'url(#circglow)':undefined}
-          />
-          {[{cx:40,cy:105},{cx:140,cy:25},{cx:240,cy:105},{cx:140,cy:185}].map((n,i)=>(
-            <circle key={i} cx={n.cx} cy={n.cy} r="6"
-              fill={circuitOn?'#FFD262':'#4A3A8A'}
-              style={{transition:'fill .5s'}}/>
-          ))}
-          {circuitOn&&[
-            {x:90,y:25,r:0},{x:190,y:25,r:0},
-            {x:240,y:65,r:90},{x:240,y:145,r:90},
-            {x:190,y:185,r:180},{x:90,y:185,r:180},
-            {x:40,y:145,r:270},{x:40,y:65,r:270},
-          ].map((a,i)=>(
-            <polygon key={i} points="0,-5 4,5 -4,5" fill="#FFD262"
-              transform={`translate(${a.x},${a.y}) rotate(${a.r})`}
-              opacity={0.85}
-              style={{animation:`ak-circuit-glow 1s ease-in-out ${i*0.1}s infinite`}}/>
-          ))}
-        </svg>
-
-        {/* Slots */}
-        <div style={{position:'absolute',left:4,top:'50%',transform:'translateY(-50%)',width:72}}>
-          <SlotCard id="A" placed={placed.A} label={SLOT_LABELS.A} shaking={shaking==='A'}
-            circuitOn={circuitOn} onClick={()=>handleSlotTap('A')} selected={selected}/>
-        </div>
-        <div style={{position:'absolute',left:'50%',top:4,transform:'translateX(-50%)',width:82}}>
-          <SlotCard id="B" placed={placed.B} label={SLOT_LABELS.B} shaking={shaking==='B'}
-            circuitOn={circuitOn} onClick={()=>handleSlotTap('B')} selected={selected}/>
-        </div>
-        <div style={{position:'absolute',right:4,top:'50%',transform:'translateY(-50%)',width:72}}>
-          <SlotCard id="C" placed={placed.C} label={SLOT_LABELS.C} shaking={shaking==='C'}
-            circuitOn={circuitOn} onClick={()=>handleSlotTap('C')} selected={selected}/>
-        </div>
-        <div style={{position:'absolute',left:'50%',bottom:4,transform:'translateX(-50%)',width:82}}>
-          <SlotCard id="D" placed={placed.D} label={SLOT_LABELS.D} shaking={shaking==='D'}
-            circuitOn={circuitOn} onClick={()=>handleSlotTap('D')} selected={selected}/>
-        </div>
-
-        {sparks&&[...Array(6)].map((_,i)=>(
-          <div key={i} style={{
-            position:'absolute',
-            left:`${20+i*13}%`,top:`${25+((i%3)*22)}%`,
-            width:12,height:12,borderRadius:'50%',
-            background:i%2?'#FFD262':'#5DD9A0',
-            animation:`ak-spark .9s ease-out ${i*0.12}s both`,
-          }}/>
-        ))}
-      </div>
-
-      <div style={{height:16}}/>
-
-      {/* Component tray */}
-      <div style={{background:'#fff',borderRadius:20,padding:'14px 12px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-2)',marginBottom:10,textAlign:'center'}}>
-          {selected
-            ? `Выбрано: ${COMPONENTS.find(c=>c.id===selected)?.label} → нажми на слот`
-            : 'Нажми компонент, потом слот на схеме'}
-        </div>
-        <div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center'}}>
-          {COMPONENTS.map(c=>{
-            const inUse=Object.values(placed).includes(c.id);
-            const isSel=selected===c.id;
-            return(
-              <button key={c.id} onClick={()=>handleCompTap(c.id)} disabled={inUse}
-                style={{
-                  background:isSel?`linear-gradient(180deg,${c.color}77,${c.color}cc)`:inUse?'#F5F2FC':'#fff',
-                  border:isSel?`2px solid ${c.color}`:'2px solid rgba(45,27,69,.06)',
-                  borderRadius:14,padding:'10px 8px',cursor:inUse?'not-allowed':'pointer',
-                  fontFamily:'var(--ak-body)',fontSize:10,fontWeight:700,color:'var(--ak-ink)',
-                  display:'flex',flexDirection:'column',alignItems:'center',gap:4,
-                  boxShadow:isSel?`0 0 0 4px ${c.color}33,0 4px 0 rgba(45,27,69,.08)`:'0 2px 0 rgba(45,27,69,.06)',
-                  opacity:inUse?.3:1,
-                  transform:isSel?'scale(1.1)':'scale(1)',
-                  transition:'transform .12s,box-shadow .12s,background .12s',
-                  minWidth:54,
-                }}>
-                <c.SvgComp color={c.color} size={0.6} glowing={false}/>
-                <span style={{lineHeight:1.1,textAlign:'center'}}>{c.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div style={{height:10}}/>
-      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Задача {challIdx+1} из {L2_CHALLENGES.length}
-      </div>
-
-      {popup&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.78)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{display:'flex',justifyContent:'center',marginBottom:10}}>
-              <SvgBulb color="#FFE083" glowing={true} size={1.2}/>
-            </div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Цепь замкнута!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{chall.fact}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-              {challIdx>=L2_CHALLENGES.length-1?'Завершить! 🎉':'Дальше →'}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL 3 — "Проведи тепло!" — path selection gameplay
-   ============================================================ */
-const L3_SCENARIOS = [
-  { srcEmoji:'☕', srcLabel:'Горячая кружка', tgtEmoji:'🖐', tgtLabel:'Рука', type:'conduction', fact:'Теплопроводность: атомы кружки передают движение атомам руки через прямой контакт!' },
-  { srcEmoji:'☀️', srcLabel:'Солнце', tgtEmoji:'🪨', tgtLabel:'Нагретый камень', type:'radiation', fact:'Излучение проходит через вакуум. Именно так тепло Солнца летит 150 млн км до Земли!' },
-  { srcEmoji:'🔥', srcLabel:'Горячий воздух', tgtEmoji:'💨', tgtLabel:'Поток вверх', type:'convection', fact:'Конвекция: тёплый воздух легче и поднимается вверх. Так образуются облака и ветер!' },
-  { srcEmoji:'🍳', srcLabel:'Раскалённая сковорода', tgtEmoji:'🥄', tgtLabel:'Металлическая ложка', type:'conduction', fact:'Металл — лучший проводник тепла. Деревянная ложка нагреется в 400 раз медленнее!' },
-  { srcEmoji:'🔥', srcLabel:'Костёр', tgtEmoji:'🧍', tgtLabel:'Человек рядом', type:'radiation', fact:'Костёр греет инфракрасными волнами — ты чувствуешь жар лицом даже без прикосновения!' },
-  { srcEmoji:'🫖', srcLabel:'Кипящий чайник', tgtEmoji:'🌀', tgtLabel:'Потоки воды', type:'convection', fact:'В кипящей воде горячие слои снизу поднимаются, холодные опускаются — это конвекция!' },
-];
-
-function SvgIconConduction() {
-  return (
-    <svg width="54" height="36" viewBox="0 0 54 36">
-      {/* Left square */}
-      <rect x="1" y="8" width="16" height="20" rx="3" fill="#FF8B7A" stroke="#FF6060" strokeWidth="1.5"/>
-      {/* Right square */}
-      <rect x="37" y="8" width="16" height="20" rx="3" fill="#FFD2C8" stroke="#FFA090" strokeWidth="1.5"/>
-      {/* Glowing bridge */}
-      <rect x="17" y="15" width="20" height="6" rx="3" fill="url(#condGrad)"/>
-      <defs>
-        <linearGradient id="condGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#FF6B3D"/>
-          <stop offset="50%" stopColor="#FFD262"/>
-          <stop offset="100%" stopColor="#FF8B7A"/>
-        </linearGradient>
-      </defs>
-      {/* Arrow */}
-      <polygon points="41,18 37,14 37,22" fill="#FF6B3D" opacity="0.85"/>
-    </svg>
-  );
-}
-
-function SvgIconConvection() {
-  return (
-    <svg width="54" height="36" viewBox="0 0 54 36">
-      {/* Three upward curved arrows */}
-      {[10, 26, 42].map((x, i) => (
-        <g key={i}>
-          <path d={`M${x},32 Q${x-4},22 ${x},14`}
-            fill="none" stroke="#60B8E8" strokeWidth="2.5" strokeLinecap="round"/>
-          <polygon points={`${x},10 ${x-3},17 ${x+3},17`} fill="#60B8E8"/>
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-function SvgIconRadiation() {
-  return (
-    <svg width="54" height="36" viewBox="0 0 54 36">
-      {/* Center sun circle */}
-      <circle cx="27" cy="18" r="7" fill="#FFD262" stroke="#D4A22B" strokeWidth="1.5"/>
-      {/* Radiating lines */}
-      {[0,45,90,135,180,225,270,315].map((a, i) => {
-        const rad = a * Math.PI / 180;
-        const x1 = 27 + Math.cos(rad) * 10;
-        const y1 = 18 + Math.sin(rad) * 10;
-        const x2 = 27 + Math.cos(rad) * 16;
-        const y2 = 18 + Math.sin(rad) * 16;
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#FFD262" strokeWidth="2" strokeLinecap="round"/>;
-      })}
-    </svg>
-  );
-}
-
-const L3_PATH_BUTTONS = [
-  { type:'conduction', label:'Касание', sublabel:'Теплопроводность', color:'#FF8B7A', bg:'#FFD2C8', Icon: SvgIconConduction },
-  { type:'convection', label:'Поток',   sublabel:'Конвекция',        color:'#60B8E8', bg:'#DCF0FF', Icon: SvgIconConvection },
-  { type:'radiation',  label:'Волны',   sublabel:'Излучение',         color:'#FFD262', bg:'#FFF5AA', Icon: SvgIconRadiation },
-];
-
-function L3ConnectionZone({ animType, phase }) {
-  const isAnimating = phase === 'animating';
-  return (
-    <div style={{
-      position:'relative',height:72,borderRadius:20,overflow:'hidden',
-      background:'rgba(45,27,69,.06)',margin:'0 0',
-      display:'flex',alignItems:'center',justifyContent:'center',
-    }}>
-      {/* Static arrow */}
-      {!isAnimating && (
-        <div style={{fontSize:28,color:'var(--ak-ink-3)',opacity:.45}}>↓</div>
-      )}
-
-      {/* Conduction: glowing bar flows left→right */}
-      {isAnimating && animType === 'conduction' && (
-        <div style={{position:'relative',width:'90%',height:18,borderRadius:999,background:'rgba(255,100,50,.15)',overflow:'hidden'}}>
-          <div className="heat-anim-bar"/>
-          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontFamily:'var(--ak-display)',color:'#D9523F',fontWeight:700,zIndex:2}}>
-            теплопроводность →
-          </div>
-        </div>
-      )}
-
-      {/* Convection: 3 upward arrows */}
-      {isAnimating && animType === 'convection' && (
-        <div style={{display:'flex',gap:20,alignItems:'center',justifyContent:'center',width:'100%',height:'100%'}}>
-          {[0,1,2].map(i=>(
-            <div key={i} className="rise-arrow"
-              style={{fontSize:26,color:'#60B8E8',fontWeight:900,animationDelay:`${i*0.22}s`}}>↑</div>
-          ))}
-        </div>
-      )}
-
-      {/* Radiation: expanding rings */}
-      {isAnimating && animType === 'radiation' && (
-        <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%'}}>
-          {[0,1].map(i=>(
-            <div key={i} className="radiate-ring"
-              style={{animationDelay:`${i*0.35}s`,borderColor:'#FFD262'}}/>
-          ))}
-          <div style={{fontSize:18,zIndex:2}}>☀️</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Level3Heat({ onDone }) {
-  const [scIdx, setScIdx] = React.useState(0);
-  const [phase, setPhase] = React.useState('question'); // question | animating | success
-  const [shakingType, setShakingType] = React.useState(null);
-  const [done, setDone] = React.useState(false);
-
-  const sc = L3_SCENARIOS[scIdx];
-  const total = L3_SCENARIOS.length;
-
-  const handlePathBtn = (type) => {
-    if(phase !== 'question') return;
-    if(type === sc.type) {
-      // Correct!
-      setPhase('animating');
-      setTimeout(() => setPhase('success'), 1500);
-    } else {
-      // Wrong — shake that button only
-      setShakingType(type);
-      setTimeout(() => setShakingType(null), 500);
-    }
-  };
-
-  const handleNext = () => {
-    if(scIdx >= total - 1) {
-      setDone(true);
-    } else {
-      setScIdx(i => i+1);
-      setPhase('question');
-    }
-  };
-
-  if(done) {
-    return(
-      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Мастер тепла!" fact="Теплопроводность, конвекция, излучение — ты знаешь все три способа передачи тепла!" onNext={onDone} ctaLabel="На главную 🏠"/>
-      </div>
-    );
-  }
-
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box'}}>
-      <AKLessonHeader progress={scIdx/total} stars={scIdx} onClose={onDone}/>
-      <div style={{height:18}}/>
-
-      <div style={{display:'flex',justifyContent:'center',marginBottom:14}}>
-        <AKTaskBadge tone="phys">Как передаётся тепло?</AKTaskBadge>
-      </div>
-
-      {/* Source card */}
-      <div style={{
-        background:'#fff',borderRadius:22,padding:'18px 16px',
-        textAlign:'center',
-        boxShadow:'0 6px 0 rgba(45,27,69,.08),0 14px 28px -8px rgba(45,27,69,.14)',
-        marginBottom:10,
-      }}>
-        <div style={{fontSize:48,lineHeight:1,marginBottom:6}}>{sc.srcEmoji}</div>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:16,color:'var(--ak-ink)'}}>{sc.srcLabel}</div>
-      </div>
-
-      {/* Connection zone */}
-      <L3ConnectionZone animType={sc.type} phase={phase}/>
-
-      {/* Target card */}
-      <div style={{
-        background:'#fff',borderRadius:22,padding:'18px 16px',
-        textAlign:'center',
-        boxShadow:'0 6px 0 rgba(45,27,69,.08),0 14px 28px -8px rgba(45,27,69,.14)',
-        marginTop:10,marginBottom:16,
-      }}>
-        <div style={{fontSize:48,lineHeight:1,marginBottom:6}}>{sc.tgtEmoji}</div>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:16,color:'var(--ak-ink)'}}>{sc.tgtLabel}</div>
-      </div>
-
-      {/* Path buttons */}
-      {phase === 'question' && (
-        <div style={{display:'flex',gap:10,marginBottom:14}}>
-          {L3_PATH_BUTTONS.map(btn=>(
-            <button key={btn.type}
-              onClick={() => handlePathBtn(btn.type)}
-              className={shakingType === btn.type ? 'ak-shake' : ''}
-              style={{
-                flex:1,minHeight:100,
-                background:btn.bg,
-                border:`2.5px solid ${btn.color}`,
-                borderRadius:18,
-                padding:'12px 8px',
-                cursor:'pointer',
-                display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6,
-                boxShadow:`0 5px 0 ${btn.color}88,0 10px 18px -6px ${btn.color}44`,
-                transition:'transform .1s',
-              }}
-              onMouseDown={e=>e.currentTarget.style.transform='translateY(3px)'}
-              onMouseUp={e=>e.currentTarget.style.transform=''}
-              onTouchStart={e=>e.currentTarget.style.transform='translateY(3px)'}
-              onTouchEnd={e=>e.currentTarget.style.transform=''}
-            >
-              <btn.Icon/>
-              <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:14,color:btn.color,lineHeight:1.1,textAlign:'center'}}>{btn.label}</div>
-              <div style={{fontFamily:'var(--ak-body)',fontWeight:600,fontSize:10,color:'var(--ak-ink-2)',lineHeight:1.1,textAlign:'center'}}>{btn.sublabel}</div>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Animating phase placeholder */}
-      {phase === 'animating' && (
-        <div style={{display:'flex',justifyContent:'center',marginBottom:14}}>
-          <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'14px 24px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:16,color:'var(--ak-ink)'}}>
-            🌡️ Тепло передаётся…
-          </div>
-        </div>
-      )}
-
-      {/* Success phase */}
-      {phase === 'success' && (
-        <div style={{marginBottom:14}}>
-          <div style={{
-            background:'#C8F2DD',
-            borderRadius:18,padding:'16px 18px',
-            fontFamily:'var(--ak-body)',fontWeight:600,fontSize:14,
-            color:'var(--ak-ink)',lineHeight:1.55,
-            boxShadow:'0 4px 0 rgba(43,168,115,.2)',
-            marginBottom:12,
-          }}>
-            {sc.fact}
-          </div>
-          <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-            {scIdx >= total-1 ? 'Завершить! 🎉' : 'Дальше →'}
-          </button>
-        </div>
-      )}
-
-      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Сценарий {scIdx+1} из {total}
-      </div>
     </div>
   );
 }
@@ -1173,101 +1223,61 @@ function Level3Heat({ onDone }) {
    LEVEL SELECT
    ============================================================ */
 const LEVELS = [
-  { n:1, title:'Поймай луч!',    sub:'Свет · Зеркала · Отражение', emoji:'🔦', desc:'Открой закон отражения света' },
-  { n:2, title:'Собери цепь!',   sub:'Ток · Батарейка · Лампочка', emoji:'💡', desc:'Как работает электрическая цепь' },
-  { n:3, title:'Проведи тепло!', sub:'Проводность · Конвекция · Излучение', emoji:'🌡️', desc:'Три способа передачи тепла' },
+  {n:1, title:'Лазерный лабиринт', sub:'Свет · Зеркала · Отражение', emoji:'🔦', desc:'Направь лазер через зеркала к цели'},
+  {n:2, title:'Рычаг Архимеда',    sub:'Силы · Рычаг · Равновесие',  emoji:'⚖️', desc:'Найди равновесие перетаскивая груз'},
+  {n:3, title:'Пушка Галилея',     sub:'Траектория · Угол · Гравитация', emoji:'💥', desc:'Выбери угол и попади в цель'},
 ];
 
-function LevelSelect({ onStart, completed }) {
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'32px 16px 40px',boxSizing:'border-box'}}>
-      <div style={{maxWidth:390,margin:'0 auto'}}>
-        {/* Header */}
-        <div style={{textAlign:'center',marginBottom:32}}>
-          <div style={{fontSize:64,marginBottom:8,lineHeight:1}}>⚛️</div>
-          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:34,color:'var(--ak-ink)',letterSpacing:'-.5px',marginBottom:6}}>Физика</div>
-          <div style={{fontSize:15,color:'var(--ak-ink-2)',fontWeight:600,lineHeight:1.4}}>Свет, электричество и тепло</div>
-          <div style={{fontSize:13,color:'var(--ak-ink-3)',fontWeight:500,marginTop:4}}>5–6 класс · ФГОС</div>
-        </div>
+function LevelSelect({ onSelect }) {
+  return (
+    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'32px 20px 40px',maxWidth:390,margin:'0 auto',boxSizing:'border-box'}}>
+      {/* Header */}
+      <div style={{textAlign:'center',marginBottom:32}}>
+        <div style={{fontSize:52,marginBottom:8}} className="ak-bob">⚛️</div>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:30,letterSpacing:'-.5px',color:'var(--ak-ink)',marginBottom:6}}>Физика</div>
+        <div style={{fontSize:15,color:'var(--ak-ink-2)',fontWeight:600}}>Открой законы природы через игру</div>
+      </div>
 
-        {/* Level cards */}
-        <div style={{display:'flex',flexDirection:'column',gap:14}}>
-          {LEVELS.map((lv)=>{
-            const isDone=completed.has(lv.n);
-            const isLocked=lv.n>1&&!completed.has(lv.n-1);
-            return(
-              <div key={lv.n}
-                className={!isLocked?'ak-tap':''}
-                onClick={!isLocked?()=>onStart(lv.n):undefined}
-                style={{
-                  background:isDone
-                    ?'linear-gradient(135deg,#E5DCFF,#D0C4FF)'
-                    :isLocked?'rgba(255,255,255,.55)'
-                    :'linear-gradient(135deg,#fff 0%,#F5F0FF 100%)',
-                  borderRadius:24,padding:'20px 22px',
-                  boxShadow:isLocked
-                    ?'0 4px 0 rgba(45,27,69,.06),0 8px 18px -6px rgba(45,27,69,.08)'
-                    :'0 8px 0 rgba(124,95,224,.18),0 16px 32px -10px rgba(124,95,224,.22),inset 0 2px 0 rgba(255,255,255,.9)',
-                  cursor:isLocked?'not-allowed':'pointer',
-                  opacity:isLocked?.6:1,
-                  display:'flex',alignItems:'center',gap:18,
-                  border:`2px solid ${isDone?'#B5A1FF':isLocked?'rgba(45,27,69,.06)':'rgba(124,95,224,.14)'}`,
-                }}>
-                <div style={{
-                  width:64,height:64,borderRadius:18,flexShrink:0,
-                  background:isDone?'linear-gradient(135deg,#B5A1FF,#7C5FE0)':isLocked?'rgba(45,27,69,.06)':'linear-gradient(135deg,#E5DCFF,#B5A1FF)',
-                  display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,
-                  boxShadow:isDone?'0 4px 0 #7C5FE0,inset 0 2px 0 rgba(255,255,255,.4)':'none',
-                }}>
-                  {isLocked?'🔒':lv.emoji}
-                </div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:19,color:'var(--ak-ink)',marginBottom:3}}>{lv.title}</div>
-                  <div style={{fontSize:12,fontWeight:700,color:'var(--ak-ink-3)',marginBottom:5,textTransform:'uppercase',letterSpacing:.6}}>{lv.sub}</div>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--ak-ink-2)',lineHeight:1.3}}>{lv.desc}</div>
-                  {isDone&&(
-                    <div style={{display:'flex',gap:2,marginTop:6,alignItems:'center'}}>
-                      {[0,1,2].map(s=><AKStarSmall key={s} filled/>)}
-                      <span style={{fontFamily:'var(--ak-body)',fontWeight:700,fontSize:12,color:'var(--ak-phys-3)',marginLeft:4}}>Пройдено!</span>
-                    </div>
-                  )}
-                </div>
-                {!isLocked&&!isDone&&(
-                  <button className="ak-btn ak-btn--phys ak-btn--sm" style={{flexShrink:0}}
-                    onClick={(e)=>{e.stopPropagation();onStart(lv.n);}}>
-                    СТАРТ →
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      {/* Level cards */}
+      <div style={{display:'flex',flexDirection:'column',gap:16}}>
+        {LEVELS.map(lv=>(
+          <button key={lv.n} onClick={()=>onSelect(lv.n)}
+            style={{width:'100%',textAlign:'left',background:'#fff',border:'none',cursor:'pointer',borderRadius:24,padding:'20px 22px',boxShadow:'0 6px 0 rgba(45,27,69,.10),0 14px 28px -8px rgba(45,27,69,.16),inset 0 2px 0 rgba(255,255,255,1)',transition:'transform .12s,box-shadow .12s',fontFamily:'var(--ak-body)',color:'var(--ak-ink)',display:'flex',alignItems:'center',gap:18}}
+            onMouseEnter={e=>{ e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow='0 9px 0 rgba(45,27,69,.10),0 18px 36px -8px rgba(45,27,69,.22),inset 0 2px 0 rgba(255,255,255,1)'; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 6px 0 rgba(45,27,69,.10),0 14px 28px -8px rgba(45,27,69,.16),inset 0 2px 0 rgba(255,255,255,1)'; }}
+          >
+            <div style={{width:60,height:60,borderRadius:20,background:'linear-gradient(135deg,#E5DCFF,#B5A1FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,flexShrink:0,boxShadow:'0 4px 0 #7C5FE044,inset 0 2px 0 rgba(255,255,255,.6)'}}>{lv.emoji}</div>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,color:'var(--ak-ink)',marginBottom:3}}>{lv.title}</div>
+              <div style={{fontSize:12,fontWeight:700,color:'var(--ak-phys-3)',letterSpacing:'.5px',marginBottom:4,textTransform:'uppercase'}}>{lv.sub}</div>
+              <div style={{fontSize:13,color:'var(--ak-ink-2)',fontWeight:500}}>{lv.desc}</div>
+            </div>
+            <div style={{color:'var(--ak-ink-3)',fontSize:20}}>›</div>
+          </button>
+        ))}
+      </div>
 
-        <div style={{textAlign:'center',marginTop:32,display:'flex',flexDirection:'column',gap:8,alignItems:'center'}}>
-          <div style={{fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>КосмоБаза · Физика ⚛️</div>
-          <a href="index.html" style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-phys-3)',textDecoration:'none'}}>
-            ← Все предметы
-          </a>
-        </div>
+      {/* Footer */}
+      <div style={{textAlign:'center',marginTop:32,fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
+        КосмоБаза · Физика · возраст 6–14 лет
       </div>
     </div>
   );
 }
 
 /* ============================================================
-   APP ROOT
+   APP
    ============================================================ */
-function App(){
-  const [screen,setScreen] = React.useState('select');
-  const [completed,setCompleted] = React.useState(new Set());
+function App() {
+  const [screen, setScreen] = React.useState('select'); // 'select' | 'l1' | 'l2' | 'l3'
 
-  const done=(n)=>{ setCompleted(s=>new Set([...s,n])); setScreen('select'); };
+  const handleSelect = (n) => setScreen(`l${n}`);
+  const handleDone = () => setScreen('select');
 
-  if(screen==='select') return <LevelSelect onStart={n=>setScreen('l'+n)} completed={completed}/>;
-  if(screen==='l1') return <Level1Light onDone={()=>done(1)}/>;
-  if(screen==='l2') return <Level2Circuit onDone={()=>done(2)}/>;
-  if(screen==='l3') return <Level3Heat onDone={()=>done(3)}/>;
-  return null;
+  if(screen==='l1') return <Level1Light onDone={handleDone}/>;
+  if(screen==='l2') return <Level2Lever onDone={handleDone}/>;
+  if(screen==='l3') return <Level3Cannon onDone={handleDone}/>;
+  return <LevelSelect onSelect={handleSelect}/>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
