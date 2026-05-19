@@ -271,6 +271,8 @@ function Level1Light({ onDone }) {
   const [starsEarned, setStarsEarned] = React.useState(0);
   const [celebrating, setCelebrating] = React.useState(false);
   const [done, setDone] = React.useState(false);
+  const [introShown, setIntroShown] = React.useState(false);
+  const [missionIdx, setMissionIdx] = React.useState(0);
 
   const puz = L1_PUZZLES[puzzleIdx];
   const initAngles = puz.mirrors.map(m => m.angle);
@@ -296,6 +298,7 @@ function Level1Light({ onDone }) {
   },[puzzleIdx]);
 
   React.useEffect(()=>{
+    if(!introShown) return;
     const canvas = canvasRef.current;
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -352,6 +355,17 @@ function Level1Light({ onDone }) {
       ctx.stroke();
       ctx.restore();
 
+      // Draw angle annotation at mirror hit points when beam hits target
+      if(hit && pts.length > 2) {
+        const reflPt = pts[1]; // first reflection point
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,255,136,.85)';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⟲', reflPt.x, reflPt.y - 14);
+        ctx.restore();
+      }
+
       // Draw mirrors
       mirrors.forEach((m,i)=>{
         const mAng = m.angle*Math.PI/180;
@@ -403,11 +417,11 @@ function Level1Light({ onDone }) {
 
     draw();
     return()=>cancelAnimationFrame(animRef.current);
-  },[puzzleIdx]);
+  },[puzzleIdx, introShown]);
 
   // Poll for hit
   React.useEffect(()=>{
-    if(celebrating||done) return;
+    if(!introShown||celebrating||done) return;
     const iv=setInterval(()=>{
       if(hitRef.current && !celebRef.current){
         celebRef.current=true;
@@ -415,7 +429,7 @@ function Level1Light({ onDone }) {
       }
     },150);
     return()=>clearInterval(iv);
-  },[celebrating,done]);
+  },[celebrating,done,introShown]);
 
   const rotMirror = React.useCallback((idx, delta)=>{
     mirrorAnglesRef.current = mirrorAnglesRef.current.map((a,i)=>i===idx?(a+delta+360)%360:a);
@@ -437,6 +451,7 @@ function Level1Light({ onDone }) {
       setDone(true);
     } else {
       setStarsEarned(s=>s+1);
+      setMissionIdx(i=>i+1);
       setPuzzleIdx(i=>i+1);
     }
   };
@@ -445,6 +460,30 @@ function Level1Light({ onDone }) {
     return(
       <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
         <AKSuccessCard stars={3} title="Закон отражения!" fact="Угол падения всегда равен углу отражения. Евклид открыл это 2300 лет назад!" onNext={onDone} ctaLabel="На главную 🏠"/>
+      </div>
+    );
+  }
+
+  // Intro card
+  if(!introShown) {
+    return (
+      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#0F0B28,#050316)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:20}}>
+        <div style={{fontSize:80, animation:'ak-bob 3s ease-in-out infinite'}}>🧑‍🚀</div>
+        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'#fff', textAlign:'center', lineHeight:1.4}}>
+          Космонавт застрял<br/>в тёмной комнате!
+        </div>
+        <div style={{fontSize:15, color:'rgba(255,255,255,.7)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
+          Направь солнечный луч через зеркала<br/>чтобы осветить путь домой
+        </div>
+        <div style={{background:'rgba(255,255,255,.06)', borderRadius:18, padding:'16px 24px', display:'flex', alignItems:'center', gap:12}}>
+          <span style={{fontSize:13, color:'#00FF88', fontFamily:'var(--ak-display)', fontWeight:700}}>луч →</span>
+          <div style={{width:40, height:40, background:'rgba(0,255,136,.15)', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid #00FF88', fontSize:18}}>🪞</div>
+          <span style={{fontSize:13, color:'#00FF88', fontFamily:'var(--ak-display)', fontWeight:700}}>→ луч</span>
+          <span style={{fontSize:11, color:'rgba(255,255,255,.5)', fontFamily:'var(--ak-body)', fontWeight:600}}>угол входа = угол выхода</span>
+        </div>
+        <button className="ak-btn ak-btn--ok" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
+          Помочь! 🔦
+        </button>
       </div>
     );
   }
@@ -486,11 +525,21 @@ function Level1Light({ onDone }) {
       {celebrating&&(
         <div style={{position:'fixed',inset:0,background:'rgba(5,3,22,.82)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
           <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:52,marginBottom:10}}>🎯</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Попал!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{L1_FACTS[puzzleIdx]}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-              {puzzleIdx>=L1_PUZZLES.length-1?'Завершить! 🎉':'Дальше →'}
+            <div style={{fontSize:48, marginBottom:8}}>🧑‍🚀</div>
+            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-ink)', marginBottom:6}}>Космонавт спасён!</div>
+            {/* Law visualization */}
+            <div style={{background:'#0F0B28', borderRadius:16, padding:'14px 16px', marginBottom:14, display:'flex', flexDirection:'column', gap:8, alignItems:'center'}}>
+              <div style={{display:'flex', alignItems:'center', gap:8}}>
+                <div style={{width:40, height:2, background:'#00FF88', boxShadow:'0 0 6px #00FF88'}}/>
+                <div style={{width:32, height:32, border:'2px solid #fff', borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:16}}>🪞</div>
+                <div style={{width:40, height:2, background:'#00FF88', boxShadow:'0 0 6px #00FF88', transform:'rotate(-30deg)', transformOrigin:'left'}}/>
+              </div>
+              <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'#00FF88', letterSpacing:1}}>ЗАКОН ОТРАЖЕНИЯ</div>
+              <div style={{fontSize:12, color:'rgba(255,255,255,.7)', fontWeight:600}}>Угол падения = Угол отражения</div>
+            </div>
+            <div style={{fontSize:13, color:'var(--ak-ink-2)', lineHeight:1.55, fontWeight:500, marginBottom:18}}>{L1_FACTS[missionIdx]}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+              {puzzleIdx >= L1_PUZZLES.length-1 ? 'Завершить! 🎉' : 'Следующее зеркало →'}
             </button>
           </div>
         </div>
@@ -516,6 +565,7 @@ function Level2Lever({ onDone }) {
   const [starsEarned, setStarsEarned] = React.useState(0);
   const [done, setDone] = React.useState(false);
   const [celebrating, setCelebrating] = React.useState(false);
+  const [introShown, setIntroShown] = React.useState(false);
 
   const chal = L2_CHALLENGES[chalIdx];
   const [rightPos, setRightPos] = React.useState(chal.startPos);
@@ -543,6 +593,7 @@ function Level2Lever({ onDone }) {
   const [displayTorque, setDisplayTorque] = React.useState({left:0,right:0});
 
   React.useEffect(()=>{
+    if(!introShown) return;
     const canvas = canvasRef.current;
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -583,14 +634,43 @@ function Level2Lever({ onDone }) {
       ctx.translate(pivotX, pivotY-14);
       ctx.rotate(beamAngle);
 
+      if(isBalanced) {
+        // Draw law text on canvas when balanced
+        ctx.save();
+        ctx.fillStyle = 'rgba(93,217,160,.15)';
+        ctx.beginPath();
+        if(ctx.roundRect) {
+          ctx.roundRect(-90, 10, 180, 36, 10);
+        } else {
+          ctx.rect(-90, 10, 180, 36);
+        }
+        ctx.fill();
+        ctx.fillStyle = '#2BA873';
+        ctx.font = 'bold 12px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚖ F×d = F×d — РАВНОВЕСИЕ!', 0, 33);
+        ctx.restore();
+      }
+
       // Beam body
       const beamGrad = ctx.createLinearGradient(0,-7,0,7);
       beamGrad.addColorStop(0,'#D4A46A');
       beamGrad.addColorStop(0.3,'#C4914A');
       beamGrad.addColorStop(1,'#A07030');
-      ctx.fillStyle = beamGrad;
-      ctx.shadowColor='rgba(45,27,69,.18)'; ctx.shadowBlur=8;
-      ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
+
+      if(isBalanced) {
+        ctx.save();
+        ctx.shadowColor = '#5DD9A0';
+        ctx.shadowBlur = 24;
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = beamGrad;
+        ctx.shadowColor='rgba(45,27,69,.18)'; ctx.shadowBlur=8;
+        ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
+      }
+
       // Beam highlight
       ctx.fillStyle='rgba(255,255,255,.35)';
       ctx.fillRect(-beamHalfW,-7,beamHalfW*2,3);
@@ -669,7 +749,7 @@ function Level2Lever({ onDone }) {
     };
     draw();
     return()=>cancelAnimationFrame(animRef.current);
-  },[chalIdx]);
+  },[chalIdx, introShown]);
 
   // Pointer events for dragging the right weight
   const getCanvasPos = (canvas, e)=>{
@@ -682,7 +762,6 @@ function Level2Lever({ onDone }) {
     const canvas = canvasRef.current;
     if(!canvas) return;
     const cx = getCanvasPos(canvas, e);
-    // Convert canvas x to beam local x: cx - pivotX ≈ rightPosRef.current
     const bx = cx - pivotX;
     const rp = rightPosRef.current;
     if(Math.abs(bx - rp) < 28){ draggingRef.current=true; e.preventDefault(); }
@@ -743,6 +822,35 @@ function Level2Lever({ onDone }) {
     );
   }
 
+  // Intro card
+  if(!introShown) {
+    return (
+      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#FFF8EA,#FFF3E2)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:16}}>
+        <div style={{display:'flex', alignItems:'flex-end', gap:4}}>
+          <div style={{fontSize:72, lineHeight:1}}>🐘</div>
+          <div style={{fontSize:28, marginBottom:8}}>🐭🐭🐭</div>
+        </div>
+        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', textAlign:'center', lineHeight:1.4}}>
+          Слонёнок и мышки<br/>хотят качаться!
+        </div>
+        <div style={{fontSize:15, color:'var(--ak-ink-2)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
+          Но слонёнок тяжёлый 🐘<br/>Помоги найти равновесие
+        </div>
+        <div style={{background:'#fff', borderRadius:18, padding:'14px 20px', boxShadow:'0 4px 0 rgba(45,27,69,.08)', display:'flex', flexDirection:'column', alignItems:'center', gap:6}}>
+          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'var(--ak-ink-2)'}}>Чем дальше — тем сильнее!</div>
+          <div style={{display:'flex', alignItems:'center', gap:8, fontSize:13, fontFamily:'var(--ak-display)', fontWeight:700}}>
+            <span style={{color:'#FF8B7A'}}>Сила × Расстояние</span>
+            <span style={{color:'var(--ak-ink-3)'}}>←→</span>
+            <span style={{color:'#5DD9A0'}}>Сила × Расстояние</span>
+          </div>
+        </div>
+        <button className="ak-btn ak-btn--cta" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
+          Качаться! ⚖️
+        </button>
+      </div>
+    );
+  }
+
   const c = L2_CHALLENGES[chalIdx];
   const leftTorque = c.leftWeights.reduce((s,w)=>s+w.mass*w.dist,0);
 
@@ -790,11 +898,22 @@ function Level2Lever({ onDone }) {
       {celebrating&&(
         <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
           <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:52,marginBottom:10}}>⚖️</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Равновесие!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{c.fact}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-              {chalIdx>=L2_CHALLENGES.length-1?'Завершить! 🎉':'Дальше →'}
+            <div style={{display:'flex', justifyContent:'center', gap:4, fontSize:36, marginBottom:8}}>
+              <span>🐘</span><span>⚖️</span><span>🐭🐭🐭</span>
+            </div>
+            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-ink)', marginBottom:6}}>Равновесие найдено!</div>
+            {/* Law visualization */}
+            <div style={{background:'linear-gradient(135deg,#C8F2DD,#E8FFF4)', borderRadius:16, padding:'14px 16px', marginBottom:14}}>
+              <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:14, color:'#2BA873', letterSpacing:1, marginBottom:6}}>ЗАКОН РЫЧАГА</div>
+              <div style={{display:'flex', alignItems:'center', justifyContent:'center', gap:10, fontSize:13, fontFamily:'var(--ak-display)', fontWeight:700, color:'var(--ak-ink)'}}>
+                <span>🐘 × расстояние</span>
+                <span style={{color:'#5DD9A0'}}>＝</span>
+                <span>🐭 × расстояние</span>
+              </div>
+            </div>
+            <div style={{fontSize:13, color:'var(--ak-ink-2)', lineHeight:1.55, fontWeight:500, marginBottom:18}}>{c.fact}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+              {chalIdx>=L2_CHALLENGES.length-1?'Завершить! 🎉':'Следующее задание →'}
             </button>
           </div>
         </div>
@@ -828,6 +947,7 @@ function Level3Cannon({ onDone }) {
   const [showFact, setShowFact] = React.useState(false);
   const [fired, setFired] = React.useState(false);
   const [trailPoints, setTrailPoints] = React.useState([]);
+  const [introShown, setIntroShown] = React.useState(false);
 
   const canvasRef = React.useRef(null);
   const animRef = React.useRef(null);
@@ -836,6 +956,7 @@ function Level3Cannon({ onDone }) {
   const angleRef = React.useRef(45);
   const firedRef = React.useRef(false);
   const hitRef = React.useRef(false);
+  const ballFlyingRef = React.useRef(false);
 
   const W=340, H=280;
   const GROUND_Y = H-30;
@@ -852,9 +973,11 @@ function Level3Cannon({ onDone }) {
     setCelebrating(false);
     setShowFact(false);
     firedRef.current=false;
+    ballFlyingRef.current=false;
   },[targetIdx]);
 
   React.useEffect(()=>{
+    if(!introShown) return;
     const canvas = canvasRef.current;
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -913,6 +1036,17 @@ function Level3Cannon({ onDone }) {
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.restore();
+
+        // Add label at apex of trajectory
+        const apexIdx = Math.floor(trailRef.current.length * 0.4);
+        if(trailRef.current[apexIdx] && !ballRef.current) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(45,27,69,.7)';
+          ctx.font = 'bold 10px Nunito, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('↓ гравитация', trailRef.current[apexIdx].x, trailRef.current[apexIdx].y - 14);
+          ctx.restore();
+        }
       }
 
       // Target bucket
@@ -993,6 +1127,8 @@ function Level3Cannon({ onDone }) {
       // Flying ball
       if(ballRef.current){
         const {x,y,vx,vy} = ballRef.current;
+        ballFlyingRef.current = true;
+
         // Physics step
         const nvx = vx;
         const nvy = vy + GRAVITY;
@@ -1005,6 +1141,7 @@ function Level3Cannon({ onDone }) {
         if(Math.abs(x - tgt.x) < 28 && y >= GROUND_Y - 55 && y <= GROUND_Y){
           hitRef.current = true;
           ballRef.current = null;
+          ballFlyingRef.current = false;
           firedRef.current = false;
           setFired(false);
           return;
@@ -1013,6 +1150,7 @@ function Level3Cannon({ onDone }) {
         // Check ground
         if(ny >= GROUND_Y){
           ballRef.current = null;
+          ballFlyingRef.current = false;
           firedRef.current = false;
           setFired(false);
           setAttempts(prev=>{
@@ -1027,6 +1165,7 @@ function Level3Cannon({ onDone }) {
         // Check walls
         if(nx > W || nx < 0){
           ballRef.current = null;
+          ballFlyingRef.current = false;
           firedRef.current = false;
           setFired(false);
           setAttempts(prev=>{
@@ -1049,6 +1188,26 @@ function Level3Cannon({ onDone }) {
         ctx.shadowColor='rgba(200,72,32,.6)'; ctx.shadowBlur=10;
         ctx.beginPath(); ctx.arc(nx,ny,8,0,Math.PI*2); ctx.fill();
         ctx.restore();
+
+        // Draw downward gravity arrow near ball
+        ctx.save();
+        ctx.strokeStyle = '#FF6B6B';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(nx, ny - 18);
+        ctx.lineTo(nx, ny - 6);
+        ctx.stroke();
+        // Arrowhead
+        ctx.fillStyle = '#FF6B6B';
+        ctx.beginPath();
+        ctx.moveTo(nx, ny);
+        ctx.lineTo(nx - 4, ny - 8);
+        ctx.lineTo(nx + 4, ny - 8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      } else {
+        ballFlyingRef.current = false;
       }
 
       if(hitRef.current){
@@ -1075,7 +1234,7 @@ function Level3Cannon({ onDone }) {
 
     draw();
     return()=>cancelAnimationFrame(animRef.current);
-  },[targetIdx,fired]);
+  },[targetIdx,fired,introShown]);
 
   const handleFire = ()=>{
     if(firedRef.current || celebrating || showFact) return;
@@ -1099,11 +1258,12 @@ function Level3Cannon({ onDone }) {
     ballRef.current=null;
     firedRef.current=false;
     hitRef.current=false;
+    ballFlyingRef.current=false;
     trailRef.current=[];
     setFired(false);
   };
 
-  const handleNext = ()=>{
+  const handleNextTarget = ()=>{
     setCelebrating(false);
     setShowFact(false);
     if(targetIdx>=L3_TARGETS.length-1){
@@ -1118,6 +1278,36 @@ function Level3Cannon({ onDone }) {
     return(
       <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
         <AKSuccessCard stars={3} title="Пушка Галилея!" fact="Угол 45° даёт максимальную дальность. Галилей открыл законы баллистики в 1590 году!" onNext={onDone} ctaLabel="На главную 🏠"/>
+      </div>
+    );
+  }
+
+  // Intro card
+  if(!introShown) {
+    return (
+      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#87CEEB,#C8E8F5)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:16}}>
+        <div style={{position:'relative', width:240, height:120}}>
+          <div style={{position:'absolute', right:0, top:0, fontSize:56}}>🌴</div>
+          <div style={{position:'absolute', right:16, top:20, fontSize:36}}>🐒</div>
+          <div style={{position:'absolute', left:0, bottom:0, fontSize:44}}>💥</div>
+          <svg style={{position:'absolute', inset:0}} width="240" height="120" viewBox="0 0 240 120">
+            <path d="M 50 100 Q 120 10 200 60" fill="none" stroke="#2D1B45" strokeWidth="2" strokeDasharray="6,4" opacity="0.4"/>
+            <text x="120" y="20" textAnchor="middle" fontSize="10" fill="#2D1B45" opacity="0.6" fontFamily="Nunito" fontWeight="700">гравитация тянет вниз</text>
+          </svg>
+        </div>
+        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', textAlign:'center', lineHeight:1.4}}>
+          Обезьянка голодная!<br/>Брось ей банан 🍌
+        </div>
+        <div style={{fontSize:15, color:'var(--ak-ink-2)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
+          Выбери угол — и смотри как<br/>гравитация изгибает траекторию
+        </div>
+        <div style={{background:'#fff', borderRadius:18, padding:'14px 20px', boxShadow:'0 4px 0 rgba(45,27,69,.08)', textAlign:'center'}}>
+          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'var(--ak-ink-2)', marginBottom:4}}>Лучший угол для дальнего броска:</div>
+          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-phys-3)'}}>45°</div>
+        </div>
+        <button className="ak-btn ak-btn--phys" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
+          Бросить! 🍌
+        </button>
       </div>
     );
   }
@@ -1188,6 +1378,23 @@ function Level3Cannon({ onDone }) {
         </div>
       </div>
 
+      {/* Hit success — inline card */}
+      {celebrating && (
+        <div style={{background:'linear-gradient(135deg,#C8F2DD,#E8FFF4)', borderRadius:20, padding:'18px 16px', marginTop:16}}>
+          <div style={{fontSize:36, textAlign:'center', marginBottom:6}}>🐒🍌</div>
+          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:18, color:'var(--ak-ink)', textAlign:'center', marginBottom:8}}>Обезьянка поймала!</div>
+          {/* Law */}
+          <div style={{background:'rgba(43,168,115,.12)', borderRadius:12, padding:'10px 14px', marginBottom:12, textAlign:'center'}}>
+            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:12, color:'#2BA873', letterSpacing:1, marginBottom:4}}>ГРАВИТАЦИЯ</div>
+            <div style={{fontSize:12, color:'var(--ak-ink)', fontWeight:600, lineHeight:1.5}}>Тянет всё вниз с одинаковой силой.<br/>Именно она изгибает траекторию!</div>
+          </div>
+          <div style={{fontSize:12, color:'var(--ak-ink-2)', lineHeight:1.5, fontWeight:500, marginBottom:12}}>{tgt.fact}</div>
+          <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNextTarget}>
+            {targetIdx >= L3_TARGETS.length-1 ? 'Завершить! 🎉' : 'Следующая обезьянка →'}
+          </button>
+        </div>
+      )}
+
       {/* Fact overlay after all attempts */}
       {showFact&&!celebrating&&(
         <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
@@ -1195,21 +1402,7 @@ function Level3Cannon({ onDone }) {
             <div style={{fontSize:48,marginBottom:10}}>💥</div>
             <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',marginBottom:10}}>Попробуй ещё!</div>
             <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{tgt.fact}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-              {targetIdx>=L3_TARGETS.length-1?'Завершить! 🎉':'Следующая цель →'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Hit celebration */}
-      {celebrating&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:52,marginBottom:10}}>🎯</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Попал!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{tgt.fact}</div>
-            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNextTarget}>
               {targetIdx>=L3_TARGETS.length-1?'Завершить! 🎉':'Следующая цель →'}
             </button>
           </div>
@@ -1223,9 +1416,9 @@ function Level3Cannon({ onDone }) {
    LEVEL SELECT
    ============================================================ */
 const LEVELS = [
-  {n:1, title:'Лазерный лабиринт', sub:'Свет · Зеркала · Отражение', emoji:'🔦', desc:'Направь лазер через зеркала к цели'},
-  {n:2, title:'Рычаг Архимеда',    sub:'Силы · Рычаг · Равновесие',  emoji:'⚖️', desc:'Найди равновесие перетаскивая груз'},
-  {n:3, title:'Пушка Галилея',     sub:'Траектория · Угол · Гравитация', emoji:'💥', desc:'Выбери угол и попади в цель'},
+  {n:1, title:'Лазерный лабиринт', sub:'Закон отражения света', emoji:'🧑‍🚀', desc:'Спаси космонавта — направь луч через зеркала'},
+  {n:2, title:'Рычаг Архимеда',    sub:'Закон равновесия сил',  emoji:'🐘', desc:'Помоги слонёнку качаться с мышками'},
+  {n:3, title:'Пушка Галилея',     sub:'Гравитация и траектория', emoji:'🐒', desc:'Накорми голодную обезьянку бананом'},
 ];
 
 function LevelSelect({ onSelect }) {
@@ -1246,7 +1439,7 @@ function LevelSelect({ onSelect }) {
             onMouseEnter={e=>{ e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow='0 9px 0 rgba(45,27,69,.10),0 18px 36px -8px rgba(45,27,69,.22),inset 0 2px 0 rgba(255,255,255,1)'; }}
             onMouseLeave={e=>{ e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 6px 0 rgba(45,27,69,.10),0 14px 28px -8px rgba(45,27,69,.16),inset 0 2px 0 rgba(255,255,255,1)'; }}
           >
-            <div style={{width:60,height:60,borderRadius:20,background:'linear-gradient(135deg,#E5DCFF,#B5A1FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,flexShrink:0,boxShadow:'0 4px 0 #7C5FE044,inset 0 2px 0 rgba(255,255,255,.6)'}}>{lv.emoji}</div>
+            <div style={{width:60,height:60,borderRadius:20,background:'linear-gradient(135deg,#E5DCFF,#B5A1FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:lv.n===2?26:30,flexShrink:0,boxShadow:'0 4px 0 #7C5FE044,inset 0 2px 0 rgba(255,255,255,.6)'}}>{lv.n===2?'🐘⚖️':lv.n===1?'🧑‍🚀':lv.emoji}</div>
             <div style={{flex:1}}>
               <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,color:'var(--ak-ink)',marginBottom:3}}>{lv.title}</div>
               <div style={{fontSize:12,fontWeight:700,color:'var(--ak-phys-3)',letterSpacing:'.5px',marginBottom:4,textTransform:'uppercase'}}>{lv.sub}</div>
