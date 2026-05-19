@@ -107,11 +107,15 @@ function TopBar({level,title,onHome,step,total}){
 
 function TaskBadge({children}){
   return(
-    <div style={{margin:'0 16px 10px',padding:'10px 16px',borderRadius:18,
-      background:'linear-gradient(180deg,var(--ak-phys-1),rgba(229,220,255,.4))',
-      fontFamily:'var(--ak-display)',fontSize:15,fontWeight:700,color:'var(--ak-phys-3)',
-      textAlign:'center',boxShadow:'inset 0 1px 0 rgba(255,255,255,.8)'}}>
-      {children}
+    <div className="ak-pulse" style={{margin:'0 16px 10px',
+      display:'inline-flex',alignItems:'center',gap:10,
+      padding:'11px 18px 11px 14px',borderRadius:999,
+      background:'#fff',
+      fontFamily:'var(--ak-display)',fontSize:14,fontWeight:600,color:'var(--ak-ink)',
+      boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -6px rgba(45,27,69,.14),inset 0 1px 0 rgba(255,255,255,1)'}}>
+      <div style={{width:10,height:10,borderRadius:'50%',background:'#B5A1FF',flexShrink:0,
+        boxShadow:'0 0 0 4px rgba(181,161,255,.33),inset 0 -1px 0 #7C5FE0'}}/>
+      <span>{children}</span>
     </div>
   );
 }
@@ -281,8 +285,8 @@ function Level1({onWin,onHome}){
         ctx.beginPath();ctx.arc(sx,sy,2,0,Math.PI*2);ctx.fill();
       });
       // ground
-      ctx.fillStyle='var(--ak-ok-1)';ctx.fillRect(0,H-44,W,44);
-      ctx.fillStyle='var(--ak-ok-3)';ctx.fillRect(0,H-44,W,5);
+      ctx.fillStyle='#C8F2DD';ctx.fillRect(0,H-44,W,44);
+      ctx.fillStyle='#2BA873';ctx.fillRect(0,H-44,W,5);
 
       drawCannon(a);
       ctx.font='30px serif';ctx.textBaseline='alphabetic';
@@ -304,8 +308,8 @@ function Level1({onWin,onHome}){
         ctx.beginPath();ctx.arc(t.x,t.y,t.r+8,0,Math.PI*2);
         ctx.fillStyle='rgba(255,210,98,.18)';ctx.fill();
         ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-        ctx.fillStyle='var(--ak-cta-1)';ctx.fill();
-        ctx.strokeStyle='var(--ak-cta-3)';ctx.lineWidth=2.5;ctx.stroke();
+        ctx.fillStyle='#FFEDA8';ctx.fill();
+        ctx.strokeStyle='#D4A22B';ctx.lineWidth=2.5;ctx.stroke();
         ctx.font='28px serif';ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillText('⭐',t.x,t.y);
         ctx.textAlign='left';ctx.textBaseline='alphabetic';
@@ -324,10 +328,10 @@ function Level1({onWin,onHome}){
         ctx.strokeStyle='rgba(124,95,224,.3)';ctx.lineWidth=2;
         ctx.beginPath();ctx.arc(0,0,40,-ar,0,false);ctx.stroke();
         ctx.restore();
-        ctx.fillStyle='var(--ak-phys-3)';ctx.font='bold 14px Nunito,sans-serif';
+        ctx.fillStyle='#7C5FE0';ctx.font='bold 14px Nunito,sans-serif';
         ctx.textAlign='left';ctx.fillText(`${a}°`,g.cannon.x+44,g.cannon.y-32);
         if(Math.abs(a-45)<6){
-          ctx.fillStyle='var(--ak-cta-3)';ctx.font='bold 12px Nunito,sans-serif';
+          ctx.fillStyle='#D4A22B';ctx.font='bold 12px Nunito,sans-serif';
           ctx.fillText('⭐ 45° — MAX дальность!',g.cannon.x+44,g.cannon.y-50);
         }
       }
@@ -371,7 +375,7 @@ function Level1({onWin,onHome}){
 
       // HUD
       const alive=g.targets.filter(t=>t.alive).length;
-      ctx.fillStyle='var(--ak-ink-2)';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='right';
+      ctx.fillStyle='#6B5680';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='right';
       ctx.fillText(`⭐ ${3-alive}/3  ·  💥 ${g.maxShots-g.shots} выстрелов`,W-12,26);
       ctx.textAlign='left';
 
@@ -398,7 +402,9 @@ function Level1({onWin,onHome}){
     <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',
       background:'radial-gradient(80% 40% at 50% 0%,var(--ak-phys-1) 0%,transparent 65%),linear-gradient(180deg,#FFF8EA,var(--ak-bg) 60%)'}}>
       <TopBar level={1} title="Траектория полёта" onHome={onHome}/>
-      <TaskBadge>Попади в ⭐ из пушки — смотри на стрелки скорости!</TaskBadge>
+      <div style={{display:'flex',justifyContent:'center',padding:'2px 0'}}>
+        <TaskBadge>Попади в ⭐ из пушки — смотри на стрелки скорости!</TaskBadge>
+      </div>
       <canvas ref={canRef} width={360} height={460} style={{width:'100%',flex:1,display:'block'}}/>
       <div style={{padding:'10px 20px 16px',background:'rgba(255,255,255,.75)',backdropFilter:'blur(8px)',flexShrink:0}}>
         <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',textAlign:'center',marginBottom:6}}>
@@ -430,10 +436,11 @@ function Level1({onWin,onHome}){
    LEVEL 2 — РЫЧАГ АРХИМЕДА
    Slider moves right weight → live F×d=F×d equation → find balance
    ══════════════════════════════════════════════════════════════ */
+// ⚠️ ПРАВИЛО: lMass*lDist = rMass*ans, И ans ≤ ARM(138)!
 const LVL2_PUZZLES=[
-  {lMass:80,lDist:60,rMass:20,e1:'🐘',e2:'🐭',ans:240},
-  {lMass:90,lDist:50,rMass:30,e1:'🦏',e2:'🐱',ans:150},
-  {lMass:60,lDist:80,rMass:40,e1:'🦛',e2:'🐰',ans:120},
+  {lMass:60,lDist:40,rMass:30,e1:'🐘',e2:'🐭',ans:80},   // 60×40=2400, 30×80=2400 ✓
+  {lMass:50,lDist:60,rMass:25,e1:'🦏',e2:'🐱',ans:120},  // 50×60=3000, 25×120=3000 ✓
+  {lMass:60,lDist:80,rMass:80,e1:'🦛',e2:'🐰',ans:60},   // 60×80=4800, 80×60=4800 ✓
 ];
 
 function Level2({onWin,onHome}){
@@ -497,8 +504,8 @@ function Level2({onWin,onHome}){
         ctx.fillStyle='rgba(124,95,224,.2)';ctx.beginPath();ctx.arc(sx,sy,2,0,Math.PI*2);ctx.fill();
       });
       // ground
-      ctx.fillStyle='var(--ak-ok-1)';ctx.fillRect(0,H-44,W,44);
-      ctx.fillStyle='var(--ak-ok-3)';ctx.fillRect(0,H-44,W,5);
+      ctx.fillStyle='#C8F2DD';ctx.fillRect(0,H-44,W,44);
+      ctx.fillStyle='#2BA873';ctx.fillRect(0,H-44,W,5);
 
       // beam math — positions of weights on rotated beam
       function beamPt(d){
@@ -567,20 +574,20 @@ function Level2({onWin,onHome}){
       // row 1: formula
       ctx.fillStyle='#FF6B35';ctx.font='bold 13px Nunito,sans-serif';
       ctx.fillText(`${pz.e1} × d₁`,W/2-72,eqY+20);
-      ctx.fillStyle=balanced?'#3CA876':'var(--ak-ink-3)';ctx.font='bold 18px Nunito,sans-serif';
+      ctx.fillStyle=balanced?'#3CA876':'#A797B8';ctx.font='bold 18px Nunito,sans-serif';
       ctx.fillText(balanced?'=':'≠',W/2,eqY+20);
       ctx.fillStyle='#4A9EFF';ctx.font='bold 13px Nunito,sans-serif';
       ctx.fillText(`${pz.e2} × d₂`,W/2+72,eqY+20);
       // row 2: numbers
       ctx.fillStyle='#FF6B35';ctx.font='bold 17px Nunito,sans-serif';
       ctx.fillText(`${tL}`,W/2-80,eqY+46);
-      ctx.fillStyle='var(--ak-ink-3)';ctx.font='12px Nunito,sans-serif';
+      ctx.fillStyle='#A797B8';ctx.font='12px Nunito,sans-serif';
       ctx.fillText('ед',W/2-52,eqY+46);
-      ctx.fillStyle=balanced?'#3CA876':'var(--ak-ink-3)';ctx.font='bold 18px Nunito,sans-serif';
+      ctx.fillStyle=balanced?'#3CA876':'#A797B8';ctx.font='bold 18px Nunito,sans-serif';
       ctx.fillText(balanced?'✓ =':'≠',W/2,eqY+46);
       ctx.fillStyle=balanced?'#3CA876':tR>tL?'#D9523F':'#4A9EFF';ctx.font='bold 17px Nunito,sans-serif';
       ctx.fillText(`${tR}`,W/2+72,eqY+46);
-      ctx.fillStyle='var(--ak-ink-3)';ctx.font='12px Nunito,sans-serif';
+      ctx.fillStyle='#A797B8';ctx.font='12px Nunito,sans-serif';
       ctx.fillText('ед',W/2+96,eqY+46);
       ctx.textAlign='left';
 
@@ -595,7 +602,7 @@ function Level2({onWin,onHome}){
       // hint
       if(!balanced){
         const diff=tL-tR;
-        ctx.fillStyle='var(--ak-ink-3)';ctx.font='13px Nunito,sans-serif';ctx.textAlign='center';
+        ctx.fillStyle='#A797B8';ctx.font='13px Nunito,sans-serif';ctx.textAlign='center';
         ctx.fillText(diff>0?'← сдвинь правее →':'← сдвинь левее →',W/2,eqY-8);ctx.textAlign='left';
       } else {
         ctx.fillStyle='#3CA876';ctx.font='bold 13px Nunito,sans-serif';ctx.textAlign='center';
@@ -612,7 +619,9 @@ function Level2({onWin,onHome}){
     <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',
       background:'radial-gradient(70% 40% at 50% 0%,var(--ak-cta-1) 0%,transparent 70%),linear-gradient(180deg,#FFF8EA,var(--ak-bg))'}}>
       <TopBar level={2} title="Закон рычага" onHome={onHome} step={pIdx} total={LVL2_PUZZLES.length}/>
-      <TaskBadge>Найди равновесие! Уравнение меняется вживую 📐</TaskBadge>
+      <div style={{display:'flex',justifyContent:'center',padding:'2px 0'}}>
+        <TaskBadge>Найди равновесие! Уравнение меняется вживую 📐</TaskBadge>
+      </div>
       <canvas ref={canRef} width={360} height={460} style={{width:'100%',flex:1,display:'block'}}/>
       <div style={{padding:'10px 20px 14px',background:'rgba(255,255,255,.75)',backdropFilter:'blur(8px)',flexShrink:0}}>
         <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',textAlign:'center',marginBottom:6}}>
@@ -642,10 +651,15 @@ function Level2({onWin,onHome}){
    Rotate mirror with slider → laser beam bounces → hit star
    Shows angles live: angle_in = angle_out
    ══════════════════════════════════════════════════════════════ */
+// ⚠️ ПРАВИЛО: геометрия ПРОВЕРЕНА — каждый ответ-угол лежит в [15°,165°]
+// Зеркало: mx=W*0.30, my=H*0.50. Лазер горизонтальный (dx=1,dy=0) от x=30.
+// Задача 1: θ≈30°, лазер вниз-вправо → цель внизу-справа
+// Задача 2: θ≈20°, лазер вниз-вправо → цель внизу-справа (ближе)
+// Задача 3: θ≈145°, лазер вверх-вправо → цель вверху
 const LVL3_PUZZLES=[
-  {srcY:.38, tgt:{x:.85,y:.22}},
-  {srcY:.55, tgt:{x:.85,y:.75}},
-  {srcY:.30, tgt:{x:.85,y:.55}},
+  {srcY:.489, tgt:{x:.556, y:.876}},
+  {srcY:.478, tgt:{x:.694, y:.793}},
+  {srcY:.540, tgt:{x:.389, y:.187}},
 ];
 
 function Level3({onWin,onHome}){
@@ -696,7 +710,7 @@ function Level3({onWin,onHome}){
       const pz=LVL3_PUZZLES[pIdx];
       const srcX=30, srcY=pz.srcY*H;
       const dx=1,dy=0; // laser goes right
-      const mx=W*.48, my=H*.48;
+      const mx=W*.30, my=H*.50; // mirror on left-center (GEOMETRICALLY VERIFIED)
       const ma=mAngRef.current*Math.PI/180;
       // mirror normal (choose the one facing source)
       const n1x=-Math.sin(ma),n1y=Math.cos(ma);
@@ -814,8 +828,8 @@ function Level3({onWin,onHome}){
         ctx.fillText(`${incAng}°`,hx+Math.cos(ra)*52-8,hy+Math.sin(ra)*52+4);
         ctx.restore();
       } else {
-        // draw mirror anyway
-        const mx2=W*.48,my2=H*.48,ma2=mAngRef.current*Math.PI/180;
+        // draw mirror anyway (same position as traceRay)
+        const mx2=W*.30,my2=H*.50,ma2=mAngRef.current*Math.PI/180;
         ctx.save();ctx.translate(mx2,my2);ctx.rotate(ma2);
         const mg2=ctx.createLinearGradient(0,-52,0,52);
         mg2.addColorStop(0,'rgba(181,161,255,.2)');mg2.addColorStop(.5,'rgba(181,161,255,.9)');mg2.addColorStop(1,'rgba(181,161,255,.2)');
@@ -838,15 +852,15 @@ function Level3({onWin,onHome}){
         ctx.textAlign='center';
         ctx.fillStyle='#FF6B35';ctx.font='bold 14px Nunito,sans-serif';
         ctx.fillText(`угол падения: ${info.incAng}°`,W/2-70,eqY+20);
-        ctx.fillStyle=hits?'#3CA876':'var(--ak-ink-3)';ctx.font='bold 18px Nunito,sans-serif';
+        ctx.fillStyle=hits?'#3CA876':'#A797B8';ctx.font='bold 18px Nunito,sans-serif';
         ctx.fillText(hits?'=':'≠',W/2,eqY+20);
         ctx.fillStyle=hits?'#3CA876':'#7C5FE0';ctx.font='bold 14px Nunito,sans-serif';
         ctx.fillText(`угол отражения: ${info.incAng}°`,W/2+70,eqY+20);
-        ctx.fillStyle=hits?'#3CA876':'var(--ak-ink-3)';ctx.font='bold 13px Nunito,sans-serif';
+        ctx.fillStyle=hits?'#3CA876':'#A797B8';ctx.font='bold 13px Nunito,sans-serif';
         ctx.fillText(hits?'✓ Закон отражения работает!':'вращай зеркало → найди цель',W/2,eqY+44);
         ctx.textAlign='left';
       } else {
-        ctx.fillStyle='var(--ak-ink-3)';ctx.font='13px Nunito,sans-serif';ctx.textAlign='center';
+        ctx.fillStyle='#A797B8';ctx.font='13px Nunito,sans-serif';ctx.textAlign='center';
         ctx.fillText('Луч не попадает на зеркало — измени угол',W/2,eqY+30);ctx.textAlign='left';
       }
 
@@ -867,7 +881,9 @@ function Level3({onWin,onHome}){
     <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',
       background:'radial-gradient(70% 40% at 50% 0%,var(--ak-ok-1) 0%,transparent 65%),linear-gradient(180deg,#FFF8EA,var(--ak-bg))'}}>
       <TopBar level={3} title="Закон отражения" onHome={onHome} step={pIdx} total={LVL3_PUZZLES.length}/>
-      <TaskBadge>Поверни зеркало — направь луч в ⭐. Углы покажут закон!</TaskBadge>
+      <div style={{display:'flex',justifyContent:'center',padding:'2px 0'}}>
+        <TaskBadge>Поверни зеркало — направь луч в ⭐. Углы покажут закон!</TaskBadge>
+      </div>
       <canvas ref={canRef} width={360} height={450} style={{width:'100%',flex:1,display:'block'}}/>
       <div style={{padding:'10px 20px 14px',background:'rgba(255,255,255,.75)',backdropFilter:'blur(8px)',flexShrink:0}}>
         <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',textAlign:'center',marginBottom:6}}>
