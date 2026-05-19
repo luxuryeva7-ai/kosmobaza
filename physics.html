@@ -9,10 +9,7 @@
 :root {
   --ak-bg:#FFF3E2; --ak-bg-2:#FFE8CC; --ak-surface:#FFFDF7;
   --ak-ink:#2D1B45; --ak-ink-2:#6B5680; --ak-ink-3:#A797B8;
-  --ak-chem-1:#DCF7E7; --ak-chem-2:#7BD9A8; --ak-chem-3:#3CA876;
   --ak-phys-1:#E5DCFF; --ak-phys-2:#B5A1FF; --ak-phys-3:#7C5FE0;
-  --ak-bio-1:#FFE0CB; --ak-bio-2:#FFA17A; --ak-bio-3:#D96D49;
-  --ak-geo-1:#D6ECFA; --ak-geo-2:#8FCAF0; --ak-geo-3:#4A93C9;
   --ak-cta-1:#FFEDA8; --ak-cta-2:#FFD262; --ak-cta-3:#D4A22B;
   --ak-ok-1:#C8F2DD; --ak-ok-2:#5DD9A0; --ak-ok-3:#2BA873;
   --ak-warn-1:#FFD2C8; --ak-warn-2:#FF8B7A; --ak-warn-3:#D9523F;
@@ -25,14 +22,17 @@ html,body{background:#FFF3E2;margin:0;}
 #root{min-height:100vh;}
 body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 .ak{font-family:var(--ak-body);color:var(--ak-ink);-webkit-font-smoothing:antialiased;}
+.ak-clay{background:var(--ak-surface);border-radius:var(--ak-r-lg);box-shadow:0 10px 22px -8px rgba(45,27,69,.22),0 4px 10px -4px rgba(45,27,69,.10),inset 0 2px 0 rgba(255,255,255,.9),inset 0 -3px 0 rgba(45,27,69,.06);}
 .ak-btn{font-family:var(--ak-display);font-weight:600;font-size:17px;border:none;cursor:pointer;position:relative;transition:transform .08s ease,box-shadow .08s ease,filter .15s ease;user-select:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;padding:16px 26px;border-radius:999px;color:var(--ak-ink);}
 .ak-btn:disabled{cursor:not-allowed;filter:grayscale(.25) opacity(.6);}
-.ak-btn--phys{color:#fff;background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9C83FF 100%);box-shadow:0 6px 0 var(--ak-phys-3),0 12px 24px -6px rgba(124,95,224,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(124,95,224,.25);}
-.ak-btn--phys:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-phys-3),0 6px 12px -4px rgba(124,95,224,.4),inset 0 2px 0 rgba(255,255,255,.55);}
+.ak-btn--phys{color:#fff;background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9C83FF 100%);box-shadow:0 6px 0 var(--ak-phys-3),0 12px 24px -6px rgba(124,95,224,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(124,95,224,.25);text-shadow:0 1px 0 rgba(124,95,224,.4);}
+.ak-btn--phys:active{transform:translateY(4px);}
 .ak-btn--cta{color:var(--ak-ink);background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);}
 .ak-btn--cta:active{transform:translateY(4px);}
-.ak-btn--ok{color:#fff;background:linear-gradient(180deg,#7CECB5 0%,#5DD9A0 55%,#3FC685 100%);box-shadow:0 6px 0 var(--ak-ok-3),0 12px 24px -6px rgba(43,168,115,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(43,168,115,.25);}
+.ak-btn--ok{color:#fff;background:linear-gradient(180deg,#7CECB5 0%,#5DD9A0 55%,#3FC685 100%);box-shadow:0 6px 0 var(--ak-ok-3),0 12px 24px -6px rgba(43,168,115,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(43,168,115,.25);text-shadow:0 1px 0 rgba(43,168,115,.4);}
 .ak-btn--ok:active{transform:translateY(4px);}
+.ak-btn--warn{color:#fff;background:linear-gradient(180deg,#FF9F8F 0%,#FF8B7A 55%,#E06A5A 100%);box-shadow:0 6px 0 var(--ak-warn-3),0 12px 24px -6px rgba(217,82,63,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(217,82,63,.25);}
+.ak-btn--warn:active{transform:translateY(4px);}
 .ak-btn--soft{color:var(--ak-ink);background:linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(45,27,69,.05),inset 0 0 0 1px rgba(45,27,69,.06);}
 .ak-btn--soft:active{transform:translateY(3px);}
 .ak-btn--sm{padding:11px 18px;font-size:14px;}
@@ -44,19 +44,20 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 @keyframes ak-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px) rotate(-1deg);}40%{transform:translateX(7px) rotate(1deg);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
 @keyframes ak-pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.06);opacity:1;}100%{transform:scale(1);}}
 @keyframes ak-twinkle{0%,100%{opacity:.35;transform:scale(.85);}50%{opacity:1;transform:scale(1.05);}}
-@keyframes ak-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
 .ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
 .ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
 .ak-shake{animation:ak-shake .45s ease-in-out;}
 .ak-pop{animation:ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards;}
 .ak-twinkle{animation:ak-twinkle 2.4s ease-in-out infinite;}
-.ak-float{animation:ak-float 3s ease-in-out infinite;}
 .ak-num{font-variant-numeric:tabular-nums;font-family:var(--ak-display);}
 .ak-tap{cursor:pointer;transition:transform .12s cubic-bezier(.2,.7,.3,1),filter .12s;}
 .ak-tap:hover{transform:translateY(-3px);filter:brightness(1.03);}
 .ak-tap:active{transform:translateY(0);}
 .ak ::-webkit-scrollbar{display:none;}
 .ak{scrollbar-width:none;}
+input[type=range]{-webkit-appearance:none;width:100%;height:18px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
+input[type=range]::-webkit-slider-runnable-track{height:18px;border-radius:999px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -66,13 +67,10 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
 <script type="text/babel">
 /* ============================================================
-   AK DESIGN SYSTEM — ICONS & COMPONENTS
+   AK DESIGN TOKENS
    ============================================================ */
 const AK_TONES = {
-  chem: ['#DCF7E7','#7BD9A8','#3CA876'],
   phys: ['#E5DCFF','#B5A1FF','#7C5FE0'],
-  bio:  ['#FFE0CB','#FFA17A','#D96D49'],
-  geo:  ['#D6ECFA','#8FCAF0','#4A93C9'],
   ok:   ['#C8F2DD','#5DD9A0','#2BA873'],
   cta:  ['#FFEDA8','#FFD262','#D4A22B'],
   star: ['#FFE49E','#FFC857','#D4972B'],
@@ -80,126 +78,57 @@ const AK_TONES = {
   ink:  ['#E5DCEE','#6B5680','#2D1B45'],
 };
 
-function AKAtom({ size=80, tone='phys' }) {
+/* ============================================================
+   AK ICONS / SVG COMPONENTS
+   ============================================================ */
+function AKAtom({ size=60, tone='phys' }) {
   const [l,m,d] = AK_TONES[tone];
-  const id = React.useId().replace(/:/g,'');
+  const id = React.useId().replace(/:/g,'_');
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80" style={{display:'block'}}>
+    <svg width={size} height={size} viewBox="0 0 60 60" style={{display:'block'}}>
       <defs>
-        <radialGradient id={'at-'+id} cx="38%" cy="32%" r="70%">
+        <radialGradient id={'atom_'+id} cx="40%" cy="30%" r="70%">
           <stop offset="0%" stopColor="#fff"/>
-          <stop offset="30%" stopColor={l}/>
+          <stop offset="40%" stopColor={l}/>
           <stop offset="100%" stopColor={d}/>
         </radialGradient>
       </defs>
-      <ellipse cx="40" cy="74" rx="20" ry="3" fill="rgba(45,27,69,.18)"/>
-      <ellipse cx="40" cy="40" rx="36" ry="14" fill="none" stroke={d} strokeWidth="2" opacity=".35" transform="rotate(-35 40 40)"/>
-      <ellipse cx="40" cy="40" rx="36" ry="14" fill="none" stroke={d} strokeWidth="2" opacity=".35" transform="rotate(35 40 40)"/>
-      <ellipse cx="40" cy="40" rx="36" ry="14" fill="none" stroke={d} strokeWidth="2" opacity=".35"/>
-      <circle cx="40" cy="40" r="11" fill={'url(#at-'+id+')'} stroke={d} strokeWidth="2"/>
-      <ellipse cx="36" cy="35" rx="4" ry="6" fill="#fff" opacity=".6" transform="rotate(-20 36 35)"/>
-    </svg>
-  );
-}
-
-function AKBlob({ size=80, kind='sphere', tone='phys' }) {
-  const [l,m,d] = AK_TONES[tone];
-  const id = React.useId().replace(/:/g,'');
-  let shape;
-  if (kind === 'sphere') {
-    shape = <circle cx="40" cy="40" r="28" fill={'url(#bgb-'+id+')'} stroke={d} strokeWidth="2"/>;
-  } else if (kind === 'cube') {
-    shape = (
-      <g>
-        <polygon points="40,14 64,26 64,54 40,66 16,54 16,26" fill={'url(#bgb-'+id+')'} stroke={d} strokeWidth="2"/>
-        <polygon points="40,14 64,26 40,38 16,26" fill="rgba(255,255,255,.28)"/>
-        <line x1="40" y1="38" x2="40" y2="66" stroke={d} strokeWidth="1.5" opacity=".4"/>
-        <line x1="40" y1="38" x2="64" y2="26" stroke="rgba(255,255,255,.38)" strokeWidth="1.5"/>
-        <line x1="40" y1="38" x2="16" y2="26" stroke="rgba(255,255,255,.28)" strokeWidth="1.5"/>
-      </g>
-    );
-  } else if (kind === 'gear') {
-    const teeth = 8, ir = 16, or = 24, cx = 40, cy = 40;
-    let pts = '';
-    for (let i = 0; i < teeth * 2; i++) {
-      const angle = (i / (teeth * 2)) * Math.PI * 2 - Math.PI / 2;
-      const r = i % 2 === 0 ? or : ir;
-      pts += (cx + r * Math.cos(angle)) + ',' + (cy + r * Math.sin(angle)) + ' ';
-    }
-    shape = (
-      <g>
-        <polygon points={pts} fill={'url(#bgb-'+id+')'} stroke={d} strokeWidth="1.5"/>
-        <circle cx="40" cy="40" r="8" fill={l} stroke={d} strokeWidth="1.5"/>
-        <circle cx="40" cy="40" r="4" fill="#fff" opacity=".7"/>
-      </g>
-    );
-  } else if (kind === 'cylinder') {
-    shape = (
-      <g>
-        <rect x="18" y="28" width="44" height="36" rx="4" fill={'url(#bgb-'+id+')'} stroke={d} strokeWidth="2"/>
-        <ellipse cx="40" cy="28" rx="22" ry="7" fill={m} stroke={d} strokeWidth="2"/>
-        <ellipse cx="40" cy="27" rx="18" ry="4.5" fill="#fff" opacity=".42"/>
-        <ellipse cx="40" cy="64" rx="22" ry="7" fill={d} opacity=".32"/>
-        <rect x="24" y="30" width="8" height="30" rx="4" fill="#fff" opacity=".32"/>
-      </g>
-    );
-  } else {
-    shape = <circle cx="40" cy="40" r="28" fill={'url(#bgb-'+id+')'} stroke={d} strokeWidth="2"/>;
-  }
-  return (
-    <svg width={size} height={size} viewBox="0 0 80 80" style={{display:'block'}}>
-      <defs>
-        <radialGradient id={'bgb-'+id} cx="40%" cy="32%" r="75%">
-          <stop offset="0%" stopColor="#fff"/>
-          <stop offset="28%" stopColor={l}/>
-          <stop offset="100%" stopColor={d}/>
-        </radialGradient>
-      </defs>
-      <ellipse cx="40" cy="74" rx="22" ry="3" fill="rgba(45,27,69,.2)"/>
-      {shape}
-      {kind === 'sphere' && <ellipse cx="30" cy="26" rx="6" ry="10" fill="#fff" opacity=".6" transform="rotate(-20 30 26)"/>}
-    </svg>
-  );
-}
-
-function AKStar({ size=56, filled=true }) {
-  const id = React.useId().replace(/:/g,'');
-  return (
-    <svg width={size} height={size} viewBox="0 0 56 56">
-      <defs><radialGradient id={'st-'+id} cx="40%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="35%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#D4972B"/></radialGradient></defs>
-      <ellipse cx="28" cy="52" rx="14" ry="2.5" fill="rgba(45,27,69,.18)"/>
-      <path d="M28 5 L34.5 19 L50 21 L38.5 31.5 L42 47 L28 39.5 L14 47 L17.5 31.5 L6 21 L21.5 19 Z"
-        fill={filled?'url(#st-'+id+')':'#E8DCEE'} stroke={filled?'#C99B3B':'#B0A0C2'} strokeWidth="2.2" strokeLinejoin="round"/>
-      {filled&&<><ellipse cx="20" cy="18" rx="3.5" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 20 18)"/><circle cx="36" cy="14" r="1.6" fill="#fff" opacity=".7"/></>}
+      <ellipse cx="30" cy="30" rx="26" ry="10" fill="none" stroke={m} strokeWidth="2.5" opacity=".7"/>
+      <ellipse cx="30" cy="30" rx="26" ry="10" fill="none" stroke={m} strokeWidth="2.5" opacity=".7" transform="rotate(60 30 30)"/>
+      <ellipse cx="30" cy="30" rx="26" ry="10" fill="none" stroke={m} strokeWidth="2.5" opacity=".7" transform="rotate(120 30 30)"/>
+      <circle cx="30" cy="30" r="7" fill={'url(#atom_'+id+')'} stroke={d} strokeWidth="1.5"/>
+      <circle cx="27" cy="27" r="2.5" fill="#fff" opacity=".8"/>
     </svg>
   );
 }
 
 function AKStarSmall({ filled=true }) {
-  const id = React.useId().replace(/:/g,'');
+  const id = React.useId().replace(/:/g,'_');
   return (
     <svg width="14" height="14" viewBox="0 0 14 14">
-      <defs><linearGradient id={'ss-'+id} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#FFC857"/></linearGradient></defs>
+      <defs><linearGradient id={'ss_'+id} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#FFC857"/></linearGradient></defs>
       <path d="M7 1.2 L8.7 5 L13 5.4 L9.7 8.2 L10.7 12.3 L7 10.2 L3.3 12.3 L4.3 8.2 L1 5.4 L5.3 5 Z"
-        fill={filled?'url(#ss-'+id+')':'#E8DCEE'} stroke={filled?'#D4972B':'#B0A0C2'} strokeWidth="1.2" strokeLinejoin="round"/>
+        fill={filled ? 'url(#ss_'+id+')' : '#E8DCEE'} stroke={filled?'#D4972B':'#B0A0C2'} strokeWidth="1.2" strokeLinejoin="round"/>
     </svg>
   );
 }
 
-function AKPlanet({ size=80, tone='phys', ring=true }) {
-  const [l,m,d] = AK_TONES[tone];
-  const id = React.useId().replace(/:/g,'');
+function AKStar({ size=56, filled=true }) {
+  const id = React.useId().replace(/:/g,'_');
   return (
-    <svg width={size} height={size*0.78} viewBox="0 0 100 78">
-      <defs><radialGradient id={'pl-'+id} cx="38%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="30%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>
-      {ring&&<ellipse cx="50" cy="40" rx="48" ry="11" fill="none" stroke={d} strokeWidth="3" opacity=".4"/>}
-      <circle cx="50" cy="38" r="26" fill={'url(#pl-'+id+')'} stroke={d} strokeWidth="2"/>
-      <ellipse cx="42" cy="28" rx="6" ry="9" fill="#fff" opacity=".55" transform="rotate(-22 42 28)"/>
-      {ring&&<path d="M 16 47 Q 50 60 84 47" fill="none" stroke={d} strokeWidth="3" opacity=".7" strokeLinecap="round"/>}
+    <svg width={size} height={size} viewBox="0 0 56 56">
+      <defs><radialGradient id={'st_'+id} cx="40%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="35%" stopColor="#FFE49E"/><stop offset="100%" stopColor="#D4972B"/></radialGradient></defs>
+      <ellipse cx="28" cy="52" rx="14" ry="2.5" fill="rgba(45,27,69,.18)"/>
+      <path d="M28 5 L34.5 19 L50 21 L38.5 31.5 L42 47 L28 39.5 L14 47 L17.5 31.5 L6 21 L21.5 19 Z"
+        fill={filled ? 'url(#st_'+id+')' : '#E8DCEE'} stroke={filled?'#C99B3B':'#B0A0C2'} strokeWidth="2.2" strokeLinejoin="round"/>
+      {filled&&<><ellipse cx="20" cy="18" rx="3.5" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 20 18)"/><circle cx="36" cy="14" r="1.6" fill="#fff" opacity=".7"/></>}
     </svg>
   );
 }
 
+/* ============================================================
+   AK UI COMPONENTS
+   ============================================================ */
 function AKProgress({ value=0.5, tone='phys', height=18, label }) {
   const [l,m,d] = AK_TONES[tone];
   return (
@@ -208,8 +137,8 @@ function AKProgress({ value=0.5, tone='phys', height=18, label }) {
         <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-2)'}}>{label}</span>
         <span className="ak-num" style={{fontWeight:700,fontSize:14,color:'var(--ak-ink)'}}>{Math.round(value*100)}%</span>
       </div>}
-      <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18),inset 0 -1px 0 rgba(255,255,255,.6)',overflow:'hidden',position:'relative'}}>
-        <div style={{width:Math.max(0,Math.min(1,value))*100+'%',height:'100%',background:'linear-gradient(180deg,'+l+' 0%,'+m+' 50%,'+d+' 100%)',boxShadow:'inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 '+d,borderRadius:999,transition:'width .4s cubic-bezier(.2,.7,.3,1)',position:'relative'}}>
+      <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',overflow:'hidden',position:'relative'}}>
+        <div style={{width:`${Math.max(0,Math.min(1,value))*100}%`,height:'100%',background:`linear-gradient(180deg,${l} 0%,${m} 50%,${d} 100%)`,boxShadow:`inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 ${d}`,borderRadius:999,transition:'width .4s cubic-bezier(.2,.7,.3,1)',position:'relative'}}>
           <div style={{position:'absolute',top:3,left:8,right:8,height:3,background:'rgba(255,255,255,.55)',borderRadius:999}}/>
         </div>
       </div>
@@ -217,11 +146,11 @@ function AKProgress({ value=0.5, tone='phys', height=18, label }) {
   );
 }
 
-function AKStatChip({ icon, value, tone='cta' }) {
+function AKStatChip({ icon, value, tone='phys' }) {
   const [l,m,d] = AK_TONES[tone];
   return (
     <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'6px 14px 6px 6px',borderRadius:999,background:'#fff',boxShadow:'0 3px 0 rgba(45,27,69,.08),0 6px 14px -4px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'var(--ak-ink)'}}>
-      <div style={{width:28,height:28,borderRadius:'50%',background:'radial-gradient(circle at 35% 30%,#fff,'+l+' 25%,'+m+' 75%,'+d+' 100%)',boxShadow:'inset 0 -2px 0 '+d,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:14}}>{icon}</div>
+      <div style={{width:28,height:28,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${l} 25%,${m} 75%,${d} 100%)`,boxShadow:`inset 0 -2px 0 ${d}`,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:14}}>{icon}</div>
       <span className="ak-num">{value}</span>
     </div>
   );
@@ -231,752 +160,786 @@ function AKTaskBadge({ children, tone='phys' }) {
   const [l,m,d] = AK_TONES[tone];
   return (
     <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'12px 20px 12px 14px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -6px rgba(45,27,69,.14),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14.5,color:'var(--ak-ink)'}}>
-      <div style={{width:10,height:10,borderRadius:'50%',background:m,boxShadow:'0 0 0 4px '+m+'33,inset 0 -1px 0 '+d}}/>
+      <div style={{width:10,height:10,borderRadius:'50%',background:m,boxShadow:`0 0 0 4px ${m}33,inset 0 -1px 0 ${d}`}}/>
       <span>{children}</span>
+    </div>
+  );
+}
+
+function AKLessonHeader({ progress=0, stars=0, onClose }) {
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:'#fff',borderRadius:18,boxShadow:'0 4px 0 rgba(45,27,69,.06)',marginBottom:16}}>
+      <div style={{flex:1}}><AKProgress value={progress} tone="phys" height={14}/></div>
+      <div style={{display:'flex',gap:3}}>
+        {[0,1,2].map(i=><AKStarSmall key={i} filled={i<stars}/>)}
+      </div>
+      <button onClick={onClose} style={{width:36,height:36,fontSize:18,borderRadius:'50%',padding:0,flexShrink:0,border:'none',cursor:'pointer',background:'linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%)',boxShadow:'0 4px 0 rgba(45,27,69,.10),inset 0 2px 0 rgba(255,255,255,.95)',color:'var(--ak-ink)',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
     </div>
   );
 }
 
 function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabel='Дальше' }) {
   return (
-    <div className="ak-pop" style={{width:340,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(124,95,224,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1),inset 0 -3px 0 rgba(45,27,69,.05)',fontFamily:'var(--ak-body)',position:'relative'}}>
+    <div className="ak-pop" style={{width:320,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(43,168,115,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-body)',position:'relative',margin:'0 auto'}}>
       <div aria-hidden style={{position:'absolute',top:-10,left:-10,right:-10,height:30,pointerEvents:'none'}}>
-        {[{l:8,c:'#FFC857',s:8},{l:60,c:'#B5A1FF',s:6},{l:120,c:'#5DD9A0',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#E5DCFF',s:6}].map((p,i)=>(
-          <div key={i} className="ak-twinkle" style={{position:'absolute',left:p.l,top:4+(i%2)*8,width:p.s,height:p.s,borderRadius:2,background:p.c,transform:'rotate('+(i*25)+'deg)',animationDelay:(i*.15)+'s'}}/>
+        {[{l:8,c:'#FFC857',s:8},{l:60,c:'#5DD9A0',s:6},{l:120,c:'#B5A1FF',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#FFC857',s:6}].map((p,i)=>(
+          <div key={i} className="ak-twinkle" style={{position:'absolute',left:p.l,top:4+(i%2)*8,width:p.s,height:p.s,borderRadius:2,background:p.c,transform:`rotate(${i*25}deg)`,animationDelay:`${i*.15}s`}}/>
         ))}
       </div>
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:14,marginTop:8}}>
+      <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:16}}>
         {[0,1,2].map(i=>(
-          <div key={i} style={{transform:'translateY('+(i===1?-6:0)+'px) rotate('+((i-1)*12)+'deg)'}}>
-            <AKStar size={i===1?70:56} filled={i<stars}/>
+          <div key={i} style={{animationDelay:`${i*.12}s`}} className="ak-pop">
+            <AKStar size={44} filled={i<stars}/>
           </div>
         ))}
       </div>
-      <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:26,letterSpacing:-.4,color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
-      {fact&&<div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{fact}</div>}
-      {onNext&&<button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={onNext}>{ctaLabel}</button>}
-    </div>
-  );
-}
-
-function AKLessonHeader({ progress=0.4, stars=240, onClose }) {
-  return (
-    <div style={{display:'flex',alignItems:'center',gap:10}}>
-      <button onClick={onClose} className="ak-btn ak-btn--soft ak-btn--icon ak-btn--sm" aria-label="Закрыть">
-        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2 L12 12 M12 2 L2 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
+      <div style={{fontFamily:'var(--ak-display)',fontSize:26,color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
+      {fact&&<div style={{fontSize:14,color:'var(--ak-ink-2)',lineHeight:1.55,marginBottom:22,padding:'0 4px'}}>{fact}</div>}
+      <button className="ak-btn ak-btn--ok ak-btn--lg" onClick={onNext} style={{width:'100%'}}>
+        {ctaLabel} →
       </button>
-      <div style={{flex:1,paddingTop:2}}>
-        <AKProgress value={progress} tone="phys" height={14}/>
-      </div>
-      <AKStatChip icon="★" value={stars} tone="star"/>
     </div>
   );
 }
 
 /* ============================================================
-   LEVEL 1 — ГРАВИТАЦИЯ: Что упадёт первым?
+   LEVEL DATA
    ============================================================ */
-const L1_TASKS = [
-  {left:{e:'🪨',label:'Камень',mass:10}, right:{e:'🪶',label:'Перо',mass:.01}, answer:'same', fact:'В вакууме всё падает одинаково! Галилей доказал это, бросая шары с Пизанской башни.'},
-  {left:{e:'⚽',label:'Мяч',mass:.4}, right:{e:'🎈',label:'Шарик',mass:.003}, answer:'left', fact:'Шарик очень лёгкий — воздух сильно тормозит его. В вакууме они упали бы вместе!'},
-  {left:{e:'🍎',label:'Яблоко',mass:.18}, right:{e:'📚',label:'Книга',mass:.5}, answer:'same', fact:'Масса не важна для скорости падения. Земля сильнее тянет тяжёлый предмет, но и сдвинуть его сложнее!'},
-  {left:{e:'🔨',label:'Молоток',mass:.5}, right:{e:'🏓',label:'Мячик',mass:.03}, answer:'left', fact:'Молоток компактный — у него меньше площадь и меньше сопротивление воздуха.'},
-  {left:{e:'🪨',label:'Камень 1кг',mass:1}, right:{e:'🪨',label:'Камень 2кг',mass:2}, answer:'same', fact:'Один из законов Галилея: тела падают с одинаковым ускорением 9.8 м/с² независимо от массы!'},
+const L1_MISSIONS = [
+  { goal:'Попади в мишень! 🎯', targetX:200, targetY:145, hint:'Попробуй угол около 30–45°' },
+  { goal:'Мишень далеко! 🎯', targetX:250, targetY:150, hint:'Дальше всего летит под 45°!' },
+  { goal:'Мишень близко 🎯', targetX:100, targetY:150, hint:'Маленький угол = короткий полёт' },
+  { goal:'Высокая мишень! 🎯', targetX:180, targetY:100, hint:'Большой угол = выше траектория' },
+  { goal:'Последний выстрел! 🎯', targetX:230, targetY:130, hint:'Теперь ты знаешь физику полёта!' },
+];
+const L1_FACTS = [
+  'Под углом 45° снаряд летит дальше всего! Это закон физики.',
+  'Чем дальше мишень — тем ближе к 45° должен быть угол.',
+  'Маленький угол даёт низкую быструю траекторию.',
+  'Большой угол даёт высокую медленную дугу — можно попасть через препятствие!',
+  'Настоящие артиллеристы используют эти уравнения для точных выстрелов!',
 ];
 
-function Level1Falling({ onDone=()=>{} }) {
-  const [taskIdx, setTaskIdx] = React.useState(0);
-  const [falling, setFalling] = React.useState(false);
-  const [answered, setAnswered] = React.useState(null);
-  const [showFact, setShowFact] = React.useState(false);
-  const [allDone, setAllDone] = React.useState(false);
-  const [score, setScore] = React.useState(0);
-  const [leftY, setLeftY] = React.useState(0);
-  const [rightY, setRightY] = React.useState(0);
-  const task = L1_TASKS[taskIdx];
-  const rafRef = React.useRef(null);
+const L2_MISSIONS = [
+  { goal:'Сделай маятник коротким — меньше 50', targetMin:30, targetMax:50, label:'БЫСТРЫЙ', hint:'Тяни ползунок влево', fact:'Короткий маятник качается быстро — так работают маленькие часы!' },
+  { goal:'Сделай маятник длинным — больше 100', targetMin:100, targetMax:130, label:'МЕДЛЕННЫЙ', hint:'Тяни ползунок вправо', fact:'Длинный маятник качается медленно — как большие напольные часы!' },
+  { goal:'Средняя длина: 60–80', targetMin:60, targetMax:80, label:'СРЕДНИЙ', hint:'Найди середину', fact:'Galileo Galilei первым описал законы маятника в 1602 году!' },
+  { goal:'Самый длинный возможный — 120+', targetMin:115, targetMax:130, label:'МАКСИМУМ', hint:'Ползунок до конца вправо', fact:'Маятник Фуко длиной 67м в Парижском Пантеоне доказал вращение Земли!' },
+  { goal:'Самый короткий — меньше 40', targetMin:30, targetMax:40, label:'МИНИМУМ', hint:'Ползунок до конца влево', fact:'Масса шарика НЕ влияет на период маятника — доказал Галилей!' },
+];
 
-  const doAnswer = (choice) => {
-    if (falling || showFact) return;
-    setFalling(true);
-    const correct = choice === task.answer;
-    if (correct) setScore(s => s + 1);
-    setAnswered(correct ? 'correct' : 'wrong');
-    const startTime = performance.now();
-    const duration = 1400;
-    const groundMax = 200;
-    const animFall = (now) => {
-      const elapsed = now - startTime;
-      const p = Math.min(elapsed / duration, 1);
-      const eased = p * p;
-      let lY = eased * groundMax;
-      let rY = eased * groundMax;
-      if (task.answer === 'left') { rY = eased * groundMax * 0.55; }
-      else if (task.answer === 'right') { lY = eased * groundMax * 0.55; }
-      setLeftY(lY);
-      setRightY(rY);
-      if (p < 1) { rafRef.current = requestAnimationFrame(animFall); }
-      else setTimeout(() => setShowFact(true), 250);
-    };
-    rafRef.current = requestAnimationFrame(animFall);
-  };
+const L3_EXPERIMENTS = [
+  {
+    a:{ emoji:'🛒', label:'Тяжёлая тележка' }, b:{ emoji:'💪', label:'Большая сила' },
+    effect:'fast_move', question:'По какому закону Ньютона?',
+    options:['Первый: инерция','Второй: F=ma','Третий: действие=противодействие'],
+    answer:1, fact:'2-й закон Ньютона: F = m·a. Больше сила — больше ускорение! Тележка разгоняется.'
+  },
+  {
+    a:{ emoji:'🚀', label:'Ракета' }, b:{ emoji:'🔥', label:'Выхлоп газов' },
+    effect:'rocket_launch', question:'Что толкает ракету вверх?',
+    options:['Воздух снизу','Газы бьют вниз — ракета летит вверх','Гравитация отключается'],
+    answer:1, fact:'3-й закон Ньютона: действие = противодействие. Газы толкают вниз → ракета летит вверх!'
+  },
+  {
+    a:{ emoji:'⚽', label:'Мяч катится' }, b:{ emoji:'🏔', label:'Трение о пол' },
+    effect:'slow_stop', question:'Почему мяч остановился?',
+    options:['Кончилась энергия','Трение замедлило движение','Гравитация потянула вниз'],
+    answer:1, fact:'Трение — сила сопротивления движению. В космосе без трения мяч летел бы вечно!'
+  },
+  {
+    a:{ emoji:'🪃', label:'Покоящийся мяч' }, b:{ emoji:'❌', label:'Нет силы' },
+    effect:'stays_still', question:'Что произойдёт с мячом?',
+    options:['Покатится сам','Останется на месте','Упадёт вниз'],
+    answer:1, fact:'1-й закон Ньютона (инерция): тело в покое остаётся в покое, если нет внешней силы!'
+  },
+  {
+    a:{ emoji:'🏋', label:'Гиря 10 кг' }, b:{ emoji:'🪶', label:'Перо 0.001 кг' },
+    effect:'both_fall', question:'Что упадёт быстрее в вакууме?',
+    options:['Гиря','Перо','Одновременно!'],
+    answer:2, fact:'Галилей доказал: в вакууме все тела падают одинаково! g = 9.8 м/с² для всех.'
+  },
+  {
+    a:{ emoji:'🧲', label:'Магнит' }, b:{ emoji:'🔩', label:'Металлическая гайка' },
+    effect:'attract', question:'Какая это сила?',
+    options:['Гравитация','Электромагнитная','Трение'],
+    answer:1, fact:'Электромагнетизм — одна из 4 фундаментальных сил природы. Магнит притягивает железо!'
+  },
+];
 
-  React.useEffect(() => { return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); }; }, []);
+/* ============================================================
+   LEVEL 1 — CANNON (Пушка Галилея)
+   ============================================================ */
+function Level1Cannon({ onDone }) {
+  const isMobile = window.innerWidth < 600;
+  const CW = isMobile ? 300 : 340;
+  const CH = 190;
+  const GROUND_Y = CH - 30;
+  const V0 = 13, G = 0.42;
 
-  const nextTask = () => {
-    const next = taskIdx + 1;
-    if (next >= L1_TASKS.length) { setAllDone(true); return; }
-    setTaskIdx(next);
-    setFalling(false); setAnswered(null); setShowFact(false);
-    setLeftY(0); setRightY(0);
-  };
+  const [missionIdx, setMissionIdx] = React.useState(0);
+  const [displayAngle, setDisplayAngle] = React.useState(45);
+  const [phase, setPhase] = React.useState('aim'); // aim|flying|hit|miss|complete
 
-  if (allDone) {
-    return (
-      <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',alignItems:'center',justifyContent:'center',padding:24,boxSizing:'border-box'}}>
-        <AKSuccessCard stars={score >= 4 ? 3 : score >= 2 ? 2 : 1} title="Физик-эксперт!" fact="Галилей доказал: в вакууме все тела падают с одинаковым ускорением 9.8 м/с², независимо от массы. Воздух меняет всё!" onNext={onDone} ctaLabel="В меню →"/>
-      </div>
-    );
+  const angleRef = React.useRef(45);
+  const rafAngleRef = React.useRef(null);
+  const canvasRef = React.useRef(null);
+  const flyRef = React.useRef({ active:false, x:28, y:GROUND_Y-16, vx:0, vy:0, trail:[] });
+  const animFrameRef = React.useRef(null);
+  const phaseRef = React.useRef('aim');
+  const triesRef = React.useRef([0,0,0,0,0]);
+
+  const mission = L1_MISSIONS[missionIdx];
+
+  function drawCloud(ctx, x, y, r) {
+    ctx.save(); ctx.globalAlpha = 0.32;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+r*0.7, y+4, r*0.75, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x-r*0.7, y+4, r*0.65, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
   }
 
-  return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',padding:'16px 18px 22px',boxSizing:'border-box',position:'relative',overflow:'hidden'}}>
-      {/* Decorative clouds */}
-      <div style={{position:'absolute',top:56,left:6,fontSize:36,opacity:.32,pointerEvents:'none'}}>☁️</div>
-      <div style={{position:'absolute',top:88,right:10,fontSize:26,opacity:.24,pointerEvents:'none'}}>☁️</div>
-      <div style={{position:'absolute',top:42,'left':'38%',fontSize:20,opacity:.18,pointerEvents:'none'}}>☁️</div>
+  function drawTarget(ctx, tx, ty) {
+    ctx.save();
+    ctx.fillStyle = '#78350F';
+    ctx.fillRect(tx-2, ty, 4, GROUND_Y-ty);
+    [[14,'#EF4444'],[10,'#fff'],[6,'#EF4444'],[3,'#FFD262']].forEach(([r,c])=>{
+      ctx.beginPath(); ctx.arc(tx, ty, r, 0, Math.PI*2); ctx.fillStyle=c; ctx.fill();
+    });
+    ctx.restore();
+  }
 
-      <AKLessonHeader progress={taskIdx / L1_TASKS.length} stars={200 + score * 30} onClose={onDone}/>
+  function drawScene(ctx, fly, ang) {
+    ctx.clearRect(0, 0, CW, CH);
+    const sky = ctx.createLinearGradient(0, 0, 0, CH);
+    sky.addColorStop(0, '#EDE0FF'); sky.addColorStop(1, '#FFF3E2');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, CW, CH);
+    ctx.fillStyle = '#86EFAC'; ctx.fillRect(0, GROUND_Y, CW, CH-GROUND_Y);
+    ctx.fillStyle = '#4ADE80'; ctx.fillRect(0, GROUND_Y, CW, 4);
+    drawCloud(ctx, 80, 28, 28);
+    drawCloud(ctx, 200, 18, 20);
+    if (CW > 310) drawCloud(ctx, 290, 35, 18);
+    drawTarget(ctx, mission.targetX, mission.targetY);
+    // cannon shadow
+    ctx.save(); ctx.globalAlpha = 0.10;
+    ctx.beginPath(); ctx.ellipse(32, GROUND_Y+2, 24, 5, 0, 0, Math.PI*2); ctx.fillStyle='#2D1B45'; ctx.fill();
+    ctx.restore();
+    // cannon body
+    ctx.fillStyle = '#7C5FE0';
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(6, GROUND_Y-28, 42, 26, 8); ctx.fill(); }
+    else { ctx.fillRect(6, GROUND_Y-28, 42, 26); }
+    ctx.fillStyle = '#9C83FF'; ctx.fillRect(10, GROUND_Y-25, 34, 6);
+    // wheels
+    [[16,'#5A3FA0','#B5A1FF'],[38,'#5A3FA0','#B5A1FF']].forEach(([wx,dc,lc])=>{
+      ctx.beginPath(); ctx.arc(wx, GROUND_Y-3, 9, 0, Math.PI*2); ctx.fillStyle=dc; ctx.fill();
+      ctx.beginPath(); ctx.arc(wx, GROUND_Y-3, 4, 0, Math.PI*2); ctx.fillStyle=lc; ctx.fill();
+    });
+    // barrel
+    const bx=28, by=GROUND_Y-16;
+    const a = ang * Math.PI / 180;
+    ctx.strokeStyle='#5A3FA0'; ctx.lineWidth=11; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx+Math.cos(a)*40, by-Math.sin(a)*40); ctx.stroke();
+    ctx.strokeStyle='#9C83FF'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(bx+2, by-2); ctx.lineTo(bx+Math.cos(a)*36, by-Math.sin(a)*36); ctx.stroke();
+    // trail
+    if (fly.trail.length > 1) {
+      ctx.save(); ctx.globalAlpha=0.25; ctx.setLineDash([4,7]);
+      ctx.strokeStyle='#7C5FE0'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(fly.trail[0].x, fly.trail[0].y);
+      for (let i=1;i<fly.trail.length;i++) ctx.lineTo(fly.trail[i].x, fly.trail[i].y);
+      ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    }
+    // ball
+    const showBall = fly.active || fly.trail.length > 0;
+    if (showBall) {
+      const bxPos = fly.active ? fly.x : (fly.trail.length ? fly.trail[fly.trail.length-1].x : bx);
+      const byPos = fly.active ? fly.y : (fly.trail.length ? fly.trail[fly.trail.length-1].y : by);
+      const bg2 = ctx.createRadialGradient(bxPos-3, byPos-3, 2, bxPos, byPos, 9);
+      bg2.addColorStop(0,'#fff'); bg2.addColorStop(0.4,'#C4B5FF'); bg2.addColorStop(1,'#7C5FE0');
+      ctx.beginPath(); ctx.arc(bxPos, byPos, 8, 0, Math.PI*2);
+      ctx.fillStyle=bg2; ctx.fill();
+      ctx.strokeStyle='#5A3FA0'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+  }
 
-      {/* Task counter dots */}
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:14,marginBottom:8}}>
-        {L1_TASKS.map((_,i) => (
-          <div key={i} style={{width:10,height:10,borderRadius:'50%',background:i < taskIdx ? '#B5A1FF' : i === taskIdx ? '#7C5FE0' : 'rgba(45,27,69,.14)',transition:'all .3s',boxShadow:i === taskIdx ? '0 0 0 3px rgba(124,95,224,.3)' : 'none'}}/>
-        ))}
-      </div>
-
-      <div style={{display:'flex',justifyContent:'center',marginBottom:14}}>
-        <AKTaskBadge tone="phys">Что упадёт первым?</AKTaskBadge>
-      </div>
-
-      {/* Fall arena */}
-      <div style={{flex:1,position:'relative',minHeight:260,marginBottom:10}}>
-        {/* Left object */}
-        <div style={{position:'absolute',left:'12%',top:leftY,display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
-          <div style={{background:'#fff',borderRadius:20,padding:'12px 16px',boxShadow:'0 6px 0 rgba(181,161,255,.5),0 12px 24px -6px rgba(124,95,224,.25),inset 0 2px 0 rgba(255,255,255,.95)',display:'flex',flexDirection:'column',alignItems:'center',gap:4,minWidth:76}}>
-            <span style={{fontSize:52,lineHeight:1}}>{task.left.e}</span>
-            <span style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:12,color:'var(--ak-ink-2)',textTransform:'uppercase',letterSpacing:.4}}>{task.left.label}</span>
-          </div>
-        </div>
-        {/* VS */}
-        {!falling && (
-          <div style={{position:'absolute',left:'50%',top:'28%',transform:'translate(-50%,-50%)',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,color:'var(--ak-ink-3)',letterSpacing:2}}>VS</div>
-        )}
-        {/* Right object */}
-        <div style={{position:'absolute',right:'12%',top:rightY,display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
-          <div style={{background:'#fff',borderRadius:20,padding:'12px 16px',boxShadow:'0 6px 0 rgba(181,161,255,.5),0 12px 24px -6px rgba(124,95,224,.25),inset 0 2px 0 rgba(255,255,255,.95)',display:'flex',flexDirection:'column',alignItems:'center',gap:4,minWidth:76}}>
-            <span style={{fontSize:52,lineHeight:1}}>{task.right.e}</span>
-            <span style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:12,color:'var(--ak-ink-2)',textTransform:'uppercase',letterSpacing:.4}}>{task.right.label}</span>
-          </div>
-        </div>
-        {/* Grass strip */}
-        <div style={{position:'absolute',bottom:0,left:0,right:0,height:42,borderRadius:'20px 20px 0 0',background:'linear-gradient(180deg,#86EFAC,#4ADE80)',boxShadow:'inset 0 4px 0 rgba(255,255,255,.28),0 -2px 0 #2BA873'}}/>
-      </div>
-
-      {/* Answer buttons */}
-      <div style={{display:'flex',gap:8,marginBottom:10}}>
-        <button className="ak-btn ak-btn--phys" style={{flex:1,fontSize:13,padding:'12px 6px'}} onClick={() => doAnswer('left')} disabled={falling || showFact}>
-          ← {task.left.label}
-        </button>
-        <button className="ak-btn ak-btn--soft" style={{flex:1,fontSize:13,padding:'12px 6px'}} onClick={() => doAnswer('same')} disabled={falling || showFact}>
-          🤝 Вместе!
-        </button>
-        <button className="ak-btn ak-btn--phys" style={{flex:1,fontSize:13,padding:'12px 6px'}} onClick={() => doAnswer('right')} disabled={falling || showFact}>
-          {task.right.label} →
-        </button>
-      </div>
-
-      {/* Fact popup overlay */}
-      {showFact && (
-        <div style={{position:'absolute',inset:0,background:'rgba(45,27,69,.52)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'24px 22px',textAlign:'center',boxShadow:'0 12px 0 rgba(124,95,224,.2),0 24px 48px -12px rgba(45,27,69,.3)',maxWidth:340,width:'100%'}}>
-            <div style={{fontSize:42,marginBottom:12}}>{answered === 'correct' ? '✅' : '❌'}</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'var(--ak-ink)',marginBottom:10}}>
-              {answered === 'correct' ? 'Правильно!' : 'Не совсем...'}
-            </div>
-            <div style={{fontSize:14,lineHeight:1.6,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{task.fact}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={nextTask}>
-              {taskIdx + 1 >= L1_TASKS.length ? 'Завершить! 🎉' : 'Дальше →'}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL 2 — МАЯТНИК: Visual quiz with animation
-   ============================================================ */
-const L2_QUESTIONS = [
-  {
-    question: 'Где маятник движется БЫСТРЕЕ всего?',
-    highlightPos: 'bottom',
-    options: ['В нижней точке', 'В верхней точке', 'Всегда одинаково'],
-    answer: 0,
-    fact: 'В нижней точке вся потенциальная энергия превращается в кинетическую — там максимальная скорость!'
-  },
-  {
-    question: 'Где маятник имеет БОЛЬШЕ всего энергии?',
-    highlightPos: 'top',
-    options: ['В нижней точке', 'В верхней точке', 'Они равны'],
-    answer: 2,
-    fact: 'Полная энергия маятника не меняется! Внизу — кинетическая, вверху — потенциальная. Сумма одинакова!'
-  },
-  {
-    question: 'Что произойдёт если укоротить нить маятника?',
-    highlightPos: 'swing',
-    options: ['Будет качаться медленнее', 'Будет качаться быстрее', 'Скорость не изменится'],
-    answer: 1,
-    fact: 'Период маятника зависит от длины нити: T = 2π√(L/g). Короче нить — короче период, быстрее качание!'
-  },
-  {
-    question: 'Маятник отпускают с угла 30°. На какую высоту он поднимется с другой стороны?',
-    highlightPos: 'symmetry',
-    options: ['Ниже 30°', 'На тот же уровень 30°', 'Выше 30°'],
-    answer: 1,
-    fact: 'Закон сохранения энергии! Без трения маятник всегда поднимается до той же высоты, что и стартовая.'
-  },
-];
-
-function PendulumCanvas({ highlightPos }) {
-  const canvasRef = React.useRef(null);
-  const rafRef = React.useRef(null);
-  const tRef = React.useRef(0);
-
-  React.useEffect(() => {
+  React.useEffect(()=>{
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-    const pivotX = W / 2, pivotY = 26;
-    const L = highlightPos === 'swing' ? 75 : 115;
-    const amplitude = highlightPos === 'symmetry' ? (30 * Math.PI / 180) : (38 * Math.PI / 180);
-    const omega = Math.sqrt(9.8 / (L / 80));
+    let alive = true;
+    flyRef.current = { active:false, x:28, y:GROUND_Y-16, vx:0, vy:0, trail:[] };
+    phaseRef.current = 'aim';
 
-    const loop = () => {
-      tRef.current += 0.018;
-      const t = tRef.current;
-      ctx.clearRect(0, 0, W, H);
-
-      // Background gradient (AK cream)
-      const grad = ctx.createLinearGradient(0, 0, 0, H);
-      grad.addColorStop(0, '#EDE4FF');
-      grad.addColorStop(1, '#FFF3E2');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-
-      const theta = amplitude * Math.cos(omega * t);
-      const bobX = pivotX + L * Math.sin(theta);
-      const bobY = pivotY + L * Math.cos(theta);
-
-      // Arc trace
-      ctx.beginPath();
-      ctx.arc(pivotX, pivotY, L, -Math.PI/2 - amplitude - 0.05, -Math.PI/2 + amplitude + 0.05);
-      ctx.strokeStyle = 'rgba(181,161,255,.3)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Symmetry markers
-      if (highlightPos === 'symmetry') {
-        const lx = pivotX + L * Math.sin(-amplitude), ly = pivotY + L * Math.cos(-amplitude);
-        const rx = pivotX + L * Math.sin(amplitude), ry = pivotY + L * Math.cos(amplitude);
-        ctx.beginPath(); ctx.arc(lx, ly, 7, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(124,95,224,.28)'; ctx.fill();
-        ctx.beginPath(); ctx.arc(rx, ry, 7, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(lx - 10, ly); ctx.lineTo(rx + 10, ry);
-        ctx.strokeStyle = 'rgba(124,95,224,.4)'; ctx.lineWidth = 1.5;
-        ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
+    function loop() {
+      if (!alive) return;
+      const fly = flyRef.current;
+      const ang = angleRef.current;
+      if (fly.active) {
+        fly.vy += G; fly.x += fly.vx; fly.y += fly.vy;
+        fly.trail.push({x:fly.x, y:fly.y});
+        if (fly.trail.length > 55) fly.trail.shift();
+        const d = Math.hypot(fly.x - mission.targetX, fly.y - mission.targetY);
+        if (d < 22) {
+          fly.active = false;
+          drawScene(ctx, fly, ang);
+          phaseRef.current = 'hit';
+          setPhase('hit');
+          return;
+        }
+        if (fly.x > CW+20 || fly.y > CH+20 || fly.x < -20) {
+          fly.active = false;
+          drawScene(ctx, fly, ang);
+          phaseRef.current = 'miss';
+          setPhase('miss');
+          return;
+        }
       }
+      drawScene(ctx, fly, ang);
+      animFrameRef.current = requestAnimationFrame(loop);
+    }
+    loop();
+    return ()=>{ alive=false; cancelAnimationFrame(animFrameRef.current); };
+  }, [missionIdx]);
 
-      // Velocity arrow at bottom
-      const speed = Math.abs(-amplitude * omega * Math.sin(omega * t));
-      if (Math.abs(theta) < 0.12 && speed > 0.4) {
-        const dir = theta > 0 ? -1 : 1;
-        ctx.beginPath(); ctx.moveTo(bobX + dir*18, bobY); ctx.lineTo(bobX + dir*30, bobY);
-        ctx.strokeStyle = '#5DD9A0'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(bobX + dir*30, bobY - 5);
-        ctx.lineTo(bobX + dir*36, bobY);
-        ctx.lineTo(bobX + dir*30, bobY + 5);
-        ctx.fillStyle = '#5DD9A0'; ctx.fill();
-      }
+  function fire() {
+    if (phaseRef.current==='flying'||phaseRef.current==='hit'||phaseRef.current==='miss') return;
+    const a = angleRef.current * Math.PI / 180;
+    const by = GROUND_Y-16;
+    flyRef.current = { active:true, x:28+Math.cos(a)*10, y:by-Math.sin(a)*10, vx:V0*Math.cos(a), vy:-V0*Math.sin(a), trail:[] };
+    triesRef.current[missionIdx] = (triesRef.current[missionIdx]||0)+1;
+    phaseRef.current = 'flying';
+    setPhase('flying');
+  }
 
-      // Pivot bracket
-      ctx.fillStyle = '#7C5FE0';
-      ctx.fillRect(pivotX - 18, pivotY - 10, 36, 14);
-      ctx.beginPath(); ctx.arc(pivotX, pivotY, 6, 0, Math.PI*2);
-      ctx.fillStyle = '#9C83FF'; ctx.fill();
-      ctx.beginPath(); ctx.arc(pivotX-2, pivotY-2, 2.5, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fill();
+  function handleHit() {
+    if (missionIdx >= L1_MISSIONS.length-1) {
+      setPhase('complete');
+    } else {
+      flyRef.current = { active:false, x:28, y:GROUND_Y-16, vx:0, vy:0, trail:[] };
+      phaseRef.current = 'aim';
+      setPhase('aim');
+      setMissionIdx(i=>i+1);
+    }
+  }
 
-      // String
-      ctx.beginPath(); ctx.moveTo(pivotX, pivotY + 4); ctx.lineTo(bobX, bobY - 17);
-      ctx.strokeStyle = '#6B5680'; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.stroke();
+  function handleMiss() {
+    flyRef.current = { active:false, x:28, y:GROUND_Y-16, vx:0, vy:0, trail:[] };
+    phaseRef.current = 'aim';
+    setPhase('aim');
+  }
 
-      // Bob clay circle
-      const bobGrad = ctx.createRadialGradient(bobX-6, bobY-6, 1, bobX, bobY, 17);
-      bobGrad.addColorStop(0, '#fff');
-      bobGrad.addColorStop(0.22, '#E5DCFF');
-      bobGrad.addColorStop(1, '#7C5FE0');
-      ctx.beginPath(); ctx.arc(bobX, bobY, 17, 0, Math.PI*2);
-      ctx.fillStyle = bobGrad; ctx.fill();
-      ctx.strokeStyle = '#7C5FE0'; ctx.lineWidth = 2; ctx.stroke();
-      // Bob highlight
-      ctx.beginPath();
-      ctx.ellipse(bobX-5, bobY-5, 4.5, 7, -0.4, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,.58)'; ctx.fill();
-
-      // Shadow
-      ctx.beginPath();
-      ctx.ellipse(bobX, H - 14, 20 + 8 * (bobY / H), 3.5, 0, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(45,27,69,.1)'; ctx.fill();
-
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [highlightPos]);
-
-  return (
-    <canvas ref={canvasRef} width={300} height={210}
-      style={{borderRadius:20,display:'block',margin:'0 auto',boxShadow:'0 8px 0 rgba(124,95,224,.15),0 16px 32px -8px rgba(124,95,224,.2)'}}/>
-  );
-}
-
-function Level2Pendulum({ onDone=()=>{} }) {
-  const [qIdx, setQIdx] = React.useState(0);
-  const [chosen, setChosen] = React.useState(null);
-  const [showFact, setShowFact] = React.useState(false);
-  const [score, setScore] = React.useState(0);
-  const [allDone, setAllDone] = React.useState(false);
-  const q = L2_QUESTIONS[qIdx];
-
-  const handleChoice = (i) => {
-    if (chosen !== null) return;
-    setChosen(i);
-    if (i === q.answer) setScore(s => s + 1);
-    setShowFact(true);
-  };
-
-  const nextQ = () => {
-    const next = qIdx + 1;
-    if (next >= L2_QUESTIONS.length) { setAllDone(true); return; }
-    setQIdx(next); setChosen(null); setShowFact(false);
-  };
-
-  if (allDone) {
+  if (phase === 'complete') {
+    const total = triesRef.current.reduce((a,b)=>a+b,0);
+    const stars = total <= L1_MISSIONS.length+1 ? 3 : total <= L1_MISSIONS.length+4 ? 2 : 1;
     return (
-      <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',alignItems:'center',justifyContent:'center',padding:24,boxSizing:'border-box'}}>
-        <AKSuccessCard stars={score >= 3 ? 3 : score >= 2 ? 2 : 1} title="Мастер маятника!" fact="Период маятника T = 2π√(L/g). Только длина нити влияет на период — масса и угол (при малых углах) не важны!" onNext={onDone} ctaLabel="В меню →"/>
+      <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+        <AKSuccessCard stars={stars} title="Пушка освоена!" fact={L1_FACTS[4]} onNext={onDone} ctaLabel="К уровням"/>
       </div>
     );
   }
 
   return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',padding:'16px 18px 22px',boxSizing:'border-box',position:'relative',overflowY:'auto'}}>
-      <AKLessonHeader progress={qIdx / L2_QUESTIONS.length} stars={190 + score * 35} onClose={onDone}/>
-
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:14,marginBottom:12}}>
-        {L2_QUESTIONS.map((_,i) => (
-          <div key={i} style={{width:10,height:10,borderRadius:'50%',background:i < qIdx ? '#B5A1FF' : i === qIdx ? '#7C5FE0' : 'rgba(45,27,69,.14)',transition:'all .3s',boxShadow:i === qIdx ? '0 0 0 3px rgba(124,95,224,.3)' : 'none'}}/>
-        ))}
-      </div>
-
-      <div style={{textAlign:'center',marginBottom:14,fontFamily:'var(--ak-display)',fontWeight:700,fontSize:17,color:'var(--ak-ink)',lineHeight:1.3,padding:'0 6px'}}>
-        {q.question}
-      </div>
-
-      <div style={{marginBottom:16}}>
-        <PendulumCanvas highlightPos={q.highlightPos}/>
-      </div>
-
-      <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:10}}>
-        {q.options.map((opt, i) => {
-          let cardStyle;
-          if (chosen === null) {
-            cardStyle = {
-              background:'linear-gradient(160deg,#E5DCFF 0%,#fff 100%)',
-              boxShadow:'0 5px 0 rgba(124,95,224,.22),0 10px 20px -6px rgba(124,95,224,.12),inset 0 2px 0 rgba(255,255,255,.8)',
-              color:'var(--ak-ink)',
-            };
-          } else if (i === q.answer) {
-            cardStyle = {
-              background:'linear-gradient(160deg,#C8F2DD 0%,#5DD9A0 100%)',
-              boxShadow:'0 5px 0 #2BA873,0 10px 20px -6px rgba(43,168,115,.3)',
-              color:'#fff',
-            };
-          } else if (i === chosen) {
-            cardStyle = {
-              background:'linear-gradient(160deg,#FFD2C8 0%,#FF8B7A 100%)',
-              boxShadow:'0 5px 0 #D9523F,0 10px 20px -6px rgba(217,82,63,.3)',
-              color:'#fff',
-            };
-          } else {
-            cardStyle = {
-              background:'rgba(255,255,255,.45)',
-              boxShadow:'0 2px 0 rgba(45,27,69,.06)',
-              color:'var(--ak-ink-3)',
-            };
-          }
-          return (
-            <button key={i} onClick={() => handleChoice(i)} disabled={chosen !== null}
-              style={{width:'100%',padding:'13px 16px',borderRadius:17,border:'none',cursor:chosen !== null ? 'default' : 'pointer',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:15,textAlign:'left',transition:'all .2s',display:'flex',alignItems:'center',gap:12,...cardStyle}}>
-              <span style={{width:27,height:27,borderRadius:'50%',background:'rgba(255,255,255,.45)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:12,flexShrink:0}}>{String.fromCharCode(65+i)}</span>
-              <span style={{flex:1}}>{opt}</span>
-              {chosen !== null && i === q.answer && <span>✅</span>}
-              {chosen !== null && i === chosen && i !== q.answer && <span>❌</span>}
-            </button>
-          );
-        })}
-      </div>
-
-      {showFact && (
-        <div className="ak-pop" style={{background:'rgba(255,255,255,.92)',borderRadius:20,padding:'14px 16px',backdropFilter:'blur(8px)',boxShadow:'0 4px 0 rgba(124,95,224,.1),0 8px 20px -6px rgba(45,27,69,.12)'}}>
-          <div style={{fontSize:13,lineHeight:1.6,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:12}}>{q.fact}</div>
-          <button className="ak-btn ak-btn--phys" style={{width:'100%',padding:'12px 18px'}} onClick={nextQ}>
-            {qIdx + 1 >= L2_QUESTIONS.length ? 'Завершить! 🎉' : 'Следующий вопрос →'}
-          </button>
+    <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',flexDirection:'column',alignItems:'center',padding:'16px 16px 32px'}}>
+      <div style={{width:'100%',maxWidth:390}}>
+        <AKLessonHeader progress={missionIdx/L1_MISSIONS.length} stars={0} onClose={onDone}/>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:21,color:'var(--ak-ink)',textAlign:'center',marginBottom:8}}>{mission.goal}</div>
+        <div style={{display:'flex',justifyContent:'center',gap:10,marginBottom:14}}>
+          <AKStatChip icon="🎯" value={`${missionIdx+1} / ${L1_MISSIONS.length}`} tone="phys"/>
         </div>
-      )}
+        {/* Canvas */}
+        <div className="ak-clay" style={{padding:10,marginBottom:16,position:'relative',overflow:'hidden'}}>
+          <canvas ref={canvasRef} width={CW} height={CH}
+            style={{display:'block',width:'100%',borderRadius:14}}/>
+          {phase==='hit'&&(
+            <div className="ak-pop" style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(200,242,221,.88)',borderRadius:16}}>
+              <div style={{textAlign:'center',padding:'0 20px'}}>
+                <div style={{fontSize:52,marginBottom:6}}>🎯</div>
+                <div style={{fontFamily:'var(--ak-display)',fontSize:22,color:'#2BA873',marginBottom:6}}>Попал!</div>
+                <div style={{fontSize:13,color:'var(--ak-ink-2)',marginBottom:16,lineHeight:1.5}}>{L1_FACTS[missionIdx]}</div>
+                <button className="ak-btn ak-btn--ok" onClick={handleHit}>
+                  {missionIdx>=L1_MISSIONS.length-1 ? 'Финиш! 🏆' : 'Дальше →'}
+                </button>
+              </div>
+            </div>
+          )}
+          {phase==='miss'&&(
+            <div className="ak-pop" style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(255,210,200,.88)',borderRadius:16}}>
+              <div style={{textAlign:'center',padding:'0 20px'}}>
+                <div style={{fontSize:44,marginBottom:6}}>💨</div>
+                <div style={{fontFamily:'var(--ak-display)',fontSize:20,color:'#D9523F',marginBottom:4}}>Мимо! 😅</div>
+                <div style={{fontSize:13,color:'var(--ak-ink-2)',marginBottom:14}}>{mission.hint}</div>
+                <button className="ak-btn ak-btn--cta" onClick={handleMiss}>Ещё раз</button>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Slider */}
+        <div className="ak-clay" style={{padding:'16px 20px',marginBottom:16}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+            <span style={{fontFamily:'var(--ak-display)',fontSize:15,color:'var(--ak-ink-2)'}}>Угол пушки</span>
+            <span className="ak-num" style={{fontFamily:'var(--ak-display)',fontSize:26,color:'var(--ak-ink)',fontWeight:700}}>{displayAngle}°</span>
+          </div>
+          <div style={{position:'relative',height:18}}>
+            <div style={{position:'absolute',inset:0,borderRadius:999,background:'linear-gradient(90deg,#8FCAF0 0%,#B5A1FF 50%,#FFA17A 100%)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',pointerEvents:'none'}}/>
+            <input type="range" min={10} max={80} defaultValue={45}
+              style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',zIndex:2,width:'100%'}}
+              onInput={e=>{
+                const v=Number(e.target.value);
+                angleRef.current=v;
+                if(!rafAngleRef.current) rafAngleRef.current=requestAnimationFrame(()=>{setDisplayAngle(angleRef.current);rafAngleRef.current=null;});
+              }}
+            />
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',marginTop:6,fontSize:12,color:'var(--ak-ink-3)'}}>
+            <span>10° — низко</span><span>45° — далеко</span><span>80° — высоко</span>
+          </div>
+        </div>
+        <button className="ak-btn ak-btn--cta ak-btn--lg"
+          onClick={fire}
+          disabled={phase==='flying'||phase==='hit'||phase==='miss'}
+          style={{width:'100%'}}>
+          {phase==='flying' ? '💨 Летит...' : 'ОГОНЬ! 💥'}
+        </button>
+        <div style={{textAlign:'center',marginTop:12,fontSize:13,color:'var(--ak-ink-3)'}}>
+          Выбери угол и нажми «ОГОНЬ»
+        </div>
+      </div>
     </div>
   );
 }
 
 /* ============================================================
-   LEVEL 3 — РЫЧАГ: Balance the scale!
+   LEVEL 2 — PENDULUM (Маятник-машина)
    ============================================================ */
-const L3_CHALLENGES = [
-  {goal:'Уравновесь весы!', target:'balance', leftFixed:[], rightFixed:[], availableWeights:[2,3,5], fact:'Рычаг балансирует когда моменты сил равны: m₁ × d₁ = m₂ × d₂.'},
-  {goal:'Перевесь ЛЕВУЮ чашу', target:'left', leftFixed:[], rightFixed:[{mass:3}], availableWeights:[1,2,5], fact:'Момент силы = масса × плечо. Большая масса на том же плече = больший момент!'},
-  {goal:'Уравновесь весы!', target:'balance', leftFixed:[{mass:2}], rightFixed:[], availableWeights:[1,1,3,5], fact:'Можно поставить несколько гирь на одну чашу — они суммируются!'},
-  {goal:'Перевесь ПРАВУЮ чашу', target:'right', leftFixed:[{mass:1}], rightFixed:[], availableWeights:[2,3,5], fact:'Физика весов — основа строительства мостов и подъёмных кранов!'},
-  {goal:'Уравновесь весы!', target:'balance', leftFixed:[{mass:5}], rightFixed:[{mass:2}], availableWeights:[1,1,2,3], fact:'Когда рычаг уравновешен — можно поднять очень тяжёлый груз небольшой силой!'},
+function Level2Pendulum({ onDone }) {
+  const isMobile = window.innerWidth < 600;
+  const CW = isMobile ? 280 : 320;
+  const CH = 220;
+  const PIVOT_X = CW/2, PIVOT_Y = 28;
+  const G_PEND = 0.0028;
+
+  const [missionIdx, setMissionIdx] = React.useState(0);
+  const [displayLength, setDisplayLength] = React.useState(80);
+  const [accepted, setAccepted] = React.useState(false);
+  const [successFact, setSuccessFact] = React.useState('');
+  const [complete, setComplete] = React.useState(false);
+  const [completedStars, setCompletedStars] = React.useState(3);
+
+  const lengthRef = React.useRef(80);
+  const rafLenRef = React.useRef(null);
+  const canvasRef = React.useRef(null);
+  const pendRef = React.useRef({ angle: Math.PI/7, omega: 0.0 });
+  const trailRef = React.useRef([]);
+  const animRef = React.useRef(null);
+  const firstTryRef = React.useRef(true);
+  const wrongCountRef = React.useRef(0);
+
+  const mission = L2_MISSIONS[missionIdx];
+
+  React.useEffect(()=>{
+    pendRef.current = { angle: Math.PI/7, omega: 0.0 };
+    trailRef.current = [];
+    firstTryRef.current = true;
+  }, [missionIdx]);
+
+  React.useEffect(()=>{
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let alive = true;
+
+    function loop() {
+      if (!alive) return;
+      const len = lengthRef.current;
+      const p = pendRef.current;
+      const alpha = -G_PEND/len * Math.sin(p.angle);
+      p.omega += alpha; p.omega *= 0.9993; p.angle += p.omega;
+      const px = PIVOT_X + Math.sin(p.angle)*len;
+      const py = PIVOT_Y + Math.cos(p.angle)*len;
+      trailRef.current.push({x:px,y:py});
+      if (trailRef.current.length>14) trailRef.current.shift();
+
+      ctx.clearRect(0,0,CW,CH);
+      const bg = ctx.createLinearGradient(0,0,0,CH);
+      bg.addColorStop(0,'#EDE0FF'); bg.addColorStop(1,'#FFF3E2');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
+      // ceiling
+      ctx.fillStyle='#7C5FE0'; ctx.fillRect(0,0,CW,10);
+      ctx.fillStyle='#B5A1FF'; ctx.fillRect(0,8,CW,4);
+      // trail
+      trailRef.current.forEach((pt,i)=>{
+        ctx.globalAlpha=0.04+i/trailRef.current.length*0.18;
+        ctx.beginPath(); ctx.arc(pt.x,pt.y,10,0,Math.PI*2);
+        ctx.fillStyle='#B5A1FF'; ctx.fill();
+      });
+      ctx.globalAlpha=1;
+      // pivot
+      ctx.beginPath(); ctx.arc(PIVOT_X,PIVOT_Y,6,0,Math.PI*2);
+      ctx.fillStyle='#5A3FA0'; ctx.fill();
+      ctx.strokeStyle='#9C83FF'; ctx.lineWidth=2; ctx.stroke();
+      // string
+      ctx.strokeStyle='#9CA3AF'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(PIVOT_X,PIVOT_Y); ctx.lineTo(px,py); ctx.stroke();
+      // ball shadow
+      ctx.save(); ctx.globalAlpha=0.12;
+      ctx.beginPath(); ctx.ellipse(px,CH-18,10,3,0,0,Math.PI*2); ctx.fillStyle='#2D1B45'; ctx.fill();
+      ctx.restore();
+      // ball
+      const bg2 = ctx.createRadialGradient(px-4,py-4,2,px,py,14);
+      bg2.addColorStop(0,'#fff'); bg2.addColorStop(0.4,'#B5A1FF'); bg2.addColorStop(1,'#7C5FE0');
+      ctx.beginPath(); ctx.arc(px,py,14,0,Math.PI*2); ctx.fillStyle=bg2; ctx.fill();
+      ctx.strokeStyle='#5A3FA0'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(px-4,py-4,4,6,-Math.PI/5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.72)'; ctx.fill();
+      // period HUD
+      const realL = len/100;
+      const T = (2*Math.PI*Math.sqrt(realL/9.8)).toFixed(1);
+      ctx.fillStyle='rgba(45,27,69,.5)';
+      ctx.font='bold 13px "Fredoka One",sans-serif';
+      ctx.textAlign='right';
+      ctx.fillText('T ≈ '+T+'с', CW-10, 28);
+      animRef.current=requestAnimationFrame(loop);
+    }
+    loop();
+    return ()=>{ alive=false; cancelAnimationFrame(animRef.current); };
+  }, [missionIdx]);
+
+  function accept() {
+    const len=lengthRef.current;
+    if (len>=mission.targetMin&&len<=mission.targetMax) {
+      setSuccessFact(mission.fact);
+      setAccepted(true);
+      if (!firstTryRef.current) wrongCountRef.current++;
+    } else {
+      firstTryRef.current=false;
+    }
+  }
+
+  function next() {
+    setAccepted(false);
+    if (missionIdx>=L2_MISSIONS.length-1) {
+      const s = wrongCountRef.current===0 ? 3 : wrongCountRef.current<=2 ? 2 : 1;
+      setCompletedStars(s);
+      setComplete(true);
+    } else {
+      setMissionIdx(i=>i+1);
+    }
+  }
+
+  const inRange = displayLength>=mission.targetMin && displayLength<=mission.targetMax;
+  const realL = displayLength/100;
+  const T = (2*Math.PI*Math.sqrt(realL/9.8)).toFixed(1);
+
+  if (complete) {
+    return (
+      <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+        <AKSuccessCard stars={completedStars} title="Маятник освоен!" fact="Ты открыл тайну часов — их ритм задаёт длина маятника, а не масса!" onNext={onDone} ctaLabel="К уровням"/>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',flexDirection:'column',alignItems:'center',padding:'16px 16px 32px'}}>
+      <div style={{width:'100%',maxWidth:390}}>
+        <AKLessonHeader progress={missionIdx/L2_MISSIONS.length} stars={0} onClose={onDone}/>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:19,color:'var(--ak-ink)',textAlign:'center',marginBottom:8}}>{mission.goal}</div>
+        <div style={{display:'flex',justifyContent:'center',gap:10,marginBottom:14,flexWrap:'wrap'}}>
+          <AKStatChip icon="⏱" value={`${missionIdx+1} / ${L2_MISSIONS.length}`} tone="phys"/>
+          <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'6px 14px',borderRadius:999,background:'var(--ak-phys-1)',fontFamily:'var(--ak-display)',fontSize:14,color:'var(--ak-ink)',boxShadow:'0 3px 0 rgba(45,27,69,.06)'}}>
+            Период: ~{T} сек
+          </div>
+        </div>
+        {/* Canvas */}
+        <div className="ak-clay" style={{padding:10,marginBottom:16,position:'relative',overflow:'hidden',display:'flex',justifyContent:'center'}}>
+          <canvas ref={canvasRef} width={CW} height={CH}
+            style={{display:'block',width:'100%',maxWidth:CW,borderRadius:14}}/>
+          {accepted&&(
+            <div className="ak-pop" style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(200,242,221,.9)',borderRadius:16}}>
+              <div style={{textAlign:'center',padding:'0 20px'}}>
+                <div style={{fontSize:48,marginBottom:6}}>⏱️</div>
+                <div style={{fontFamily:'var(--ak-display)',fontSize:22,color:'#2BA873',marginBottom:6}}>{mission.label}!</div>
+                <div style={{fontSize:13,color:'var(--ak-ink-2)',marginBottom:16,lineHeight:1.55}}>{successFact}</div>
+                <button className="ak-btn ak-btn--ok" onClick={next}>
+                  {missionIdx>=L2_MISSIONS.length-1 ? 'Финиш! 🏆' : 'Дальше →'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Length slider */}
+        <div className="ak-clay" style={{padding:'16px 20px',marginBottom:16}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+            <span style={{fontFamily:'var(--ak-display)',fontSize:15,color:'var(--ak-ink-2)'}}>Длина нити</span>
+            <span className="ak-num" style={{fontFamily:'var(--ak-display)',fontSize:26,color:inRange?'#2BA873':'var(--ak-ink)',fontWeight:700,transition:'color .3s'}}>{displayLength}</span>
+          </div>
+          <div style={{position:'relative',height:18}}>
+            <div style={{position:'absolute',inset:0,borderRadius:999,background:'linear-gradient(90deg,#8FCAF0 0%,#B5A1FF 100%)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',pointerEvents:'none'}}/>
+            <input type="range" min={30} max={130} defaultValue={80}
+              style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',zIndex:2,width:'100%'}}
+              onInput={e=>{
+                const v=Number(e.target.value);
+                lengthRef.current=v;
+                if(!rafLenRef.current) rafLenRef.current=requestAnimationFrame(()=>{setDisplayLength(lengthRef.current);rafLenRef.current=null;});
+              }}
+            />
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',marginTop:6,fontSize:12,color:'var(--ak-ink-3)'}}>
+            <span>30 — быстро</span><span>80 — средне</span><span>130 — медленно</span>
+          </div>
+          {inRange&&(
+            <div style={{marginTop:10,padding:'8px 14px',borderRadius:12,background:'var(--ak-ok-1)',color:'var(--ak-ok-3)',fontFamily:'var(--ak-display)',fontSize:13,textAlign:'center'}}>
+              ✓ Попал в диапазон {mission.targetMin}–{mission.targetMax}!
+            </div>
+          )}
+        </div>
+        <button className="ak-btn ak-btn--cta ak-btn--lg" onClick={accept} disabled={!inRange||accepted} style={{width:'100%'}}>
+          {inRange ? 'Принять! ✓' : `Нужно: ${mission.targetMin}–${mission.targetMax}`}
+        </button>
+        <div style={{textAlign:'center',marginTop:12,fontSize:13,color:'var(--ak-ink-3)'}}>{mission.hint}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   LEVEL 3 — FORCES LAB (Лаборатория сил)
+   ============================================================ */
+function Level3Forces({ onDone }) {
+  const [expIdx, setExpIdx] = React.useState(0);
+  const [effectPhase, setEffectPhase] = React.useState('idle'); // idle|playing|done
+  const [offsetA, setOffsetA] = React.useState({x:0,y:0});
+  const [offsetB, setOffsetB] = React.useState({x:0,y:0});
+  const [answered, setAnswered] = React.useState(null);
+  const [score, setScore] = React.useState(0);
+  const [complete, setComplete] = React.useState(false);
+  const [showFact, setShowFact] = React.useState(false);
+  const [showZzz, setShowZzz] = React.useState(false);
+
+  const exp = L3_EXPERIMENTS[expIdx];
+
+  function playEffect() {
+    if (effectPhase!=='idle') return;
+    setEffectPhase('playing');
+    setShowZzz(false);
+
+    const apply = (oA, oB, delay=60) => {
+      setTimeout(()=>{ setOffsetA(oA); setOffsetB(oB); }, delay);
+    };
+
+    switch(exp.effect) {
+      case 'fast_move': apply({x:150,y:0}, {x:-15,y:0}); break;
+      case 'rocket_launch': apply({x:0,y:-80}, {x:0,y:48}); break;
+      case 'slow_stop':
+        apply({x:55,y:0}, {x:0,y:0});
+        setTimeout(()=>setOffsetA({x:58,y:0}), 750);
+        break;
+      case 'stays_still':
+        setTimeout(()=>setShowZzz(true), 200);
+        break;
+      case 'both_fall':
+        apply({x:0,y:68}, {x:0,y:68});
+        break;
+      case 'attract':
+        apply({x:0,y:0}, {x:-68,y:0});
+        break;
+    }
+    setTimeout(()=>setEffectPhase('done'), 1400);
+  }
+
+  function answer(idx) {
+    if (answered!==null) return;
+    const correct = idx===exp.answer;
+    setAnswered(idx);
+    if (correct) setScore(s=>s+1);
+    setShowFact(true);
+  }
+
+  function next() {
+    setAnswered(null); setShowFact(false);
+    setEffectPhase('idle'); setOffsetA({x:0,y:0}); setOffsetB({x:0,y:0}); setShowZzz(false);
+    if (expIdx>=L3_EXPERIMENTS.length-1) { setComplete(true); }
+    else { setExpIdx(i=>i+1); }
+  }
+
+  if (complete) {
+    const stars = score>=5 ? 3 : score>=4 ? 2 : 1;
+    return (
+      <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+        <AKSuccessCard stars={stars} title="Лаборатория пройдена!" fact={`Правильных ответов: ${score} из 6! Законы Ньютона — основа всей механики.`} onNext={onDone} ctaLabel="К уровням"/>
+      </div>
+    );
+  }
+
+  const transStyle = {transition:'transform 0.85s cubic-bezier(.2,.7,.3,1)'};
+
+  return (
+    <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',flexDirection:'column',alignItems:'center',padding:'16px 16px 32px'}}>
+      <div style={{width:'100%',maxWidth:390}}>
+        <AKLessonHeader progress={expIdx/L3_EXPERIMENTS.length} stars={0} onClose={onDone}/>
+        <div style={{textAlign:'center',marginBottom:14}}>
+          <AKStatChip icon="⚡" value={`${expIdx+1} / ${L3_EXPERIMENTS.length}`} tone="phys"/>
+        </div>
+        {/* Ingredient cards */}
+        <div style={{display:'flex',gap:12,marginBottom:18,justifyContent:'center'}}>
+          <div className="ak-clay" style={{flex:1,padding:'20px 10px',display:'flex',flexDirection:'column',alignItems:'center',gap:8,minHeight:120,position:'relative',overflow:'hidden'}}>
+            <div style={{fontSize:46,...transStyle,transform:`translate(${offsetA.x}px,${offsetA.y}px)`}}>
+              {exp.a.emoji}
+            </div>
+            <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',textAlign:'center',lineHeight:1.2}}>{exp.a.label}</div>
+            {showZzz&&(
+              <div style={{position:'absolute',top:12,right:14,fontSize:22,transition:'opacity .5s',opacity:1}}>💤</div>
+            )}
+          </div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,flexShrink:0}}>⚡</div>
+          <div className="ak-clay" style={{flex:1,padding:'20px 10px',display:'flex',flexDirection:'column',alignItems:'center',gap:8,minHeight:120,overflow:'hidden'}}>
+            <div style={{fontSize:46,...transStyle,transform:`translate(${offsetB.x}px,${offsetB.y}px)`}}>
+              {exp.b.emoji}
+            </div>
+            <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',textAlign:'center',lineHeight:1.2}}>{exp.b.label}</div>
+          </div>
+        </div>
+
+        {/* Apply button */}
+        {effectPhase==='idle'&&(
+          <button className="ak-btn ak-btn--cta ak-btn--lg" onClick={playEffect} style={{width:'100%',marginBottom:18}}>
+            ПРИМЕНИТЬ СИЛУ! 💪
+          </button>
+        )}
+        {effectPhase==='playing'&&(
+          <div style={{textAlign:'center',padding:'16px 0',fontFamily:'var(--ak-display)',fontSize:18,color:'var(--ak-ink-2)',marginBottom:18}}>
+            ⏳ Наблюдай что происходит...
+          </div>
+        )}
+
+        {/* Question */}
+        {effectPhase==='done'&&!showFact&&(
+          <div className="ak-pop ak-clay" style={{padding:'20px 18px'}}>
+            <div style={{fontFamily:'var(--ak-display)',fontSize:17,color:'var(--ak-ink)',marginBottom:14,textAlign:'center',lineHeight:1.3}}>{exp.question}</div>
+            <div style={{display:'flex',flexDirection:'column',gap:10}}>
+              {exp.options.map((opt,i)=>{
+                const isCorrect = i===exp.answer;
+                const isChosen = answered===i;
+                let extra = {};
+                if (answered!==null) {
+                  if (isCorrect) extra={background:'var(--ak-ok-1)',boxShadow:'0 4px 0 var(--ak-ok-3)',color:'#2BA873'};
+                  else if (isChosen) extra={background:'var(--ak-warn-1)',boxShadow:'0 4px 0 var(--ak-warn-3)',color:'#D9523F'};
+                }
+                return (
+                  <button key={i} className="ak-btn ak-btn--soft"
+                    onClick={()=>answer(i)}
+                    style={{width:'100%',textAlign:'left',justifyContent:'flex-start',fontSize:14,padding:'13px 18px',borderRadius:14,...extra}}>
+                    <span style={{marginRight:10,fontSize:15}}>
+                      {answered===null ? '○' : isCorrect ? '✅' : isChosen ? '❌' : '○'}
+                    </span>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Fact */}
+        {showFact&&(
+          <div className="ak-pop ak-clay" style={{padding:'22px 20px',textAlign:'center'}}>
+            <div style={{fontSize:44,marginBottom:8}}>{answered===exp.answer ? '🎉' : '💡'}</div>
+            <div style={{fontFamily:'var(--ak-display)',fontSize:20,marginBottom:8,color:answered===exp.answer?'#2BA873':'#D9523F'}}>
+              {answered===exp.answer ? 'Верно!' : 'Не совсем...'}
+            </div>
+            <div style={{fontSize:14,color:'var(--ak-ink-2)',lineHeight:1.6,marginBottom:20}}>{exp.fact}</div>
+            <button className="ak-btn ak-btn--ok" onClick={next} style={{width:'100%'}}>
+              {expIdx>=L3_EXPERIMENTS.length-1 ? 'Финиш! 🏆' : 'Дальше →'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   LEVEL SELECT
+   ============================================================ */
+const LEVELS = [
+  { n:1, title:'Пушка Галилея', sub:'Угол · Траектория · Попади!', emoji:'💥', desc:'Открой законы баллистики на собственном опыте' },
+  { n:2, title:'Маятник-машина', sub:'Длина · Период · Ритм', emoji:'⏱', desc:'Управляй маятником и открой закон Галилея' },
+  { n:3, title:'Лаборатория сил', sub:'Наблюдай · Думай · Объясни', emoji:'⚡', desc:'Три закона Ньютона через живые эксперименты' },
 ];
 
-const WEIGHT_COLORS = { 1:['#E5DCFF','#B5A1FF','#7C5FE0'], 2:['#DCF7E7','#7BD9A8','#3CA876'], 3:['#FFE49E','#FFC857','#D4A22B'], 5:['#FFD2C8','#FF8B7A','#D9523F'] };
-
-function ScaleSVG({ leftWeights, rightWeights, beamAngle }) {
-  const W = 320, H = 195;
-  const pivotX = W / 2, pivotY = 78;
-  const armLen = 118;
-  const rad = (beamAngle * Math.PI) / 180;
-  const leftEndX = pivotX - armLen * Math.cos(rad);
-  const leftEndY = pivotY - armLen * Math.sin(rad);
-  const rightEndX = pivotX + armLen * Math.cos(rad);
-  const rightEndY = pivotY + armLen * Math.sin(rad);
-  const panR = 34;
-  const panOffY = 42;
-  const leftPanX = leftEndX, leftPanY = leftEndY + panOffY;
-  const rightPanX = rightEndX, rightPanY = rightEndY + panOffY;
-  const isBalanced = Math.abs(beamAngle) < 1.5;
-
+function LevelCard({ level, locked, done, onStart }) {
+  const doneBg = 'linear-gradient(180deg,#7CECB5 0%,#5DD9A0 100%)';
+  const physBg = 'linear-gradient(180deg,var(--ak-phys-1) 0%,var(--ak-phys-2) 100%)';
   return (
-    <svg width={W} height={H} viewBox={'0 0 '+W+' '+H} style={{display:'block',margin:'0 auto',transition:'all .4s'}}>
-      <defs>
-        <radialGradient id="sg-l" cx="38%" cy="32%" r="70%">
-          <stop offset="0%" stopColor="#fff"/>
-          <stop offset="35%" stopColor="#E5DCFF"/>
-          <stop offset="100%" stopColor="#7C5FE0"/>
-        </radialGradient>
-        <radialGradient id="sg-r" cx="38%" cy="32%" r="70%">
-          <stop offset="0%" stopColor="#fff"/>
-          <stop offset="35%" stopColor="#E5DCFF"/>
-          <stop offset="100%" stopColor="#7C5FE0"/>
-        </radialGradient>
-      </defs>
-      {/* Base stand */}
-      <polygon points={pivotX+','+( pivotY+6)+' '+(pivotX-16)+','+(H-10)+' '+(pivotX+16)+','+(H-10)} fill="#B5A1FF" stroke="#7C5FE0" strokeWidth="2"/>
-      <rect x={pivotX-28} y={H-14} width={56} height={10} rx={5} fill="#7C5FE0"/>
-      {/* Beam */}
-      <line x1={leftEndX} y1={leftEndY} x2={rightEndX} y2={rightEndY}
-        stroke={isBalanced ? '#5DD9A0' : '#7C5FE0'} strokeWidth={isBalanced ? 9 : 7.5} strokeLinecap="round"
-        style={{filter:isBalanced ? 'drop-shadow(0 0 8px rgba(93,217,160,.65))' : 'none'}}/>
-      <line x1={leftEndX+3} y1={leftEndY+2} x2={rightEndX-3} y2={rightEndY+2}
-        stroke="rgba(255,255,255,.45)" strokeWidth="3" strokeLinecap="round"/>
-      {/* Pivot */}
-      <circle cx={pivotX} cy={pivotY} r={10} fill="#7C5FE0" stroke="#fff" strokeWidth="2.5"/>
-      <circle cx={pivotX-2.5} cy={pivotY-2.5} r={3} fill="rgba(255,255,255,.65)"/>
-      {/* Strings */}
-      <line x1={leftEndX} y1={leftEndY} x2={leftPanX} y2={leftPanY-panR} stroke="#6B5680" strokeWidth="2" strokeDasharray="3,2"/>
-      <line x1={rightEndX} y1={rightEndY} x2={rightPanX} y2={rightPanY-panR} stroke="#6B5680" strokeWidth="2" strokeDasharray="3,2"/>
-      {/* Left pan */}
-      <circle cx={leftPanX} cy={leftPanY} r={panR} fill="url(#sg-l)" stroke="#7C5FE0" strokeWidth="2.5"
-        style={{filter:isBalanced ? 'drop-shadow(0 0 5px rgba(93,217,160,.45))' : 'none'}}/>
-      <ellipse cx={leftPanX-7} cy={leftPanY-9} rx={7} ry={11} fill="rgba(255,255,255,.48)" transform={'rotate(-18 '+(leftPanX-7)+' '+(leftPanY-9)+')'}/>
-      {/* Right pan */}
-      <circle cx={rightPanX} cy={rightPanY} r={panR} fill="url(#sg-r)" stroke="#7C5FE0" strokeWidth="2.5"
-        style={{filter:isBalanced ? 'drop-shadow(0 0 5px rgba(93,217,160,.45))' : 'none'}}/>
-      <ellipse cx={rightPanX-7} cy={rightPanY-9} rx={7} ry={11} fill="rgba(255,255,255,.48)" transform={'rotate(-18 '+(rightPanX-7)+' '+(rightPanY-9)+')'}/>
-      {/* Left weights */}
-      {leftWeights.map((w, i) => {
-        const [cl,cm,cd] = WEIGHT_COLORS[w] || WEIGHT_COLORS[1];
-        const wx = leftPanX + (i - (leftWeights.length - 1) / 2) * 22;
-        const wy = leftPanY - 10 - i * 2;
-        return (
-          <g key={i}>
-            <circle cx={wx} cy={wy} r={12} fill={cm} stroke={cd} strokeWidth="2"/>
-            <circle cx={wx-3} cy={wy-3} r={4} fill="rgba(255,255,255,.6)"/>
-            <text x={wx} y={wy+5} textAnchor="middle" fontFamily="Fredoka One" fontSize="10" fill="#fff" fontWeight="700">{w}</text>
-          </g>
-        );
-      })}
-      {/* Right weights */}
-      {rightWeights.map((w, i) => {
-        const [cl,cm,cd] = WEIGHT_COLORS[w] || WEIGHT_COLORS[1];
-        const wx = rightPanX + (i - (rightWeights.length - 1) / 2) * 22;
-        const wy = rightPanY - 10 - i * 2;
-        return (
-          <g key={i}>
-            <circle cx={wx} cy={wy} r={12} fill={cm} stroke={cd} strokeWidth="2"/>
-            <circle cx={wx-3} cy={wy-3} r={4} fill="rgba(255,255,255,.6)"/>
-            <text x={wx} y={wy+5} textAnchor="middle" fontFamily="Fredoka One" fontSize="10" fill="#fff" fontWeight="700">{w}</text>
-          </g>
-        );
-      })}
-      {isBalanced && (
-        <text x={pivotX} y={pivotY-18} textAnchor="middle" fontFamily="Fredoka One" fontSize="13" fill="#2BA873">⚖️ Баланс!</text>
-      )}
-    </svg>
+    <button onClick={locked?undefined:onStart} style={{
+        width:'100%',border:'none',padding:0,textAlign:'left',
+        cursor:locked?'not-allowed':'pointer',opacity:locked?.55:1,
+        borderRadius:28,marginBottom:14,background:'none',display:'block',
+      }}>
+      <div className="ak-clay ak-tap" style={{
+          borderRadius:28,
+          boxShadow: done
+            ? '0 10px 22px -8px rgba(43,168,115,.28),0 4px 10px -4px rgba(43,168,115,.12),inset 0 2px 0 rgba(255,255,255,.9),inset 0 -3px 0 rgba(43,168,115,.08)'
+            : undefined,
+          filter:locked?'grayscale(.3)':'none',
+        }}>
+        <div style={{padding:'20px 20px',display:'flex',gap:16,alignItems:'center'}}>
+          <div style={{
+              width:62,height:62,borderRadius:20,flexShrink:0,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontSize:32,
+              background: done ? doneBg : physBg,
+              boxShadow: done
+                ? '0 6px 0 var(--ak-ok-3),inset 0 2px 0 rgba(255,255,255,.6)'
+                : '0 6px 0 var(--ak-phys-3),inset 0 2px 0 rgba(255,255,255,.6)',
+            }}>
+            {locked ? '🔒' : done ? '✅' : level.emoji}
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:'var(--ak-display)',fontSize:18,color:'var(--ak-ink)',marginBottom:2}}>{level.title}</div>
+            <div style={{fontSize:11,color:'var(--ak-ink-3)',fontWeight:700,letterSpacing:.7,textTransform:'uppercase',marginBottom:4}}>{level.sub}</div>
+            <div style={{fontSize:13,color:'var(--ak-ink-2)',lineHeight:1.4}}>{level.desc}</div>
+          </div>
+          <div style={{fontSize:22,flexShrink:0,color:'var(--ak-phys-3)'}}>
+            {!locked&&!done&&'›'}
+            {done&&'🏆'}
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }
 
-function Level3Lever({ onDone=()=>{} }) {
-  const [chIdx, setChIdx] = React.useState(0);
-  const [leftAdded, setLeftAdded] = React.useState([]);
-  const [rightAdded, setRightAdded] = React.useState([]);
-  const [selectedW, setSelectedW] = React.useState(null);
-  const [checked, setChecked] = React.useState(false);
-  const [result, setResult] = React.useState(null);
-  const [allDone, setAllDone] = React.useState(false);
-  const [score, setScore] = React.useState(0);
-
-  const ch = L3_CHALLENGES[chIdx];
-  const leftFixed = ch.leftFixed.map(w => w.mass);
-  const rightFixed = ch.rightFixed.map(w => w.mass);
-  const allLeft = [...leftFixed, ...leftAdded];
-  const allRight = [...rightFixed, ...rightAdded];
-  const leftT = allLeft.reduce((a, m) => a + m, 0);
-  const rightT = allRight.reduce((a, m) => a + m, 0);
-  const diff = leftT - rightT;
-  const beamAngle = Math.max(-34, Math.min(34, (-diff / 8) * 34));
-
-  const getState = () => leftT > rightT ? 'left' : rightT > leftT ? 'right' : 'balance';
-
-  const handlePlaceSide = (side) => {
-    if (selectedW === null || checked) return;
-    if (side === 'left') setLeftAdded(a => [...a, selectedW]);
-    else setRightAdded(a => [...a, selectedW]);
-    setSelectedW(null);
-  };
-
-  const handleCheck = () => {
-    setChecked(true);
-    const state = getState();
-    if (state === ch.target) { setResult('correct'); setScore(s => s + 1); }
-    else setResult('wrong');
-  };
-
-  const handleClear = () => {
-    setLeftAdded([]); setRightAdded([]);
-    setSelectedW(null); setChecked(false); setResult(null);
-  };
-
-  const nextCh = () => {
-    const next = chIdx + 1;
-    if (next >= L3_CHALLENGES.length) { setAllDone(true); return; }
-    setChIdx(next);
-    setLeftAdded([]); setRightAdded([]);
-    setSelectedW(null); setChecked(false); setResult(null);
-  };
-
-  if (allDone) {
-    return (
-      <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',alignItems:'center',justifyContent:'center',padding:24,boxSizing:'border-box'}}>
-        <AKSuccessCard stars={score >= 4 ? 3 : score >= 2 ? 2 : 1} title="Мастер рычага!" fact="Закон рычага: F₁ × d₁ = F₂ × d₂. С помощью рычага Архимед мог поднять Землю, имея точку опоры!" onNext={onDone} ctaLabel="В меню →"/>
-      </div>
-    );
-  }
-
-  const targetLabel = ch.target === 'balance' ? '⚖️ Уравновесить' : ch.target === 'left' ? '⬅️ Перевесить влево' : '➡️ Перевесить вправо';
-
-  return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',padding:'16px 18px 22px',boxSizing:'border-box',overflowY:'auto'}}>
-      <AKLessonHeader progress={chIdx / L3_CHALLENGES.length} stars={180 + score * 40} onClose={onDone}/>
-
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:14,marginBottom:12}}>
-        {L3_CHALLENGES.map((_,i) => (
-          <div key={i} style={{width:10,height:10,borderRadius:'50%',background:i < chIdx ? '#B5A1FF' : i === chIdx ? '#7C5FE0' : 'rgba(45,27,69,.14)',transition:'all .3s',boxShadow:i === chIdx ? '0 0 0 3px rgba(124,95,224,.3)' : 'none'}}/>
-        ))}
-      </div>
-
-      <div style={{textAlign:'center',marginBottom:8}}>
-        <AKTaskBadge tone="phys">{ch.goal}</AKTaskBadge>
-      </div>
-      <div style={{textAlign:'center',marginBottom:12,fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-2)',fontWeight:700}}>{targetLabel}</div>
-
-      {/* Scale */}
-      <div style={{marginBottom:12,background:'linear-gradient(180deg,#EDE4FF 0%,#FFF3E2 100%)',borderRadius:20,padding:'10px 0 6px',boxShadow:'0 4px 0 rgba(124,95,224,.12),0 8px 20px -6px rgba(124,95,224,.1)'}}>
-        <ScaleSVG leftWeights={allLeft} rightWeights={allRight} beamAngle={beamAngle}/>
-        <div style={{display:'flex',justifyContent:'space-between',padding:'4px 40px 0',}}>
-          <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'#7C5FE0',fontWeight:700}}>Лево: {leftT}кг</div>
-          <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'#7C5FE0',fontWeight:700}}>Право: {rightT}кг</div>
-        </div>
-      </div>
-
-      {/* Place side buttons (when weight selected) */}
-      {selectedW !== null && !checked && (
-        <div className="ak-pop" style={{display:'flex',gap:10,marginBottom:12,padding:'10px 12px',borderRadius:16,background:'rgba(229,220,255,.55)',backdropFilter:'blur(8px)',alignItems:'center'}}>
-          <div style={{flex:1,fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink)',fontWeight:700}}>Гиря {selectedW}кг — куда?</div>
-          <button className="ak-btn ak-btn--phys" style={{padding:'9px 14px',fontSize:13}} onClick={() => handlePlaceSide('left')}>← Влево</button>
-          <button className="ak-btn ak-btn--phys" style={{padding:'9px 14px',fontSize:13}} onClick={() => handlePlaceSide('right')}>Вправо →</button>
-        </div>
-      )}
-
-      {/* Available weights */}
-      <div style={{marginBottom:14}}>
-        <div style={{fontFamily:'var(--ak-display)',fontSize:11,color:'var(--ak-ink-3)',fontWeight:700,textTransform:'uppercase',letterSpacing:.9,marginBottom:8}}>Доступные гири:</div>
-        <div style={{display:'flex',flexWrap:'wrap',gap:10}}>
-          {ch.availableWeights.map((w, i) => {
-            const [cl,cm,cd] = WEIGHT_COLORS[w] || WEIGHT_COLORS[1];
-            const isSel = selectedW === w;
-            return (
-              <button key={i} onClick={() => !checked && setSelectedW(w)}
-                style={{width:56,height:56,borderRadius:'50%',background:isSel ? 'linear-gradient(180deg,'+cl+' 0%,'+cm+' 100%)' : '#fff',border:'3px solid '+(isSel ? cd : cm),boxShadow:isSel ? '0 5px 0 '+cd+',0 10px 18px -5px '+cd+'66' : '0 4px 0 '+cm+'77,0 8px 16px -4px rgba(45,27,69,.09)',cursor:checked?'not-allowed':'pointer',fontFamily:'var(--ak-display)',fontWeight:800,fontSize:17,color:isSel ? cd : cm,transition:'all .14s',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:1}}>
-                {w}
-                <span style={{fontSize:8,fontWeight:600,opacity:.7,lineHeight:1}}>кг</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Actions */}
-      {!checked ? (
-        <div style={{display:'flex',gap:10,marginBottom:8}}>
-          <button className="ak-btn ak-btn--soft" style={{flex:1,padding:'12px 14px',fontSize:14}} onClick={handleClear}>🔄 Сброс</button>
-          <button className="ak-btn ak-btn--phys" style={{flex:2,padding:'12px 14px',fontSize:14}} onClick={handleCheck} disabled={allLeft.length === 0 && allRight.length === 0}>Проверить! ⚖️</button>
-        </div>
-      ) : (
-        <div className="ak-pop" style={{background:'rgba(255,255,255,.92)',borderRadius:20,padding:'16px 16px',backdropFilter:'blur(8px)',boxShadow:'0 4px 0 rgba(124,95,224,.1)'}}>
-          <div style={{fontSize:34,textAlign:'center',marginBottom:8}}>{result === 'correct' ? '✅' : '❌'}</div>
-          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,textAlign:'center',color:'var(--ak-ink)',marginBottom:8}}>
-            {result === 'correct' ? 'Правильно!' : 'Не совсем...'}
-          </div>
-          <div style={{fontSize:13,lineHeight:1.6,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:14,textAlign:'center'}}>{ch.fact}</div>
-          <div style={{display:'flex',gap:10}}>
-            {result === 'wrong' && <button className="ak-btn ak-btn--soft" style={{flex:1,fontSize:13}} onClick={handleClear}>Попробовать снова</button>}
-            <button className="ak-btn ak-btn--phys" style={{flex:2,fontSize:14}} onClick={nextCh}>
-              {chIdx + 1 >= L3_CHALLENGES.length ? 'Завершить! 🎉' : 'Дальше →'}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL SELECT SCREEN
-   ============================================================ */
 function LevelSelect({ onStart, completed }) {
-  const LEVELS = [
-    { n:1, title:'Гравитация', sub:'Что упадёт первым?', icon:<AKBlob size={72} kind="sphere" tone="phys"/>, emoji:'🍎' },
-    { n:2, title:'Маятник',    sub:'Энергия в движении', icon:<AKBlob size={72} kind="gear" tone="phys"/>, emoji:'⏱' },
-    { n:3, title:'Рычаг',      sub:'Баланс сил',          icon:<AKBlob size={72} kind="cube" tone="phys"/>, emoji:'⚖️' },
-  ];
-
   return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(70% 50% at 50% 100%,#E5DCFF 0%,transparent 70%),linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'0 18px 36px',boxSizing:'border-box',position:'relative',overflow:'hidden'}}>
-
-      {/* Decorative planet top right */}
-      <div style={{position:'absolute',top:-22,right:-18,opacity:.58,pointerEvents:'none'}}>
-        <AKPlanet size={110} tone="phys" ring={true}/>
-      </div>
-      {/* Decorative star bottom left */}
-      <div className="ak-float" style={{position:'absolute',bottom:88,left:6,opacity:.36,pointerEvents:'none',transform:'rotate(-18deg)'}}>
-        <AKStar size={42} filled={true}/>
-      </div>
-      {/* Floating dots */}
-      {[[22,14,'#E5DCFF',10],[298,52,'#B5A1FF',7],[38,118,'#FFC857',6],[328,138,'#7BD9A8',8]].map(([x,y,c,s],i) => (
-        <div key={i} style={{position:'absolute',left:x,top:y,width:s,height:s,borderRadius:'50%',background:c,opacity:.48,pointerEvents:'none'}}/>
-      ))}
-
-      {/* Header section */}
-      <div style={{paddingTop:52,paddingBottom:6,textAlign:'center'}}>
-        <div style={{display:'flex',justifyContent:'center',marginBottom:10}}>
-          <div className="ak-bob"><AKAtom size={70} tone="phys"/></div>
+    <div className="ak" style={{minHeight:'100vh',background:'var(--ak-bg)',display:'flex',flexDirection:'column',alignItems:'center',padding:'28px 20px 48px'}}>
+      <div style={{width:'100%',maxWidth:390}}>
+        <div style={{textAlign:'center',marginBottom:28}}>
+          <div className="ak-bob" style={{display:'inline-block',marginBottom:10}}>
+            <AKAtom size={72} tone="phys"/>
+          </div>
+          <div style={{fontFamily:'var(--ak-display)',fontSize:32,color:'var(--ak-ink)',lineHeight:1.1,marginBottom:6}}>Физика</div>
+          <div style={{fontSize:15,color:'var(--ak-ink-2)',lineHeight:1.5,marginBottom:16}}>
+            Открой законы природы через игровые эксперименты
+          </div>
+          <div style={{display:'flex',justifyContent:'center',gap:10,flexWrap:'wrap'}}>
+            <AKStatChip icon="🎯" value={`${completed.size} / ${LEVELS.length}`} tone="phys"/>
+            <AKStatChip icon="⚡" value="Физика" tone="phys"/>
+          </div>
         </div>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:32,letterSpacing:-.5,color:'var(--ak-ink)',lineHeight:1.05,marginBottom:6}}>
-          Физика
+        {LEVELS.map((lv,i)=>(
+          <LevelCard
+            key={lv.n}
+            level={lv}
+            locked={i>0 && !completed.has(i)}
+            done={completed.has(lv.n)}
+            onStart={()=>onStart(lv.n)}
+          />
+        ))}
+        <div style={{textAlign:'center',marginTop:10,fontSize:13,color:'var(--ak-ink-3)',lineHeight:1.6}}>
+          🏫 КосмоБаза · Физика · 6–12 лет<br/>
+          Выполни все уровни и стань физиком!
         </div>
-        <div style={{fontFamily:'var(--ak-body)',fontWeight:600,fontSize:14,color:'var(--ak-ink-2)',lineHeight:1.5,maxWidth:270,margin:'0 auto'}}>
-          Узнай как работает гравитация, маятник и рычаг!
-        </div>
-      </div>
-
-      {/* Level cards */}
-      <div style={{maxWidth:390,margin:'22px auto 0'}}>
-        {LEVELS.map((lv, idx) => {
-          const isLocked = idx > 0 && !completed.has(idx);
-          const isDone = completed.has(lv.n);
-          return (
-            <button key={lv.n} onClick={isLocked ? undefined : () => onStart(lv.n)}
-              className={isLocked ? '' : 'ak-tap'}
-              style={{width:'100%',padding:'18px 20px',borderRadius:28,background:'linear-gradient(160deg,#E5DCFF 0%,#B5A1FF 100%)',boxShadow:'0 8px 0 #7C5FE0,0 18px 30px -8px rgba(181,161,255,.6),inset 0 2px 0 rgba(255,255,255,.6)',position:'relative',overflow:'hidden',border:'none',cursor:isLocked?'not-allowed':'pointer',opacity:isLocked?.55:1,filter:isLocked?'grayscale(.42)':'none',textAlign:'left',boxSizing:'border-box',marginBottom:20}}>
-              {/* Card globs */}
-              <div style={{position:'absolute',top:-28,right:-10,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,.2)',filter:'blur(2px)',pointerEvents:'none'}}/>
-              <div style={{position:'absolute',bottom:-28,left:-18,width:78,height:78,borderRadius:'50%',background:'rgba(255,255,255,.12)',pointerEvents:'none'}}/>
-              {/* Card content */}
-              <div style={{position:'relative',display:'flex',alignItems:'center',gap:16}}>
-                <div style={{filter:'drop-shadow(0 4px 10px rgba(45,27,69,.2))',flexShrink:0}}>
-                  {lv.icon}
-                </div>
-                <div style={{flex:1}}>
-                  <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:11,color:'rgba(45,27,69,.58)',textTransform:'uppercase',letterSpacing:1.2,marginBottom:3}}>{lv.sub}</div>
-                  <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:23,color:'var(--ak-ink)',letterSpacing:-.3,lineHeight:1.1,marginBottom:8}}>{lv.title}</div>
-                  {isDone ? (
-                    <div style={{display:'inline-flex',alignItems:'center',gap:8}}>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(43,168,115,.16)',borderRadius:999,padding:'5px 12px'}}>
-                        <span style={{color:'#2BA873',fontSize:15}}>✓</span>
-                        <span style={{fontFamily:'var(--ak-display)',fontSize:12,color:'#2BA873',fontWeight:700}}>Пройден</span>
-                      </div>
-                      <div style={{display:'flex',gap:2}}>
-                        {[0,1,2].map(i => <AKStarSmall key={i} filled={true}/>)}
-                      </div>
-                    </div>
-                  ) : isLocked ? (
-                    <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(45,27,69,.1)',borderRadius:999,padding:'5px 12px'}}>
-                      <span style={{fontSize:13}}>🔒</span>
-                      <span style={{fontFamily:'var(--ak-display)',fontSize:12,color:'var(--ak-ink-2)',fontWeight:700}}>Заблокирован</span>
-                    </div>
-                  ) : (
-                    <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(124,95,224,.2)',borderRadius:999,padding:'5px 16px',boxShadow:'inset 0 1px 0 rgba(255,255,255,.5)'}}>
-                      <span style={{fontFamily:'var(--ak-display)',fontSize:12,color:'#7C5FE0',fontWeight:800,letterSpacing:.5}}>СТАРТ</span>
-                      <span style={{color:'#7C5FE0',fontWeight:700}}>→</span>
-                    </div>
-                  )}
-                </div>
-                <div style={{fontSize:38,flexShrink:0,opacity:.82}}>{lv.emoji}</div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Footer */}
-      <div style={{textAlign:'center',marginTop:4,fontFamily:'var(--ak-display)',fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>
-        КосмоБаза · Физика
       </div>
     </div>
   );
@@ -989,20 +952,19 @@ function App() {
   const [screen, setScreen] = React.useState('select');
   const [completed, setCompleted] = React.useState(new Set());
 
-  const done = (n) => {
+  function done(n) {
     setCompleted(s => new Set([...s, n]));
     setScreen('select');
-  };
+  }
 
-  if (screen === 'select') return <LevelSelect onStart={n => setScreen('l' + n)} completed={completed}/>;
-  if (screen === 'l1') return <Level1Falling onDone={() => done(1)}/>;
-  if (screen === 'l2') return <Level2Pendulum onDone={() => done(2)}/>;
-  if (screen === 'l3') return <Level3Lever onDone={() => done(3)}/>;
+  if (screen==='select') return <LevelSelect onStart={n=>setScreen('l'+n)} completed={completed}/>;
+  if (screen==='l1') return <Level1Cannon onDone={()=>done(1)}/>;
+  if (screen==='l2') return <Level2Pendulum onDone={()=>done(2)}/>;
+  if (screen==='l3') return <Level3Forces onDone={()=>done(3)}/>;
   return null;
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
