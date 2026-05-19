@@ -11,8 +11,6 @@
   --ak-ink:#2D1B45; --ak-ink-2:#6B5680; --ak-ink-3:#A797B8;
   --ak-chem-1:#DCF7E7; --ak-chem-2:#7BD9A8; --ak-chem-3:#3CA876;
   --ak-phys-1:#E5DCFF; --ak-phys-2:#B5A1FF; --ak-phys-3:#7C5FE0;
-  --ak-bio-1:#FFE0CB; --ak-bio-2:#FFA17A; --ak-bio-3:#D96D49;
-  --ak-geo-1:#D6ECFA; --ak-geo-2:#8FCAF0; --ak-geo-3:#4A93C9;
   --ak-cta-1:#FFEDA8; --ak-cta-2:#FFD262; --ak-cta-3:#D4A22B;
   --ak-ok-1:#C8F2DD; --ak-ok-2:#5DD9A0; --ak-ok-3:#2BA873;
   --ak-warn-1:#FFD2C8; --ak-warn-2:#FF8B7A; --ak-warn-3:#D9523F;
@@ -25,16 +23,17 @@ html,body{background:#FFF3E2;margin:0;}
 #root{min-height:100vh;}
 body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 .ak{font-family:var(--ak-body);color:var(--ak-ink);-webkit-font-smoothing:antialiased;}
+.ak-clay{background:var(--ak-surface);border-radius:var(--ak-r-lg);box-shadow:0 10px 22px -8px rgba(45,27,69,.22),0 4px 10px -4px rgba(45,27,69,.10),inset 0 2px 0 rgba(255,255,255,.9),inset 0 -3px 0 rgba(45,27,69,.06);}
 .ak-btn{font-family:var(--ak-display);font-weight:600;font-size:17px;border:none;cursor:pointer;position:relative;transition:transform .08s ease,box-shadow .08s ease,filter .15s ease;user-select:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;padding:16px 26px;border-radius:999px;color:var(--ak-ink);}
 .ak-btn:disabled{cursor:not-allowed;filter:grayscale(.25) opacity(.6);}
 .ak-btn--cta{color:var(--ak-ink);background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);}
 .ak-btn--cta:active{transform:translateY(4px);}
 .ak-btn--ok{color:#fff;background:linear-gradient(180deg,#7CECB5 0%,#5DD9A0 55%,#3FC685 100%);box-shadow:0 6px 0 var(--ak-ok-3),0 12px 24px -6px rgba(43,168,115,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(43,168,115,.25);}
 .ak-btn--ok:active{transform:translateY(4px);}
+.ak-btn--warn{color:#fff;background:linear-gradient(180deg,#FF9F8F 0%,#FF8B7A 55%,#E06A5A 100%);box-shadow:0 6px 0 var(--ak-warn-3),0 12px 24px -6px rgba(217,82,63,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(217,82,63,.25);}
+.ak-btn--warn:active{transform:translateY(4px);}
 .ak-btn--soft{color:var(--ak-ink);background:linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(45,27,69,.05),inset 0 0 0 1px rgba(45,27,69,.06);}
 .ak-btn--soft:active{transform:translateY(3px);}
-.ak-btn--chem{color:var(--ak-ink);background:linear-gradient(180deg,#A8F0CC 0%,#7BD9A8 55%,#5CC890 100%);box-shadow:0 6px 0 var(--ak-chem-3),0 12px 24px -6px rgba(60,168,118,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(60,168,118,.25);}
-.ak-btn--chem:active{transform:translateY(4px);}
 .ak-btn--sm{padding:11px 18px;font-size:14px;}
 .ak-btn--lg{padding:20px 32px;font-size:19px;}
 .ak-btn--icon{width:56px;height:56px;padding:0;border-radius:50%;}
@@ -45,8 +44,13 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 @keyframes ak-pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.06);opacity:1;}100%{transform:scale(1);}}
 @keyframes ak-pour{0%{transform:scaleY(0);opacity:0;}100%{transform:scaleY(1);opacity:1;}}
 @keyframes ak-twinkle{0%,100%{opacity:.35;transform:scale(.85);}50%{opacity:1;transform:scale(1.05);}}
+@keyframes ak-rise{0%{transform:translateY(0);opacity:1;}100%{transform:translateY(-60px);opacity:0;}}
+@keyframes ak-bubble{0%{transform:scale(0);opacity:0;}50%{transform:scale(1.2);opacity:.9;}100%{transform:scale(1);opacity:.7;}}
 @keyframes ak-fly-in{0%{transform:scale(.5) translateY(30px);opacity:0;}70%{transform:scale(1.08) translateY(-4px);opacity:1;}100%{transform:scale(1) translateY(0);opacity:1;}}
 @keyframes ak-fly-out{0%{transform:scale(1);opacity:1;}100%{transform:scale(.3) translateY(60px);opacity:0;}}
+@keyframes ak-dissolve{0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(0);}}
+@keyframes ak-rust{0%{background-color:#9CA3AF;}100%{background-color:#B45309;}}
+@keyframes ak-fall{0%{top:0;}100%{top:var(--fall-to);}}
 .ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
 .ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
 .ak-shake{animation:ak-shake .45s ease-in-out;}
@@ -61,10 +65,10 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 .ak-tap:active{transform:translateY(0);}
 .ak ::-webkit-scrollbar{display:none;}
 .ak{scrollbar-width:none;}
-input[type=range]{-webkit-appearance:none;width:100%;height:14px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
-input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:999px;background:transparent;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.12),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;transition:transform .1s;}
-input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);}
+input[type=range]{-webkit-appearance:none;width:100%;height:18px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
+input[type=range]::-webkit-slider-runnable-track{height:18px;border-radius:999px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;transition:transform .1s;}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.18);}
 </style>
 </head>
 <body>
@@ -106,28 +110,21 @@ function AKFlask({ size=120, tone='chem', fillLevel=0.6, bubbles=true }) {
           <stop offset="60%" stopColor={m}/>
           <stop offset="100%" stopColor={d}/>
         </linearGradient>
-        <linearGradient id={`fc-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.6"/>
-          <stop offset="100%" stopColor="#fff" stopOpacity="0"/>
-        </linearGradient>
-        <clipPath id={`fcp-${id}`}>
+        <clipPath id={`fc-${id}`}>
           <path d="M50 22 L50 48 L24 96 Q22 108 34 108 L86 108 Q98 108 96 96 L70 48 L70 22 Z"/>
         </clipPath>
       </defs>
       <ellipse cx="60" cy="112" rx="34" ry="4" fill="rgba(45,27,69,.22)"/>
       <path d="M50 22 L50 48 L24 96 Q22 108 34 108 L86 108 Q98 108 96 96 L70 48 L70 22 Z"
         fill={`url(#fg-${id})`} stroke="rgba(45,27,69,.18)" strokeWidth="2.2"/>
-      <g clipPath={`url(#fcp-${id})`}>
+      <g clipPath={`url(#fc-${id})`}>
         <rect x="20" y={48+(60*(1-fillLevel))} width="80" height="80" fill={`url(#fl-${id})`}/>
         <ellipse cx="60" cy={48+(60*(1-fillLevel))} rx="26" ry="3" fill={m}/>
-        <ellipse cx="60" cy={48+(60*(1-fillLevel))} rx="22" ry="1.4" fill="#fff" opacity=".5"/>
-        {bubbles&&<g><circle cx="46" cy="86" r="3" fill="#fff" opacity=".5"/><circle cx="72" cy="92" r="2.4" fill="#fff" opacity=".4"/><circle cx="58" cy="98" r="2" fill="#fff" opacity=".35"/></g>}
+        {bubbles&&<g><circle cx="46" cy="86" r="3" fill="#fff" opacity=".5"/><circle cx="72" cy="92" r="2.4" fill="#fff" opacity=".4"/></g>}
       </g>
       <path d="M54 30 L54 52 L34 90" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" opacity=".75" fill="none"/>
-      <ellipse cx="60" cy="22" rx="11" ry="3.5" fill="rgba(45,27,69,.18)"/>
-      <ellipse cx="60" cy="21" rx="11" ry="2.5" fill="#fff" opacity=".85"/>
       <rect x="46" y="10" width="28" height="14" rx="5" fill={d}/>
-      <rect x="48" y="11" width="24" height="4" rx="2" fill={`url(#fc-${id})`}/>
+      <rect x="48" y="11" width="24" height="4" rx="2" fill="#fff" opacity=".4"/>
     </svg>
   );
 }
@@ -156,42 +153,13 @@ function AKStar({ size=56, filled=true }) {
   );
 }
 
-function AKPlanet({ size=80, tone='phys', ring=true }) {
-  const [l,m,d] = AK_TONES[tone];
-  const id = React.useId().replace(/:/g,'');
-  return (
-    <svg width={size} height={size*0.78} viewBox="0 0 100 78">
-      <defs><radialGradient id={`pl-${id}`} cx="38%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="30%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>
-      {ring&&<ellipse cx="50" cy="40" rx="48" ry="11" fill="none" stroke={d} strokeWidth="3" opacity=".4"/>}
-      <circle cx="50" cy="38" r="26" fill={`url(#pl-${id})`} stroke={d} strokeWidth="2"/>
-      <ellipse cx="42" cy="28" rx="6" ry="9" fill="#fff" opacity=".55" transform="rotate(-22 42 28)"/>
-      {ring&&<path d="M 16 47 Q 50 60 84 47" fill="none" stroke={d} strokeWidth="3" opacity=".7" strokeLinecap="round"/>}
-    </svg>
-  );
-}
-
-function AKBlob({ size=80, kind='sphere', tone='cta' }) {
-  const [l,m,d] = AK_TONES[tone];
-  const id = React.useId().replace(/:/g,'');
-  const grad = <defs><radialGradient id={`g-${id}`} cx="40%" cy="32%" r="75%"><stop offset="0%" stopColor="#fff"/><stop offset="28%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>;
-  const shadow = <ellipse cx="40" cy="74" rx="22" ry="3" fill="rgba(45,27,69,.2)"/>;
-  const shine = <ellipse cx="30" cy="26" rx="6" ry="10" fill="#fff" opacity=".6" transform="rotate(-20 30 26)"/>;
-  let shape;
-  if (kind==='sphere') shape = <circle cx="40" cy="40" r="28" fill={`url(#g-${id})`} stroke={d} strokeWidth="2"/>;
-  else if (kind==='cube') shape = <g><rect x="14" y="14" width="52" height="52" rx="12" fill={`url(#g-${id})`} stroke={d} strokeWidth="2"/><rect x="18" y="18" width="44" height="6" rx="3" fill="#fff" opacity=".5"/></g>;
-  else if (kind==='droplet') shape = <path d="M40 8 C24 30 18 44 22 56 C26 70 54 70 58 56 C62 44 56 30 40 8 Z" fill={`url(#g-${id})`} stroke={d} strokeWidth="2"/>;
-  else if (kind==='cloud') shape = <g><ellipse cx="40" cy="48" rx="24" ry="14" fill={`url(#g-${id})`} stroke={d} strokeWidth="1.5"/><ellipse cx="28" cy="44" rx="14" ry="12" fill={`url(#g-${id})`} stroke={d} strokeWidth="1.5"/><ellipse cx="52" cy="44" rx="12" ry="10" fill={`url(#g-${id})`} stroke={d} strokeWidth="1.5"/></g>;
-  else shape = <circle cx="40" cy="40" r="28" fill={`url(#g-${id})`} stroke={d} strokeWidth="2"/>;
-  return <svg width={size} height={size} viewBox="0 0 80 80" style={{display:'block'}}>{grad}{shadow}{shape}{kind!=='cloud'&&shine}</svg>;
-}
-
-function AKCylinder({ layers=[], capacity=4, width=160, height=360 }) {
+function AKCylinder({ layers=[], capacity=4, width=160, height=360, objects=[] }) {
   const id = React.useId().replace(/:/g,'');
   const layerH = (height-70)/capacity;
   const top=40, bottom=height-30, inL=18, inR=width-18;
   const bodyPath = `M ${inL} ${top} Q ${inL} ${top-10} ${inL+14} ${top-10} L ${inR-14} ${top-10} Q ${inR} ${top-10} ${inR} ${top} L ${inR} ${bottom-16} Q ${inR} ${bottom} ${inR-16} ${bottom} L ${inL+16} ${bottom} Q ${inL} ${bottom} ${inL} ${bottom-16} Z`;
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{overflow:'visible'}}>
       <defs>
         <linearGradient id={`cg-${id}`} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#fff" stopOpacity="0.9"/><stop offset="20%" stopColor="#fff" stopOpacity="0.2"/>
@@ -211,17 +179,21 @@ function AKCylinder({ layers=[], capacity=4, width=160, height=360 }) {
               <defs><linearGradient id={`cl-${id}-${i}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={L.color} stopOpacity=".75"/><stop offset="100%" stopColor={L.color} stopOpacity="1"/></linearGradient></defs>
               <rect x={inL} y={y} width={inR-inL} height={layerH+1} fill={`url(#cl-${id}-${i})`}/>
               <rect x={inL} y={y+4} width={inR-inL} height="6" fill="#fff" opacity=".28"/>
-              <rect x={inL} y={y+layerH-8} width={inR-inL} height="6" fill="#000" opacity=".10"/>
               {isTop&&<><ellipse cx={width/2} cy={y} rx={(inR-inL)/2} ry="4" fill={L.color}/><ellipse cx={width/2} cy={y} rx={(inR-inL)/2-4} ry="2" fill="#fff" opacity=".4"/></>}
             </g>
           );
         })}
+        {objects.map((obj,i)=>(
+          <g key={`obj-${i}`}>
+            <circle cx={width/2} cy={obj.cy} r={10} fill={obj.color} opacity=".85"/>
+            <text x={width/2} y={obj.cy+5} textAnchor="middle" fontSize="11">{obj.emoji}</text>
+          </g>
+        ))}
       </g>
       <ellipse cx={width/2} cy={top-10} rx={(inR-inL)/2} ry="6" fill="rgba(45,27,69,.16)"/>
       <ellipse cx={width/2} cy={top-11} rx={(inR-inL)/2-2} ry="4" fill="#fff" opacity=".9"/>
       <path d={`M ${inL+8} ${top+14} L ${inL+8} ${bottom-22}`} stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity=".8"/>
-      <path d={`M ${inR-6} ${top+30} L ${inR-6} ${bottom-50}`} stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity=".45"/>
-      <path d={`M ${inL} ${top} L ${inR} ${top} L ${inR} ${bottom-16} Q ${inR} ${bottom} ${inR-16} ${bottom} L ${inL+16} ${bottom} Q ${inL} ${bottom} ${inL} ${bottom-16} Z`} fill={`url(#cg-${id})`} pointerEvents="none"/>
+      <path d={`M ${inR} ${top} L ${inR} ${bottom-16} Q ${inR} ${bottom} ${inR-16} ${bottom} L ${inL+16} ${bottom} Q ${inL} ${bottom} ${inL} ${bottom-16} Z`} fill={`url(#cg-${id})`} pointerEvents="none"/>
       {[...Array(capacity)].map((_,i)=>(
         <g key={i}><line x1={inR+4} y1={bottom-(i+1)*layerH} x2={inR+12} y2={bottom-(i+1)*layerH} stroke="rgba(45,27,69,.3)" strokeWidth="2" strokeLinecap="round"/></g>
       ))}
@@ -269,7 +241,7 @@ function AKProgress({ value=0.5, tone='cta', height=18, label }) {
         <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-2)'}}>{label}</span>
         <span className="ak-num" style={{fontWeight:700,fontSize:14,color:'var(--ak-ink)'}}>{Math.round(value*100)}%</span>
       </div>}
-      <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18),inset 0 -1px 0 rgba(255,255,255,.6)',overflow:'hidden',position:'relative'}}>
+      <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',overflow:'hidden',position:'relative'}}>
         <div style={{width:`${Math.max(0,Math.min(1,value))*100}%`,height:'100%',background:`linear-gradient(180deg,${l} 0%,${m} 50%,${d} 100%)`,boxShadow:`inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 ${d}`,borderRadius:999,transition:'width .4s cubic-bezier(.2,.7,.3,1)',position:'relative'}}>
           <div style={{position:'absolute',top:3,left:8,right:8,height:3,background:'rgba(255,255,255,.55)',borderRadius:999}}/>
         </div>
@@ -300,7 +272,7 @@ function AKTaskBadge({ children, tone='chem' }) {
 
 function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabel='Дальше' }) {
   return (
-    <div className="ak-pop" style={{width:340,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(43,168,115,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1),inset 0 -3px 0 rgba(45,27,69,.05)',fontFamily:'var(--ak-body)',position:'relative'}}>
+    <div className="ak-pop" style={{width:320,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(43,168,115,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-body)',position:'relative',margin:'0 auto'}}>
       <div aria-hidden style={{position:'absolute',top:-10,left:-10,right:-10,height:30,pointerEvents:'none'}}>
         {[{l:8,c:'#FFC857',s:8},{l:60,c:'#5DD9A0',s:6},{l:120,c:'#B5A1FF',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#FFC857',s:6}].map((p,i)=>(
           <div key={i} className="ak-twinkle" style={{position:'absolute',left:p.l,top:4+(i%2)*8,width:p.s,height:p.s,borderRadius:2,background:p.c,transform:`rotate(${i*25}deg)`,animationDelay:`${i*.15}s`}}/>
@@ -313,7 +285,7 @@ function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabe
           </div>
         ))}
       </div>
-      <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:26,letterSpacing:-.4,color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
+      <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:26,letterSpacing:'-.4px',color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
       {fact&&<div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{fact}</div>}
       {onNext&&<button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={onNext}>{ctaLabel}</button>}
     </div>
@@ -333,146 +305,342 @@ function AKLessonHeader({ progress=0.4, stars=240, onClose }) {
 }
 
 /* ============================================================
-   LEVEL 1 — ТРИ СОСТОЯНИЯ (States of Matter)
+   LEVEL 1 — МАШИНА ТЕМПЕРАТУР (Temperature Machine)
    ============================================================ */
-const L1_ITEMS = [
-  {e:'🧊', label:'Лёд',      state:'solid',   fact:'Молекулы льда плотно упакованы и почти не движутся'},
-  {e:'💧', label:'Вода',     state:'liquid',  fact:'Молекулы воды движутся и скользят мимо друг друга'},
-  {e:'💨', label:'Пар',      state:'gas',     fact:'Молекулы пара летают свободно во все стороны'},
-  {e:'🪨', label:'Камень',   state:'solid',   fact:'Твёрдые тела сохраняют форму — молекулы держатся вместе'},
-  {e:'🥛', label:'Молоко',   state:'liquid',  fact:'Жидкости принимают форму сосуда'},
-  {e:'🌬️', label:'Воздух',   state:'gas',     fact:'Воздух — смесь газов: азот, кислород, углекислый газ'},
-  {e:'🍫', label:'Шоколад',  state:'solid',   fact:'Твёрдый, пока не нагреется — потом становится жидким!'},
-  {e:'🧃', label:'Сок',      state:'liquid',  fact:'Сок занимает форму стакана — это признак жидкости'},
-  {e:'🫁', label:'Кислород', state:'gas',     fact:'Кислород — газ без цвета и запаха, мы им дышим'},
+const L1_MISSIONS = [
+  {goal:'Заморозь воду!', substance:'Вода 💧', targetMin:-20, targetMax:-1, result:'solid', reward:'🧊 Готово! Лёд!', fact:'При 0°C вода замерзает. Молекулы замедляются и выстраиваются в кристаллическую решётку.'},
+  {goal:'Растопи лёд — сделай жидкой водой', substance:'Лёд 🧊', targetMin:1, targetMax:60, result:'liquid', reward:'💧 Вода течёт!', fact:'Выше 0°C молекулы начинают скользить друг мимо друга — это жидкость.'},
+  {goal:'Вскипяти воду!', substance:'Вода 💧', targetMin:100, targetMax:130, result:'gas', reward:'♨️ Кипит!', fact:'При 100°C молекулы приобретают достаточно энергии чтобы вырваться в воздух — это пар!'},
+  {goal:'Охлади кипяток до комфортной температуры (35–40°C)', substance:'Горячая вода ♨️', targetMin:35, targetMax:40, result:'liquid', reward:'☕ Идеально!', fact:'Температура тела человека ~36.6°C. Вода при такой температуре — тёплая жидкость.'},
+  {goal:'Растопи шоколад!', substance:'Шоколад 🍫', targetMin:34, targetMax:60, result:'liquid', reward:'🍫 Растаял!', fact:'Шоколад плавится при 32-34°C — почти температура рук! Поэтому тает в ладонях.'},
 ];
 
-const L1_BINS = [
-  { key:'solid',  label:'ТВЁРДОЕ', emoji:'🧱', bg:'linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 100%)', shadow:'0 6px 0 #7C5FE0,0 12px 24px -6px rgba(124,95,224,.4),inset 0 2px 0 rgba(255,255,255,.55)' },
-  { key:'liquid', label:'ЖИДКОЕ',  emoji:'💧', bg:'linear-gradient(180deg,#B8DCFA 0%,#8FCAF0 100%)', shadow:'0 6px 0 #4A93C9,0 12px 24px -6px rgba(74,147,201,.4),inset 0 2px 0 rgba(255,255,255,.55)' },
-  { key:'gas',    label:'ГАЗ',     emoji:'☁️', bg:'linear-gradient(180deg,#FFEDA8 0%,#FFD262 100%)', shadow:'0 6px 0 #D4A22B,0 12px 24px -6px rgba(212,162,43,.4),inset 0 2px 0 rgba(255,255,255,.55)' },
-];
+function getPhase(temp) {
+  if (temp < 0) return 'solid';
+  if (temp >= 100) return 'gas';
+  return 'liquid';
+}
 
-function Level1States({ onDone }) {
-  const [idx, setIdx]         = React.useState(0);
-  const [counts, setCounts]   = React.useState({solid:0,liquid:0,gas:0});
-  const [selected, setSelected] = React.useState(null); // which item card is picked
-  const [shakeBin, setShakeBin] = React.useState(null);
-  const [factPopup, setFactPopup] = React.useState(null); // {text}
-  const [animOut, setAnimOut] = React.useState(false);
-  const [done, setDone]       = React.useState(false);
+function getPhaseForMission(mission, temp) {
+  if (mission === 4) { // chocolate mission
+    if (temp < 34) return 'solid';
+    return 'liquid';
+  }
+  return getPhase(temp);
+}
 
-  const item = L1_ITEMS[idx];
-  const total = L1_ITEMS.length;
-  const sorted = idx; // how many already sorted
+function getTempColor(temp) {
+  if (temp <= 0) return '#60B5E8';
+  if (temp >= 100) return '#FF6B35';
+  const t = temp / 100;
+  const r = Math.round(96 + t*(255-96));
+  const g = Math.round(181 - t*(181-107));
+  const b = Math.round(232 - t*(232-53));
+  return `rgb(${r},${g},${b})`;
+}
 
-  const handleCardTap = () => {
-    if (factPopup) return;
-    setSelected(s => s === idx ? null : idx);
-  };
+function MoleculeCanvas({ temp, missionIdx }) {
+  const canvasRef = React.useRef(null);
+  const particlesRef = React.useRef(null);
+  const animRef = React.useRef(null);
 
-  const handleBin = (binKey) => {
-    if (factPopup || selected === null) return;
-    if (item.state === binKey) {
-      // correct
-      setAnimOut(true);
-      setTimeout(() => {
-        setCounts(c => ({...c, [binKey]: c[binKey]+1}));
-        setFactPopup({ text: item.fact });
-        setAnimOut(false);
-      }, 350);
-    } else {
-      setShakeBin(binKey);
-      setTimeout(() => setShakeBin(null), 450);
+  const isChocolate = missionIdx === 4;
+  const phase = isChocolate ? getPhaseForMission(4, temp) : getPhase(temp);
+
+  const SOLID_COLOR  = isChocolate ? '#8B4513' : '#A8D8FF';
+  const LIQUID_COLOR = isChocolate ? '#D2691E' : '#7BD9A8';
+  const GAS_COLOR    = isChocolate ? '#F4A460' : '#FFD262';
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const W = canvas.width, H = canvas.height;
+    const N = 40;
+
+    if (!particlesRef.current) {
+      particlesRef.current = Array.from({length: N}, (_, i) => {
+        const col = i % 8, row = Math.floor(i / 8);
+        return {
+          x: 30 + col * 28,
+          y: 30 + row * 28,
+          vx: (Math.random()-0.5)*2,
+          vy: (Math.random()-0.5)*2,
+          baseX: 30 + col * 28,
+          baseY: 30 + row * 28,
+        };
+      });
     }
-  };
 
-  const handleFactClose = () => {
-    setFactPopup(null);
-    setSelected(null);
-    const nextIdx = idx + 1;
-    if (nextIdx >= total) {
-      setTimeout(() => setDone(true), 200);
-    } else {
-      setIdx(nextIdx);
-    }
-  };
+    const particles = particlesRef.current;
+
+    const draw = () => {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, W, H);
+
+      // Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      if (phase === 'solid') {
+        bgGrad.addColorStop(0, '#E8F4FF');
+        bgGrad.addColorStop(1, '#C8E8FF');
+      } else if (phase === 'gas') {
+        bgGrad.addColorStop(0, '#FFF8E0');
+        bgGrad.addColorStop(1, '#FFE8B0');
+      } else {
+        bgGrad.addColorStop(0, '#E8FFF4');
+        bgGrad.addColorStop(1, '#C8F0DC');
+      }
+      ctx.fillStyle = bgGrad;
+      ctx.roundRect(0, 0, W, H, 16);
+      ctx.fill();
+
+      const speed = phase === 'solid'
+        ? 0.3
+        : phase === 'gas'
+          ? 2 + (temp - 100) * 0.04
+          : 0.4 + temp * 0.015;
+
+      const color = phase === 'solid' ? SOLID_COLOR : phase === 'liquid' ? LIQUID_COLOR : GAS_COLOR;
+
+      particles.forEach(p => {
+        if (phase === 'solid') {
+          // vibrate around base position
+          p.x = p.baseX + (Math.random()-0.5) * 2.5;
+          p.y = p.baseY + (Math.random()-0.5) * 2.5;
+        } else {
+          // move freely
+          p.x += p.vx * speed;
+          p.y += p.vy * speed;
+          if (p.x < 8) { p.x = 8; p.vx = Math.abs(p.vx); }
+          if (p.x > W-8) { p.x = W-8; p.vx = -Math.abs(p.vx); }
+          if (p.y < 8) { p.y = 8; p.vy = Math.abs(p.vy); }
+          if (p.y > H-8) { p.y = H-8; p.vy = -Math.abs(p.vy); }
+        }
+
+        // Draw particle
+        const r = phase === 'gas' ? 4.5 : phase === 'liquid' ? 5.5 : 5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Shine
+        ctx.beginPath();
+        ctx.arc(p.x - r*0.3, p.y - r*0.3, r*0.35, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.fill();
+      });
+
+      // Grid lines for solid
+      if (phase === 'solid') {
+        ctx.strokeStyle = `${SOLID_COLOR}55`;
+        ctx.lineWidth = 1;
+        particles.forEach((p, i) => {
+          if (i % 8 < 7) {
+            const next = particles[i+1];
+            if (next && Math.abs(next.baseX - p.baseX) < 35) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(next.x, next.y); ctx.stroke();
+            }
+          }
+          if (i < N - 8) {
+            const below = particles[i+8];
+            if (below) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(below.x, below.y); ctx.stroke();
+            }
+          }
+        });
+      }
+
+      // Steam wisps for gas
+      if (phase === 'gas') {
+        const t = Date.now() * 0.001;
+        ctx.strokeStyle = 'rgba(255,210,98,0.4)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+          const sx = 40 + i * 90;
+          ctx.beginPath();
+          ctx.moveTo(sx, H);
+          ctx.bezierCurveTo(sx + Math.sin(t + i)*15, H*0.6, sx - Math.sin(t+i)*15, H*0.3, sx + Math.sin(t*1.3+i)*10, 0);
+          ctx.stroke();
+        }
+      }
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => cancelAnimationFrame(animRef.current);
+  }, [temp, phase, missionIdx]);
 
   return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 100%,#DCF7E7 0%,transparent 70%),linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'60px 18px 22px',boxSizing:'border-box',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}}>
-      <AKLessonHeader progress={sorted/total} stars={sorted*30} onClose={onDone}/>
-      <div style={{textAlign:'center',marginTop:18,marginBottom:6}}>
-        <AKTaskBadge tone="chem">Отсортировано: {sorted} / {total}</AKTaskBadge>
+    <canvas ref={canvasRef} width={280} height={175}
+      style={{borderRadius:16,display:'block',margin:'0 auto',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 8px 20px -6px rgba(45,27,69,.12)'}}
+    />
+  );
+}
+
+function Level1TempMachine({ onDone }) {
+  const [missionIdx, setMissionIdx] = React.useState(0);
+  const [temp, setTemp]             = React.useState(20);
+  const [celebrating, setCelebrating] = React.useState(false);
+  const [done, setDone]             = React.useState(false);
+  const [completedCount, setCompletedCount] = React.useState(0);
+
+  const mission = L1_MISSIONS[missionIdx];
+  const total   = L1_MISSIONS.length;
+  const phase   = missionIdx === 4 ? getPhaseForMission(4, temp) : getPhase(temp);
+  const inRange = temp >= mission.targetMin && temp <= mission.targetMax;
+
+  const PHASE_LABELS = { solid: 'ТВЁРДОЕ 🧱', liquid: 'ЖИДКОЕ 💧', gas: 'ГАЗ 💨' };
+  const PHASE_COLORS = { solid: '#7C5FE0', liquid: '#3CA876', gas: '#D4A22B' };
+
+  const thermFill = (temp + 30) / 160; // -30..130 → 0..1
+  const thermColor = getTempColor(temp);
+
+  const handleAccept = () => {
+    if (!inRange) return;
+    setCelebrating(true);
+  };
+
+  const handleNext = () => {
+    setCelebrating(false);
+    const nextIdx = missionIdx + 1;
+    setCompletedCount(c => c + 1);
+    if (nextIdx >= total) {
+      setDone(true);
+    } else {
+      setMissionIdx(nextIdx);
+      setTemp(20);
+    }
+  };
+
+  const stars = completedCount >= total ? 3 : completedCount >= total - 1 ? 2 : completedCount >= 3 ? 1 : 0;
+
+  return (
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'60px 18px 22px',boxSizing:'border-box',display:'flex',flexDirection:'column',gap:14,position:'relative',overflow:'hidden'}}>
+
+      <AKLessonHeader progress={missionIdx/total} stars={completedCount*60} onClose={onDone}/>
+
+      {/* Mission badge */}
+      <div style={{textAlign:'center'}}>
+        <AKTaskBadge tone="chem">{mission.goal}</AKTaskBadge>
       </div>
 
-      {/* Current item card */}
-      {!done && item && (
-        <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',paddingBottom:8}}>
-          <div
-            onClick={handleCardTap}
-            className={`ak-tap${animOut?' ak-fly-out':' ak-fly-in'}`}
-            style={{
-              background: selected !== null ? 'linear-gradient(160deg,#DCF7E7,#A8F0CC)' : '#fff',
-              borderRadius: 28,
-              padding: '28px 36px',
-              boxShadow: selected !== null
-                ? '0 8px 0 #3CA876,0 18px 30px -8px rgba(60,168,118,.4),inset 0 2px 0 rgba(255,255,255,.7)'
-                : '0 8px 0 rgba(45,27,69,.10),0 18px 30px -8px rgba(45,27,69,.14),inset 0 2px 0 rgba(255,255,255,1)',
-              textAlign: 'center',
-              cursor: 'pointer',
-              transition: 'background .15s, box-shadow .15s',
-              minWidth: 180,
-            }}
-          >
-            <div style={{fontSize: 72, lineHeight: 1, marginBottom: 12}}>{item.e}</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)'}}>{item.label}</div>
-            {selected !== null && <div style={{marginTop:8,fontSize:12,color:'var(--ak-chem-3)',fontFamily:'var(--ak-display)',fontWeight:600}}>Теперь нажми на корзину ↓</div>}
+      {/* Substance label */}
+      <div style={{textAlign:'center',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:14,color:'var(--ak-ink-2)'}}>
+        Вещество: {mission.substance}
+      </div>
+
+      {/* Canvas */}
+      <MoleculeCanvas temp={temp} missionIdx={missionIdx} />
+
+      {/* Phase badge + temp display */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,padding:'0 4px'}}>
+        <div style={{
+          padding:'10px 18px',
+          borderRadius:999,
+          background: PHASE_COLORS[phase],
+          color:'#fff',
+          fontFamily:'var(--ak-display)',
+          fontWeight:700,
+          fontSize:14,
+          boxShadow:`0 4px 0 rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.3)`,
+          transition:'background .5s',
+        }}>
+          {PHASE_LABELS[phase]}
+        </div>
+
+        {/* Thermometer */}
+        <div style={{display:'flex',alignItems:'center',gap:10,flex:1,justifyContent:'flex-end'}}>
+          <div style={{width:28,height:80,background:'rgba(45,27,69,.08)',borderRadius:14,position:'relative',overflow:'hidden',boxShadow:'inset 0 2px 4px rgba(45,27,69,.15)'}}>
+            <div style={{
+              position:'absolute',bottom:0,left:0,right:0,
+              height:`${Math.max(5, thermFill*100)}%`,
+              background:thermColor,
+              borderRadius:14,
+              transition:'height .2s, background .2s',
+            }}/>
+          </div>
+          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:32,color:thermColor,transition:'color .2s',minWidth:70,textAlign:'right'}}>
+            {temp}°C
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Bins */}
-      <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:8,paddingBottom:8}}>
-        {L1_BINS.map(bin => (
-          <div key={bin.key}
-            className={`ak-tap${shakeBin===bin.key?' ak-shake':''}`}
-            onClick={() => handleBin(bin.key)}
-            style={{
-              flex:1,
-              maxWidth: 110,
-              padding: '14px 6px 12px',
-              borderRadius: 20,
-              background: bin.bg,
-              boxShadow: bin.shadow,
-              textAlign: 'center',
-              cursor: selected !== null ? 'pointer' : 'default',
-              opacity: selected !== null ? 1 : 0.65,
-              transition: 'opacity .2s',
-            }}
-          >
-            <div style={{fontSize:28,marginBottom:4}}>{bin.emoji}</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:11,color:'var(--ak-ink)',letterSpacing:.5}}>{bin.label}</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:13,color:'var(--ak-ink)',marginTop:4,opacity:.7}}>{counts[bin.key]}/3</div>
-          </div>
+      {/* Slider */}
+      <div style={{padding:'0 4px'}}>
+        <div style={{position:'relative',borderRadius:999,background:'linear-gradient(90deg,#60B5E8 0%,#7BD9A8 40%,#FFD262 70%,#FF6B35 100%)',height:18,boxShadow:'inset 0 2px 4px rgba(45,27,69,.2)'}}>
+          <input
+            type="range" min="-30" max="130" value={temp}
+            onChange={e => setTemp(Number(e.target.value))}
+            style={{position:'absolute',inset:0,width:'100%',opacity:0,height:'100%',cursor:'pointer',zIndex:2}}
+          />
+          <div style={{
+            position:'absolute',
+            left:`calc(${(temp+30)/160*100}% - 18px)`,
+            top:'50%',
+            transform:'translateY(-50%)',
+            width:36,height:36,
+            borderRadius:'50%',
+            background:'linear-gradient(180deg,#fff 0%,#FFF7E8 100%)',
+            boxShadow:'0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95)',
+            transition:'left .05s',
+            pointerEvents:'none',
+          }}/>
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',marginTop:6,fontFamily:'var(--ak-display)',fontSize:11,color:'var(--ak-ink-3)',fontWeight:600}}>
+          <span>−30°C ❄️</span><span>💧 0°C</span><span>♨️ 100°C</span><span>130°C 🔥</span>
+        </div>
+      </div>
+
+      {/* Target range hint */}
+      <div style={{textAlign:'center',fontFamily:'var(--ak-display)',fontSize:13,color: inRange ? '#2BA873' : 'var(--ak-ink-3)',fontWeight:700,transition:'color .3s'}}>
+        {inRange ? '✅ Температура в нужном диапазоне!' : `Нужно: от ${mission.targetMin}°C до ${mission.targetMax}°C`}
+      </div>
+
+      {/* Accept button */}
+      <button
+        className="ak-btn ak-btn--cta ak-btn--lg"
+        style={{width:'100%',opacity: inRange ? 1 : 0.4,transition:'opacity .3s'}}
+        disabled={!inRange}
+        onClick={handleAccept}
+      >
+        {mission.reward} Принять!
+      </button>
+
+      {/* Mission progress dots */}
+      <div style={{display:'flex',justifyContent:'center',gap:8}}>
+        {L1_MISSIONS.map((_,i)=>(
+          <div key={i} style={{width:10,height:10,borderRadius:'50%',background: i<completedCount ? '#5DD9A0' : i===missionIdx ? '#7BD9A8' : 'rgba(45,27,69,.12)',boxShadow: i===missionIdx ? '0 0 0 3px rgba(123,217,168,.4)' : 'none',transition:'all .3s'}}/>
         ))}
       </div>
 
-      {/* Fact popup */}
-      {factPopup && (
-        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'24px 20px',textAlign:'center',boxShadow:'0 12px 0 rgba(60,168,118,.18),0 24px 48px -12px rgba(45,27,69,.25)',maxWidth:320,width:'100%'}}>
-            <div style={{fontSize:40,marginBottom:12}}>✅</div>
-            <div style={{fontFamily:'var(--ak-display)',fontSize:17,fontWeight:700,color:'var(--ak-ink)',marginBottom:10}}>Верно!</div>
-            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>{factPopup.text}</div>
-            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleFactClose}>Дальше →</button>
+      {/* Celebration overlay */}
+      {celebrating && !done && (
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 22px',textAlign:'center',boxShadow:'0 12px 0 rgba(60,168,118,.18),0 24px 48px -12px rgba(45,27,69,.25)',maxWidth:320,width:'100%'}}>
+            <div style={{fontSize:56,marginBottom:12,lineHeight:1}}>{mission.reward.split(' ')[0]}</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',marginBottom:10}}>{mission.reward}</div>
+            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>{mission.fact}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+              {missionIdx < total - 1 ? 'Следующая задача →' : 'Финиш! 🎉'}
+            </button>
           </div>
         </div>
       )}
 
-      {/* Success */}
+      {/* Final success */}
       {done && (
-        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
-          <AKSuccessCard stars={3} title="Все разложено!" fact="Молекулы в твёрдых телах стоят на месте, в жидкостях — скользят, в газах — летают. Это и есть три состояния!" onNext={onDone} ctaLabel="Следующий уровень →"/>
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
+          <AKSuccessCard
+            stars={3}
+            title="Лаборант года! 🔬"
+            fact="Ты узнал как температура управляет состоянием вещества. Молекулы реагируют на тепло — это основа химии!"
+            onNext={onDone}
+            ctaLabel="Следующий уровень →"
+          />
         </div>
       )}
     </div>
@@ -480,69 +648,236 @@ function Level1States({ onDone }) {
 }
 
 /* ============================================================
-   LEVEL 2 — БАШНЯ ПЛОТНОСТЕЙ
+   LEVEL 2 — БАШНЯ ПЛОТНОСТЕЙ + БРОСКИ ПРЕДМЕТОВ
    ============================================================ */
 const AK_LIQUIDS = {
-  honey:   { color:'#E8A23C', label:'МЁД',   density:'1.4 г/мл' },
-  water:   { color:'#5A9EE3', label:'ВОДА',  density:'1.0 г/мл' },
-  oil:     { color:'#F2D147', label:'МАСЛО', density:'0.9 г/мл' },
-  alcohol: { color:'#A981E6', label:'СПИРТ', density:'0.8 г/мл' },
+  honey:   { color:'#E8A23C', label:'МЁД',   density: 1.4, densityLabel:'1.4 г/мл' },
+  water:   { color:'#5A9EE3', label:'ВОДА',  density: 1.0, densityLabel:'1.0 г/мл' },
+  oil:     { color:'#F2D147', label:'МАСЛО', density: 0.9, densityLabel:'0.9 г/мл' },
+  alcohol: { color:'#A981E6', label:'СПИРТ', density: 0.8, densityLabel:'0.8 г/мл' },
 };
 const AK_ORDER = ['honey','water','oil','alcohol'];
 
-function Level2Tower({ onDone }) {
-  const [poured, setPoured] = React.useState([]);
-  const [shake, setShake]   = React.useState(false);
-  const [won, setWon]       = React.useState(false);
+// Cylinder geometry constants (must match AKCylinder props width=160 height=360 capacity=4)
+const CYL_HEIGHT = 360, CYL_WIDTH = 160, CYL_CAP = 4;
+const CYL_LAYER_H = (CYL_HEIGHT - 70) / CYL_CAP;
+const CYL_BOTTOM = CYL_HEIGHT - 30;
+const CYL_TOP    = 40;
+
+const PHASE2_OBJECTS = [
+  {e:'🪵', label:'Щепка',     density:0.6, color:'#8B6914', fact:'Дерево легче масла — плавает на самом верху!'},
+  {e:'🪙', label:'Монетка',   density:8.9, color:'#C8A84B', fact:'Монета тяжелее всех жидкостей — тонет на самое дно.'},
+  {e:'🍇', label:'Виноград',  density:1.1, color:'#7B2FBE', fact:'Виноград чуть тяжелее воды — оседает между водой и мёдом!'},
+  {e:'🧊', label:'Лёд',       density:0.9, color:'#A8D8FF', fact:'Лёд чуть легче воды — плавает между маслом и водой.'},
+];
+
+function getObjectCy(density) {
+  // Layers from bottom: honey(1.4), water(1.0), oil(0.9), alcohol(0.8)
+  const layerDensities = [1.4, 1.0, 0.9, 0.8]; // index 0 = bottom layer
+  if (density > 1.4) {
+    return CYL_BOTTOM - 12; // below honey, at very bottom
+  }
+  if (density > 1.0) {
+    return CYL_BOTTOM - CYL_LAYER_H * 1 + CYL_LAYER_H * 0.5; // between honey and water
+  }
+  if (density > 0.9) {
+    return CYL_BOTTOM - CYL_LAYER_H * 2 + CYL_LAYER_H * 0.5; // between water and oil
+  }
+  if (density > 0.8) {
+    return CYL_BOTTOM - CYL_LAYER_H * 3 + CYL_LAYER_H * 0.5; // between oil and alcohol
+  }
+  // lighter than alcohol → floats on top
+  return CYL_BOTTOM - CYL_LAYER_H * 4 + 10;
+}
+
+function Level2Density({ onDone }) {
+  const [phase, setPhase]     = React.useState(1); // 1=tower, 2=objects
+  const [poured, setPoured]   = React.useState([]);
+  const [shake, setShake]     = React.useState(false);
+  const [p1Done, setP1Done]   = React.useState(false);
+
+  // Phase 2 state
+  const [selectedObj, setSelectedObj]   = React.useState(null);
+  const [droppedObjs, setDroppedObjs]   = React.useState([]); // [{idx, cy}]
+  const [dropping, setDropping]         = React.useState(false);
+  const [factsQueue, setFactsQueue]     = React.useState(null);
+  const [p2Done, setP2Done]             = React.useState(false);
+
   const used = new Set(poured);
   const expected = AK_ORDER[poured.length];
 
   const handlePour = (k) => {
-    if (won) return;
+    if (p1Done) return;
     if (k === expected) {
       const next = [...poured, k];
       setPoured(next);
-      if (next.length === AK_ORDER.length) setTimeout(() => setWon(true), 600);
+      if (next.length === AK_ORDER.length) setTimeout(() => setP1Done(true), 600);
     } else {
       setShake(true);
       setTimeout(() => setShake(false), 450);
     }
   };
 
-  const reset = () => { setPoured([]); setWon(false); };
   const layers = poured.map((k,i) => ({color:AK_LIQUIDS[k].color, fresh:i===poured.length-1}));
 
+  // Phase 2: drop object
+  const handleDrop = () => {
+    if (selectedObj === null || dropping) return;
+    const obj = PHASE2_OBJECTS[selectedObj];
+    const targetCy = getObjectCy(obj.density);
+    setDropping(true);
+    setTimeout(() => {
+      setDroppedObjs(prev => [...prev, { idx: selectedObj, cy: targetCy }]);
+      setFactsQueue({ obj });
+      setDropping(false);
+      setSelectedObj(null);
+    }, 700);
+  };
+
+  const handleFactClose = () => {
+    setFactsQueue(null);
+    if (droppedObjs.length >= PHASE2_OBJECTS.length) {
+      setTimeout(() => setP2Done(true), 300);
+    }
+  };
+
+  const droppedSet = new Set(droppedObjs.map(o => o.idx));
+
   return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 100%,#DCF7E7 0%,transparent 70%),linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'60px 18px 22px',boxSizing:'border-box',position:'relative',overflow:'hidden',display:'flex',flexDirection:'column'}}>
-      <AKLessonHeader progress={poured.length/AK_ORDER.length} stars={240} onClose={onDone}/>
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'60px 18px 22px',boxSizing:'border-box',position:'relative',overflow:'hidden',display:'flex',flexDirection:'column',gap:12}}>
 
-      <div style={{display:'flex',justifyContent:'center',marginTop:18,marginBottom:6}}>
-        <AKTaskBadge tone="chem">Нажимай от самого тяжёлого к лёгкому!</AKTaskBadge>
-      </div>
+      <AKLessonHeader progress={phase===1 ? poured.length/AK_ORDER.length : (4 + droppedObjs.length)/(AK_ORDER.length + PHASE2_OBJECTS.length)} stars={240} onClose={onDone}/>
 
-      <div style={{display:'flex',justifyContent:'center',gap:6,marginBottom:10}}>
-        {AK_ORDER.map((k,i) => (
-          <React.Fragment key={k}>
-            <div style={{width:22,height:22,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${AK_LIQUIDS[k].color} 30%,${AK_LIQUIDS[k].color} 100%)`,boxShadow:'inset 0 -2px 0 rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.6)',opacity:i<poured.length?1:.35,filter:i<poured.length?'none':'grayscale(.5)',transition:'all .3s'}}/>
-            {i<AK_ORDER.length-1&&<span style={{color:'var(--ak-ink-3)',alignSelf:'center',fontSize:12,fontWeight:700}}>→</span>}
-          </React.Fragment>
-        ))}
-      </div>
+      {phase === 1 && (
+        <>
+          <div style={{textAlign:'center'}}>
+            <AKTaskBadge tone="chem">Нажимай от самого тяжёлого к лёгкому!</AKTaskBadge>
+          </div>
 
-      <div className={shake?'ak-shake':''} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-end',position:'relative',minHeight:380}}>
-        <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:220,height:24,borderRadius:'50%',background:'radial-gradient(ellipse at center,rgba(45,27,69,.22) 0%,rgba(45,27,69,0) 70%)'}}/>
-        <AKCylinder layers={layers} capacity={4} width={160} height={360}/>
-      </div>
+          <div style={{display:'flex',justifyContent:'center',gap:6,marginBottom:4}}>
+            {AK_ORDER.map((k,i) => (
+              <React.Fragment key={k}>
+                <div style={{width:22,height:22,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${AK_LIQUIDS[k].color} 30%,${AK_LIQUIDS[k].color} 100%)`,boxShadow:'inset 0 -2px 0 rgba(0,0,0,.15)',opacity:i<poured.length?1:.35,transition:'all .3s'}}/>
+                {i<AK_ORDER.length-1&&<span style={{color:'var(--ak-ink-3)',alignSelf:'center',fontSize:12,fontWeight:700}}>→</span>}
+              </React.Fragment>
+            ))}
+          </div>
 
-      <div style={{marginTop:8,padding:'12px 8px 10px',borderRadius:28,background:'rgba(255,255,255,.55)',boxShadow:'inset 0 2px 6px rgba(45,27,69,.06),0 1px 0 rgba(255,255,255,.9)',display:'flex',justifyContent:'space-around',alignItems:'flex-end',backdropFilter:'blur(8px)'}}>
-        {AK_ORDER.map(k => (
-          <AKBottle key={k} color={AK_LIQUIDS[k].color} label={AK_LIQUIDS[k].label} densityLabel={AK_LIQUIDS[k].density} used={used.has(k)} onClick={() => handlePour(k)} size={72}/>
-        ))}
-      </div>
+          <div className={shake?'ak-shake':''} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-end',position:'relative',minHeight:320}}>
+            <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:220,height:24,borderRadius:'50%',background:'radial-gradient(ellipse at center,rgba(45,27,69,.22) 0%,rgba(45,27,69,0) 70%)'}}/>
+            <AKCylinder layers={layers} capacity={4} width={160} height={320}/>
+          </div>
 
-      {won && (
-        <div style={{position:'absolute',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
-          <AKSuccessCard stars={3} title="Идеальная башня!" fact="Самая плотная жидкость опускается на дно. Мёд тяжелее воды, а спирт легче масла — поэтому слои не смешиваются." onNext={() => { reset(); onDone(); }} ctaLabel="Следующий уровень →"/>
+          <div style={{padding:'12px 8px',borderRadius:28,background:'rgba(255,255,255,.6)',boxShadow:'inset 0 2px 6px rgba(45,27,69,.06)',display:'flex',justifyContent:'space-around',alignItems:'flex-end',backdropFilter:'blur(8px)'}}>
+            {AK_ORDER.map(k => (
+              <AKBottle key={k} color={AK_LIQUIDS[k].color} label={AK_LIQUIDS[k].label} densityLabel={AK_LIQUIDS[k].densityLabel} used={used.has(k)} onClick={() => handlePour(k)} size={68}/>
+            ))}
+          </div>
+        </>
+      )}
+
+      {phase === 2 && (
+        <>
+          <div style={{textAlign:'center'}}>
+            <AKTaskBadge tone="chem">Брось предметы — куда они попадут?</AKTaskBadge>
+          </div>
+
+          <div style={{display:'flex',gap:16,justifyContent:'center',alignItems:'flex-start'}}>
+            {/* Tower with dropped objects */}
+            <div style={{position:'relative'}}>
+              <AKCylinder
+                layers={AK_ORDER.map((k,i) => ({color:AK_LIQUIDS[k].color, fresh:false}))}
+                capacity={4} width={140} height={320}
+                objects={droppedObjs.map(o => ({
+                  emoji: PHASE2_OBJECTS[o.idx].e,
+                  color: PHASE2_OBJECTS[o.idx].color,
+                  cy: o.cy,
+                }))}
+              />
+            </div>
+
+            {/* Object cards grid */}
+            <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:10,alignContent:'start'}}>
+              {PHASE2_OBJECTS.map((obj, i) => {
+                const isDone = droppedSet.has(i);
+                const isSelected = selectedObj === i;
+                return (
+                  <button key={i}
+                    onClick={() => !isDone && setSelectedObj(i === selectedObj ? null : i)}
+                    disabled={isDone}
+                    style={{
+                      padding:'12px 8px',
+                      borderRadius:16,
+                      border:'none',
+                      cursor: isDone ? 'not-allowed' : 'pointer',
+                      background: isDone ? 'rgba(45,27,69,.05)' : isSelected ? 'linear-gradient(160deg,#DCF7E7,#A8F0CC)' : '#fff',
+                      boxShadow: isSelected
+                        ? '0 6px 0 #3CA876,0 12px 20px -6px rgba(60,168,118,.4),inset 0 1px 0 rgba(255,255,255,.8)'
+                        : '0 4px 0 rgba(45,27,69,.08),0 8px 18px -6px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,1)',
+                      opacity: isDone ? 0.4 : 1,
+                      transition:'all .15s',
+                      textAlign:'center',
+                    }}
+                  >
+                    <div style={{fontSize:28,lineHeight:1}}>{obj.e}</div>
+                    <div style={{fontFamily:'var(--ak-display)',fontSize:11,fontWeight:700,color:'var(--ak-ink)',marginTop:4}}>{obj.label}</div>
+                    <div style={{fontFamily:'var(--ak-body)',fontSize:10,color:'var(--ak-ink-3)',fontWeight:600,marginTop:2}}>{obj.density} г/мл</div>
+                    {isDone && <div style={{fontSize:10,color:'#2BA873',fontWeight:700,marginTop:2}}>✅</div>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <button
+            className="ak-btn ak-btn--cta"
+            style={{width:'100%',opacity: selectedObj !== null && !dropping ? 1 : 0.4,transition:'opacity .3s'}}
+            disabled={selectedObj === null || dropping}
+            onClick={handleDrop}
+          >
+            {dropping ? '💦 Падает...' : '🎯 Бросить!'}
+          </button>
+        </>
+      )}
+
+      {/* Phase 1 success overlay */}
+      {p1Done && phase === 1 && (
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 22px',textAlign:'center',boxShadow:'0 12px 0 rgba(60,168,118,.18),0 24px 48px -12px rgba(45,27,69,.25)',maxWidth:320,width:'100%'}}>
+            <div style={{fontSize:56,marginBottom:12,lineHeight:1}}>🏆</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',marginBottom:10}}>Идеальная башня!</div>
+            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>Самая плотная жидкость опускается на дно. Мёд тяжелее воды, а спирт легче масла — поэтому слои не смешиваются.</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={() => { setP1Done(false); setPhase(2); }}>
+              А теперь брось предметы! →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Fact overlay after drop */}
+      {factsQueue && !p2Done && (
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
+          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 22px',textAlign:'center',boxShadow:'0 12px 0 rgba(60,168,118,.18),0 24px 48px -12px rgba(45,27,69,.25)',maxWidth:320,width:'100%'}}>
+            <div style={{fontSize:52,marginBottom:10,lineHeight:1}}>{factsQueue.obj.e}</div>
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,color:'var(--ak-ink)',marginBottom:10}}>{factsQueue.obj.label} — {factsQueue.obj.density} г/мл</div>
+            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>{factsQueue.obj.fact}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleFactClose}>
+              {droppedObjs.length >= PHASE2_OBJECTS.length ? 'Финиш! 🎉' : 'Следующий →'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Phase 2 done */}
+      {p2Done && (
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
+          <AKSuccessCard
+            stars={3}
+            title="Физик-химик! ⚗️"
+            fact="Плотность — это масса на объём. Тяжёлые предметы тонут, лёгкие плавают. Именно поэтому айсберги не тонут!"
+            onNext={onDone}
+            ctaLabel="Следующий уровень →"
+          />
         </div>
       )}
     </div>
@@ -550,43 +885,244 @@ function Level2Tower({ onDone }) {
 }
 
 /* ============================================================
-   LEVEL 3 — ФИЗИЧЕСКОЕ ИЛИ ХИМИЧЕСКОЕ?
+   LEVEL 3 — ЛАБОРАТОРИЯ РЕАКЦИЙ (Reaction Lab)
    ============================================================ */
-const L3_SITUATIONS = [
-  {emoji:'🧊', label:'Лёд тает',        answer:'physical', fact:'Таяние — физическое: вода и лёд это одно вещество H₂O, просто в разных состояниях. Можно снова заморозить!'},
-  {emoji:'📄', label:'Бумага горит',     answer:'chemical', fact:'Горение — химическое: бумага превращается в углекислый газ и пепел. Назад не вернуть!'},
-  {emoji:'🍋', label:'Лимон в молоко',  answer:'chemical', fact:'Кислота лимона реагирует с молоком — оно сворачивается. Это химическая реакция!'},
-  {emoji:'✂️', label:'Бумагу режут',    answer:'physical', fact:'Резать — физическое изменение. Вещество то же самое, просто меньший размер.'},
-  {emoji:'🦀', label:'Железо ржавеет',  answer:'chemical', fact:'Ржавчина — это оксид железа, новое вещество. Химическая реакция железа с кислородом!'},
-  {emoji:'🥚', label:'Яйцо жарится',   answer:'chemical', fact:'Белок яйца необратимо меняется при нагреве. Уже готовое яйцо нельзя сделать сырым!'},
-  {emoji:'🪨', label:'Камень дробят',   answer:'physical', fact:'Дробление — физическое. Камень стал меньше, но это всё равно тот же минерал.'},
+const L3_EXPERIMENTS = [
+  {
+    a:{emoji:'🍋',label:'Уксус',color:'#F2E44B'},
+    b:{emoji:'🧂',label:'Сода',color:'#F0F0F0'},
+    effect:'bubbles',
+    resultEmoji:'💨',
+    resultLabel:'Выделяется газ CO₂!',
+    answer:'chemical',
+    explanation:'Уксусная кислота реагирует с содой. Появляется новое вещество — углекислый газ CO₂. Это химическая реакция!',
+  },
+  {
+    a:{emoji:'🔵',label:'Синяя краска',color:'#3B82F6'},
+    b:{emoji:'💧',label:'Вода',color:'#93C5FD'},
+    effect:'color_mix',
+    resultEmoji:'💧',
+    resultLabel:'Вода стала синей',
+    answer:'physical',
+    explanation:'Краска растворилась в воде. Новое вещество не образовалось — это физическое изменение. Воду можно выпарить и получить краску обратно.',
+  },
+  {
+    a:{emoji:'🥚',label:'Яйцо',color:'#FEF3C7'},
+    b:{emoji:'🔥',label:'Жар',color:'#F97316'},
+    effect:'solidify',
+    resultEmoji:'🍳',
+    resultLabel:'Белок свернулся!',
+    answer:'chemical',
+    explanation:'Белок яйца при нагреве необратимо меняет структуру. Сырое яйцо назад не получить — это химическая реакция!',
+  },
+  {
+    a:{emoji:'🧂',label:'Соль',color:'#FAFAFA'},
+    b:{emoji:'💧',label:'Вода',color:'#93C5FD'},
+    effect:'dissolve',
+    resultEmoji:'💧',
+    resultLabel:'Соль растворилась',
+    answer:'physical',
+    explanation:'Соль растворилась но не изменилась химически. Если выпарить воду — получишь соль обратно. Физическое изменение!',
+  },
+  {
+    a:{emoji:'🔩',label:'Железо',color:'#9CA3AF'},
+    b:{emoji:'🌧',label:'Влажный воздух',color:'#E0F2FE'},
+    effect:'rust',
+    resultEmoji:'🟫',
+    resultLabel:'Ржавчина!',
+    answer:'chemical',
+    explanation:'Железо + кислород + вода = ржавчина (оксид железа Fe₂O₃). Новое вещество! Химическая реакция.',
+  },
+  {
+    a:{emoji:'🧊',label:'Лёд',color:'#DBEAFE'},
+    b:{emoji:'☀️',label:'Тепло',color:'#FEF9C3'},
+    effect:'melt',
+    resultEmoji:'💧',
+    resultLabel:'Лёд растаял',
+    answer:'physical',
+    explanation:'Лёд стал водой, но H₂O не изменился. Заморозь снова — лёд вернётся. Физическое изменение!',
+  },
 ];
 
-function Level3Changes({ onDone }) {
-  const [idx, setIdx]         = React.useState(0);
-  const [score, setScore]     = React.useState(0);
-  const [shakeBtn, setShakeBtn] = React.useState(null);
-  const [reveal, setReveal]   = React.useState(null); // {correct: bool, fact: str}
-  const [done, setDone]       = React.useState(false);
+function BubbleEffect() {
+  const bubbles = Array.from({length:12}, (_,i) => ({
+    left: 20 + Math.random()*60,
+    size: 6 + Math.random()*10,
+    delay: i * 0.1,
+    dur: 0.8 + Math.random()*0.5,
+  }));
+  return (
+    <div style={{position:'relative',height:80,overflow:'hidden'}}>
+      {bubbles.map((b,i) => (
+        <div key={i} style={{
+          position:'absolute',
+          left:`${b.left}%`,
+          bottom:0,
+          width:b.size,height:b.size,
+          borderRadius:'50%',
+          background:'rgba(200,240,220,0.85)',
+          border:'1.5px solid rgba(60,168,118,.4)',
+          animation:`ak-rise ${b.dur}s ease-out ${b.delay}s forwards`,
+        }}/>
+      ))}
+    </div>
+  );
+}
 
-  const total = L3_SITUATIONS.length;
-  const situation = L3_SITUATIONS[idx];
+function ColorMixEffect({ startColor, endColor }) {
+  const [bg, setBg] = React.useState(startColor);
+  React.useEffect(() => {
+    const t = setTimeout(() => setBg(endColor), 100);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{
+      width:80,height:80,borderRadius:16,
+      background: bg,
+      transition:'background 1.2s ease',
+      display:'flex',alignItems:'center',justifyContent:'center',
+      fontSize:32,
+    }}>💧</div>
+  );
+}
+
+function DissolveEffect() {
+  const grains = Array.from({length:8}, (_,i) => ({
+    left: 10 + (i % 4) * 20,
+    top: 15 + Math.floor(i/4) * 20,
+    size: 6 + Math.random()*4,
+  }));
+  const [opacity, setOpacity] = React.useState(1);
+  React.useEffect(() => {
+    const t = setTimeout(() => setOpacity(0), 200);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{position:'relative',width:80,height:80,background:'#93C5FD66',borderRadius:16}}>
+      {grains.map((g,i) => (
+        <div key={i} style={{
+          position:'absolute', left:g.left, top:g.top,
+          width:g.size, height:g.size, borderRadius:'50%',
+          background:'rgba(255,255,255,.9)',
+          opacity,
+          transition:`opacity 1.5s ease ${i*0.1}s`,
+        }}/>
+      ))}
+      <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,opacity: 1-opacity*0.5,transition:'opacity 1.5s'}}>💧</div>
+    </div>
+  );
+}
+
+function RustEffect() {
+  const [progress, setProgress] = React.useState(0);
+  React.useEffect(() => {
+    const t = setTimeout(() => setProgress(1), 100);
+    return () => clearTimeout(t);
+  }, []);
+  const r = Math.round(156 + progress*22);
+  const g = Math.round(163 - progress*96);
+  const b = Math.round(175 - progress*166);
+  return (
+    <div style={{
+      width:80,height:80,borderRadius:16,
+      background:`rgb(${r},${g},${b})`,
+      transition:'background 1.8s ease',
+      display:'flex',alignItems:'center',justifyContent:'center',
+      fontSize:32,
+      boxShadow:'inset 0 0 12px rgba(0,0,0,.2)',
+    }}>🟫</div>
+  );
+}
+
+function MeltEffect() {
+  const [melt, setMelt] = React.useState(0);
+  React.useEffect(() => {
+    const t = setTimeout(() => setMelt(1), 100);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:0}}>
+      <div style={{
+        width:70,
+        height: `${Math.round(70 - melt*50)}px`,
+        borderRadius:12,
+        background:'linear-gradient(180deg,#DBEAFE,#93C5FD)',
+        transition:'height 1.4s ease',
+        overflow:'hidden',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        fontSize: melt < 0.5 ? 28 : 16,
+      }}>🧊</div>
+      <div style={{
+        width:`${Math.round(40 + melt*50)}px`,
+        height:8,
+        borderRadius:999,
+        background:'#5A9EE3',
+        opacity: melt,
+        transition:'width 1.4s ease, opacity 1.4s ease',
+        marginTop:2,
+      }}/>
+    </div>
+  );
+}
+
+function SolidifyEffect() {
+  const [solid, setSolid] = React.useState(0);
+  React.useEffect(() => {
+    const t = setTimeout(() => setSolid(1), 100);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{
+      width:80,height:80,borderRadius:16,
+      background:`rgba(255,255,255,${0.3 + solid*0.6})`,
+      transition:'background 1.2s ease',
+      display:'flex',alignItems:'center',justifyContent:'center',
+      fontSize:32,
+      border:`2px solid rgba(249,115,22,${1-solid*0.8})`,
+    }}>🍳</div>
+  );
+}
+
+function EffectDisplay({ effect, exp }) {
+  if (effect === 'bubbles')    return <BubbleEffect />;
+  if (effect === 'color_mix')  return <ColorMixEffect startColor={exp.b.color} endColor={exp.a.color} />;
+  if (effect === 'dissolve')   return <DissolveEffect />;
+  if (effect === 'rust')       return <RustEffect />;
+  if (effect === 'melt')       return <MeltEffect />;
+  if (effect === 'solidify')   return <SolidifyEffect />;
+  return null;
+}
+
+function Level3Lab({ onDone }) {
+  const [idx, setIdx]               = React.useState(0);
+  const [score, setScore]           = React.useState(0);
+  const [mixing, setMixing]         = React.useState(false);
+  const [effectPlaying, setEffectPlaying] = React.useState(false);
+  const [answered, setAnswered]     = React.useState(null); // null | {correct, explanation}
+  const [done, setDone]             = React.useState(false);
+
+  const total = L3_EXPERIMENTS.length;
+  const exp   = L3_EXPERIMENTS[idx];
+
+  const handleMix = () => {
+    if (mixing || effectPlaying) return;
+    setMixing(true);
+    setTimeout(() => {
+      setMixing(false);
+      setEffectPlaying(true);
+    }, 500);
+  };
 
   const handleAnswer = (choice) => {
-    if (reveal) return;
-    const correct = choice === situation.answer;
-    if (correct) {
-      setScore(s => s + 1);
-      setReveal({ correct: true, fact: situation.fact });
-    } else {
-      setShakeBtn(choice);
-      setTimeout(() => setShakeBtn(null), 450);
-      setReveal({ correct: false, fact: situation.fact });
-    }
+    if (answered) return;
+    const correct = choice === exp.answer;
+    if (correct) setScore(s => s + 1);
+    setAnswered({ correct, explanation: exp.explanation });
   };
 
   const handleNext = () => {
-    setReveal(null);
+    setAnswered(null);
+    setEffectPlaying(false);
     const nextIdx = idx + 1;
     if (nextIdx >= total) {
       setDone(true);
@@ -595,81 +1131,139 @@ function Level3Changes({ onDone }) {
     }
   };
 
-  const stars = score >= total ? 3 : score >= Math.ceil(total*0.7) ? 2 : score >= Math.ceil(total*0.4) ? 1 : 0;
+  const stars = score >= total ? 3 : score >= Math.ceil(total * 0.67) ? 2 : score >= Math.ceil(total * 0.34) ? 1 : 0;
 
   return (
-    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 100%,#DCF7E7 0%,transparent 60%),linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 100%)',padding:'60px 18px 32px',boxSizing:'border-box',display:'flex',flexDirection:'column',position:'relative',overflow:'hidden'}}>
-      <AKLessonHeader progress={idx/total} stars={score*35} onClose={onDone}/>
+    <div className="ak" style={{width:'100%',minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 100%)',padding:'60px 18px 32px',boxSizing:'border-box',display:'flex',flexDirection:'column',gap:16,position:'relative',overflow:'hidden'}}>
+
+      <AKLessonHeader progress={idx/total} stars={score*50} onClose={onDone}/>
 
       {/* Progress dots */}
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:16,marginBottom:18}}>
-        {L3_SITUATIONS.map((_,i) => (
-          <div key={i} style={{
-            width: 10, height: 10, borderRadius: '50%',
-            background: i < idx ? '#5DD9A0' : i === idx ? '#7BD9A8' : 'rgba(45,27,69,.12)',
-            boxShadow: i === idx ? '0 0 0 3px rgba(123,217,168,.4)' : 'none',
-            transition: 'all .3s',
-          }}/>
+      <div style={{display:'flex',justifyContent:'center',gap:8}}>
+        {L3_EXPERIMENTS.map((_,i) => (
+          <div key={i} style={{width:10,height:10,borderRadius:'50%',background: i<idx ? '#5DD9A0' : i===idx ? '#7BD9A8' : 'rgba(45,27,69,.12)',boxShadow: i===idx ? '0 0 0 3px rgba(123,217,168,.4)' : 'none',transition:'all .3s'}}/>
         ))}
       </div>
 
-      {/* Situation card */}
-      {!done && situation && (
-        <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:20}}>
-          <div className="ak-fly-in" style={{
-            background:'#fff',
-            borderRadius:28,
-            padding:'32px 28px 28px',
-            boxShadow:'0 8px 0 rgba(45,27,69,.10),0 18px 30px -8px rgba(45,27,69,.14),inset 0 2px 0 rgba(255,255,255,1)',
-            textAlign:'center',
-            maxWidth:300,
-            width:'100%',
-          }}>
-            <div style={{fontSize:80,lineHeight:1,marginBottom:14}}>{situation.emoji}</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'var(--ak-ink)',marginBottom:6}}>{situation.label}</div>
-            <div style={{fontFamily:'var(--ak-body)',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>обратимое или нет?</div>
+      {!done && (
+        <div style={{flex:1,display:'flex',flexDirection:'column',gap:14}}>
+
+          {/* Ingredients row */}
+          <div style={{display:'flex',alignItems:'center',gap:12,justifyContent:'center'}}>
+
+            {/* Ingredient A */}
+            <div className={mixing ? 'ak-fly-out' : 'ak-fly-in'} style={{
+              flex:1, maxWidth:130,
+              padding:'18px 12px',
+              borderRadius:20,
+              background: exp.a.color + 'CC',
+              boxShadow:'0 6px 0 rgba(45,27,69,.10),0 12px 20px -6px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,.6)',
+              textAlign:'center',
+            }}>
+              <div style={{fontSize:44,lineHeight:1,marginBottom:8}}>{exp.a.emoji}</div>
+              <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:13,color:'var(--ak-ink)'}}>{exp.a.label}</div>
+            </div>
+
+            {/* Plus / Arrow */}
+            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink-3)'}}>
+              {effectPlaying ? '⟶' : '+'}
+            </div>
+
+            {/* Ingredient B / Effect */}
+            {!effectPlaying ? (
+              <div className={mixing ? 'ak-fly-out' : 'ak-fly-in'} style={{
+                flex:1, maxWidth:130,
+                padding:'18px 12px',
+                borderRadius:20,
+                background: exp.b.color + 'CC',
+                boxShadow:'0 6px 0 rgba(45,27,69,.10),0 12px 20px -6px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,.6)',
+                textAlign:'center',
+              }}>
+                <div style={{fontSize:44,lineHeight:1,marginBottom:8}}>{exp.b.emoji}</div>
+                <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:13,color:'var(--ak-ink)'}}>{exp.b.label}</div>
+              </div>
+            ) : (
+              <div className="ak-pop" style={{
+                flex:1, maxWidth:130,
+                padding:'12px',
+                borderRadius:20,
+                background:'rgba(255,255,255,.85)',
+                boxShadow:'0 6px 0 rgba(45,27,69,.10),0 12px 20px -6px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,.95)',
+                textAlign:'center',
+                minHeight:100,
+                display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8,
+              }}>
+                <EffectDisplay effect={exp.effect} exp={exp} />
+                <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:11,color:'var(--ak-ink-2)'}}>{exp.resultEmoji} {exp.resultLabel}</div>
+              </div>
+            )}
           </div>
 
-          {/* Answer buttons */}
-          <div style={{display:'flex',gap:12,width:'100%',maxWidth:300}}>
+          {/* Mix button or Answer buttons */}
+          {!effectPlaying ? (
             <button
-              className={`ak-btn ak-btn--soft${shakeBtn==='physical'?' ak-shake':''}`}
-              style={{flex:1,fontSize:14}}
-              onClick={() => handleAnswer('physical')}
+              className={`ak-btn ak-btn--cta ak-btn--lg${mixing?' ak-shake':''}`}
+              style={{width:'100%'}}
+              onClick={handleMix}
+              disabled={mixing}
             >
-              ⟲ Физическое
+              ⚗️ СМЕШАТЬ!
             </button>
-            <button
-              className={`ak-btn ak-btn--chem${shakeBtn==='chemical'?' ak-shake':''}`}
-              style={{flex:1,fontSize:14}}
-              onClick={() => handleAnswer('chemical')}
-            >
-              ⚗ Химическое
-            </button>
+          ) : (
+            <div style={{display:'flex',gap:12}}>
+              <button
+                className="ak-btn ak-btn--soft"
+                style={{flex:1,fontSize:15}}
+                onClick={() => handleAnswer('physical')}
+                disabled={!!answered}
+              >
+                ⟲ Физическое
+              </button>
+              <button
+                className="ak-btn ak-btn--ok"
+                style={{flex:1,fontSize:15}}
+                onClick={() => handleAnswer('chemical')}
+                disabled={!!answered}
+              >
+                ⚗️ Химическое
+              </button>
+            </div>
+          )}
+
+          {/* Instruction */}
+          <div style={{textAlign:'center',fontFamily:'var(--ak-display)',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
+            {!effectPlaying
+              ? 'Нажми СМЕШАТЬ и наблюдай что произойдёт'
+              : !answered
+                ? 'Это физическое или химическое изменение?'
+                : ''}
           </div>
+
         </div>
       )}
 
-      {/* Reveal overlay */}
-      {reveal && !done && (
+      {/* Answer reveal overlay */}
+      {answered && !done && (
         <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.45)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
           <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 22px',textAlign:'center',boxShadow:'0 12px 0 rgba(60,168,118,.18),0 24px 48px -12px rgba(45,27,69,.25)',maxWidth:320,width:'100%'}}>
-            <div style={{fontSize:48,marginBottom:10}}>{reveal.correct?'✅':'❌'}</div>
+            <div style={{fontSize:48,marginBottom:10}}>{answered.correct ? '✅' : '❌'}</div>
             <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'var(--ak-ink)',marginBottom:12}}>
-              {reveal.correct?'Правильно!':'Не совсем!'}
+              {answered.correct ? 'Правильно!' : 'Не совсем!'}
             </div>
-            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>{reveal.fact}</div>
-            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>Дальше →</button>
+            <div style={{fontSize:14,lineHeight:1.55,color:'var(--ak-ink-2)',fontWeight:500,marginBottom:20}}>{answered.explanation}</div>
+            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
+              {idx < total-1 ? 'Следующий опыт →' : 'Итог! 🎉'}
+            </button>
           </div>
         </div>
       )}
 
       {/* Done */}
       {done && (
-        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100}}>
+        <div style={{position:'fixed',inset:0,background:'rgba(45,27,69,.5)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:'0 24px'}}>
           <AKSuccessCard
             stars={stars}
-            title={score >= 6 ? 'Химик-детектив! 🕵️' : score >= 4 ? 'Хорошая работа!' : 'Учись дальше!'}
+            title={score >= total ? 'Химик-детектив! 🕵️' : score >= 4 ? 'Хорошая работа!' : 'Учись дальше!'}
             fact={`Правильных ответов: ${score} из ${total}. Химическое изменение создаёт новое вещество, физическое — нет!`}
             onNext={onDone}
             ctaLabel="На главную →"
@@ -683,34 +1277,27 @@ function Level3Changes({ onDone }) {
 /* ============================================================
    LEVEL SELECT
    ============================================================ */
-function LevelSelect({ onStart, completed }) {
-  const levels = [
-    {
-      n: 1,
-      title: 'Три состояния',
-      sub: 'Твёрдое · Жидкое · Газ',
-      tone: 'chem',
-      icon: <AKFlask size={72} tone="chem" fillLevel={0.55}/>,
-      locked: false,
-    },
-    {
-      n: 2,
-      title: 'Башня плотностей',
-      sub: 'Налей по порядку!',
-      tone: 'chem',
-      icon: <AKFlask size={72} tone="chem" fillLevel={0.7}/>,
-      locked: false,
-    },
-    {
-      n: 3,
-      title: 'Физ. или хим.?',
-      sub: 'Найди отличие',
-      tone: 'ok',
-      icon: <AKFlask size={72} tone="ok" fillLevel={0.4}/>,
-      locked: !completed.has(2),
-    },
-  ];
+function AKPlanet({ size=80, tone='phys', ring=true }) {
+  const [l,m,d] = AK_TONES[tone];
+  const id = React.useId().replace(/:/g,'');
+  return (
+    <svg width={size} height={size*0.78} viewBox="0 0 100 78">
+      <defs><radialGradient id={`pl-${id}`} cx="38%" cy="32%" r="70%"><stop offset="0%" stopColor="#fff"/><stop offset="30%" stopColor={l}/><stop offset="100%" stopColor={d}/></radialGradient></defs>
+      {ring&&<ellipse cx="50" cy="40" rx="48" ry="11" fill="none" stroke={d} strokeWidth="3" opacity=".4"/>}
+      <circle cx="50" cy="38" r="26" fill={`url(#pl-${id})`} stroke={d} strokeWidth="2"/>
+      <ellipse cx="42" cy="28" rx="6" ry="9" fill="#fff" opacity=".55" transform="rotate(-22 42 28)"/>
+      {ring&&<path d="M 16 47 Q 50 60 84 47" fill="none" stroke={d} strokeWidth="3" opacity=".7" strokeLinecap="round"/>}
+    </svg>
+  );
+}
 
+const LEVEL_DATA = [
+  {n:1, title:'Машина температур', sub:'Нагрей · Охлади · Исследуй', icon:<AKFlask size={80} tone="chem" fillLevel={0.5}/>, desc:'Управляй слайдером и наблюдай как молекулы меняют поведение'},
+  {n:2, title:'Башня плотностей',  sub:'Налей · Брось · Наблюдай',   icon:<AKFlask size={80} tone="chem" fillLevel={0.8}/>, desc:'Строй башню из жидкостей — потом кидай предметы!'},
+  {n:3, title:'Лаборатория реакций', sub:'Смешивай · Наблюдай · Угадай', icon:<AKFlask size={80} tone="ok" fillLevel={0.3} bubbles={false}/>, desc:'Проводи опыты и различай химические и физические изменения'},
+];
+
+function LevelSelect({ onStart, completed }) {
   return (
     <div className="ak" style={{width:'100%',minHeight:'100vh',background:'radial-gradient(80% 50% at 50% 0%,#DCF7E7 0%,transparent 60%),linear-gradient(180deg,#FFF8EA,#FFF3E2)',padding:'60px 18px 40px',boxSizing:'border-box'}}>
       <div aria-hidden style={{position:'fixed',top:60,right:-16,opacity:.6,transform:'rotate(12deg)',pointerEvents:'none'}}><AKPlanet size={80} tone="chem" ring/></div>
@@ -728,28 +1315,23 @@ function LevelSelect({ onStart, completed }) {
       </div>
 
       <div style={{display:'flex',flexDirection:'column',gap:16,maxWidth:400,margin:'0 auto'}}>
-        {levels.map(lv => {
-          const [l,m,d] = AK_TONES[lv.tone];
-          const isDone = completed.has(lv.n);
+        {LEVEL_DATA.map((lv,li) => {
+          const tone = lv.n === 3 ? 'ok' : 'chem';
+          const [l,m,d] = AK_TONES[tone];
+          const isDone   = completed.has(lv.n);
+          const isLocked = lv.n === 2 ? false : lv.n === 3 ? !completed.has(2) : false;
           return (
             <button
               key={lv.n}
-              onClick={lv.locked ? undefined : () => onStart(lv.n)}
+              onClick={isLocked ? undefined : () => onStart(lv.n)}
               className="ak-tap"
               style={{
-                width:'100%',
-                padding:18,
-                borderRadius:28,
+                width:'100%', padding:18, borderRadius:28,
                 background:`linear-gradient(160deg,${l} 0%,${m} 100%)`,
                 boxShadow:`0 8px 0 ${d},0 18px 30px -8px ${m}aa,inset 0 2px 0 rgba(255,255,255,.6),inset 0 -2px 0 ${d}`,
-                border:'none',
-                cursor:lv.locked?'not-allowed':'pointer',
-                opacity:lv.locked?.55:1,
-                filter:lv.locked?'grayscale(.4)':'none',
-                textAlign:'left',
-                boxSizing:'border-box',
-                position:'relative',
-                overflow:'hidden',
+                border:'none', cursor:isLocked?'not-allowed':'pointer',
+                opacity:isLocked?.55:1, filter:isLocked?'grayscale(.4)':'none',
+                textAlign:'left', boxSizing:'border-box', position:'relative', overflow:'hidden',
               }}
             >
               <div style={{position:'absolute',top:-28,right:-10,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,.22)',filter:'blur(2px)'}}/>
@@ -757,10 +1339,13 @@ function LevelSelect({ onStart, completed }) {
                 <div style={{filter:'drop-shadow(0 4px 8px rgba(45,27,69,.2))'}}>{lv.icon}</div>
                 <div style={{flex:1}}>
                   <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:12,color:'rgba(45,27,69,.6)',textTransform:'uppercase',letterSpacing:1,marginBottom:2}}>
-                    {lv.locked ? '🔒 Заблокировано' : lv.sub}
+                    {isLocked ? '🔒 Заблокировано' : lv.sub}
                   </div>
                   <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'var(--ak-ink)',letterSpacing:-.3,lineHeight:1.15}}>
                     {lv.title}
+                  </div>
+                  <div style={{fontFamily:'var(--ak-body)',fontSize:12,color:'var(--ak-ink-2)',fontWeight:600,marginTop:4,lineHeight:1.4}}>
+                    {lv.desc}
                   </div>
                   {isDone && <div style={{marginTop:6,fontSize:12,color:'#2BA873',fontFamily:'var(--ak-display)',fontWeight:700}}>✅ Пройдено</div>}
                 </div>
@@ -771,7 +1356,7 @@ function LevelSelect({ onStart, completed }) {
       </div>
 
       <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:28}}>
-        <AKStatChip icon="⭐" value="3 урока" tone="star"/>
+        <AKStatChip icon="⭐" value="3 уровня" tone="star"/>
         <AKStatChip icon="🧪" value="Химия" tone="chem"/>
       </div>
     </div>
@@ -791,9 +1376,9 @@ function App() {
   };
 
   if (screen === 'select') return <LevelSelect onStart={n => setScreen('l'+n)} completed={completed}/>;
-  if (screen === 'l1')     return <Level1States onDone={() => done(1)}/>;
-  if (screen === 'l2')     return <Level2Tower  onDone={() => done(2)}/>;
-  if (screen === 'l3')     return <Level3Changes onDone={() => done(3)}/>;
+  if (screen === 'l1')     return <Level1TempMachine onDone={() => done(1)}/>;
+  if (screen === 'l2')     return <Level2Density     onDone={() => done(2)}/>;
+  if (screen === 'l3')     return <Level3Lab          onDone={() => done(3)}/>;
   return null;
 }
 
