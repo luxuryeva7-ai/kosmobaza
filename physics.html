@@ -48,6 +48,9 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 @keyframes ak-radiate{0%{transform:scale(0);opacity:.9;}100%{transform:scale(2.2);opacity:0;}}
 @keyframes ak-circuit-glow{0%,100%{opacity:.5;}50%{opacity:1;}}
 @keyframes ak-heat-pulse{0%,100%{box-shadow:0 6px 0 rgba(45,27,69,.10),0 12px 24px -8px rgba(45,27,69,.15);}50%{box-shadow:0 6px 0 rgba(217,82,63,.3),0 12px 32px -6px rgba(255,139,122,.45);}}
+@keyframes heat-flow{0%{left:-100%;}100%{left:100%;}}
+@keyframes ak-rise{0%{transform:translateY(0);opacity:.9;}100%{transform:translateY(-32px);opacity:0;}}
+@keyframes ak-radiate-out{0%{transform:scale(0);opacity:.8;}100%{transform:scale(3.5);opacity:0;}}
 .ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
 .ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
 .ak-shake{animation:ak-shake .45s ease-in-out;}
@@ -63,6 +66,9 @@ body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 input[type=range]{-webkit-appearance:none;width:100%;height:18px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
 input[type=range]::-webkit-slider-runnable-track{height:18px;border-radius:999px;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;}
+.heat-anim-bar{position:absolute;top:0;left:-100%;width:60%;height:100%;border-radius:99px;background:linear-gradient(90deg,transparent,rgba(255,139,122,.7),rgba(255,80,60,.85),rgba(255,139,122,.7),transparent);animation:heat-flow 1.5s ease-in-out forwards;}
+.rise-arrow{animation:ak-rise 1.2s ease-out infinite;}
+.radiate-ring{position:absolute;top:50%;left:50%;width:40px;height:40px;margin-left:-20px;margin-top:-20px;border-radius:50%;border:3px solid #FFD262;box-sizing:border-box;animation:ak-radiate-out 1.5s ease-out forwards;}
 </style>
 </head>
 <body>
@@ -202,11 +208,11 @@ function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabe
    LEVEL 1 — "Поймай луч!" (Light & Mirrors)
    ============================================================ */
 const L1_PUZZLES = [
-  { mirror:{cx:180,cy:130,len:65}, target:{x:265,y:50},  startAngle:45,  hint:'Поверни зеркало чтобы луч отразился вверх!' },
-  { mirror:{cx:150,cy:80, len:70}, target:{x:270,y:200}, startAngle:135, hint:'Направь луч вниз-вправо' },
-  { mirror:{cx:200,cy:150,len:60}, target:{x:50, y:50},  startAngle:30,  hint:'Отправь луч назад!' },
-  { mirror:{cx:160,cy:100,len:80}, target:{x:270,y:130}, startAngle:90,  hint:'Почти прямо — совсем чуть-чуть поверни' },
-  { mirror:{cx:180,cy:120,len:70}, target:{x:265,y:220}, startAngle:60,  hint:'Последний! Ты знаешь закон отражения!' },
+  { mirror:{cx:204,cy:152,len:74}, target:{x:300,y:59},  startAngle:45,  hint:'Поверни зеркало — луч отразится в цель!' },
+  { mirror:{cx:170,cy:94, len:79}, target:{x:306,y:235}, startAngle:135, hint:'Направь луч вниз-вправо к цели' },
+  { mirror:{cx:227,cy:176,len:68}, target:{x:57, y:59},  startAngle:30,  hint:'Отправь луч назад!' },
+  { mirror:{cx:181,cy:117,len:91}, target:{x:306,y:152}, startAngle:90,  hint:'Почти прямо — совсем чуть-чуть поверни' },
+  { mirror:{cx:204,cy:141,len:79}, target:{x:300,y:258}, startAngle:60,  hint:'Последний! Ты знаешь закон отражения!' },
 ];
 
 const L1_FACTS = [
@@ -261,7 +267,6 @@ function traceRay(startX, startY, dirX, dirY, mirror, W, H, maxBounces) {
 
     if(hitMirror && tMirror < tWall){
       points.push({x:hx, y:hy});
-      // Mirror normal (perpendicular to mirror)
       const nRawX = -mdy, nRawY = mdx;
       const nLen = Math.sqrt(nRawX*nRawX+nRawY*nRawY);
       const nx = nRawX/nLen, ny = nRawY/nLen;
@@ -285,14 +290,13 @@ function Level1Light({ onDone }) {
 
   const mirrorAngleRef = React.useRef(L1_PUZZLES[0].startAngle);
   const [displayAngle, setDisplayAngle] = React.useState(L1_PUZZLES[0].startAngle);
-  const rafRef = React.useRef(null);
   const pendingRef = React.useRef(false);
   const canvasRef = React.useRef(null);
   const animRef = React.useRef(null);
   const hitRef = React.useRef(false);
   const celebRef = React.useRef(false);
 
-  const W=300, H=260;
+  const W=340, H=310;
 
   React.useEffect(()=>{
     mirrorAngleRef.current = L1_PUZZLES[missionIdx].startAngle;
@@ -321,25 +325,29 @@ function Level1Light({ onDone }) {
       else { ctx.rect(0,0,W,H); }
       ctx.fill();
 
-      // Flashlight
+      // Subtle floor line
+      ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(0,H-35); ctx.lineTo(W,H-35); ctx.stroke();
+
+      // Flashlight body
       const srcX=14, srcY=H/2;
       ctx.save();
       ctx.shadowColor='#FFD262'; ctx.shadowBlur=20;
+      ctx.fillStyle='#D4A22B';
+      ctx.fillRect(2, srcY-11, 10, 22);
       ctx.fillStyle='#FFD262';
-      ctx.beginPath();
-      ctx.ellipse(srcX,srcY,6,14,0,0,Math.PI*2);
-      ctx.fill();
+      ctx.fillRect(4, srcY-9, 6, 18);
       ctx.restore();
 
       // Beam cone
-      const cone=ctx.createLinearGradient(srcX,srcY,srcX+50,srcY);
-      cone.addColorStop(0,'rgba(255,210,98,.3)');
+      const cone=ctx.createLinearGradient(srcX,srcY,srcX+60,srcY);
+      cone.addColorStop(0,'rgba(255,210,98,.25)');
       cone.addColorStop(1,'rgba(255,210,98,0)');
       ctx.fillStyle=cone;
       ctx.beginPath();
       ctx.moveTo(srcX+6,srcY);
-      ctx.lineTo(srcX+50,srcY-20);
-      ctx.lineTo(srcX+50,srcY+20);
+      ctx.lineTo(srcX+60,srcY-24);
+      ctx.lineTo(srcX+60,srcY+24);
       ctx.closePath();
       ctx.fill();
 
@@ -347,53 +355,59 @@ function Level1Light({ onDone }) {
       const pts = traceRay(srcX+6, srcY, 1, 0, mirror, W, H, 5);
       const last = pts[pts.length-1];
 
-      // Hit check
+      // Hit check (radius 32)
       const ddx=last.x-puz.target.x, ddy=last.y-puz.target.y;
       const dist=Math.sqrt(ddx*ddx+ddy*ddy);
-      const hit = dist < 28;
+      const hit = dist < 32;
 
       // Draw ray
       ctx.save();
-      ctx.shadowColor='#FFD262'; ctx.shadowBlur=12;
+      ctx.shadowColor='#FFD262'; ctx.shadowBlur=14;
       ctx.strokeStyle='#FFD262'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
       ctx.beginPath();
       pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
       ctx.stroke();
       ctx.restore();
 
-      // Mirror line
+      // Mirror line — 6px white gradient with glow
       const mAng = ang*Math.PI/180;
       const ml = puz.mirror.len/2;
       const mx1=puz.mirror.cx-Math.cos(mAng)*ml, my1=puz.mirror.cy-Math.sin(mAng)*ml;
       const mx2=puz.mirror.cx+Math.cos(mAng)*ml, my2=puz.mirror.cy+Math.sin(mAng)*ml;
       ctx.save();
-      ctx.shadowColor='rgba(255,255,255,.5)'; ctx.shadowBlur=8;
+      ctx.shadowColor='rgba(255,255,255,.6)'; ctx.shadowBlur=10;
       const mGrad=ctx.createLinearGradient(mx1,my1,mx2,my2);
       mGrad.addColorStop(0,'rgba(255,255,255,.45)');
       mGrad.addColorStop(0.5,'#ffffff');
       mGrad.addColorStop(1,'rgba(255,255,255,.45)');
-      ctx.strokeStyle=mGrad; ctx.lineWidth=5; ctx.lineCap='round';
+      ctx.strokeStyle=mGrad; ctx.lineWidth=6; ctx.lineCap='round';
       ctx.beginPath(); ctx.moveTo(mx1,my1); ctx.lineTo(mx2,my2); ctx.stroke();
+      // Purple pivot dot
+      ctx.shadowColor='#B5A1FF'; ctx.shadowBlur=12;
       ctx.fillStyle='#B5A1FF';
-      ctx.beginPath(); ctx.arc(puz.mirror.cx,puz.mirror.cy,6,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(puz.mirror.cx,puz.mirror.cy,7,0,Math.PI*2); ctx.fill();
       ctx.restore();
 
-      // Target star
+      // Target — 3 concentric rings
       const tx=puz.target.x, ty=puz.target.y;
       const ts=Date.now()*0.002;
-      const sc=hit?1.3+Math.sin(ts*3)*0.05:1+Math.sin(ts)*0.07;
       ctx.save();
-      if(hit){ ctx.shadowColor='#FFD262'; ctx.shadowBlur=28; }
-      ctx.translate(tx,ty); ctx.scale(sc,sc);
-      ctx.fillStyle=hit?'#FFD262':'rgba(255,200,87,0.75)';
-      ctx.beginPath();
-      for(let i=0;i<5;i++){
-        const a=i*(Math.PI*2/5)-Math.PI/2;
-        const ar=a+Math.PI/5;
-        i===0?ctx.moveTo(Math.cos(a)*13,Math.sin(a)*13):ctx.lineTo(Math.cos(a)*13,Math.sin(a)*13);
-        ctx.lineTo(Math.cos(ar)*6,Math.sin(ar)*6);
+      if(hit){ ctx.shadowColor='#FFD262'; ctx.shadowBlur=32; }
+      ctx.translate(tx,ty);
+      // outer ring r=22 red/orange
+      ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2);
+      ctx.fillStyle=hit?'#FFD262':'rgba(220,60,40,0.85)'; ctx.fill();
+      // mid ring r=14 white
+      ctx.beginPath(); ctx.arc(0,0,14,0,Math.PI*2);
+      ctx.fillStyle=hit?'rgba(255,255,180,.9)':'rgba(255,255,255,0.9)'; ctx.fill();
+      // inner ring r=8 orange
+      ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2);
+      ctx.fillStyle=hit?'#FFD262':'#FF8020'; ctx.fill();
+      if(hit){
+        ctx.shadowColor='#FFD262'; ctx.shadowBlur=40;
+        ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2);
+        ctx.strokeStyle='#FFD262'; ctx.lineWidth=3; ctx.stroke();
       }
-      ctx.closePath(); ctx.fill();
       ctx.restore();
 
       if(hit && !hitRef.current){ hitRef.current=true; }
@@ -512,15 +526,126 @@ function Level1Light({ onDone }) {
 }
 
 /* ============================================================
+   LEVEL 2 — SVG component renderers
+   ============================================================ */
+function SvgBattery({ color, size=1 }) {
+  const w=52*size, h=28*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 52 28">
+      {/* Body */}
+      <rect x="1" y="4" width="44" height="20" rx="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1.5"/>
+      {/* Positive terminal */}
+      <rect x="46" y="10" width="5" height="8" rx="2" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
+      {/* Internal lines */}
+      {[10,17,24,31].map((x,i)=>(
+        <rect key={i} x={x} y={i%2===0?7:9} width="3" height={i%2===0?14:10} rx="1.5" fill="rgba(255,255,255,.7)"/>
+      ))}
+      {/* Shine */}
+      <rect x="3" y="6" width="40" height="4" rx="2" fill="rgba(255,255,255,.35)"/>
+    </svg>
+  );
+}
+
+function SvgBulb({ color, glowing=false, size=1 }) {
+  const w=36*size, h=46*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 36 46">
+      {glowing && (
+        <ellipse cx="18" cy="18" rx="16" ry="16" fill="#FFD262" opacity="0.18"/>
+      )}
+      {/* Glass round top */}
+      <circle cx="18" cy="18" r="14" fill={glowing?'#FFFDE0':color} stroke="rgba(0,0,0,.10)" strokeWidth="1.5"/>
+      {/* X filament */}
+      <line x1="12" y1="12" x2="24" y2="24" stroke={glowing?'#FFA020':'rgba(45,27,69,.4)'} strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="24" y1="12" x2="12" y2="24" stroke={glowing?'#FFA020':'rgba(45,27,69,.4)'} strokeWidth="1.8" strokeLinecap="round"/>
+      {/* Highlight */}
+      <ellipse cx="12" cy="12" rx="3" ry="4" fill="rgba(255,255,255,.55)" transform="rotate(-30 12 12)"/>
+      {/* Stepped base */}
+      <rect x="12" y="30" width="12" height="5" rx="1" fill="rgba(100,80,130,.5)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
+      <rect x="14" y="35" width="8" height="4" rx="1" fill="rgba(100,80,130,.45)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
+      <rect x="13" y="39" width="10" height="4" rx="1" fill="rgba(100,80,130,.4)" stroke="rgba(0,0,0,.08)" strokeWidth="1"/>
+      {/* Glow overlay */}
+      {glowing && <circle cx="18" cy="18" r="14" fill="rgba(255,220,100,.15)"/>}
+    </svg>
+  );
+}
+
+function SvgSwitch({ color, size=1 }) {
+  const w=52*size, h=28*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 52 28">
+      {/* Connecting lines */}
+      <line x1="0" y1="20" x2="14" y2="20" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="38" y1="20" x2="52" y2="20" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
+      {/* Left terminal circle */}
+      <circle cx="14" cy="20" r="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
+      {/* Right terminal circle */}
+      <circle cx="38" cy="20" r="4" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1"/>
+      {/* Diagonal lever line */}
+      <line x1="14" y1="20" x2="38" y2="8" stroke={color} strokeWidth="3" strokeLinecap="round"/>
+      {/* Pivot dot */}
+      <circle cx="14" cy="20" r="3" fill="#fff" stroke={color} strokeWidth="1.5"/>
+    </svg>
+  );
+}
+
+function SvgWire({ color, size=1 }) {
+  const w=52*size, h=28*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 52 28">
+      {/* S-curve wavy line */}
+      <path d="M2,14 C8,4 16,24 26,14 C36,4 44,24 50,14"
+        fill="none" stroke={color} strokeWidth="3" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function SvgResistor({ color, size=1 }) {
+  const w=52*size, h=28*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 52 28">
+      {/* Lead lines */}
+      <line x1="0" y1="14" x2="10" y2="14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="42" y1="14" x2="52" y2="14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
+      {/* IEC rectangle body */}
+      <rect x="10" y="8" width="32" height="12" rx="2" fill={color} stroke="rgba(0,0,0,.12)" strokeWidth="1.5"/>
+      {/* Zigzag inside */}
+      <polyline points="13,14 17,8 21,20 25,8 29,20 33,8 37,14 39,14"
+        fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round"/>
+      {/* Shine */}
+      <rect x="12" y="9" width="28" height="3" rx="1.5" fill="rgba(255,255,255,.3)"/>
+    </svg>
+  );
+}
+
+function SvgMagnet({ color, size=1 }) {
+  const w=44*size, h=44*size;
+  return (
+    <svg width={w} height={h} viewBox="0 0 44 44">
+      {/* U-shaped arc */}
+      <path d="M6,8 L6,28 Q6,38 16,38 Q22,38 22,38 Q28,38 28,28 L28,8"
+        fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Red pole (left) */}
+      <rect x="2" y="6" width="8" height="10" rx="2" fill="#FF6B6B"/>
+      {/* Blue pole (right) */}
+      <rect x="24" y="6" width="8" height="10" rx="2" fill="#6BA0FF"/>
+      {/* N label area */}
+      <text x="4" y="15" fontFamily="sans-serif" fontSize="6" fontWeight="bold" fill="white">N</text>
+      <text x="26" y="15" fontFamily="sans-serif" fontSize="6" fontWeight="bold" fill="white">S</text>
+    </svg>
+  );
+}
+
+/* ============================================================
    LEVEL 2 — "Собери цепь!" (Electric Circuit Builder)
    ============================================================ */
 const COMPONENTS = [
-  { id:'battery',  emoji:'🔋', label:'Батарейка',   color:'#5DD9A0' },
-  { id:'switch',   emoji:'🔌', label:'Выключатель', color:'#FFD262' },
-  { id:'bulb',     emoji:'💡', label:'Лампочка',    color:'#FFE083' },
-  { id:'wire',     emoji:'〰️', label:'Провод',      color:'#B0BEC5' },
-  { id:'resistor', emoji:'⚡', label:'Резистор',    color:'#FFA17A' },
-  { id:'magnet',   emoji:'🧲', label:'Магнит',      color:'#B5A1FF' },
+  { id:'battery',  label:'Батарейка',   color:'#5DD9A0', SvgComp: SvgBattery },
+  { id:'switch',   label:'Выключатель', color:'#FFD262', SvgComp: SvgSwitch },
+  { id:'bulb',     label:'Лампочка',    color:'#FFE083', SvgComp: SvgBulb },
+  { id:'wire',     label:'Провод',      color:'#B0BEC5', SvgComp: SvgWire },
+  { id:'resistor', label:'Резистор',    color:'#FFA17A', SvgComp: SvgResistor },
+  { id:'magnet',   label:'Магнит',      color:'#B5A1FF', SvgComp: SvgMagnet },
 ];
 
 const L2_CHALLENGES = [
@@ -541,11 +666,15 @@ const L2_CHALLENGES = [
     fact:'Электричество — поток электронов по проводнику. Без него нет света, тепла, интернета!' },
 ];
 
-const SLOT_LABELS = {A:'Источник',B:'Выключатель',C:'Лампочка',D:'Провод'};
+const SLOT_LABELS = {A:'Источник',B:'Элемент',C:'Лампочка',D:'Провод'};
+const SLOT_GHOST  = {A:'battery', B:'switch', C:'bulb', D:'wire'};
 
 function SlotCard({ id, placed, label, shaking, circuitOn, onClick, selected }) {
   const comp = placed ? COMPONENTS.find(c=>c.id===placed) : null;
+  const ghostId = SLOT_GHOST[id];
+  const ghostComp = COMPONENTS.find(c=>c.id===ghostId);
   const canPlace = !!selected && !placed;
+
   return(
     <div onClick={onClick}
       className={shaking?'ak-shake':''}
@@ -554,19 +683,26 @@ function SlotCard({ id, placed, label, shaking, circuitOn, onClick, selected }) 
         borderRadius:12,
         border: canPlace?'2px dashed #B5A1FF':'2px solid rgba(255,255,255,.12)',
         display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-        minHeight:58,padding:'6px 5px',cursor:'pointer',
+        minHeight:64,padding:'6px 5px',cursor:'pointer',
         boxShadow: circuitOn&&comp?'0 0 16px #FFD26088':'none',
         transition:'box-shadow .5s,background .3s',
-        textAlign:'center',minWidth:64,
+        textAlign:'center',minWidth:64,position:'relative',overflow:'hidden',
       }}>
-      {comp?(
+      {comp ? (
         <>
-          <span style={{fontSize:20,lineHeight:1}}>{comp.emoji}</span>
-          <span style={{fontFamily:'var(--ak-body)',fontSize:10,fontWeight:700,
-            color:circuitOn?'#7C5F00':'var(--ak-ink-2)',lineHeight:1.2,marginTop:3}}>{comp.label}</span>
+          <comp.SvgComp color={comp.color} size={0.55} glowing={circuitOn && comp.id==='bulb'}/>
+          <span style={{fontFamily:'var(--ak-body)',fontSize:9,fontWeight:700,
+            color:circuitOn?'#7C5F00':'var(--ak-ink-2)',lineHeight:1.2,marginTop:2}}>{comp.label}</span>
         </>
-      ):(
-        <span style={{fontSize:10,color:'rgba(255,255,255,.38)',fontFamily:'var(--ak-body)',fontWeight:600,lineHeight:1.2,padding:'0 4px'}}>{label}</span>
+      ) : (
+        <>
+          {ghostComp && (
+            <div style={{opacity:0.2,filter:'grayscale(1)'}}>
+              <ghostComp.SvgComp color="#888" size={0.5}/>
+            </div>
+          )}
+          <span style={{fontSize:9,color:'rgba(255,255,255,.5)',fontFamily:'var(--ak-body)',fontWeight:600,lineHeight:1.2,padding:'0 3px',marginTop:2}}>{label}</span>
+        </>
       )}
     </div>
   );
@@ -653,34 +789,32 @@ function Level2Circuit({ onDone }) {
       <div style={{height:16}}/>
 
       {/* Circuit board */}
-      <div style={{background:'#130E38',borderRadius:22,padding:'16px',boxShadow:'0 8px 0 rgba(45,27,69,.15),0 18px 36px -12px rgba(45,27,69,.25)',position:'relative',overflow:'hidden',minHeight:240}}>
+      <div style={{background:'#130E38',borderRadius:22,padding:'16px',boxShadow:'0 8px 0 rgba(45,27,69,.15),0 18px 36px -12px rgba(45,27,69,.25)',position:'relative',overflow:'hidden',minHeight:280}}>
         {/* SVG circuit */}
-        <svg width="100%" height="200" viewBox="0 0 280 200" style={{display:'block',position:'absolute',inset:'20px'}}>
+        <svg width="100%" height="210" viewBox="0 0 280 210" style={{display:'block',position:'absolute',inset:'20px'}}>
           <defs>
             <filter id="circglow">
               <feGaussianBlur stdDeviation="2.5" result="blur"/>
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          <rect x="40" y="25" width="200" height="150" rx="10"
+          <rect x="40" y="25" width="200" height="160" rx="10"
             fill="none"
             stroke={strokeColor}
             strokeWidth={strokeW}
             style={{transition:'stroke .6s,stroke-width .3s'}}
             filter={circuitOn?'url(#circglow)':undefined}
           />
-          {/* Node dots */}
-          {[{cx:40,cy:100},{cx:140,cy:25},{cx:240,cy:100},{cx:140,cy:175}].map((n,i)=>(
+          {[{cx:40,cy:105},{cx:140,cy:25},{cx:240,cy:105},{cx:140,cy:185}].map((n,i)=>(
             <circle key={i} cx={n.cx} cy={n.cy} r="6"
               fill={circuitOn?'#FFD262':'#4A3A8A'}
               style={{transition:'fill .5s'}}/>
           ))}
-          {/* Flow arrows when on */}
           {circuitOn&&[
             {x:90,y:25,r:0},{x:190,y:25,r:0},
-            {x:240,y:62,r:90},{x:240,y:138,r:90},
-            {x:190,y:175,r:180},{x:90,y:175,r:180},
-            {x:40,y:138,r:270},{x:40,y:62,r:270},
+            {x:240,y:65,r:90},{x:240,y:145,r:90},
+            {x:190,y:185,r:180},{x:90,y:185,r:180},
+            {x:40,y:145,r:270},{x:40,y:65,r:270},
           ].map((a,i)=>(
             <polygon key={i} points="0,-5 4,5 -4,5" fill="#FFD262"
               transform={`translate(${a.x},${a.y}) rotate(${a.r})`}
@@ -689,29 +823,24 @@ function Level2Circuit({ onDone }) {
           ))}
         </svg>
 
-        {/* Slots positioned over circuit nodes */}
-        {/* A — left */}
+        {/* Slots */}
         <div style={{position:'absolute',left:4,top:'50%',transform:'translateY(-50%)',width:72}}>
           <SlotCard id="A" placed={placed.A} label={SLOT_LABELS.A} shaking={shaking==='A'}
             circuitOn={circuitOn} onClick={()=>handleSlotTap('A')} selected={selected}/>
         </div>
-        {/* B — top center */}
         <div style={{position:'absolute',left:'50%',top:4,transform:'translateX(-50%)',width:82}}>
           <SlotCard id="B" placed={placed.B} label={SLOT_LABELS.B} shaking={shaking==='B'}
             circuitOn={circuitOn} onClick={()=>handleSlotTap('B')} selected={selected}/>
         </div>
-        {/* C — right */}
         <div style={{position:'absolute',right:4,top:'50%',transform:'translateY(-50%)',width:72}}>
           <SlotCard id="C" placed={placed.C} label={SLOT_LABELS.C} shaking={shaking==='C'}
             circuitOn={circuitOn} onClick={()=>handleSlotTap('C')} selected={selected}/>
         </div>
-        {/* D — bottom center */}
         <div style={{position:'absolute',left:'50%',bottom:4,transform:'translateX(-50%)',width:82}}>
           <SlotCard id="D" placed={placed.D} label={SLOT_LABELS.D} shaking={shaking==='D'}
             circuitOn={circuitOn} onClick={()=>handleSlotTap('D')} selected={selected}/>
         </div>
 
-        {/* Sparks */}
         {sparks&&[...Array(6)].map((_,i)=>(
           <div key={i} style={{
             position:'absolute',
@@ -741,16 +870,16 @@ function Level2Circuit({ onDone }) {
                 style={{
                   background:isSel?`linear-gradient(180deg,${c.color}77,${c.color}cc)`:inUse?'#F5F2FC':'#fff',
                   border:isSel?`2px solid ${c.color}`:'2px solid rgba(45,27,69,.06)',
-                  borderRadius:14,padding:'10px 10px',cursor:inUse?'not-allowed':'pointer',
-                  fontFamily:'var(--ak-body)',fontSize:11,fontWeight:700,color:'var(--ak-ink)',
-                  display:'flex',flexDirection:'column',alignItems:'center',gap:3,
+                  borderRadius:14,padding:'10px 8px',cursor:inUse?'not-allowed':'pointer',
+                  fontFamily:'var(--ak-body)',fontSize:10,fontWeight:700,color:'var(--ak-ink)',
+                  display:'flex',flexDirection:'column',alignItems:'center',gap:4,
                   boxShadow:isSel?`0 0 0 4px ${c.color}33,0 4px 0 rgba(45,27,69,.08)`:'0 2px 0 rgba(45,27,69,.06)',
                   opacity:inUse?.3:1,
                   transform:isSel?'scale(1.1)':'scale(1)',
                   transition:'transform .12s,box-shadow .12s,background .12s',
-                  minWidth:56,
+                  minWidth:54,
                 }}>
-                <span style={{fontSize:22}}>{c.emoji}</span>
+                <c.SvgComp color={c.color} size={0.6} glowing={false}/>
                 <span style={{lineHeight:1.1,textAlign:'center'}}>{c.label}</span>
               </button>
             );
@@ -766,7 +895,9 @@ function Level2Circuit({ onDone }) {
       {popup&&(
         <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.78)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
           <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:52,marginBottom:10}}>💡</div>
+            <div style={{display:'flex',justifyContent:'center',marginBottom:10}}>
+              <SvgBulb color="#FFE083" glowing={true} size={1.2}/>
+            </div>
             <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:24,color:'var(--ak-ink)',marginBottom:10}}>Цепь замкнута!</div>
             <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{chall.fact}</div>
             <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
@@ -780,246 +911,259 @@ function Level2Circuit({ onDone }) {
 }
 
 /* ============================================================
-   LEVEL 3 — "Три пути тепла" (Heat Transfer Lab)
+   LEVEL 3 — "Проведи тепло!" — path selection gameplay
    ============================================================ */
-const L3_EXPERIMENTS = [
-  {
-    a:{emoji:'☕',label:'Горячая кружка'},
-    b:{emoji:'🤲',label:'Рука на кружке'},
-    effect:'conduction',
-    question:'Как тепло передалось руке?',
-    options:['Теплопроводность — через прикосновение','Конвекция — через воздух','Излучение — как солнце'],
-    answer:0,
-    fact:'Теплопроводность — передача тепла через прямой контакт. Атомы кружки толкают атомы руки!'
-  },
-  {
-    a:{emoji:'🌅',label:'Солнце'},
-    b:{emoji:'🪨',label:'Камень на пляже'},
-    effect:'radiation',
-    question:'Как солнце нагрело камень?',
-    options:['Теплопроводность','Конвекция','Излучение — через пустоту'],
-    answer:2,
-    fact:'Излучение — единственный способ передать тепло через вакуум. Именно так тепло Солнца доходит до Земли!'
-  },
-  {
-    a:{emoji:'🍵',label:'Горячий чай'},
-    b:{emoji:'💨',label:'Воздух над чаем'},
-    effect:'convection',
-    question:'Почему над чаем поднимается тёплый воздух?',
-    options:['Теплопроводность','Конвекция — тёплое поднимается','Излучение'],
-    answer:1,
-    fact:'Конвекция — движение нагретого вещества. Тёплый воздух легче холодного и поднимается вверх!'
-  },
-  {
-    a:{emoji:'🔥',label:'Костёр'},
-    b:{emoji:'🏕',label:'Человек у костра'},
-    effect:'radiation',
-    question:'Как тепло костра доходит до человека?',
-    options:['Теплопроводность','Конвекция','Излучение — инфракрасные волны'],
-    answer:2,
-    fact:'Костёр греет излучением — инфракрасными волнами, которые ты чувствуешь лицом даже на расстоянии!'
-  },
-  {
-    a:{emoji:'🥘',label:'Горячий суп'},
-    b:{emoji:'🌀',label:'Потоки в кастрюле'},
-    effect:'convection',
-    question:'Почему горячий суп перемешивается сам?',
-    options:['Теплопроводность','Конвекция — горячее снизу поднимается','Излучение'],
-    answer:1,
-    fact:'Конвекция в кастрюле: горячее дно нагревает суп → он поднимается → холодный опускается. Цикл!'
-  },
-  {
-    a:{emoji:'❄️',label:'Металлическая ложка'},
-    b:{emoji:'🥣',label:'Горячий суп'},
-    effect:'conduction',
-    question:'Почему металлическая ложка быстро нагревается?',
-    options:['Теплопроводность — металл отличный проводник','Конвекция','Излучение'],
-    answer:0,
-    fact:'Металлы — лучшие проводники тепла. Деревянная ложка нагреется в 400 раз медленнее!'
-  },
+const L3_SCENARIOS = [
+  { srcEmoji:'☕', srcLabel:'Горячая кружка', tgtEmoji:'🖐', tgtLabel:'Рука', type:'conduction', fact:'Теплопроводность: атомы кружки передают движение атомам руки через прямой контакт!' },
+  { srcEmoji:'☀️', srcLabel:'Солнце', tgtEmoji:'🪨', tgtLabel:'Нагретый камень', type:'radiation', fact:'Излучение проходит через вакуум. Именно так тепло Солнца летит 150 млн км до Земли!' },
+  { srcEmoji:'🔥', srcLabel:'Горячий воздух', tgtEmoji:'💨', tgtLabel:'Поток вверх', type:'convection', fact:'Конвекция: тёплый воздух легче и поднимается вверх. Так образуются облака и ветер!' },
+  { srcEmoji:'🍳', srcLabel:'Раскалённая сковорода', tgtEmoji:'🥄', tgtLabel:'Металлическая ложка', type:'conduction', fact:'Металл — лучший проводник тепла. Деревянная ложка нагреется в 400 раз медленнее!' },
+  { srcEmoji:'🔥', srcLabel:'Костёр', tgtEmoji:'🧍', tgtLabel:'Человек рядом', type:'radiation', fact:'Костёр греет инфракрасными волнами — ты чувствуешь жар лицом даже без прикосновения!' },
+  { srcEmoji:'🫖', srcLabel:'Кипящий чайник', tgtEmoji:'🌀', tgtLabel:'Потоки воды', type:'convection', fact:'В кипящей воде горячие слои снизу поднимаются, холодные опускаются — это конвекция!' },
 ];
 
-const EFFECT_LABELS = { conduction:'Теплопроводность', convection:'Конвекция', radiation:'Излучение' };
-const EFFECT_COLORS = {
-  conduction:{bg:'#FFE8E0',border:'#FF8B7A',text:'#D9523F'},
-  convection:{bg:'#DCF0FF',border:'#60B8E8',text:'#1A6A99'},
-  radiation: {bg:'#FFEEAA',border:'#FFD262',text:'#8A6800'},
-};
+function SvgIconConduction() {
+  return (
+    <svg width="54" height="36" viewBox="0 0 54 36">
+      {/* Left square */}
+      <rect x="1" y="8" width="16" height="20" rx="3" fill="#FF8B7A" stroke="#FF6060" strokeWidth="1.5"/>
+      {/* Right square */}
+      <rect x="37" y="8" width="16" height="20" rx="3" fill="#FFD2C8" stroke="#FFA090" strokeWidth="1.5"/>
+      {/* Glowing bridge */}
+      <rect x="17" y="15" width="20" height="6" rx="3" fill="url(#condGrad)"/>
+      <defs>
+        <linearGradient id="condGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#FF6B3D"/>
+          <stop offset="50%" stopColor="#FFD262"/>
+          <stop offset="100%" stopColor="#FF8B7A"/>
+        </linearGradient>
+      </defs>
+      {/* Arrow */}
+      <polygon points="41,18 37,14 37,22" fill="#FF6B3D" opacity="0.85"/>
+    </svg>
+  );
+}
 
-function IngredientCard({ data, phase, effect, side }) {
-  const playing = phase==='playing';
-  const isB = side==='b';
+function SvgIconConvection() {
+  return (
+    <svg width="54" height="36" viewBox="0 0 54 36">
+      {/* Three upward curved arrows */}
+      {[10, 26, 42].map((x, i) => (
+        <g key={i}>
+          <path d={`M${x},32 Q${x-4},22 ${x},14`}
+            fill="none" stroke="#60B8E8" strokeWidth="2.5" strokeLinecap="round"/>
+          <polygon points={`${x},10 ${x-3},17 ${x+3},17`} fill="#60B8E8"/>
+        </g>
+      ))}
+    </svg>
+  );
+}
 
-  return(
+function SvgIconRadiation() {
+  return (
+    <svg width="54" height="36" viewBox="0 0 54 36">
+      {/* Center sun circle */}
+      <circle cx="27" cy="18" r="7" fill="#FFD262" stroke="#D4A22B" strokeWidth="1.5"/>
+      {/* Radiating lines */}
+      {[0,45,90,135,180,225,270,315].map((a, i) => {
+        const rad = a * Math.PI / 180;
+        const x1 = 27 + Math.cos(rad) * 10;
+        const y1 = 18 + Math.sin(rad) * 10;
+        const x2 = 27 + Math.cos(rad) * 16;
+        const y2 = 18 + Math.sin(rad) * 16;
+        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#FFD262" strokeWidth="2" strokeLinecap="round"/>;
+      })}
+    </svg>
+  );
+}
+
+const L3_PATH_BUTTONS = [
+  { type:'conduction', label:'Касание', sublabel:'Теплопроводность', color:'#FF8B7A', bg:'#FFD2C8', Icon: SvgIconConduction },
+  { type:'convection', label:'Поток',   sublabel:'Конвекция',        color:'#60B8E8', bg:'#DCF0FF', Icon: SvgIconConvection },
+  { type:'radiation',  label:'Волны',   sublabel:'Излучение',         color:'#FFD262', bg:'#FFF5AA', Icon: SvgIconRadiation },
+];
+
+function L3ConnectionZone({ animType, phase }) {
+  const isAnimating = phase === 'animating';
+  return (
     <div style={{
-      flex:1,background:'#fff',borderRadius:20,padding:'18px 10px',
-      textAlign:'center',position:'relative',overflow:'hidden',
-      boxShadow: isB&&playing&&effect==='conduction'
-        ? '0 6px 0 rgba(217,82,63,.25),0 12px 28px -8px rgba(255,139,122,.4)'
-        : '0 6px 0 rgba(45,27,69,.10),0 12px 24px -8px rgba(45,27,69,.15)',
-      minHeight:110,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8,
-      transition:'box-shadow .6s',
+      position:'relative',height:72,borderRadius:20,overflow:'hidden',
+      background:'rgba(45,27,69,.06)',margin:'0 0',
+      display:'flex',alignItems:'center',justifyContent:'center',
     }}>
-      {/* Convection: rising arrows above card A */}
-      {side==='a' && playing && effect==='convection'&&(
-        <div style={{position:'absolute',inset:0,pointerEvents:'none',overflow:'hidden'}}>
+      {/* Static arrow */}
+      {!isAnimating && (
+        <div style={{fontSize:28,color:'var(--ak-ink-3)',opacity:.45}}>↓</div>
+      )}
+
+      {/* Conduction: glowing bar flows left→right */}
+      {isAnimating && animType === 'conduction' && (
+        <div style={{position:'relative',width:'90%',height:18,borderRadius:999,background:'rgba(255,100,50,.15)',overflow:'hidden'}}>
+          <div className="heat-anim-bar"/>
+          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontFamily:'var(--ak-display)',color:'#D9523F',fontWeight:700,zIndex:2}}>
+            теплопроводность →
+          </div>
+        </div>
+      )}
+
+      {/* Convection: 3 upward arrows */}
+      {isAnimating && animType === 'convection' && (
+        <div style={{display:'flex',gap:20,alignItems:'center',justifyContent:'center',width:'100%',height:'100%'}}>
           {[0,1,2].map(i=>(
-            <div key={i} style={{
-              position:'absolute',
-              left:`${22+i*28}%`,
-              top:'10%',
-              fontSize:18,color:'#60B8E8',fontWeight:900,
-              animation:`ak-rise-up 1s ease-out ${i*0.22}s infinite`,
-            }}>↑</div>
+            <div key={i} className="rise-arrow"
+              style={{fontSize:26,color:'#60B8E8',fontWeight:900,animationDelay:`${i*0.22}s`}}>↑</div>
           ))}
         </div>
       )}
-      {/* Radiation: expanding ring from card A */}
-      {side==='a' && playing && effect==='radiation'&&(
-        <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none'}}>
-          <div style={{
-            width:36,height:36,borderRadius:'50%',
-            border:'3px solid #FFD262',boxSizing:'border-box',
-            animation:'ak-radiate 1.1s ease-out 0s 2',
-          }}/>
+
+      {/* Radiation: expanding rings */}
+      {isAnimating && animType === 'radiation' && (
+        <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%'}}>
+          {[0,1].map(i=>(
+            <div key={i} className="radiate-ring"
+              style={{animationDelay:`${i*0.35}s`,borderColor:'#FFD262'}}/>
+          ))}
+          <div style={{fontSize:18,zIndex:2}}>☀️</div>
         </div>
       )}
-      <span style={{fontSize:38,lineHeight:1}}>{data.emoji}</span>
-      <span style={{fontFamily:'var(--ak-body)',fontWeight:700,fontSize:13,color:'var(--ak-ink-2)',lineHeight:1.2}}>{data.label}</span>
     </div>
   );
 }
 
 function Level3Heat({ onDone }) {
-  const [expIdx, setExpIdx] = React.useState(0);
-  const [phase, setPhase] = React.useState('idle');
-  const [chosen, setChosen] = React.useState(null);
-  const [score, setScore] = React.useState(0);
+  const [scIdx, setScIdx] = React.useState(0);
+  const [phase, setPhase] = React.useState('question'); // question | animating | success
+  const [shakingType, setShakingType] = React.useState(null);
   const [done, setDone] = React.useState(false);
 
-  const exp = L3_EXPERIMENTS[expIdx];
-  const total = L3_EXPERIMENTS.length;
-  const ec = EFFECT_COLORS[exp.effect];
+  const sc = L3_SCENARIOS[scIdx];
+  const total = L3_SCENARIOS.length;
 
-  const handleHeat=()=>{
-    if(phase!=='idle') return;
-    setPhase('playing');
-    setTimeout(()=>setPhase('answered'),1600);
-  };
-
-  const handleAnswer=(idx)=>{
-    if(phase!=='answered'||chosen!==null) return;
-    setChosen(idx);
-    if(idx===exp.answer) setScore(s=>s+1);
-  };
-
-  const handleNext=()=>{
-    if(expIdx>=total-1){
-      setDone(true);
+  const handlePathBtn = (type) => {
+    if(phase !== 'question') return;
+    if(type === sc.type) {
+      // Correct!
+      setPhase('animating');
+      setTimeout(() => setPhase('success'), 1500);
     } else {
-      setExpIdx(i=>i+1);
-      setPhase('idle');
-      setChosen(null);
+      // Wrong — shake that button only
+      setShakingType(type);
+      setTimeout(() => setShakingType(null), 500);
     }
   };
 
-  const finalStars = score>=5?3:score>=4?2:1;
+  const handleNext = () => {
+    if(scIdx >= total - 1) {
+      setDone(true);
+    } else {
+      setScIdx(i => i+1);
+      setPhase('question');
+    }
+  };
 
-  if(done){
+  if(done) {
     return(
       <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard
-          stars={finalStars}
-          title={finalStars===3?'Мастер тепла!':finalStars===2?'Отлично!':'Хорошая попытка!'}
-          fact={`Теплопроводность, конвекция, излучение — ты знаешь все три! Правильных ответов: ${score}/${total}`}
-          onNext={onDone} ctaLabel="На главную 🏠"/>
+        <AKSuccessCard stars={3} title="Мастер тепла!" fact="Теплопроводность, конвекция, излучение — ты знаешь все три способа передачи тепла!" onNext={onDone} ctaLabel="На главную 🏠"/>
       </div>
     );
   }
 
   return(
     <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box'}}>
-      <AKLessonHeader progress={expIdx/total} stars={score} onClose={onDone}/>
+      <AKLessonHeader progress={scIdx/total} stars={scIdx} onClose={onDone}/>
       <div style={{height:18}}/>
 
-      {/* Type label or task badge */}
       <div style={{display:'flex',justifyContent:'center',marginBottom:14}}>
-        {chosen!==null?(
-          <div style={{
-            display:'inline-flex',alignItems:'center',gap:8,
-            padding:'9px 20px',borderRadius:999,
-            background:ec.bg,border:`2px solid ${ec.border}`,
-            fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:ec.text,
-          }}>
-            {chosen===exp.answer?'✅':'❌'} {EFFECT_LABELS[exp.effect]}
-          </div>
-        ):(
-          <AKTaskBadge tone="phys">{exp.question}</AKTaskBadge>
-        )}
+        <AKTaskBadge tone="phys">Как передаётся тепло?</AKTaskBadge>
       </div>
 
-      {/* Ingredients */}
-      <div style={{display:'flex',gap:14,justifyContent:'center',marginBottom:18}}>
-        <IngredientCard data={exp.a} phase={phase} effect={exp.effect} side="a"/>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'center',
-          fontSize:26,color:'var(--ak-phys-3)',fontFamily:'var(--ak-display)',fontWeight:700,flexShrink:0}}>
-          →
-        </div>
-        <IngredientCard data={exp.b} phase={phase} effect={exp.effect} side="b"/>
+      {/* Source card */}
+      <div style={{
+        background:'#fff',borderRadius:22,padding:'18px 16px',
+        textAlign:'center',
+        boxShadow:'0 6px 0 rgba(45,27,69,.08),0 14px 28px -8px rgba(45,27,69,.14)',
+        marginBottom:10,
+      }}>
+        <div style={{fontSize:48,lineHeight:1,marginBottom:6}}>{sc.srcEmoji}</div>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:16,color:'var(--ak-ink)'}}>{sc.srcLabel}</div>
       </div>
 
-      {/* Heat button */}
-      {phase==='idle'&&(
-        <div style={{display:'flex',justifyContent:'center',marginBottom:18}}>
-          <button className="ak-btn ak-btn--cta ak-btn--lg" onClick={handleHeat}>
-            НАГРЕТЬ! 🔥
-          </button>
-        </div>
-      )}
+      {/* Connection zone */}
+      <L3ConnectionZone animType={sc.type} phase={phase}/>
 
-      {/* Playing */}
-      {phase==='playing'&&(
-        <div style={{display:'flex',justifyContent:'center',marginBottom:18}}>
-          <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'14px 24px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:16,color:'var(--ak-ink)'}}>
-            🌡️ Передаётся тепло…
-          </div>
-        </div>
-      )}
+      {/* Target card */}
+      <div style={{
+        background:'#fff',borderRadius:22,padding:'18px 16px',
+        textAlign:'center',
+        boxShadow:'0 6px 0 rgba(45,27,69,.08),0 14px 28px -8px rgba(45,27,69,.14)',
+        marginTop:10,marginBottom:16,
+      }}>
+        <div style={{fontSize:48,lineHeight:1,marginBottom:6}}>{sc.tgtEmoji}</div>
+        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:16,color:'var(--ak-ink)'}}>{sc.tgtLabel}</div>
+      </div>
 
-      {/* Answer options */}
-      {phase==='answered'&&chosen===null&&(
-        <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:18}}>
-          {exp.options.map((opt,i)=>(
-            <button key={i} onClick={()=>handleAnswer(i)}
-              className="ak-btn ak-btn--soft"
-              style={{width:'100%',textAlign:'left',justifyContent:'flex-start',fontSize:15,padding:'14px 20px',borderRadius:16,lineHeight:1.35}}>
-              {opt}
+      {/* Path buttons */}
+      {phase === 'question' && (
+        <div style={{display:'flex',gap:10,marginBottom:14}}>
+          {L3_PATH_BUTTONS.map(btn=>(
+            <button key={btn.type}
+              onClick={() => handlePathBtn(btn.type)}
+              className={shakingType === btn.type ? 'ak-shake' : ''}
+              style={{
+                flex:1,minHeight:100,
+                background:btn.bg,
+                border:`2.5px solid ${btn.color}`,
+                borderRadius:18,
+                padding:'12px 8px',
+                cursor:'pointer',
+                display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6,
+                boxShadow:`0 5px 0 ${btn.color}88,0 10px 18px -6px ${btn.color}44`,
+                transition:'transform .1s',
+              }}
+              onMouseDown={e=>e.currentTarget.style.transform='translateY(3px)'}
+              onMouseUp={e=>e.currentTarget.style.transform=''}
+              onTouchStart={e=>e.currentTarget.style.transform='translateY(3px)'}
+              onTouchEnd={e=>e.currentTarget.style.transform=''}
+            >
+              <btn.Icon/>
+              <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:14,color:btn.color,lineHeight:1.1,textAlign:'center'}}>{btn.label}</div>
+              <div style={{fontFamily:'var(--ak-body)',fontWeight:600,fontSize:10,color:'var(--ak-ink-2)',lineHeight:1.1,textAlign:'center'}}>{btn.sublabel}</div>
             </button>
           ))}
         </div>
       )}
 
-      {/* Result */}
-      {chosen!==null&&(
-        <div style={{marginBottom:18}}>
+      {/* Animating phase placeholder */}
+      {phase === 'animating' && (
+        <div style={{display:'flex',justifyContent:'center',marginBottom:14}}>
+          <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'14px 24px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:16,color:'var(--ak-ink)'}}>
+            🌡️ Тепло передаётся…
+          </div>
+        </div>
+      )}
+
+      {/* Success phase */}
+      {phase === 'success' && (
+        <div style={{marginBottom:14}}>
           <div style={{
-            background:chosen===exp.answer?'#C8F2DD':'#FFD2C8',
-            borderRadius:16,padding:'16px 18px',
+            background:'#C8F2DD',
+            borderRadius:18,padding:'16px 18px',
             fontFamily:'var(--ak-body)',fontWeight:600,fontSize:14,
             color:'var(--ak-ink)',lineHeight:1.55,
-            boxShadow:`0 4px 0 ${chosen===exp.answer?'rgba(43,168,115,.2)':'rgba(217,82,63,.2)'}`,
+            boxShadow:'0 4px 0 rgba(43,168,115,.2)',
             marginBottom:12,
           }}>
-            {exp.fact}
+            {sc.fact}
           </div>
           <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNext}>
-            {expIdx>=total-1?'Завершить! 🎉':'Дальше →'}
+            {scIdx >= total-1 ? 'Завершить! 🎉' : 'Дальше →'}
           </button>
         </div>
       )}
 
       <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Опыт {expIdx+1} из {total} · Правильных: {score}
+        Сценарий {scIdx+1} из {total}
       </div>
     </div>
   );
@@ -1031,7 +1175,7 @@ function Level3Heat({ onDone }) {
 const LEVELS = [
   { n:1, title:'Поймай луч!',    sub:'Свет · Зеркала · Отражение', emoji:'🔦', desc:'Открой закон отражения света' },
   { n:2, title:'Собери цепь!',   sub:'Ток · Батарейка · Лампочка', emoji:'💡', desc:'Как работает электрическая цепь' },
-  { n:3, title:'Три пути тепла', sub:'Проводность · Конвекция · Излучение', emoji:'🌡️', desc:'Три способа передачи тепла' },
+  { n:3, title:'Проведи тепло!', sub:'Проводность · Конвекция · Излучение', emoji:'🌡️', desc:'Три способа передачи тепла' },
 ];
 
 function LevelSelect({ onStart, completed }) {
