@@ -2,75 +2,41 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Физика — КосмоБаза</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<title>КвантУм — Физика</title>
 <style>
 @import url('https://fonts.bunny.net/css?family=fredoka-one:400|nunito:500,700,800');
-:root {
-  --ak-bg:#FFF3E2; --ak-bg-2:#FFE8CC; --ak-surface:#FFFDF7;
-  --ak-ink:#2D1B45; --ak-ink-2:#6B5680; --ak-ink-3:#A797B8;
-  --ak-phys-1:#E5DCFF; --ak-phys-2:#B5A1FF; --ak-phys-3:#7C5FE0;
-  --ak-cta-1:#FFEDA8; --ak-cta-2:#FFD262; --ak-cta-3:#D4A22B;
-  --ak-ok-1:#C8F2DD; --ak-ok-2:#5DD9A0; --ak-ok-3:#2BA873;
-  --ak-warn-1:#FFD2C8; --ak-warn-2:#FF8B7A; --ak-warn-3:#D9523F;
-  --ak-star-1:#FFE49E; --ak-star-2:#FFC857; --ak-star-3:#D4972B;
-  --ak-r-sm:10px; --ak-r-md:18px; --ak-r-lg:28px; --ak-r-xl:36px;
+:root{
+  --ak-bg:#FFF3E2;--ak-surface:#FFFDF7;--ak-ink:#2D1B45;--ak-ink-2:#6B5680;--ak-ink-3:#A797B8;
+  --ak-phys-1:#E5DCFF;--ak-phys-2:#B5A1FF;--ak-phys-3:#7C5FE0;
+  --ak-cta-2:#FFD262;--ak-cta-3:#D4A22B;
+  --ak-ok-2:#5DD9A0;--ak-ok-3:#2BA873;
   --ak-display:'Fredoka One','Nunito',system-ui,sans-serif;
   --ak-body:'Nunito',system-ui,sans-serif;
 }
-html,body{background:#FFF3E2;margin:0;}
-#root{min-height:100vh;}
+html,body{background:#FFF3E2;margin:0;overflow:hidden;}
+#root{height:100vh;overflow:hidden;}
 body{margin:0;font-family:var(--ak-body);color:var(--ak-ink);}
 .ak{font-family:var(--ak-body);color:var(--ak-ink);-webkit-font-smoothing:antialiased;}
-.ak-clay{background:var(--ak-surface);border-radius:var(--ak-r-lg);box-shadow:0 10px 22px -8px rgba(45,27,69,.22),0 4px 10px -4px rgba(45,27,69,.10),inset 0 2px 0 rgba(255,255,255,.9),inset 0 -3px 0 rgba(45,27,69,.06);}
-.ak-btn{font-family:var(--ak-display);font-weight:600;font-size:17px;border:none;cursor:pointer;position:relative;transition:transform .08s ease,box-shadow .08s ease,filter .15s ease;user-select:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;padding:16px 26px;border-radius:999px;color:var(--ak-ink);}
-.ak-btn:disabled{cursor:not-allowed;filter:grayscale(.25) opacity(.6);}
-.ak-btn--phys{color:#fff;background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9C83FF 100%);box-shadow:0 6px 0 var(--ak-phys-3),0 12px 24px -6px rgba(124,95,224,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(124,95,224,.25);text-shadow:0 1px 0 rgba(124,95,224,.4);}
-.ak-btn--phys:active{transform:translateY(4px);}
-.ak-btn--cta{color:var(--ak-ink);background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(212,162,43,.25);}
+.ak-clay{background:var(--ak-surface);border-radius:28px;box-shadow:0 10px 22px -8px rgba(45,27,69,.22),0 4px 10px -4px rgba(45,27,69,.10),inset 0 2px 0 rgba(255,255,255,.9),inset 0 -3px 0 rgba(45,27,69,.06);}
+.ak-btn{font-family:var(--ak-display);font-weight:600;font-size:17px;border:none;cursor:pointer;transition:transform .08s ease,box-shadow .08s ease;user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;padding:16px 26px;border-radius:999px;color:var(--ak-ink);}
+.ak-btn:disabled{opacity:.5;pointer-events:none;}
+.ak-btn--phys{color:#fff;background:linear-gradient(180deg,#C4B5FF 0%,#B5A1FF 55%,#9C83FF 100%);box-shadow:0 6px 0 var(--ak-phys-3),0 12px 24px -6px rgba(124,95,224,.5),inset 0 2px 0 rgba(255,255,255,.55);}
+.ak-btn--phys:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ak-phys-3);}
+.ak-btn--cta{color:var(--ak-ink);background:linear-gradient(180deg,#FFEDA8 0%,#FFD262 55%,#FFC03A 100%);box-shadow:0 6px 0 var(--ak-cta-3),0 12px 24px -6px rgba(212,162,43,.55),inset 0 2px 0 rgba(255,255,255,.85);}
 .ak-btn--cta:active{transform:translateY(4px);}
-.ak-btn--ok{color:#fff;background:linear-gradient(180deg,#7CECB5 0%,#5DD9A0 55%,#3FC685 100%);box-shadow:0 6px 0 var(--ak-ok-3),0 12px 24px -6px rgba(43,168,115,.5),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(43,168,115,.25);}
-.ak-btn--ok:active{transform:translateY(4px);}
-.ak-btn--soft{color:var(--ak-ink);background:linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(45,27,69,.05),inset 0 0 0 1px rgba(45,27,69,.06);}
+.ak-btn--soft{color:var(--ak-ink);background:linear-gradient(180deg,#FFFFFF 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.10),0 8px 18px -6px rgba(45,27,69,.12),inset 0 2px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(45,27,69,.06);}
 .ak-btn--soft:active{transform:translateY(3px);}
-.ak-btn--sm{padding:11px 18px;font-size:14px;}
-.ak-btn--lg{padding:20px 32px;font-size:19px;}
-.ak-btn--icon{width:56px;height:56px;padding:0;border-radius:50%;}
-.ak-btn--icon.ak-btn--sm{width:42px;height:42px;}
-@keyframes ak-bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-4px) rotate(1deg);}}
-@keyframes ak-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
-@keyframes ak-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px) rotate(-1deg);}40%{transform:translateX(7px) rotate(1deg);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
-@keyframes ak-pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.06);opacity:1;}100%{transform:scale(1);}}
-@keyframes ak-twinkle{0%,100%{opacity:.35;transform:scale(.85);}50%{opacity:1;transform:scale(1.05);}}
-@keyframes ak-glow{0%,100%{box-shadow:0 0 8px #FFD26088;}50%{box-shadow:0 0 24px #FFD260cc,0 0 48px #FFD26044;}}
-@keyframes ak-spark{0%{transform:scale(0) rotate(0deg);opacity:1;}100%{transform:scale(1.5) rotate(180deg);opacity:0;}}
-@keyframes ak-rise-up{0%{transform:translateY(0);opacity:1;}100%{transform:translateY(-44px);opacity:0;}}
-@keyframes ak-radiate{0%{transform:scale(0);opacity:.9;}100%{transform:scale(2.2);opacity:0;}}
-@keyframes ak-circuit-glow{0%,100%{opacity:.5;}50%{opacity:1;}}
-@keyframes ak-heat-pulse{0%,100%{box-shadow:0 6px 0 rgba(45,27,69,.10),0 12px 24px -8px rgba(45,27,69,.15);}50%{box-shadow:0 6px 0 rgba(217,82,63,.3),0 12px 32px -6px rgba(255,139,122,.45);}}
-@keyframes heat-flow{0%{left:-100%;}100%{left:100%;}}
-@keyframes ak-rise{0%{transform:translateY(0);opacity:.9;}100%{transform:translateY(-32px);opacity:0;}}
-@keyframes ak-radiate-out{0%{transform:scale(0);opacity:.8;}100%{transform:scale(3.5);opacity:0;}}
-@keyframes laser-pulse{0%,100%{opacity:.85;}50%{opacity:1;}}
-.ak-bob{animation:ak-bob 3.2s ease-in-out infinite;}
-.ak-pulse{animation:ak-pulse 2.4s ease-in-out infinite;}
-.ak-shake{animation:ak-shake .45s ease-in-out;}
-.ak-pop{animation:ak-pop .42s cubic-bezier(.2,.7,.3,1) forwards;}
-.ak-twinkle{animation:ak-twinkle 2.4s ease-in-out infinite;}
-.ak-heat-pulse{animation:ak-heat-pulse .8s ease-in-out infinite;}
-.ak-num{font-variant-numeric:tabular-nums;font-family:var(--ak-display);}
-.ak-tap{cursor:pointer;transition:transform .12s cubic-bezier(.2,.7,.3,1),filter .12s;}
-.ak-tap:hover{transform:translateY(-2px);filter:brightness(1.04);}
-.ak-tap:active{transform:translateY(0);}
-.ak ::-webkit-scrollbar{display:none;}
-.ak{scrollbar-width:none;}
-.laser-pulse{animation:laser-pulse .8s ease-in-out infinite;}
-input[type=range]{-webkit-appearance:none;width:100%;height:18px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
-input[type=range]::-webkit-slider-runnable-track{height:18px;border-radius:999px;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95);margin-top:-9px;cursor:pointer;}
-.heat-anim-bar{position:absolute;top:0;left:-100%;width:60%;height:100%;border-radius:99px;background:linear-gradient(90deg,transparent,rgba(255,139,122,.7),rgba(255,80,60,.85),rgba(255,139,122,.7),transparent);animation:heat-flow 1.5s ease-in-out forwards;}
-.mirror-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(180deg,#E5DCFF,#B5A1FF);box-shadow:0 4px 0 #7C5FE0,inset 0 2px 0 rgba(255,255,255,.6);font-size:16px;font-weight:700;color:#2D1B45;display:flex;align-items:center;justify-content:center;transition:transform .08s;}
-.mirror-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #7C5FE0;}
+.ak-btn--sm{padding:10px 16px;font-size:14px;}
+@keyframes ak-bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-5px) rotate(1deg);}}
+@keyframes ak-pop{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.07);opacity:1;}100%{transform:scale(1);}}
+@keyframes ak-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.ak-bob{animation:ak-bob 3s ease-in-out infinite;}
+.ak-pop{animation:ak-pop .4s cubic-bezier(.2,.7,.3,1) forwards;}
+.ak-pulse{animation:ak-pulse 1.6s ease-in-out infinite;}
+input[type=range]{-webkit-appearance:none;width:100%;height:20px;border-radius:999px;outline:none;cursor:pointer;background:transparent;}
+input[type=range]::-webkit-slider-runnable-track{height:20px;border-radius:999px;background:linear-gradient(180deg,#E5DCFF,#B5A1FF);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:linear-gradient(180deg,#fff 0%,#FFF7E8 100%);box-shadow:0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2);margin-top:-9px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -79,1398 +45,717 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;heigh
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
 <script type="text/babel">
-/* ============================================================
-   AK DESIGN TOKENS
-   ============================================================ */
-const AK_TONES = {
-  phys: ['#E5DCFF','#B5A1FF','#7C5FE0'],
-  ok:   ['#C8F2DD','#5DD9A0','#2BA873'],
-  cta:  ['#FFEDA8','#FFD262','#D4A22B'],
-  star: ['#FFE49E','#FFC857','#D4972B'],
-  warn: ['#FFD2C8','#FF8B7A','#D9523F'],
-  ink:  ['#E5DCEE','#6B5680','#2D1B45'],
-};
+const { useState, useEffect, useRef } = React;
+const G = 0.27;
 
-/* ============================================================
-   AK COMPONENTS
-   ============================================================ */
-function AKStarSmall({ filled=true }) {
-  const id = React.useId().replace(/:/g,'');
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14">
-      <defs>
-        <linearGradient id={`ss-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FFE49E"/>
-          <stop offset="100%" stopColor="#FFC857"/>
-        </linearGradient>
-      </defs>
-      <path d="M7 1.2 L8.7 5 L13 5.4 L9.7 8.2 L10.7 12.3 L7 10.2 L3.3 12.3 L4.3 8.2 L1 5.4 L5.3 5 Z"
-        fill={filled?`url(#ss-${id})`:'#E8DCEE'} stroke={filled?'#D4972B':'#B0A0C2'} strokeWidth="1.2" strokeLinejoin="round"/>
-    </svg>
-  );
+/* ── helpers ─────────────────────────────────────────────── */
+function radialBall(ctx, x, y, r, c1, c2) {
+  const g = ctx.createRadialGradient(x - r*.3, y - r*.35, 0, x, y, r);
+  g.addColorStop(0, '#fff'); g.addColorStop(.25, c1); g.addColorStop(1, c2);
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.fill();
+  ctx.strokeStyle = 'rgba(45,27,69,.25)'; ctx.lineWidth = 2; ctx.stroke();
+}
+function xy(e, canvas) {
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x:(t.clientX-r.left)*(canvas.width/r.width), y:(t.clientY-r.top)*(canvas.height/r.height) };
 }
 
-function AKStar({ size=56, filled=true }) {
-  const id = React.useId().replace(/:/g,'');
+/* ── Shared: IntroCard ───────────────────────────────────── */
+function IntroCard({ emoji, title, desc, law, onStart }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 56 56">
-      <defs>
-        <radialGradient id={`st-${id}`} cx="40%" cy="32%" r="70%">
-          <stop offset="0%" stopColor="#fff"/>
-          <stop offset="35%" stopColor="#FFE49E"/>
-          <stop offset="100%" stopColor="#D4972B"/>
-        </radialGradient>
-      </defs>
-      <ellipse cx="28" cy="52" rx="14" ry="2.5" fill="rgba(45,27,69,.18)"/>
-      <path d="M28 5 L34.5 19 L50 21 L38.5 31.5 L42 47 L28 39.5 L14 47 L17.5 31.5 L6 21 L21.5 19 Z"
-        fill={filled?`url(#st-${id})`:'#E8DCEE'} stroke={filled?'#C99B3B':'#B0A0C2'} strokeWidth="2.2" strokeLinejoin="round"/>
-      {filled&&<>
-        <ellipse cx="20" cy="18" rx="3.5" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 20 18)"/>
-        <circle cx="36" cy="14" r="1.6" fill="#fff" opacity=".7"/>
-      </>}
-    </svg>
-  );
-}
-
-function AKProgress({ value=0.5, tone='cta', height=18 }) {
-  const [l,m,d] = AK_TONES[tone];
-  return (
-    <div style={{height,borderRadius:999,background:'rgba(45,27,69,.08)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)',overflow:'hidden',position:'relative'}}>
-      <div style={{
-        width:`${Math.max(0,Math.min(1,value))*100}%`,height:'100%',
-        background:`linear-gradient(180deg,${l} 0%,${m} 50%,${d} 100%)`,
-        boxShadow:`inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 ${d}`,
-        borderRadius:999,transition:'width .4s cubic-bezier(.2,.7,.3,1)',position:'relative'
-      }}>
-        <div style={{position:'absolute',top:3,left:8,right:8,height:3,background:'rgba(255,255,255,.55)',borderRadius:999}}/>
+    <div style={{
+      position:'absolute',inset:0,
+      background:'linear-gradient(180deg,#E5DCFF 0%,#FFF3E2 100%)',
+      display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
+      padding:32,zIndex:60,
+    }}>
+      <div style={{fontSize:72,marginBottom:10}} className="ak-bob">{emoji}</div>
+      <div style={{fontFamily:'var(--ak-display)',fontSize:24,fontWeight:700,color:'#2D1B45',textAlign:'center',marginBottom:8}}>{title}</div>
+      <div style={{fontSize:15,color:'#6B5680',textAlign:'center',lineHeight:1.5,marginBottom:18}}>{desc}</div>
+      <div style={{background:'rgba(124,95,224,.12)',borderRadius:16,padding:'10px 18px',marginBottom:28,fontFamily:'var(--ak-display)',fontSize:14,color:'#7C5FE0',textAlign:'center'}}>
+        📚 {law}
       </div>
+      <button className="ak-btn ak-btn--phys" onClick={onStart}>Играть! ⚡</button>
     </div>
   );
 }
 
-function AKStatChip({ icon, value, tone='cta' }) {
-  const [l,m,d] = AK_TONES[tone];
+/* ── Shared: WinOverlay ──────────────────────────────────── */
+function WinOverlay({ title, law, fact, cta, onNext, onHome }) {
   return (
-    <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'6px 14px 6px 6px',borderRadius:999,background:'#fff',boxShadow:'0 3px 0 rgba(45,27,69,.08),0 6px 14px -4px rgba(45,27,69,.12),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'var(--ak-ink)'}}>
-      <div style={{width:28,height:28,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,#fff,${l} 25%,${m} 75%,${d} 100%)`,boxShadow:`inset 0 -2px 0 ${d}`,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:14}}>{icon}</div>
-      <span className="ak-num">{value}</span>
-    </div>
-  );
-}
-
-function AKLessonHeader({ progress=0.4, stars=0, onClose }) {
-  return (
-    <div style={{display:'flex',alignItems:'center',gap:10}}>
-      <button onClick={onClose} className="ak-btn ak-btn--soft ak-btn--icon ak-btn--sm" aria-label="Закрыть">
-        <svg width="14" height="14" viewBox="0 0 14 14">
-          <path d="M2 2 L12 12 M12 2 L2 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-        </svg>
-      </button>
-      <div style={{flex:1,paddingTop:2}}>
-        <AKProgress value={progress} tone="phys" height={14}/>
-      </div>
-      <AKStatChip icon="★" value={stars} tone="star"/>
-    </div>
-  );
-}
-
-function AKTaskBadge({ children, tone='phys' }) {
-  const [l,m,d] = AK_TONES[tone];
-  return (
-    <div className="ak-pulse" style={{display:'inline-flex',alignItems:'center',gap:10,padding:'12px 20px 12px 14px',borderRadius:999,background:'#fff',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -6px rgba(45,27,69,.14),inset 0 1px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14.5,color:'var(--ak-ink)'}}>
-      <div style={{width:10,height:10,borderRadius:'50%',background:m,boxShadow:`0 0 0 4px ${m}33,inset 0 -1px 0 ${d}`}}/>
-      <span>{children}</span>
-    </div>
-  );
-}
-
-function AKSuccessCard({ stars=3, title='Отлично!', fact, onNext, ctaLabel='Дальше' }) {
-  return (
-    <div className="ak-pop" style={{width:320,background:'#fff',borderRadius:32,padding:'28px 24px 24px',textAlign:'center',boxShadow:'0 12px 0 rgba(43,168,115,.18),0 24px 48px -12px rgba(45,27,69,.25),inset 0 2px 0 rgba(255,255,255,1)',fontFamily:'var(--ak-body)',position:'relative',margin:'0 auto'}}>
-      <div aria-hidden style={{position:'absolute',top:-10,left:-10,right:-10,height:30,pointerEvents:'none'}}>
-        {[{l:8,c:'#FFC857',s:8},{l:60,c:'#5DD9A0',s:6},{l:120,c:'#B5A1FF',s:7},{l:200,c:'#FFA17A',s:6},{l:260,c:'#8FCAF0',s:8},{l:310,c:'#FFC857',s:6}].map((p,i)=>(
-          <div key={i} className="ak-twinkle" style={{position:'absolute',left:p.l,top:4+(i%2)*8,width:p.s,height:p.s,borderRadius:2,background:p.c,transform:`rotate(${i*25}deg)`,animationDelay:`${i*.15}s`}}/>
-        ))}
-      </div>
-      <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:14,marginTop:8}}>
-        {[0,1,2].map(i=>(
-          <div key={i} style={{transform:`translateY(${i===1?-6:0}px) rotate(${(i-1)*12}deg)`}}>
-            <AKStar size={i===1?70:56} filled={i<stars}/>
-          </div>
-        ))}
-      </div>
-      <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:26,letterSpacing:'-.4px',color:'var(--ak-ink)',marginBottom:8}}>{title}</div>
-      {fact&&<div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{fact}</div>}
-      {onNext&&<button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={onNext}>{ctaLabel}</button>}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL 1 — "Лазерный Лабиринт" (Laser Maze)
-   Teaching: закон отражения, угол падения = углу отражения
-   ============================================================ */
-const L1_PUZZLES = [
-  {mirrors:[{cx:100,cy:130,len:70,angle:45},{cx:200,cy:70,len:65,angle:135},{cx:250,cy:190,len:60,angle:45}],target:{x:310,y:70},hint:'Угол падения = угол отражения!'},
-  {mirrors:[{cx:90,cy:60,len:70,angle:135},{cx:190,cy:160,len:65,angle:45},{cx:270,cy:80,len:60,angle:90}],target:{x:310,y:160},hint:'Каждое зеркало меняет направление луча'},
-  {mirrors:[{cx:100,cy:200,len:70,angle:45},{cx:220,cy:100,len:65,angle:135},{cx:150,cy:60,len:60,angle:90}],target:{x:50,y:60},hint:'Луч можно отправить назад!'},
-  {mirrors:[{cx:120,cy:80,len:70,angle:60},{cx:240,cy:180,len:65,angle:120},{cx:170,cy:130,len:60,angle:45}],target:{x:310,y:240},hint:'Три отражения — ты настоящий физик!'},
-  {mirrors:[{cx:90,cy:180,len:75,angle:45},{cx:200,cy:60,len:70,angle:135},{cx:280,cy:170,len:65,angle:90}],target:{x:50,y:240},hint:'Последняя задача — самая интересная!'},
-];
-
-const L1_FACTS = [
-  'Закон отражения открыл Евклид 2300 лет назад — угол падения = углу отражения!',
-  'Зеркала в телескопе Хаббла использовали этот закон для съёмки галактик!',
-  'Перископ подводной лодки работает на двух зеркалах под 45°',
-  'Лазер в супермаркете сканирует штрих-код — используя отражение!',
-  'Кошки видят в темноте — за их сетчаткой есть зеркальный слой!',
-];
-
-function traceRay(x0,y0,dx0,dy0, mirrors, W, H, maxBounce=8) {
-  const pts=[{x:x0,y:y0}];
-  let x=x0,y=y0,dx=dx0,dy=dy0;
-  const L=Math.sqrt(dx*dx+dy*dy); dx/=L; dy/=L;
-  for(let b=0;b<maxBounce;b++){
-    let tMin=Infinity,hx=0,hy=0,bestMirror=null;
-    for(const m of mirrors){
-      const ang=m.angle*Math.PI/180, ml=m.len/2;
-      const mx1=m.cx-Math.cos(ang)*ml, my1=m.cy-Math.sin(ang)*ml;
-      const mx2=m.cx+Math.cos(ang)*ml, my2=m.cy+Math.sin(ang)*ml;
-      const mdx=mx2-mx1, mdy=my2-my1;
-      const denom=dx*mdy-dy*mdx;
-      if(Math.abs(denom)>0.001){
-        const t=((mx1-x)*mdy-(my1-y)*mdx)/denom;
-        const u=((mx1-x)*dy-(my1-y)*dx)/denom;
-        if(t>1&&u>=0&&u<=1&&t<tMin){tMin=t;hx=x+dx*t;hy=y+dy*t;bestMirror=m;}
-      }
-    }
-    const walls=[{nx:1,ny:0,d:0},{nx:-1,ny:0,d:-W},{nx:0,ny:1,d:0},{nx:0,ny:-1,d:-H}];
-    let tWall=Infinity,wnx=0,wny=0;
-    for(const w of walls){
-      const d2=dx*w.nx+dy*w.ny;
-      if(Math.abs(d2)<0.001) continue;
-      const t=(-(x*w.nx+y*w.ny+w.d))/d2;
-      if(t>0.5&&t<tWall){tWall=t;wnx=w.nx;wny=w.ny;}
-    }
-    if(bestMirror&&tMin<tWall){
-      pts.push({x:hx,y:hy});
-      const ang=bestMirror.angle*Math.PI/180;
-      const nRawX=-Math.sin(ang), nRawY=Math.cos(ang);
-      const dot=dx*nRawX+dy*nRawY;
-      dx=dx-2*dot*nRawX; dy=dy-2*dot*nRawY;
-      x=hx;y=hy;
-    } else {
-      pts.push({x:x+dx*tWall,y:y+dy*tWall}); break;
-    }
-  }
-  return pts;
-}
-
-function Level1Light({ onDone }) {
-  const [puzzleIdx, setPuzzleIdx] = React.useState(0);
-  const [starsEarned, setStarsEarned] = React.useState(0);
-  const [celebrating, setCelebrating] = React.useState(false);
-  const [done, setDone] = React.useState(false);
-  const [introShown, setIntroShown] = React.useState(false);
-  const [missionIdx, setMissionIdx] = React.useState(0);
-
-  const puz = L1_PUZZLES[puzzleIdx];
-  const initAngles = puz.mirrors.map(m => m.angle);
-  const [angles, setAngles] = React.useState(initAngles);
-  const mirrorAnglesRef = React.useRef([...initAngles]);
-  const [displayAngles, setDisplayAngles] = React.useState([...initAngles]);
-  const canvasRef = React.useRef(null);
-  const animRef = React.useRef(null);
-  const hitRef = React.useRef(false);
-  const celebRef = React.useRef(false);
-  const pendingRef = React.useRef(false);
-
-  const W=340, H=260;
-
-  // Reset on puzzle change
-  React.useEffect(()=>{
-    const p = L1_PUZZLES[puzzleIdx];
-    const a = p.mirrors.map(m=>m.angle);
-    mirrorAnglesRef.current = [...a];
-    setDisplayAngles([...a]);
-    hitRef.current = false;
-    celebRef.current = false;
-  },[puzzleIdx]);
-
-  React.useEffect(()=>{
-    if(!introShown) return;
-    const canvas = canvasRef.current;
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const p = L1_PUZZLES[puzzleIdx];
-
-    const draw = ()=>{
-      ctx.clearRect(0,0,W,H);
-
-      // Background
-      const bg = ctx.createRadialGradient(W/2,H/2,20,W/2,H/2,Math.max(W,H));
-      bg.addColorStop(0,'#16104A');
-      bg.addColorStop(1,'#050316');
-      ctx.fillStyle=bg;
-      ctx.fillRect(0,0,W,H);
-
-      // Grid dots (subtle)
-      ctx.fillStyle='rgba(255,255,255,.04)';
-      for(let gx=20;gx<W;gx+=40) for(let gy=20;gy<H;gy+=40){
-        ctx.beginPath(); ctx.arc(gx,gy,1.5,0,Math.PI*2); ctx.fill();
-      }
-
-      // Build mirror array from current angles
-      const mirrors = p.mirrors.map((m,i)=>({...m, angle: mirrorAnglesRef.current[i]}));
-
-      // Laser source at x=10, y=130
-      const srcX=10, srcY=130;
-      ctx.save();
-      ctx.shadowColor='#00FF88'; ctx.shadowBlur=14;
-      ctx.fillStyle='#00FF88';
-      ctx.fillRect(0, srcY-6, 8, 12);
-      ctx.restore();
-
-      // Trace ray
-      const pts = traceRay(srcX+8, srcY, 1, 0, mirrors, W, H, 8);
-      const last = pts[pts.length-1];
-
-      // Hit check radius 28
-      const ddx=last.x-p.target.x, ddy=last.y-p.target.y;
-      const dist=Math.sqrt(ddx*ddx+ddy*ddy);
-      const hit = dist < 28;
-
-      // Draw laser beam
-      ctx.save();
-      ctx.shadowColor='#00FF88'; ctx.shadowBlur=18;
-      ctx.strokeStyle='#00FF88'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.lineJoin='round';
-      ctx.beginPath();
-      pts.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
-      ctx.stroke();
-      // Inner bright core
-      ctx.shadowBlur=6;
-      ctx.strokeStyle='rgba(220,255,240,.9)'; ctx.lineWidth=1.2;
-      ctx.beginPath();
-      pts.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
-      ctx.stroke();
-      ctx.restore();
-
-      // Draw angle annotation at mirror hit points when beam hits target
-      if(hit && pts.length > 2) {
-        const reflPt = pts[1]; // first reflection point
-        ctx.save();
-        ctx.fillStyle = 'rgba(0,255,136,.85)';
-        ctx.font = 'bold 11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('⟲', reflPt.x, reflPt.y - 14);
-        ctx.restore();
-      }
-
-      // Draw mirrors
-      mirrors.forEach((m,i)=>{
-        const mAng = m.angle*Math.PI/180;
-        const ml = m.len/2;
-        const mx1=m.cx-Math.cos(mAng)*ml, my1=m.cy-Math.sin(mAng)*ml;
-        const mx2=m.cx+Math.cos(mAng)*ml, my2=m.cy+Math.sin(mAng)*ml;
-        ctx.save();
-        ctx.shadowColor='rgba(180,160,255,.6)'; ctx.shadowBlur=8;
-        const mGrad=ctx.createLinearGradient(mx1,my1,mx2,my2);
-        mGrad.addColorStop(0,'rgba(255,255,255,.5)');
-        mGrad.addColorStop(0.5,'#ffffff');
-        mGrad.addColorStop(1,'rgba(255,255,255,.5)');
-        ctx.strokeStyle=mGrad; ctx.lineWidth=5; ctx.lineCap='round';
-        ctx.beginPath(); ctx.moveTo(mx1,my1); ctx.lineTo(mx2,my2); ctx.stroke();
-        // Pivot
-        ctx.shadowColor='#B5A1FF'; ctx.shadowBlur=10;
-        ctx.fillStyle='#B5A1FF';
-        ctx.beginPath(); ctx.arc(m.cx,m.cy,6,0,Math.PI*2); ctx.fill();
-        // Number label
-        ctx.shadowBlur=0;
-        ctx.fillStyle='rgba(255,255,255,.7)';
-        ctx.font='bold 11px Nunito,sans-serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(i+1, m.cx, m.cy);
-        ctx.restore();
-      });
-
-      // Target bullseye
-      const tx=p.target.x, ty=p.target.y;
-      ctx.save();
-      if(hit){ ctx.shadowColor='gold'; ctx.shadowBlur=30; }
-      ctx.translate(tx,ty);
-      // outer ring r=20
-      ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2);
-      ctx.fillStyle=hit?'rgba(255,215,0,.25)':'rgba(220,60,40,0.20)'; ctx.fill();
-      ctx.strokeStyle=hit?'gold':'rgba(220,60,40,0.8)'; ctx.lineWidth=2; ctx.stroke();
-      // mid ring r=12
-      ctx.beginPath(); ctx.arc(0,0,12,0,Math.PI*2);
-      ctx.fillStyle=hit?'rgba(255,200,0,.4)':'rgba(255,100,20,.35)'; ctx.fill();
-      ctx.strokeStyle=hit?'gold':'rgba(255,100,20,.7)'; ctx.lineWidth=1.5; ctx.stroke();
-      // inner r=6
-      ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2);
-      ctx.fillStyle=hit?'gold':'rgba(255,140,0,.8)'; ctx.fill();
-      ctx.restore();
-
-      if(hit && !hitRef.current){ hitRef.current=true; }
-      animRef.current=requestAnimationFrame(draw);
-    };
-
-    draw();
-    return()=>cancelAnimationFrame(animRef.current);
-  },[puzzleIdx, introShown]);
-
-  // Poll for hit
-  React.useEffect(()=>{
-    if(!introShown||celebrating||done) return;
-    const iv=setInterval(()=>{
-      if(hitRef.current && !celebRef.current){
-        celebRef.current=true;
-        setCelebrating(true);
-      }
-    },150);
-    return()=>clearInterval(iv);
-  },[celebrating,done,introShown]);
-
-  const rotMirror = React.useCallback((idx, delta)=>{
-    mirrorAnglesRef.current = mirrorAnglesRef.current.map((a,i)=>i===idx?(a+delta+360)%360:a);
-    hitRef.current = false;
-    if(!pendingRef.current){
-      pendingRef.current=true;
-      requestAnimationFrame(()=>{
-        setDisplayAngles([...mirrorAnglesRef.current]);
-        pendingRef.current=false;
-      });
-    }
-  },[]);
-
-  const handleNext = ()=>{
-    setCelebrating(false);
-    celebRef.current=false;
-    hitRef.current=false;
-    if(puzzleIdx>=L1_PUZZLES.length-1){
-      setDone(true);
-    } else {
-      setStarsEarned(s=>s+1);
-      setMissionIdx(i=>i+1);
-      setPuzzleIdx(i=>i+1);
-    }
-  };
-
-  if(done){
-    return(
-      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Закон отражения!" fact="Угол падения всегда равен углу отражения. Евклид открыл это 2300 лет назад!" onNext={onDone} ctaLabel="На главную 🏠"/>
-      </div>
-    );
-  }
-
-  // Intro card
-  if(!introShown) {
-    return (
-      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#0F0B28,#050316)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:20}}>
-        <div style={{fontSize:80, animation:'ak-bob 3s ease-in-out infinite'}}>🧑‍🚀</div>
-        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'#fff', textAlign:'center', lineHeight:1.4}}>
-          Космонавт застрял<br/>в тёмной комнате!
+    <div style={{position:'absolute',inset:0,background:'rgba(45,27,69,.52)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:200}}>
+      <div className="ak-clay ak-pop" style={{margin:20,padding:28,textAlign:'center',maxWidth:320}}>
+        <div style={{fontSize:54,marginBottom:6}}>🎉</div>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:22,fontWeight:700,color:'#2D1B45',marginBottom:10}}>{title}</div>
+        <div style={{background:'#E5DCFF',borderRadius:16,padding:'12px 16px',marginBottom:18}}>
+          <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'#7C5FE0',fontWeight:700,marginBottom:4}}>⚡ {law}</div>
+          <div style={{fontSize:13,color:'#2D1B45',lineHeight:1.45}}>{fact}</div>
         </div>
-        <div style={{fontSize:15, color:'rgba(255,255,255,.7)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
-          Направь солнечный луч через зеркала<br/>чтобы осветить путь домой
+        <div style={{display:'flex',gap:10,justifyContent:'center'}}>
+          <button className="ak-btn ak-btn--soft ak-btn--sm" onClick={onHome}>🏠</button>
+          <button className="ak-btn ak-btn--cta" onClick={onNext}>{cta}</button>
         </div>
-        <div style={{background:'rgba(255,255,255,.06)', borderRadius:18, padding:'16px 24px', display:'flex', alignItems:'center', gap:12}}>
-          <span style={{fontSize:13, color:'#00FF88', fontFamily:'var(--ak-display)', fontWeight:700}}>луч →</span>
-          <div style={{width:40, height:40, background:'rgba(0,255,136,.15)', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid #00FF88', fontSize:18}}>🪞</div>
-          <span style={{fontSize:13, color:'#00FF88', fontFamily:'var(--ak-display)', fontWeight:700}}>→ луч</span>
-          <span style={{fontSize:11, color:'rgba(255,255,255,.5)', fontFamily:'var(--ak-body)', fontWeight:600}}>угол входа = угол выхода</span>
-        </div>
-        <button className="ak-btn ak-btn--ok" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
-          Помочь! 🔦
-        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
-  const p=L1_PUZZLES[puzzleIdx];
-
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
-      <AKLessonHeader progress={puzzleIdx/L1_PUZZLES.length} stars={starsEarned} onClose={onDone}/>
-      <div style={{height:16}}/>
-      <AKTaskBadge tone="phys">{p.hint}</AKTaskBadge>
-      <div style={{height:14}}/>
-
-      <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)'}}>
-        <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
+/* ── Shared: FailOverlay ─────────────────────────────────── */
+function FailOverlay({ tip, onRetry }) {
+  return (
+    <div style={{position:'absolute',inset:0,background:'rgba(45,27,69,.52)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:200}}>
+      <div className="ak-clay ak-pop" style={{margin:20,padding:28,textAlign:'center',maxWidth:300}}>
+        <div style={{fontSize:44,marginBottom:8}}>😅</div>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:20,fontWeight:700,color:'#2D1B45',marginBottom:10}}>Не попал!</div>
+        <div style={{fontSize:14,color:'#6B5680',lineHeight:1.5,marginBottom:20}}>💡 {tip}</div>
+        <button className="ak-btn ak-btn--phys" onClick={onRetry}>Ещё раз 🔄</button>
       </div>
+    </div>
+  );
+}
 
-      <div style={{height:16}}/>
-
-      {/* Mirror controls */}
-      <div style={{background:'#fff',borderRadius:20,padding:'14px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:13,color:'var(--ak-ink-3)',marginBottom:10}}>🪞 Управление зеркалами</div>
-        {[0,1,2].map(i=>(
-          <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:i<2?'1px solid rgba(45,27,69,.06)':'none'}}>
-            <button className="mirror-btn" onClick={()=>rotMirror(i,-5)}>◀</button>
-            <span style={{flex:1,fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-ink)',textAlign:'center'}}>
-              🪞 Зеркало {i+1}: {Math.round(displayAngles[i])}°
-            </span>
-            <button className="mirror-btn" onClick={()=>rotMirror(i,+5)}>▶</button>
-          </div>
-        ))}
-      </div>
-
-      <div style={{height:10}}/>
-      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Задача {puzzleIdx+1} из {L1_PUZZLES.length}
-      </div>
-
-      {celebrating&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(5,3,22,.82)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:48, marginBottom:8}}>🧑‍🚀</div>
-            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-ink)', marginBottom:6}}>Космонавт спасён!</div>
-            {/* Law visualization */}
-            <div style={{background:'#0F0B28', borderRadius:16, padding:'14px 16px', marginBottom:14, display:'flex', flexDirection:'column', gap:8, alignItems:'center'}}>
-              <div style={{display:'flex', alignItems:'center', gap:8}}>
-                <div style={{width:40, height:2, background:'#00FF88', boxShadow:'0 0 6px #00FF88'}}/>
-                <div style={{width:32, height:32, border:'2px solid #fff', borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:16}}>🪞</div>
-                <div style={{width:40, height:2, background:'#00FF88', boxShadow:'0 0 6px #00FF88', transform:'rotate(-30deg)', transformOrigin:'left'}}/>
+/* ── HomeScreen ──────────────────────────────────────────── */
+function HomeScreen({ onSelect }) {
+  const levels = [
+    {n:1, emoji:'🐱', title:'Рогатка',    sub:'Траектория и угол полёта',  bg:'#E5DCFF'},
+    {n:2, emoji:'🦁', title:'Рикошет',    sub:'Угол падения = отражения',  bg:'#FFE5C2'},
+    {n:3, emoji:'🐘', title:'Катапульта', sub:'Рычаг и бросок',            bg:'#C8F2DD'},
+  ];
+  return (
+    <div className="ak" style={{
+      minHeight:'100vh',height:'100vh',
+      background:'linear-gradient(180deg,#E5DCFF 0%,#FFF3E2 100%)',
+      display:'flex',flexDirection:'column',alignItems:'center',
+      padding:'50px 20px 40px',boxSizing:'border-box',overflowY:'auto',
+    }}>
+      <div style={{fontSize:52,marginBottom:6}}>⚡</div>
+      <div style={{fontFamily:'var(--ak-display)',fontSize:30,fontWeight:700,color:'#2D1B45',marginBottom:2}}>КвантУм</div>
+      <div style={{fontFamily:'var(--ak-display)',fontSize:15,color:'#6B5680',marginBottom:36}}>Физика — 3 уровня</div>
+      <div style={{display:'flex',flexDirection:'column',gap:14,width:'100%',maxWidth:340}}>
+        {levels.map(l=>(
+          <button key={l.n} onClick={()=>onSelect(l.n)} style={{
+            display:'flex',alignItems:'center',gap:16,
+            background:'rgba(255,255,255,.85)',borderRadius:22,padding:'16px 20px',
+            border:'none',cursor:'pointer',textAlign:'left',
+            boxShadow:'0 6px 0 rgba(45,27,69,.08),0 12px 24px -8px rgba(45,27,69,.12),inset 0 2px 0 #fff',
+          }}>
+            <div style={{
+              width:54,height:54,borderRadius:'50%',flexShrink:0,
+              background:`radial-gradient(circle at 35% 30%,#fff,${l.bg} 60%)`,
+              display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,
+              boxShadow:'0 4px 0 rgba(45,27,69,.1)',
+            }}>{l.emoji}</div>
+            <div>
+              <div style={{fontFamily:'var(--ak-display)',fontSize:18,fontWeight:700,color:'#2D1B45'}}>
+                Уровень {l.n}: {l.title}
               </div>
-              <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'#00FF88', letterSpacing:1}}>ЗАКОН ОТРАЖЕНИЯ</div>
-              <div style={{fontSize:12, color:'rgba(255,255,255,.7)', fontWeight:600}}>Угол падения = Угол отражения</div>
+              <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'#6B5680',marginTop:2}}>{l.sub}</div>
             </div>
-            <div style={{fontSize:13, color:'var(--ak-ink-2)', lineHeight:1.55, fontWeight:500, marginBottom:18}}>{L1_FACTS[missionIdx]}</div>
-            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
-              {puzzleIdx >= L1_PUZZLES.length-1 ? 'Завершить! 🎉' : 'Следующее зеркало →'}
-            </button>
-          </div>
-        </div>
-      )}
+            <div style={{marginLeft:'auto',fontSize:18,color:'#A797B8'}}>→</div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-/* ============================================================
-   LEVEL 2 — "Рычаг Архимеда"
-   Teaching: закон рычага, F×d = F×d
-   ============================================================ */
-const L2_CHALLENGES = [
-  {leftWeights:[{mass:30,dist:80,color:'#B5A1FF'}], rightMass:30, startPos:40, hint:'Поставь такой же груз на такое же расстояние!', fact:'Рычаг уравновешен! F×d слева = F×d справа — открытие Архимеда!'},
-  {leftWeights:[{mass:60,dist:60,color:'#FF8B7A'}], rightMass:30, startPos:30, hint:'Груз вдвое легче — поставь его вдвое дальше!', fact:'Архимед сказал: "Дайте мне точку опоры — и я переверну Землю!"'},
-  {leftWeights:[{mass:30,dist:50,color:'#5DD9A0'},{mass:30,dist:90,color:'#FFD262'}], rightMass:60, startPos:40, hint:'Два груза слева суммируются. Один тяжёлый справа.', fact:'Несколько сил заменяются одной равнодействующей — это суперпозиция!'},
-  {leftWeights:[{mass:50,dist:70,color:'#60B8E8'}], rightMass:70, startPos:80, hint:'Тяжёлый груз — ближе к центру!', fact:'Тяжёлые грузы требуют меньшего расстояния от точки опоры!'},
-  {leftWeights:[{mass:40,dist:90,color:'#FFA17A'}], rightMass:20, startPos:50, hint:'Лёгкий груз — дальше от центра!', fact:'Простые машины (рычаг, блок, колесо) используют этот закон — они меняют силу или расстояние!'},
-];
+/* ══════════════════════════════════════════════════════════
+   LEVEL 1 — РОГАТКА
+   Drag slingshot → launch → hit alien targets
+   Teach: projectile motion, 45° = max range
+   ══════════════════════════════════════════════════════════ */
+function Level1({ onWin, onHome }) {
+  const [intro, setIntro] = useState(true);
+  const [status, setStatus] = useState('play');
+  const canRef = useRef(null);
+  const raf = useRef(null);
+  const gs = useRef(null);
 
-function Level2Lever({ onDone }) {
-  const [chalIdx, setChalIdx] = React.useState(0);
-  const [starsEarned, setStarsEarned] = React.useState(0);
-  const [done, setDone] = React.useState(false);
-  const [celebrating, setCelebrating] = React.useState(false);
-  const [introShown, setIntroShown] = React.useState(false);
+  function buildState(W, H) {
+    return {
+      W, H,
+      sling: { x:80, y:H-100 },
+      maxPull: 75, ballR: 13, speed: 0.155,
+      balls: [],
+      targets: [
+        {x:262,y:195,r:26,alive:true,burst:0},
+        {x:305,y:295,r:26,alive:true,burst:0},
+        {x:258,y:380,r:26,alive:true,burst:0},
+      ],
+      drag: null, dragging: false,
+      shotsLeft: 6, done: false,
+    };
+  }
 
-  const chal = L2_CHALLENGES[chalIdx];
-  const [rightPos, setRightPos] = React.useState(chal.startPos);
-  const rightPosRef = React.useRef(chal.startPos);
-  const draggingRef = React.useRef(false);
-  const canvasRef = React.useRef(null);
-  const animRef = React.useRef(null);
-  const balancedFrames = React.useRef(0);
-  const celebRef = React.useRef(false);
-
-  const W=340, H=280;
-  const pivotX=170, pivotY=200;
-  const beamHalfW=150;
-
-  React.useEffect(()=>{
-    const c = L2_CHALLENGES[chalIdx];
-    rightPosRef.current = c.startPos;
-    setRightPos(c.startPos);
-    balancedFrames.current = 0;
-    celebRef.current = false;
-    setCelebrating(false);
-  },[chalIdx]);
-
-  // Display state (throttled from ref)
-  const [displayTorque, setDisplayTorque] = React.useState({left:0,right:0});
-
-  React.useEffect(()=>{
-    if(!introShown) return;
-    const canvas = canvasRef.current;
-    if(!canvas) return;
+  useEffect(() => {
+    if (intro) return;
+    const canvas = canRef.current;
     const ctx = canvas.getContext('2d');
-    const c = L2_CHALLENGES[chalIdx];
+    const W = canvas.width, H = canvas.height;
+    gs.current = buildState(W, H);
+    const g = gs.current;
 
-    const draw = ()=>{
-      const rp = rightPosRef.current;
-      const leftTorque = c.leftWeights.reduce((s,w)=>s+w.mass*w.dist,0);
-      const rightTorque = c.rightMass * rp;
-      const netTorque = leftTorque - rightTorque;
-      const beamAngle = Math.max(-0.45,Math.min(0.45,netTorque/500));
-      const isBalanced = Math.abs(netTorque) < 20;
-
-      ctx.clearRect(0,0,W,H);
-
-      // Warm cream background
-      ctx.fillStyle='#FFF8EA';
-      ctx.fillRect(0,0,W,H);
-
-      // Ground shadow
-      ctx.fillStyle='rgba(45,27,69,.06)';
-      ctx.fillRect(0,H-20,W,20);
-
-      // Pivot triangle
-      ctx.save();
-      ctx.fillStyle='#8B7355';
-      ctx.shadowColor='rgba(45,27,69,.2)'; ctx.shadowBlur=6;
-      ctx.beginPath();
-      ctx.moveTo(pivotX, pivotY-18);
-      ctx.lineTo(pivotX-18, pivotY+4);
-      ctx.lineTo(pivotX+18, pivotY+4);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Beam (rotated around pivot)
-      ctx.save();
-      ctx.translate(pivotX, pivotY-14);
-      ctx.rotate(beamAngle);
-
-      if(isBalanced) {
-        // Draw law text on canvas when balanced
-        ctx.save();
-        ctx.fillStyle = 'rgba(93,217,160,.15)';
-        ctx.beginPath();
-        if(ctx.roundRect) {
-          ctx.roundRect(-90, 10, 180, 36, 10);
-        } else {
-          ctx.rect(-90, 10, 180, 36);
-        }
-        ctx.fill();
-        ctx.fillStyle = '#2BA873';
-        ctx.font = 'bold 12px Nunito, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('⚖ F×d = F×d — РАВНОВЕСИЕ!', 0, 33);
-        ctx.restore();
-      }
-
-      // Beam body
-      const beamGrad = ctx.createLinearGradient(0,-7,0,7);
-      beamGrad.addColorStop(0,'#D4A46A');
-      beamGrad.addColorStop(0.3,'#C4914A');
-      beamGrad.addColorStop(1,'#A07030');
-
-      if(isBalanced) {
-        ctx.save();
-        ctx.shadowColor = '#5DD9A0';
-        ctx.shadowBlur = 24;
-        ctx.fillStyle = beamGrad;
-        ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
-        ctx.restore();
-      } else {
-        ctx.fillStyle = beamGrad;
-        ctx.shadowColor='rgba(45,27,69,.18)'; ctx.shadowBlur=8;
-        ctx.fillRect(-beamHalfW,-7,beamHalfW*2,14);
-      }
-
-      // Beam highlight
-      ctx.fillStyle='rgba(255,255,255,.35)';
-      ctx.fillRect(-beamHalfW,-7,beamHalfW*2,3);
-
-      // Draw left weights
-      c.leftWeights.forEach(w=>{
-        const wx = -w.dist;
-        ctx.save();
-        ctx.shadowColor='rgba(45,27,69,.25)'; ctx.shadowBlur=8;
-        ctx.fillStyle = w.color;
-        ctx.beginPath();
-        ctx.arc(wx,-14-16,14,0,Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle='rgba(255,255,255,.35)';
-        ctx.beginPath();
-        ctx.ellipse(wx-4,-14-22,5,6,Math.PI*0.3,0,Math.PI*2);
-        ctx.fill();
-        // Mass label
-        ctx.fillStyle='#fff';
-        ctx.font='bold 10px Nunito,sans-serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(w.mass+'г', wx, -14-16);
-        ctx.restore();
-      });
-
-      // Draw right weight (draggable)
-      const rwx = rp;
-      ctx.save();
-      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=10;
-      ctx.fillStyle='#FFD262';
-      ctx.beginPath();
-      ctx.arc(rwx,-14-16,16,0,Math.PI*2);
-      ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,.4)';
-      ctx.beginPath();
-      ctx.ellipse(rwx-5,-14-22,6,7,Math.PI*0.3,0,Math.PI*2);
-      ctx.fill();
-      ctx.fillStyle='#2D1B45';
-      ctx.font='bold 10px Nunito,sans-serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText(c.rightMass+'г', rwx, -14-16);
-      // Drag indicator
-      ctx.fillStyle='rgba(45,27,69,.3)';
-      ctx.font='9px sans-serif';
-      ctx.fillText('↔', rwx, -14-16+22);
-      ctx.restore();
-
-      // End markers
-      [-beamHalfW+4, beamHalfW-4].forEach(ex=>{
-        ctx.save();
-        ctx.fillStyle='rgba(139,115,85,.5)';
-        ctx.fillRect(ex-3,-12,6,24);
-        ctx.restore();
-      });
-
-      ctx.restore(); // end beam rotation
-
-      // Balance indicator glow
-      if(isBalanced){
-        ctx.save();
-        ctx.strokeStyle='#5DD9A0'; ctx.lineWidth=3;
-        ctx.shadowColor='#5DD9A0'; ctx.shadowBlur=16;
-        ctx.strokeRect(4,4,W-8,H-8);
-        ctx.restore();
-        balancedFrames.current++;
-        if(balancedFrames.current>60 && !celebRef.current){
-          celebRef.current=true;
-          setCelebrating(true);
-        }
-      } else {
-        balancedFrames.current=0;
-      }
-
-      setDisplayTorque({left:leftTorque,right:Math.round(c.rightMass*rp)});
-      animRef.current=requestAnimationFrame(draw);
-    };
-    draw();
-    return()=>cancelAnimationFrame(animRef.current);
-  },[chalIdx, introShown]);
-
-  // Pointer events for dragging the right weight
-  const getCanvasPos = (canvas, e)=>{
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    return (clientX - rect.left) * (W / rect.width);
-  };
-
-  const handlePointerDown = React.useCallback(e=>{
-    const canvas = canvasRef.current;
-    if(!canvas) return;
-    const cx = getCanvasPos(canvas, e);
-    const bx = cx - pivotX;
-    const rp = rightPosRef.current;
-    if(Math.abs(bx - rp) < 28){ draggingRef.current=true; e.preventDefault(); }
-  },[]);
-
-  const handlePointerMove = React.useCallback(e=>{
-    if(!draggingRef.current) return;
-    const canvas = canvasRef.current;
-    if(!canvas) return;
-    const cx = getCanvasPos(canvas, e);
-    const bx = cx - pivotX;
-    rightPosRef.current = Math.max(10, Math.min(155, bx));
-    e.preventDefault();
-  },[]);
-
-  const handlePointerUp = React.useCallback(e=>{
-    if(!draggingRef.current) return;
-    draggingRef.current=false;
-    setRightPos(rightPosRef.current);
-  },[]);
-
-  React.useEffect(()=>{
-    const canvas = canvasRef.current;
-    if(!canvas) return;
-    canvas.addEventListener('mousedown', handlePointerDown);
-    canvas.addEventListener('mousemove', handlePointerMove);
-    canvas.addEventListener('mouseup', handlePointerUp);
-    canvas.addEventListener('touchstart', handlePointerDown, {passive:false});
-    canvas.addEventListener('touchmove', handlePointerMove, {passive:false});
-    canvas.addEventListener('touchend', handlePointerUp);
-    return()=>{
-      canvas.removeEventListener('mousedown', handlePointerDown);
-      canvas.removeEventListener('mousemove', handlePointerMove);
-      canvas.removeEventListener('mouseup', handlePointerUp);
-      canvas.removeEventListener('touchstart', handlePointerDown);
-      canvas.removeEventListener('touchmove', handlePointerMove);
-      canvas.removeEventListener('touchend', handlePointerUp);
-    };
-  },[handlePointerDown,handlePointerMove,handlePointerUp]);
-
-  const handleNext = ()=>{
-    setCelebrating(false);
-    celebRef.current=false;
-    balancedFrames.current=0;
-    if(chalIdx>=L2_CHALLENGES.length-1){
-      setDone(true);
-    } else {
-      setStarsEarned(s=>s+1);
-      setChalIdx(i=>i+1);
+    function clamp(pos) {
+      const dx=pos.x-g.sling.x, dy=pos.y-g.sling.y, d=Math.hypot(dx,dy);
+      if(d>g.maxPull) return {x:g.sling.x+dx/d*g.maxPull, y:g.sling.y+dy/d*g.maxPull};
+      return pos;
     }
-  };
+    function simPath(sx,sy,vx,vy,steps=90) {
+      const pts=[]; let x=sx,y=sy,dx=vx,dy=vy;
+      for(let i=0;i<steps;i++){x+=dx;y+=dy;dy+=G;if(y>H||x<0||x>W)break;pts.push({x,y});}
+      return pts;
+    }
+    function drawSling() {
+      const {x,y}=g.sling;
+      ctx.save(); ctx.strokeStyle='#7A4E28'; ctx.lineWidth=8; ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(x,y+68);ctx.lineTo(x-22,y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x,y+68);ctx.lineTo(x+22,y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x,y+68);ctx.lineTo(x,y+110);ctx.stroke();
+      ctx.fillStyle='#5A3010';
+      ctx.beginPath();ctx.arc(x-22,y,6,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(x+22,y,6,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    function drawBand(tx,ty) {
+      ctx.save(); ctx.strokeStyle='#A0622A'; ctx.lineWidth=4; ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(g.sling.x-22,g.sling.y);ctx.lineTo(tx,ty);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(g.sling.x+22,g.sling.y);ctx.lineTo(tx,ty);ctx.stroke();
+      ctx.restore();
+    }
 
-  if(done){
-    return(
-      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Рычаг Архимеда!" fact="F×d слева = F×d справа — вот закон рычага! Архимед обещал перевернуть Землю, имея точку опоры." onNext={onDone} ctaLabel="На главную 🏠"/>
-      </div>
-    );
-  }
+    const onDown = e => {
+      e.preventDefault();
+      if(g.done||g.shotsLeft<=0) return;
+      const pos=xy(e,canvas);
+      if(Math.hypot(pos.x-g.sling.x,pos.y-g.sling.y)<52){
+        g.dragging=true; g.drag=clamp(pos);
+      }
+    };
+    const onMove = e => {
+      e.preventDefault();
+      if(!g.dragging) return;
+      g.drag=clamp(xy(e,canvas));
+    };
+    const onUp = e => {
+      e.preventDefault();
+      if(!g.dragging) return;
+      g.dragging=false;
+      const dr=g.drag; if(!dr) return;
+      const vx=(g.sling.x-dr.x)*g.speed, vy=(g.sling.y-dr.y)*g.speed;
+      g.balls.push({x:g.sling.x,y:g.sling.y,vx,vy,r:g.ballR,trail:[]});
+      g.shotsLeft--; g.drag=null;
+    };
+    canvas.addEventListener('pointerdown',onDown,{passive:false});
+    canvas.addEventListener('pointermove',onMove,{passive:false});
+    canvas.addEventListener('pointerup',onUp,{passive:false});
 
-  // Intro card
-  if(!introShown) {
-    return (
-      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#FFF8EA,#FFF3E2)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:16}}>
-        <div style={{display:'flex', alignItems:'flex-end', gap:4}}>
-          <div style={{fontSize:72, lineHeight:1}}>🐘</div>
-          <div style={{fontSize:28, marginBottom:8}}>🐭🐭🐭</div>
-        </div>
-        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', textAlign:'center', lineHeight:1.4}}>
-          Слонёнок и мышки<br/>хотят качаться!
-        </div>
-        <div style={{fontSize:15, color:'var(--ak-ink-2)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
-          Но слонёнок тяжёлый 🐘<br/>Помоги найти равновесие
-        </div>
-        <div style={{background:'#fff', borderRadius:18, padding:'14px 20px', boxShadow:'0 4px 0 rgba(45,27,69,.08)', display:'flex', flexDirection:'column', alignItems:'center', gap:6}}>
-          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'var(--ak-ink-2)'}}>Чем дальше — тем сильнее!</div>
-          <div style={{display:'flex', alignItems:'center', gap:8, fontSize:13, fontFamily:'var(--ak-display)', fontWeight:700}}>
-            <span style={{color:'#FF8B7A'}}>Сила × Расстояние</span>
-            <span style={{color:'var(--ak-ink-3)'}}>←→</span>
-            <span style={{color:'#5DD9A0'}}>Сила × Расстояние</span>
-          </div>
-        </div>
-        <button className="ak-btn ak-btn--cta" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
-          Качаться! ⚖️
-        </button>
-      </div>
-    );
-  }
-
-  const c = L2_CHALLENGES[chalIdx];
-  const leftTorque = c.leftWeights.reduce((s,w)=>s+w.mass*w.dist,0);
-
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
-      <AKLessonHeader progress={chalIdx/L2_CHALLENGES.length} stars={starsEarned} onClose={onDone}/>
-      <div style={{height:16}}/>
-      <AKTaskBadge tone="phys">{c.hint}</AKTaskBadge>
-      <div style={{height:14}}/>
-
-      <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)',cursor:'grab'}}>
-        <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
-      </div>
-
-      <div style={{height:16}}/>
-
-      {/* Torque display */}
-      <div style={{background:'#fff',borderRadius:20,padding:'14px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'#B5A1FF'}}>← {leftTorque} Н·см</div>
-          <div style={{fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>Момент силы</div>
-          <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:15,color:'#FFD262'}}>{displayTorque.right} Н·см →</div>
-        </div>
-        {/* Balance bar */}
-        <div style={{height:12,borderRadius:999,background:'rgba(45,27,69,.08)',overflow:'hidden',position:'relative'}}>
-          {(()=>{
-            const rp2 = rightPosRef.current;
-            const rt = c.rightMass * rp2;
-            const ratio = leftTorque===0 ? 0.5 : Math.min(1,Math.max(0, rt / (leftTorque*2)));
-            const balanced = Math.abs(leftTorque - rt) < 20;
-            return <div style={{position:'absolute',left:`${ratio*100}%`,top:0,width:4,height:'100%',background:balanced?'#5DD9A0':'#FF8B7A',borderRadius:999,transform:'translateX(-50%)',boxShadow:`0 0 8px ${balanced?'#5DD9A0':'#FF8B7A'}`}}/>;
-          })()}
-          <div style={{position:'absolute',left:'50%',top:0,width:2,height:'100%',background:'rgba(45,27,69,.2)',borderRadius:999,transform:'translateX(-50%)'}}/>
-        </div>
-        <div style={{textAlign:'center',marginTop:8,fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>
-          Перетащи жёлтый груз для баланса ← →
-        </div>
-      </div>
-
-      <div style={{height:10}}/>
-      <div style={{textAlign:'center',fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        Задача {chalIdx+1} из {L2_CHALLENGES.length}
-      </div>
-
-      {celebrating&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{display:'flex', justifyContent:'center', gap:4, fontSize:36, marginBottom:8}}>
-              <span>🐘</span><span>⚖️</span><span>🐭🐭🐭</span>
-            </div>
-            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-ink)', marginBottom:6}}>Равновесие найдено!</div>
-            {/* Law visualization */}
-            <div style={{background:'linear-gradient(135deg,#C8F2DD,#E8FFF4)', borderRadius:16, padding:'14px 16px', marginBottom:14}}>
-              <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:14, color:'#2BA873', letterSpacing:1, marginBottom:6}}>ЗАКОН РЫЧАГА</div>
-              <div style={{display:'flex', alignItems:'center', justifyContent:'center', gap:10, fontSize:13, fontFamily:'var(--ak-display)', fontWeight:700, color:'var(--ak-ink)'}}>
-                <span>🐘 × расстояние</span>
-                <span style={{color:'#5DD9A0'}}>＝</span>
-                <span>🐭 × расстояние</span>
-              </div>
-            </div>
-            <div style={{fontSize:13, color:'var(--ak-ink-2)', lineHeight:1.55, fontWeight:500, marginBottom:18}}>{c.fact}</div>
-            <button className="ak-btn ak-btn--ok" style={{width:'100%'}} onClick={handleNext}>
-              {chalIdx>=L2_CHALLENGES.length-1?'Завершить! 🎉':'Следующее задание →'}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL 3 — "Пушка Галилея"
-   Teaching: траектория тела, угол бросания, гравитация
-   ============================================================ */
-const L3_TARGETS = [
-  {x:180, hint:'Постарайся попасть! Попробуй угол около 45°', fact:'Гравитация тянет мяч вниз — поэтому траектория изогнута!'},
-  {x:240, hint:'Цель дальше — попробуй угол побольше!', fact:'Угол 45° даёт максимальную дальность. Открытие Галилея — 1590 год!'},
-  {x:130, hint:'Цель ближе — какой угол нужен?', fact:'Угол 30° и угол 60° дают ОДИНАКОВУЮ дальность — красивая симметрия!'},
-  {x:290, hint:'Очень далеко! Ближе к 45°', fact:'Горизонтальная скорость постоянна, вертикальная замедляется гравитацией!'},
-  {x:100, hint:'Совсем рядом — малый угол', fact:'На Луне бросок в 6 раз дальше — гравитация там в 6 раз меньше!'},
-];
-
-const GRAVITY = 0.12;
-const SPEED = 7;
-
-function Level3Cannon({ onDone }) {
-  const [targetIdx, setTargetIdx] = React.useState(0);
-  const [starsEarned, setStarsEarned] = React.useState(0);
-  const [done, setDone] = React.useState(false);
-  const [angle, setAngle] = React.useState(45);
-  const [attempts, setAttempts] = React.useState(0);
-  const [celebrating, setCelebrating] = React.useState(false);
-  const [showFact, setShowFact] = React.useState(false);
-  const [fired, setFired] = React.useState(false);
-  const [trailPoints, setTrailPoints] = React.useState([]);
-  const [introShown, setIntroShown] = React.useState(false);
-
-  const canvasRef = React.useRef(null);
-  const animRef = React.useRef(null);
-  const ballRef = React.useRef(null); // {x,y,vx,vy} or null
-  const trailRef = React.useRef([]);
-  const angleRef = React.useRef(45);
-  const firedRef = React.useRef(false);
-  const hitRef = React.useRef(false);
-  const ballFlyingRef = React.useRef(false);
-
-  const W=340, H=280;
-  const GROUND_Y = H-30;
-  const CANNON_X = 30;
-  const CANNON_Y = GROUND_Y;
-
-  React.useEffect(()=>{
-    setAttempts(0);
-    setFired(false);
-    setTrailPoints([]);
-    trailRef.current=[];
-    ballRef.current=null;
-    hitRef.current=false;
-    setCelebrating(false);
-    setShowFact(false);
-    firedRef.current=false;
-    ballFlyingRef.current=false;
-  },[targetIdx]);
-
-  React.useEffect(()=>{
-    if(!introShown) return;
-    const canvas = canvasRef.current;
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const tgt = L3_TARGETS[targetIdx];
-
-    const draw = ()=>{
+    function loop() {
       ctx.clearRect(0,0,W,H);
-
-      // Sky gradient
-      const sky = ctx.createLinearGradient(0,0,0,GROUND_Y);
-      sky.addColorStop(0,'#87CEEB');
-      sky.addColorStop(1,'#C8E8F5');
-      ctx.fillStyle=sky;
-      ctx.fillRect(0,0,W,GROUND_Y);
-
-      // Sun
-      ctx.save();
-      ctx.fillStyle='#FFE066';
-      ctx.shadowColor='#FFD262'; ctx.shadowBlur=20;
-      ctx.beginPath(); ctx.arc(W-30,28,16,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-
-      // Clouds
-      [[60,30,0.5],[180,20,0.35],[280,40,0.4]].forEach(([cx,cy,op])=>{
-        ctx.save(); ctx.globalAlpha=op;
-        ctx.fillStyle='#fff';
-        ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
-        ctx.arc(cx+16,cy-4,14,0,Math.PI*2);
-        ctx.arc(cx-14,cy-2,12,0,Math.PI*2);
-        ctx.fill(); ctx.restore();
+      // sky
+      const sky=ctx.createLinearGradient(0,0,0,H);
+      sky.addColorStop(0,'#D0C4FF'); sky.addColorStop(1,'#FFF3E2');
+      ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+      // stars
+      [[28,55],[140,35],[215,72],[310,28],[338,105]].forEach(([sx,sy])=>{
+        ctx.fillStyle='rgba(124,95,224,.35)';
+        ctx.beginPath();ctx.arc(sx,sy,2.5,0,Math.PI*2);ctx.fill();
       });
+      // ground
+      ctx.fillStyle='#DCF7E7'; ctx.fillRect(0,H-48,W,48);
+      ctx.fillStyle='#3CA876'; ctx.fillRect(0,H-48,W,5);
 
-      // Ground
-      ctx.fillStyle='#5AAF4F';
-      ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
-      ctx.fillStyle='#6CC460';
-      ctx.fillRect(0,GROUND_Y,W,6);
+      drawSling();
+      ctx.font='34px serif'; ctx.textBaseline='alphabetic';
+      ctx.fillText('🐱',g.sling.x-58,g.sling.y+108);
 
-      // Distance markers on ground
-      for(let mx=50;mx<W-10;mx+=50){
-        ctx.fillStyle='rgba(45,80,30,.25)';
-        ctx.fillRect(mx,GROUND_Y,1,8);
-        ctx.fillStyle='rgba(45,80,30,.4)';
-        ctx.font='9px sans-serif';
-        ctx.textAlign='center';
-        ctx.fillText(mx+'px',mx,GROUND_Y+18);
-      }
-
-      // Trail (dotted arc from previous shot)
-      if(trailRef.current.length>1){
-        ctx.save();
-        ctx.setLineDash([4,6]);
-        ctx.strokeStyle='rgba(100,60,200,.25)'; ctx.lineWidth=2;
-        ctx.beginPath();
-        trailRef.current.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.restore();
-
-        // Add label at apex of trajectory
-        const apexIdx = Math.floor(trailRef.current.length * 0.4);
-        if(trailRef.current[apexIdx] && !ballRef.current) {
-          ctx.save();
-          ctx.fillStyle = 'rgba(45,27,69,.7)';
-          ctx.font = 'bold 10px Nunito, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('↓ гравитация', trailRef.current[apexIdx].x, trailRef.current[apexIdx].y - 14);
-          ctx.restore();
+      // targets
+      g.targets.forEach(t=>{
+        if(!t.alive){
+          if(t.burst>0){
+            for(let i=0;i<8;i++){
+              const a=(i/8)*Math.PI*2, prog=1-t.burst/16, rd=prog*38;
+              ctx.beginPath();ctx.arc(t.x+Math.cos(a)*rd,t.y+Math.sin(a)*rd,4*(1-prog),0,Math.PI*2);
+              ctx.fillStyle=`rgba(255,210,98,${1-prog})`;ctx.fill();
+            }
+            t.burst--;
+          }
+          return;
         }
+        ctx.beginPath();ctx.arc(t.x,t.y,t.r+6,0,Math.PI*2);
+        ctx.fillStyle='rgba(124,95,224,.12)';ctx.fill();
+        ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+        ctx.fillStyle='#E5DCFF';ctx.fill();
+        ctx.strokeStyle='#7C5FE0';ctx.lineWidth=2.5;ctx.stroke();
+        ctx.font=`${t.r*1.5}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText('👾',t.x,t.y);
+        ctx.textAlign='left';ctx.textBaseline='alphabetic';
+      });
+
+      // drag preview
+      if(g.dragging&&g.drag){
+        const dr=g.drag;
+        const pvx=(g.sling.x-dr.x)*g.speed, pvy=(g.sling.y-dr.y)*g.speed;
+        const pts=simPath(g.sling.x,g.sling.y,pvx,pvy);
+        pts.forEach((p,i)=>{
+          if(i%4!==0) return;
+          ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(124,95,224,${(1-i/pts.length)*.6})`;ctx.fill();
+        });
+        const ang=Math.atan2(g.sling.y-dr.y,g.sling.x-dr.x)*180/Math.PI;
+        ctx.fillStyle='#7C5FE0';ctx.font='bold 14px Nunito,sans-serif';
+        ctx.textAlign='left';ctx.textBaseline='alphabetic';
+        ctx.fillText(`${Math.round(ang)}°`,dr.x+10,dr.y-8);
+        if(Math.abs(ang-45)<7){
+          ctx.fillStyle='#FFD262';ctx.font='bold 13px Nunito,sans-serif';
+          ctx.fillText('⭐ 45° — ИДЕАЛЬНО!',dr.x+10,dr.y-26);
+        }
+        drawBand(dr.x,dr.y);
+        radialBall(ctx,dr.x,dr.y,g.ballR,'#C4B5FF','#7C5FE0');
+      } else if(g.shotsLeft>0&&!g.done) {
+        drawBand(g.sling.x,g.sling.y);
+        radialBall(ctx,g.sling.x,g.sling.y,g.ballR,'#C4B5FF','#7C5FE0');
       }
 
-      // Target bucket
-      const tx = tgt.x;
-      const ty = GROUND_Y-2;
-      ctx.save();
-      ctx.fillStyle='#FF8B7A';
-      ctx.shadowColor='rgba(220,80,60,.4)'; ctx.shadowBlur=8;
-      // Trapezoid bucket
-      ctx.beginPath();
-      ctx.moveTo(tx-16,ty-24);
-      ctx.lineTo(tx+16,ty-24);
-      ctx.lineTo(tx+12,ty);
-      ctx.lineTo(tx-12,ty);
-      ctx.closePath();
-      ctx.fill();
-      // Rim
-      ctx.fillStyle='#D9523F';
-      ctx.fillRect(tx-18,ty-28,36,6);
-      ctx.restore();
-
-      // Cannon wheel
-      ctx.save();
-      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=8;
-      ctx.fillStyle='#4A3A2A';
-      ctx.beginPath(); ctx.arc(CANNON_X,CANNON_Y,14,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#6A5A4A';
-      ctx.beginPath(); ctx.arc(CANNON_X,CANNON_Y,9,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='#3A2A1A'; ctx.lineWidth=2;
-      [0,60,120].forEach(a=>{
-        const ar=a*Math.PI/180;
-        ctx.beginPath();
-        ctx.moveTo(CANNON_X+Math.cos(ar)*4,CANNON_Y+Math.sin(ar)*4);
-        ctx.lineTo(CANNON_X+Math.cos(ar)*12,CANNON_Y+Math.sin(ar)*12);
-        ctx.stroke();
+      // flying balls
+      g.balls = g.balls.filter(b=>{
+        b.trail.push({x:b.x,y:b.y});
+        if(b.trail.length>14) b.trail.shift();
+        b.x+=b.vx; b.y+=b.vy; b.vy+=G;
+        b.trail.forEach((p,i)=>{
+          ctx.beginPath();ctx.arc(p.x,p.y,b.r*(i/b.trail.length)*.6,0,Math.PI*2);
+          ctx.fillStyle=`rgba(124,95,224,${(i/b.trail.length)*.35})`;ctx.fill();
+        });
+        radialBall(ctx,b.x,b.y,b.r,'#C4B5FF','#7C5FE0');
+        g.targets.forEach(t=>{
+          if(!t.alive) return;
+          if(Math.hypot(b.x-t.x,b.y-t.y)<b.r+t.r){t.alive=false;t.burst=16;}
+        });
+        return b.y<H+30&&b.x>-30&&b.x<W+30;
       });
-      ctx.restore();
 
-      // Cannon barrel
-      const aRad = angleRef.current * Math.PI / 180;
-      ctx.save();
-      ctx.translate(CANNON_X, CANNON_Y);
-      ctx.rotate(-aRad);
-      const barrelGrad = ctx.createLinearGradient(0,-10,0,10);
-      barrelGrad.addColorStop(0,'#6A5A4A');
-      barrelGrad.addColorStop(0.5,'#4A3A2A');
-      barrelGrad.addColorStop(1,'#2A1A0A');
-      ctx.fillStyle=barrelGrad;
-      ctx.shadowColor='rgba(45,27,69,.3)'; ctx.shadowBlur=6;
-      ctx.fillRect(0,-10,50,20);
-      // Barrel tip
-      ctx.fillStyle='#3A2A1A';
-      ctx.fillRect(46,-11,6,22);
-      ctx.restore();
-
-      // Angle label near cannon
-      ctx.save();
-      ctx.fillStyle='#2D1B45';
-      ctx.font='bold 13px Fredoka One,sans-serif';
+      // HUD
+      ctx.textAlign='right';ctx.font='bold 13px Nunito,sans-serif';ctx.fillStyle='#6B5680';
+      ctx.fillText(`🎯 Целей: ${g.targets.filter(t=>t.alive).length}  ⚡ Выстрелов: ${g.shotsLeft}`,W-12,26);
       ctx.textAlign='left';
-      ctx.fillText(`${Math.round(angleRef.current)}°`, CANNON_X+20, CANNON_Y-20);
-      ctx.restore();
 
-      // Ball idle position at barrel tip (when not fired)
-      if(!firedRef.current || (!ballRef.current && trailRef.current.length===0)){
-        const bx = CANNON_X + Math.cos(aRad)*52;
-        const by = CANNON_Y - Math.sin(aRad)*52;
-        ctx.save();
-        const ballGrad = ctx.createRadialGradient(bx-4,by-4,2,bx,by,8);
-        ballGrad.addColorStop(0,'#FF9A6A');
-        ballGrad.addColorStop(1,'#C84820');
-        ctx.fillStyle=ballGrad;
-        ctx.shadowColor='rgba(200,72,32,.5)'; ctx.shadowBlur=8;
-        ctx.beginPath(); ctx.arc(bx,by,8,0,Math.PI*2); ctx.fill();
-        ctx.restore();
+      if(!g.done){
+        const alive=g.targets.filter(t=>t.alive).length;
+        if(alive===0){g.done=true;setTimeout(()=>setStatus('won'),450);}
+        else if(g.shotsLeft===0&&g.balls.length===0){g.done=true;setTimeout(()=>setStatus('failed'),450);}
       }
-
-      // Flying ball
-      if(ballRef.current){
-        const {x,y,vx,vy} = ballRef.current;
-        ballFlyingRef.current = true;
-
-        // Physics step
-        const nvx = vx;
-        const nvy = vy + GRAVITY;
-        const nx = x + nvx;
-        const ny = y + nvy;
-
-        trailRef.current.push({x,y});
-
-        // Check hit bucket
-        if(Math.abs(x - tgt.x) < 28 && y >= GROUND_Y - 55 && y <= GROUND_Y){
-          hitRef.current = true;
-          ballRef.current = null;
-          ballFlyingRef.current = false;
-          firedRef.current = false;
-          setFired(false);
-          return;
-        }
-
-        // Check ground
-        if(ny >= GROUND_Y){
-          ballRef.current = null;
-          ballFlyingRef.current = false;
-          firedRef.current = false;
-          setFired(false);
-          setAttempts(prev=>{
-            const na = prev+1;
-            if(na>=3){ setShowFact(true); }
-            return na;
-          });
-          animRef.current = requestAnimationFrame(draw);
-          return;
-        }
-
-        // Check walls
-        if(nx > W || nx < 0){
-          ballRef.current = null;
-          ballFlyingRef.current = false;
-          firedRef.current = false;
-          setFired(false);
-          setAttempts(prev=>{
-            const na = prev+1;
-            if(na>=3){ setShowFact(true); }
-            return na;
-          });
-          animRef.current = requestAnimationFrame(draw);
-          return;
-        }
-
-        ballRef.current = {x:nx, y:ny, vx:nvx, vy:nvy};
-
-        // Draw ball
-        ctx.save();
-        const ballGrad2 = ctx.createRadialGradient(nx-3,ny-3,2,nx,ny,8);
-        ballGrad2.addColorStop(0,'#FF9A6A');
-        ballGrad2.addColorStop(1,'#C84820');
-        ctx.fillStyle=ballGrad2;
-        ctx.shadowColor='rgba(200,72,32,.6)'; ctx.shadowBlur=10;
-        ctx.beginPath(); ctx.arc(nx,ny,8,0,Math.PI*2); ctx.fill();
-        ctx.restore();
-
-        // Draw downward gravity arrow near ball
-        ctx.save();
-        ctx.strokeStyle = '#FF6B6B';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(nx, ny - 18);
-        ctx.lineTo(nx, ny - 6);
-        ctx.stroke();
-        // Arrowhead
-        ctx.fillStyle = '#FF6B6B';
-        ctx.beginPath();
-        ctx.moveTo(nx, ny);
-        ctx.lineTo(nx - 4, ny - 8);
-        ctx.lineTo(nx + 4, ny - 8);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-      } else {
-        ballFlyingRef.current = false;
-      }
-
-      if(hitRef.current){
-        // Show hit celebration
-        ctx.save();
-        ctx.fillStyle='rgba(93,217,160,.15)';
-        ctx.fillRect(0,0,W,H);
-        ctx.fillStyle='#2BA873';
-        ctx.font='bold 22px Fredoka One,sans-serif';
-        ctx.textAlign='center';
-        ctx.shadowColor='#5DD9A0'; ctx.shadowBlur=16;
-        ctx.fillText('🎯 Попал!', W/2, H/2-10);
-        ctx.restore();
-        // Show success after brief pause
-        setTimeout(()=>{
-          hitRef.current=false;
-          setCelebrating(true);
-        },800);
-        return; // stop RAF
-      }
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return()=>cancelAnimationFrame(animRef.current);
-  },[targetIdx,fired,introShown]);
-
-  const handleFire = ()=>{
-    if(firedRef.current || celebrating || showFact) return;
-    if(attempts>=3) return;
-    trailRef.current=[];
-    hitRef.current=false;
-    const aRad = angleRef.current * Math.PI / 180;
-    const bx = CANNON_X + Math.cos(aRad)*52;
-    const by = CANNON_Y - Math.sin(aRad)*52;
-    ballRef.current = {
-      x: bx, y: by,
-      vx: SPEED * Math.cos(aRad),
-      vy: -SPEED * Math.sin(aRad),
-    };
-    firedRef.current = true;
-    setFired(true);
-  };
-
-  const handleReset = ()=>{
-    cancelAnimationFrame(animRef.current);
-    ballRef.current=null;
-    firedRef.current=false;
-    hitRef.current=false;
-    ballFlyingRef.current=false;
-    trailRef.current=[];
-    setFired(false);
-  };
-
-  const handleNextTarget = ()=>{
-    setCelebrating(false);
-    setShowFact(false);
-    if(targetIdx>=L3_TARGETS.length-1){
-      setDone(true);
-    } else {
-      setStarsEarned(s=>s+1);
-      setTargetIdx(i=>i+1);
+      raf.current=requestAnimationFrame(loop);
     }
-  };
+    raf.current=requestAnimationFrame(loop);
+    return ()=>{
+      cancelAnimationFrame(raf.current);
+      canvas.removeEventListener('pointerdown',onDown);
+      canvas.removeEventListener('pointermove',onMove);
+      canvas.removeEventListener('pointerup',onUp);
+    };
+  },[intro]);
 
-  if(done){
-    return(
-      <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24}}>
-        <AKSuccessCard stars={3} title="Пушка Галилея!" fact="Угол 45° даёт максимальную дальность. Галилей открыл законы баллистики в 1590 году!" onNext={onDone} ctaLabel="На главную 🏠"/>
-      </div>
-    );
+  function retry(){
+    setStatus('play');
+    if(canRef.current) gs.current=buildState(canRef.current.width,canRef.current.height);
   }
 
-  // Intro card
-  if(!introShown) {
-    return (
-      <div style={{minHeight:'100vh', background:'linear-gradient(180deg,#87CEEB,#C8E8F5)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:16}}>
-        <div style={{position:'relative', width:240, height:120}}>
-          <div style={{position:'absolute', right:0, top:0, fontSize:56}}>🌴</div>
-          <div style={{position:'absolute', right:16, top:20, fontSize:36}}>🐒</div>
-          <div style={{position:'absolute', left:0, bottom:0, fontSize:44}}>💥</div>
-          <svg style={{position:'absolute', inset:0}} width="240" height="120" viewBox="0 0 240 120">
-            <path d="M 50 100 Q 120 10 200 60" fill="none" stroke="#2D1B45" strokeWidth="2" strokeDasharray="6,4" opacity="0.4"/>
-            <text x="120" y="20" textAnchor="middle" fontSize="10" fill="#2D1B45" opacity="0.6" fontFamily="Nunito" fontWeight="700">гравитация тянет вниз</text>
-          </svg>
-        </div>
-        <div style={{fontFamily:'var(--ak-display)', fontSize:22, fontWeight:700, color:'var(--ak-ink)', textAlign:'center', lineHeight:1.4}}>
-          Обезьянка голодная!<br/>Брось ей банан 🍌
-        </div>
-        <div style={{fontSize:15, color:'var(--ak-ink-2)', textAlign:'center', fontWeight:600, lineHeight:1.6, maxWidth:280}}>
-          Выбери угол — и смотри как<br/>гравитация изгибает траекторию
-        </div>
-        <div style={{background:'#fff', borderRadius:18, padding:'14px 20px', boxShadow:'0 4px 0 rgba(45,27,69,.08)', textAlign:'center'}}>
-          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:13, color:'var(--ak-ink-2)', marginBottom:4}}>Лучший угол для дальнего броска:</div>
-          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:22, color:'var(--ak-phys-3)'}}>45°</div>
-        </div>
-        <button className="ak-btn ak-btn--phys" style={{fontSize:18, padding:'18px 36px'}} onClick={() => setIntroShown(true)}>
-          Бросить! 🍌
-        </button>
-      </div>
-    );
-  }
-
-  const tgt = L3_TARGETS[targetIdx];
-
-  return(
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'16px 16px 32px',maxWidth:390,margin:'0 auto',boxSizing:'border-box',position:'relative'}}>
-      <AKLessonHeader progress={targetIdx/L3_TARGETS.length} stars={starsEarned} onClose={onDone}/>
-      <div style={{height:16}}/>
-      <AKTaskBadge tone="phys">{tgt.hint}</AKTaskBadge>
-      <div style={{height:14}}/>
-
-      <div style={{borderRadius:18,overflow:'hidden',boxShadow:'0 8px 0 rgba(45,27,69,.12),0 18px 36px -12px rgba(45,27,69,.22)'}}>
-        <canvas ref={canvasRef} width={W} height={H} style={{display:'block',width:'100%',height:'auto'}}/>
-      </div>
-
-      <div style={{height:16}}/>
-
-      {/* Controls */}
-      <div style={{background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 4px 0 rgba(45,27,69,.08),0 10px 22px -8px rgba(45,27,69,.14)'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-          <span style={{fontFamily:'var(--ak-display)',fontWeight:600,fontSize:14,color:'var(--ak-ink-2)'}}>Угол выстрела</span>
-          <span className="ak-num" style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:20,color:'#7C5FE0'}}>{angle}°</span>
-        </div>
-        <div style={{position:'relative',height:18}}>
-          <div style={{position:'absolute',inset:0,borderRadius:999,background:'linear-gradient(90deg,#E5DCFF,#B5A1FF,#7C5FE0)',boxShadow:'inset 0 2px 4px rgba(45,27,69,.18)'}}/>
-          <input type="range" min={10} max={80} step={1}
-            value={angle}
-            onChange={e=>{
-              const v=Number(e.target.value);
-              setAngle(v);
-              angleRef.current=v;
-              handleReset();
-            }}
-            style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',zIndex:3,margin:0,width:'100%',height:'100%'}}
-          />
-          <div style={{
-            position:'absolute',top:'50%',
-            left:`calc(${((angle-10)/70)*100}% - 18px)`,
-            transform:'translateY(-50%)',
-            width:36,height:36,borderRadius:'50%',
-            background:'linear-gradient(180deg,#fff 0%,#FFF7E8 100%)',
-            boxShadow:'0 4px 0 rgba(45,27,69,.15),0 8px 18px -6px rgba(45,27,69,.2),inset 0 2px 0 rgba(255,255,255,.95)',
-            pointerEvents:'none',zIndex:1,
-          }}/>
-        </div>
-        <div style={{display:'flex',justifyContent:'space-between',marginTop:8,fontSize:12,color:'var(--ak-ink-3)',fontWeight:600}}>
-          <span>10°</span><span>45°</span><span>80°</span>
-        </div>
-
-        <div style={{height:14}}/>
-        <div style={{display:'flex',gap:12}}>
-          <button className="ak-btn ak-btn--cta" style={{flex:1,fontSize:16}}
-            onClick={handleFire}
-            disabled={fired||attempts>=3||celebrating||showFact}>
-            💥 Огонь!
-          </button>
-          <button className="ak-btn ak-btn--soft ak-btn--sm"
-            onClick={handleReset}
-            disabled={!fired}>
-            Сброс
-          </button>
-        </div>
-
-        <div style={{textAlign:'center',marginTop:10,fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-          Попытка {Math.min(attempts+1,3)} из 3 · Задача {targetIdx+1}/{L3_TARGETS.length}
-        </div>
-      </div>
-
-      {/* Hit success — inline card */}
-      {celebrating && (
-        <div style={{background:'linear-gradient(135deg,#C8F2DD,#E8FFF4)', borderRadius:20, padding:'18px 16px', marginTop:16}}>
-          <div style={{fontSize:36, textAlign:'center', marginBottom:6}}>🐒🍌</div>
-          <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:18, color:'var(--ak-ink)', textAlign:'center', marginBottom:8}}>Обезьянка поймала!</div>
-          {/* Law */}
-          <div style={{background:'rgba(43,168,115,.12)', borderRadius:12, padding:'10px 14px', marginBottom:12, textAlign:'center'}}>
-            <div style={{fontFamily:'var(--ak-display)', fontWeight:700, fontSize:12, color:'#2BA873', letterSpacing:1, marginBottom:4}}>ГРАВИТАЦИЯ</div>
-            <div style={{fontSize:12, color:'var(--ak-ink)', fontWeight:600, lineHeight:1.5}}>Тянет всё вниз с одинаковой силой.<br/>Именно она изгибает траекторию!</div>
-          </div>
-          <div style={{fontSize:12, color:'var(--ak-ink-2)', lineHeight:1.5, fontWeight:500, marginBottom:12}}>{tgt.fact}</div>
-          <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNextTarget}>
-            {targetIdx >= L3_TARGETS.length-1 ? 'Завершить! 🎉' : 'Следующая обезьянка →'}
-          </button>
-        </div>
-      )}
-
-      {/* Fact overlay after all attempts */}
-      {showFact&&!celebrating&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(26,16,64,.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:24}}>
-          <div className="ak-pop" style={{background:'#fff',borderRadius:28,padding:'28px 24px',textAlign:'center',maxWidth:320,width:'100%',boxShadow:'0 16px 0 rgba(45,27,69,.12),0 32px 64px -16px rgba(45,27,69,.3)'}}>
-            <div style={{fontSize:48,marginBottom:10}}>💥</div>
-            <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:22,color:'var(--ak-ink)',marginBottom:10}}>Попробуй ещё!</div>
-            <div style={{fontSize:14,lineHeight:1.5,color:'var(--ak-ink-2)',marginBottom:20,fontWeight:500}}>{tgt.fact}</div>
-            <button className="ak-btn ak-btn--phys" style={{width:'100%'}} onClick={handleNextTarget}>
-              {targetIdx>=L3_TARGETS.length-1?'Завершить! 🎉':'Следующая цель →'}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   LEVEL SELECT
-   ============================================================ */
-const LEVELS = [
-  {n:1, title:'Лазерный лабиринт', sub:'Закон отражения света', emoji:'🧑‍🚀', desc:'Спаси космонавта — направь луч через зеркала'},
-  {n:2, title:'Рычаг Архимеда',    sub:'Закон равновесия сил',  emoji:'🐘', desc:'Помоги слонёнку качаться с мышками'},
-  {n:3, title:'Пушка Галилея',     sub:'Гравитация и траектория', emoji:'🐒', desc:'Накорми голодную обезьянку бананом'},
-];
-
-function LevelSelect({ onSelect }) {
   return (
-    <div className="ak" style={{minHeight:'100vh',background:'linear-gradient(180deg,#FFF8EA 0%,#FFF3E2 60%,#F4E9D8 100%)',padding:'32px 20px 40px',maxWidth:390,margin:'0 auto',boxSizing:'border-box'}}>
-      {/* Header */}
-      <div style={{textAlign:'center',marginBottom:32}}>
-        <div style={{fontSize:52,marginBottom:8}} className="ak-bob">⚛️</div>
-        <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:30,letterSpacing:'-.5px',color:'var(--ak-ink)',marginBottom:6}}>Физика</div>
-        <div style={{fontSize:15,color:'var(--ak-ink-2)',fontWeight:600}}>Открой законы природы через игру</div>
+    <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',background:'linear-gradient(180deg,#D8CCFF 0%,#FFF3E2 100%)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 16px 4px',flexShrink:0}}>
+        <button className="ak-btn ak-btn--soft ak-btn--sm" onClick={onHome}>← Назад</button>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:14,color:'#6B5680'}}>Уровень 1 · Рогатка</div>
       </div>
-
-      {/* Level cards */}
-      <div style={{display:'flex',flexDirection:'column',gap:16}}>
-        {LEVELS.map(lv=>(
-          <button key={lv.n} onClick={()=>onSelect(lv.n)}
-            style={{width:'100%',textAlign:'left',background:'#fff',border:'none',cursor:'pointer',borderRadius:24,padding:'20px 22px',boxShadow:'0 6px 0 rgba(45,27,69,.10),0 14px 28px -8px rgba(45,27,69,.16),inset 0 2px 0 rgba(255,255,255,1)',transition:'transform .12s,box-shadow .12s',fontFamily:'var(--ak-body)',color:'var(--ak-ink)',display:'flex',alignItems:'center',gap:18}}
-            onMouseEnter={e=>{ e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow='0 9px 0 rgba(45,27,69,.10),0 18px 36px -8px rgba(45,27,69,.22),inset 0 2px 0 rgba(255,255,255,1)'; }}
-            onMouseLeave={e=>{ e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 6px 0 rgba(45,27,69,.10),0 14px 28px -8px rgba(45,27,69,.16),inset 0 2px 0 rgba(255,255,255,1)'; }}
-          >
-            <div style={{width:60,height:60,borderRadius:20,background:'linear-gradient(135deg,#E5DCFF,#B5A1FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:lv.n===2?26:30,flexShrink:0,boxShadow:'0 4px 0 #7C5FE044,inset 0 2px 0 rgba(255,255,255,.6)'}}>{lv.n===2?'🐘⚖️':lv.n===1?'🧑‍🚀':lv.emoji}</div>
-            <div style={{flex:1}}>
-              <div style={{fontFamily:'var(--ak-display)',fontWeight:700,fontSize:18,color:'var(--ak-ink)',marginBottom:3}}>{lv.title}</div>
-              <div style={{fontSize:12,fontWeight:700,color:'var(--ak-phys-3)',letterSpacing:'.5px',marginBottom:4,textTransform:'uppercase'}}>{lv.sub}</div>
-              <div style={{fontSize:13,color:'var(--ak-ink-2)',fontWeight:500}}>{lv.desc}</div>
-            </div>
-            <div style={{color:'var(--ak-ink-3)',fontSize:20}}>›</div>
-          </button>
-        ))}
+      <canvas ref={canRef} width={360} height={540} style={{width:'100%',flex:1,touchAction:'none',display:'block',cursor:'crosshair'}}/>
+      <div style={{textAlign:'center',padding:'6px 0 10px',fontFamily:'var(--ak-display)',fontSize:13,color:'#6B5680',flexShrink:0}}>
+        Потяни за шарик и отпусти — целься в 👾
       </div>
-
-      {/* Footer */}
-      <div style={{textAlign:'center',marginTop:32,fontSize:13,color:'var(--ak-ink-3)',fontWeight:600}}>
-        КосмоБаза · Физика · возраст 6–14 лет
-      </div>
+      {intro && <IntroCard emoji="🐱" title="Кот-снайпер!" desc="Пришельцы атакуют! Потяни рогатку назад, прицелься и сбей всех захватчиков." law="При угле 45° снаряд летит дальше всего" onStart={()=>setIntro(false)}/>}
+      {status==='won' && <WinOverlay title="Всех сбил! 🎯" law="Закон бросания тела" fact="Угол 45° — максимальная дальность! Горизонтальная и вертикальная скорости равны и полёт получается самым длинным." cta="Уровень 2 →" onNext={onWin} onHome={onHome}/>}
+      {status==='failed' && <FailOverlay tip="Попробуй угол около 45° — это даст максимальную дальность полёта!" onRetry={retry}/>}
     </div>
   );
 }
 
-/* ============================================================
-   APP
-   ============================================================ */
+/* ══════════════════════════════════════════════════════════
+   LEVEL 2 — РИКОШЕТ
+   Set angle → fire → ball bounces off ceiling → hit target
+   Teach: angle of incidence = angle of reflection
+   ══════════════════════════════════════════════════════════ */
+function Level2({ onWin, onHome }) {
+  const [intro, setIntro] = useState(true);
+  const [status, setStatus] = useState('play');
+  const [ang, setAng] = useState(55);
+  const canRef = useRef(null);
+  const raf = useRef(null);
+  const gs = useRef(null);
+  const angRef = useRef(55);
+
+  function resetBall(){if(gs.current){gs.current.ball=null;gs.current.done=false;}}
+
+  useEffect(()=>{
+    if(intro) return;
+    const canvas=canRef.current;
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width,H=canvas.height;
+    const CEIL=65, SPD=7.5, BALL_G=0.22;
+    const TARGET={x:W*.74,y:H*.48,r:28};
+    const CANNON={x:48,y:H-85};
+
+    gs.current={W,H,ball:null,done:false,TARGET,CANNON,CEIL,SPD,BALL_G};
+
+    function simulate(a){
+      const ar=a*Math.PI/180;
+      let x=CANNON.x,y=CANNON.y,vx=Math.cos(ar)*SPD,vy=-Math.sin(ar)*SPD;
+      const pts=[{x,y,b:false}]; let bounced=false;
+      for(let i=0;i<400;i++){
+        x+=vx;y+=vy;vy+=BALL_G;
+        if(y<CEIL&&vy<0){vy=-vy;bounced=true;}
+        pts.push({x,y,b:bounced});
+        if(y>H||x>W+20||x<-20) break;
+      }
+      return pts;
+    }
+
+    function drawCannon(a){
+      const ar=a*Math.PI/180;
+      ctx.save();ctx.translate(CANNON.x,CANNON.y);ctx.rotate(-ar);
+      const gr=ctx.createLinearGradient(0,-10,62,-10);
+      gr.addColorStop(0,'#C4B5FF');gr.addColorStop(1,'#7C5FE0');
+      ctx.fillStyle=gr;
+      ctx.beginPath();ctx.rect(0,-10,62,20);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.rect(4,-6,54,8);ctx.fill();
+      ctx.restore();
+      ctx.save();ctx.translate(CANNON.x,CANNON.y);
+      ctx.fillStyle='#5A3D8A';ctx.beginPath();ctx.arc(0,0,20,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#7C5FE0';ctx.beginPath();ctx.arc(0,0,13,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+
+    function loop(){
+      const g=gs.current, a=angRef.current;
+      ctx.clearRect(0,0,W,H);
+      const sky=ctx.createLinearGradient(0,0,0,H);
+      sky.addColorStop(0,'#FFE5C2');sky.addColorStop(1,'#FFF3E2');
+      ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+
+      // ceiling (reflection surface)
+      const cg=ctx.createLinearGradient(0,0,0,CEIL);
+      cg.addColorStop(0,'rgba(124,95,224,.3)');cg.addColorStop(1,'rgba(124,95,224,.05)');
+      ctx.fillStyle=cg;ctx.fillRect(0,0,W,CEIL);
+      ctx.fillStyle='#7C5FE0';ctx.fillRect(0,CEIL-3,W,3);
+      ctx.fillStyle='#A797B8';ctx.font='11px Nunito,sans-serif';ctx.textAlign='center';
+      ctx.fillText('— зеркальная поверхность —',W/2,CEIL-8);
+
+      // ground
+      ctx.fillStyle='#DCF7E7';ctx.fillRect(0,H-48,W,48);
+      ctx.fillStyle='#3CA876';ctx.fillRect(0,H-48,W,5);
+
+      // target
+      const t=g.TARGET;
+      ctx.beginPath();ctx.arc(t.x,t.y,t.r+8,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,210,98,.18)';ctx.fill();
+      ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+      ctx.fillStyle='#FFE49E';ctx.fill();
+      ctx.strokeStyle='#D4972B';ctx.lineWidth=3;ctx.stroke();
+      ctx.font='26px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('🎯',t.x,t.y);
+      ctx.textAlign='left';ctx.textBaseline='alphabetic';
+
+      // trajectory preview (no ball in flight)
+      if(!g.ball){
+        const pts=simulate(a);
+        let bounceDrawn=false;
+        pts.forEach((p,i)=>{
+          if(i%5!==0) return;
+          const alpha=(1-i/pts.length)*.55;
+          ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);
+          ctx.fillStyle=p.b?`rgba(255,185,60,${alpha})`:`rgba(124,95,224,${alpha})`;
+          ctx.fill();
+        });
+        const bi=pts.findIndex(p=>p.b);
+        if(bi>0){
+          const bp=pts[bi];
+          ctx.beginPath();ctx.arc(bp.x,bp.y,7,0,Math.PI*2);
+          ctx.fillStyle='#FFD262';ctx.fill();
+          // angle annotation
+          ctx.fillStyle='#D4A22B';ctx.font='bold 12px Nunito,sans-serif';
+          ctx.textAlign='center';
+          ctx.fillText(`↗${a}° = ↘${a}°`,bp.x,bp.y-12);
+          ctx.textAlign='left';
+        }
+      }
+
+      // cannon
+      drawCannon(a);
+      ctx.font='30px serif';ctx.textBaseline='alphabetic';ctx.fillText('🦁',CANNON.x-56,CANNON.y+46);
+
+      // angle arc
+      ctx.save();ctx.translate(CANNON.x,CANNON.y);
+      ctx.strokeStyle='rgba(124,95,224,.35)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(0,0,44,-a*Math.PI/180,0);ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle='#7C5FE0';ctx.font='bold 13px Nunito,sans-serif';
+      ctx.fillText(`${a}°`,CANNON.x+50,CANNON.y-32);
+
+      // ball in flight
+      if(g.ball){
+        const b=g.ball;
+        b.trail.push({x:b.x,y:b.y});
+        if(b.trail.length>16) b.trail.shift();
+        b.x+=b.vx;b.y+=b.vy;b.vy+=g.BALL_G;
+        if(b.y<g.CEIL&&b.vy<0) b.vy=-b.vy;
+        b.trail.forEach((p,i)=>{
+          ctx.beginPath();ctx.arc(p.x,p.y,b.r*(i/b.trail.length)*.5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(124,95,224,${(i/b.trail.length)*.3})`;ctx.fill();
+        });
+        radialBall(ctx,b.x,b.y,b.r,'#C4B5FF','#7C5FE0');
+        if(Math.hypot(b.x-t.x,b.y-t.y)<b.r+t.r){
+          g.done=true;g.ball=null;setTimeout(()=>setStatus('won'),400);
+        } else if(b.y>H+20||b.x>W+20||b.x<-20){
+          g.ball=null;
+        }
+      }
+
+      raf.current=requestAnimationFrame(loop);
+    }
+    raf.current=requestAnimationFrame(loop);
+    return ()=>cancelAnimationFrame(raf.current);
+  },[intro]);
+
+  function fire(){
+    const g=gs.current; if(!g||g.ball||g.done) return;
+    const ar=angRef.current*Math.PI/180;
+    g.ball={x:g.CANNON.x,y:g.CANNON.y,vx:Math.cos(ar)*g.SPD,vy:-Math.sin(ar)*g.SPD,r:11,trail:[]};
+  }
+
+  return (
+    <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',background:'linear-gradient(180deg,#FFE5C2 0%,#FFF3E2 100%)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 16px 4px',flexShrink:0}}>
+        <button className="ak-btn ak-btn--soft ak-btn--sm" onClick={onHome}>← Назад</button>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:14,color:'#6B5680'}}>Уровень 2 · Рикошет</div>
+      </div>
+      <canvas ref={canRef} width={360} height={460} style={{width:'100%',flex:1,display:'block'}}/>
+      <div style={{padding:'8px 20px 12px',background:'rgba(255,255,255,.65)',backdropFilter:'blur(6px)',flexShrink:0}}>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:13,color:'#6B5680',marginBottom:6,textAlign:'center'}}>
+          Угол: <strong style={{color:'#7C5FE0'}}>{ang}°</strong> — настрой так чтобы рикошет попал в 🎯
+        </div>
+        <input type="range" min="20" max="78" value={ang} onChange={e=>{const v=+e.target.value;setAng(v);angRef.current=v;}} style={{width:'100%',accentColor:'#7C5FE0'}}/>
+        <div style={{display:'flex',justifyContent:'center',marginTop:10}}>
+          <button className="ak-btn ak-btn--phys" style={{minWidth:160}} onClick={fire} disabled={!!(gs.current?.ball)}>
+            💥 Выстрел!
+          </button>
+        </div>
+      </div>
+      {intro && <IntroCard emoji="🦁" title="Рикошетный снайпер!" desc="Лев не может стрелять напрямую — мешает потолок! Отрикошеть от потолка и попади в цель." law="Угол падения = угол отражения" onStart={()=>setIntro(false)}/>}
+      {status==='won' && <WinOverlay title="Рикошет! 💥" law="Закон отражения" fact="Угол падения всегда равен углу отражения — как свет от зеркала! Это работает для звука, света и мячей." cta="Уровень 3 →" onNext={onWin} onHome={onHome}/>}
+      {status==='failed' && <FailOverlay tip="Смотри на точку отскока. Измени угол и выстрели снова!" onRetry={()=>{resetBall();setStatus('play');}}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEVEL 3 — КАТАПУЛЬТА
+   Rotating arm — tap at right moment to launch ball at target
+   Teach: lever mechanics, force × distance
+   ══════════════════════════════════════════════════════════ */
+function Level3({ onWin, onHome }) {
+  const [intro, setIntro] = useState(true);
+  const [status, setStatus] = useState('play');
+  const canRef = useRef(null);
+  const raf = useRef(null);
+  const gs = useRef(null);
+
+  function buildGs(W, H) {
+    return {
+      W, H,
+      base: {x:W/2,y:H-90},
+      armLen: 88, armAngle: -Math.PI*.8, armSpd: 0.036,
+      spinning: true, launched: false,
+      ball: null,
+      target: {x:W*.8,y:H-68,w:52,h:44},
+      attempts: 0, maxAttempts: 4, done: false,
+    };
+  }
+
+  useEffect(()=>{
+    if(intro) return;
+    const canvas=canRef.current;
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width,H=canvas.height;
+    gs.current=buildGs(W,H);
+
+    function tipPos(){
+      const g=gs.current;
+      return {x:g.base.x+Math.cos(g.armAngle)*g.armLen, y:g.base.y+Math.sin(g.armAngle)*g.armLen};
+    }
+
+    function launch(){
+      const g=gs.current;
+      if(!g.spinning||g.done) return;
+      const tip=tipPos();
+      const OMEGA=g.armSpd;
+      const vx=-Math.sin(g.armAngle)*OMEGA*g.armLen*1.9;
+      const vy= Math.cos(g.armAngle)*OMEGA*g.armLen*1.9;
+      g.ball={x:tip.x,y:tip.y,vx,vy,r:12,trail:[]};
+      g.spinning=false;g.launched=true;g.attempts++;
+    }
+
+    const onClick=e=>{e.preventDefault();launch();};
+    canvas.addEventListener('pointerdown',onClick,{passive:false});
+
+    function drawArm(){
+      const g=gs.current;
+      const tip=tipPos();
+      const shortLen=34;
+      const wx=g.base.x+Math.cos(g.armAngle+Math.PI)*shortLen;
+      const wy=g.base.y+Math.sin(g.armAngle+Math.PI)*shortLen;
+      // arm
+      ctx.save();ctx.strokeStyle='#7A4E28';ctx.lineWidth=9;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(g.base.x,g.base.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(g.base.x,g.base.y);ctx.lineTo(wx,wy);ctx.stroke();
+      ctx.restore();
+      // counterweight
+      const cg=ctx.createRadialGradient(wx,wy,0,wx,wy,14);
+      cg.addColorStop(0,'#9881F0');cg.addColorStop(1,'#4A2D7A');
+      ctx.beginPath();ctx.arc(wx,wy,14,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+      // pivot
+      ctx.save();ctx.translate(g.base.x,g.base.y);
+      // base frame
+      ctx.fillStyle='#6B5680';ctx.fillRect(-28,-4,56,12);
+      ctx.beginPath();ctx.moveTo(-32,8);ctx.lineTo(32,8);ctx.lineTo(0,-22);ctx.closePath();
+      ctx.fillStyle='#8B7095';ctx.fill();
+      ctx.restore();
+      // pivot circle
+      const pg=ctx.createRadialGradient(g.base.x-4,g.base.y-4,0,g.base.x,g.base.y,12);
+      pg.addColorStop(0,'#C4B5FF');pg.addColorStop(1,'#7C5FE0');
+      ctx.beginPath();ctx.arc(g.base.x,g.base.y,12,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();
+      // ball on tip (if not launched)
+      if(!g.launched){
+        radialBall(ctx,tip.x,tip.y,12,'#A1FFD0','#3CA876');
+      }
+    }
+
+    function loop(){
+      const g=gs.current;
+      ctx.clearRect(0,0,W,H);
+      const sky=ctx.createLinearGradient(0,0,0,H);
+      sky.addColorStop(0,'#C8F2DD');sky.addColorStop(1,'#FFF3E2');
+      ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+      // clouds
+      [[50,45],[190,28],[310,55]].forEach(([cx,cy])=>{
+        ctx.fillStyle='rgba(255,255,255,.72)';
+        ctx.beginPath();ctx.arc(cx,cy,22,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(cx+22,cy+5,16,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(cx-16,cy+8,14,0,Math.PI*2);ctx.fill();
+      });
+      // ground
+      ctx.fillStyle='#DCF7E7';ctx.fillRect(0,H-48,W,48);
+      ctx.fillStyle='#3CA876';ctx.fillRect(0,H-48,W,5);
+
+      // target basket
+      const t=g.target;
+      ctx.fillStyle='#FFD262';ctx.fillRect(t.x-t.w/2,t.y-t.h,t.w,t.h);
+      ctx.strokeStyle='#D4972B';ctx.lineWidth=2.5;ctx.strokeRect(t.x-t.w/2,t.y-t.h,t.w,t.h);
+      // basket weave lines
+      ctx.strokeStyle='rgba(212,162,43,.4)';ctx.lineWidth=1.5;
+      for(let lx=t.x-t.w/2+8;lx<t.x+t.w/2;lx+=12){
+        ctx.beginPath();ctx.moveTo(lx,t.y-t.h);ctx.lineTo(lx,t.y);ctx.stroke();
+      }
+      ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('🍌',t.x,t.y-t.h/2);
+      // monkey
+      ctx.font='32px serif';ctx.textBaseline='alphabetic';ctx.textAlign='left';
+      ctx.fillText('🐒',t.x+t.w/2-6,t.y-2);
+
+      // elephant
+      ctx.font='32px serif';ctx.fillText('🐘',g.base.x-100,H-44);
+
+      drawArm();
+
+      // rotate arm
+      if(g.spinning){
+        g.armAngle+=g.armSpd;
+        if(g.armAngle>Math.PI*.55) g.armAngle=-Math.PI*.8;
+      }
+
+      // tap hint
+      if(g.spinning){
+        const alpha=.5+.5*Math.sin(Date.now()/380);
+        ctx.globalAlpha=alpha;
+        ctx.fillStyle='#2D1B45';ctx.font='bold 15px Nunito,sans-serif';ctx.textAlign='center';
+        ctx.fillText('👆 Нажми когда рычаг смотрит вверх!',W/2,38);
+        ctx.globalAlpha=1;ctx.textAlign='left';
+      }
+
+      // ball in flight
+      if(g.ball){
+        const b=g.ball;
+        b.trail.push({x:b.x,y:b.y});
+        if(b.trail.length>18) b.trail.shift();
+        b.x+=b.vx;b.y+=b.vy;b.vy+=G;
+        b.trail.forEach((p,i)=>{
+          ctx.beginPath();ctx.arc(p.x,p.y,b.r*(i/b.trail.length)*.55,0,Math.PI*2);
+          ctx.fillStyle=`rgba(60,168,118,${(i/b.trail.length)*.35})`;ctx.fill();
+        });
+        radialBall(ctx,b.x,b.y,b.r,'#A1FFD0','#3CA876');
+        // hit check
+        if(b.x>t.x-t.w/2-b.r&&b.x<t.x+t.w/2+b.r&&b.y>t.y-t.h-b.r&&b.y<t.y+b.r){
+          g.done=true;g.ball=null;setTimeout(()=>setStatus('won'),400);
+        } else if(b.y>H+20||b.x>W+20||b.x<-20){
+          g.ball=null;
+          if(g.attempts>=g.maxAttempts){g.done=true;setTimeout(()=>setStatus('failed'),300);}
+          else{g.spinning=true;g.launched=false;}
+        }
+      }
+
+      // attempts counter
+      ctx.fillStyle='#6B5680';ctx.font='bold 13px Nunito,sans-serif';
+      ctx.textAlign='right';ctx.fillText(`Попытки: ${g.attempts}/${g.maxAttempts}`,W-12,H-56);ctx.textAlign='left';
+
+      raf.current=requestAnimationFrame(loop);
+    }
+    raf.current=requestAnimationFrame(loop);
+    return ()=>{
+      cancelAnimationFrame(raf.current);
+      canvas.removeEventListener('pointerdown',onClick);
+    };
+  },[intro]);
+
+  function retry(){
+    setStatus('play');
+    if(canRef.current) gs.current=buildGs(canRef.current.width,canRef.current.height);
+  }
+
+  return (
+    <div className="ak" style={{position:'relative',width:'100%',height:'100vh',display:'flex',flexDirection:'column',overflow:'hidden',background:'linear-gradient(180deg,#C8F2DD 0%,#FFF3E2 100%)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 16px 4px',flexShrink:0}}>
+        <button className="ak-btn ak-btn--soft ak-btn--sm" onClick={onHome}>← Назад</button>
+        <div style={{fontFamily:'var(--ak-display)',fontSize:14,color:'#6B5680'}}>Уровень 3 · Катапульта</div>
+      </div>
+      <canvas ref={canRef} width={360} height={540} style={{width:'100%',flex:1,display:'block',touchAction:'none',cursor:'pointer'}}/>
+      <div style={{textAlign:'center',padding:'6px 0 10px',fontFamily:'var(--ak-display)',fontSize:13,color:'#6B5680',flexShrink:0}}>
+        Нажми на экран в нужный момент! 🎯
+      </div>
+      {intro && <IntroCard emoji="🐘" title="Слон и катапульта!" desc="Слон крутит рычаг катапульты. Нажми в нужный момент — пусть мяч летит прямо в корзину с бананами!" law="Чем длиннее рычаг — тем дальше бросок" onStart={()=>setIntro(false)}/>}
+      {status==='won' && <WinOverlay title="Попал в корзину! 🍌" law="Закон рычага" fact="Сила × длина рычага = момент силы. Катапульта использует этот принцип — длинное плечо бросает дальше!" cta="Все уровни пройдены! 🎉" onNext={onWin} onHome={onHome}/>}
+      {status==='failed' && <FailOverlay tip="Нажми когда рычаг смотрит чуть правее вверх — тогда мяч полетит прямо к корзине!" onRetry={retry}/>}
+    </div>
+  );
+}
+
+/* ── APP ─────────────────────────────────────────────────── */
 function App() {
-  const [screen, setScreen] = React.useState('select'); // 'select' | 'l1' | 'l2' | 'l3'
-
-  const handleSelect = (n) => setScreen(`l${n}`);
-  const handleDone = () => setScreen('select');
-
-  if(screen==='l1') return <Level1Light onDone={handleDone}/>;
-  if(screen==='l2') return <Level2Lever onDone={handleDone}/>;
-  if(screen==='l3') return <Level3Cannon onDone={handleDone}/>;
-  return <LevelSelect onSelect={handleSelect}/>;
+  const [screen, setScreen] = useState('home');
+  return (
+    <div style={{width:'100%',height:'100vh',maxWidth:480,margin:'0 auto',position:'relative',overflow:'hidden'}}>
+      {screen==='home'   && <HomeScreen onSelect={n=>setScreen(`l${n}`)}/>}
+      {screen==='l1'     && <Level1 onWin={()=>setScreen('l2')} onHome={()=>setScreen('home')}/>}
+      {screen==='l2'     && <Level2 onWin={()=>setScreen('l3')} onHome={()=>setScreen('home')}/>}
+      {screen==='l3'     && <Level3 onWin={()=>setScreen('home')} onHome={()=>setScreen('home')}/>}
+    </div>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
