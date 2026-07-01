@@ -436,19 +436,19 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
 <script>
 const PLANET_COLORS = {
   ai:   {bg:'pl-ai',   chip:'open',      chipClass:'open'},
-  chem: {bg:'pl-chem', chip:'soon',      chipClass:'soon'},
+  chem: {bg:'pl-chem', chip:'open',      chipClass:'open'},
   bio:  {bg:'pl-bio',  chip:'soon',      chipClass:'soon'},
   geo:  {bg:'pl-geo',  chip:'soon-dark', chipClass:'soon-dark'},
   math: {bg:'pl-math', chip:'soon',      chipClass:'soon'},
-  phys: {bg:'pl-phys', chip:'soon',      chipClass:'soon'},
+  phys: {bg:'pl-phys', chip:'open',      chipClass:'open'},
 };
 const PL=[
-  {key:'ai',  img:'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&q=85&fit=crop',name:'Нейро Академия',subject:'Искусственный интеллект',desc:'Нейросети, промпты, BIPO-роботы и декодеры — 9 уровней реального погружения в ИИ.',active:true,levels:9,src:'https://luxuryeva7-ai.github.io/na-prod/'},
-  {key:'chem',img:'https://images.unsplash.com/photo-1628863353691-0071c8c1874c?w=700&q=85&fit=crop',name:'Хемо Лаб',subject:'Химия',desc:'Реакции, молекулы, взрывные опыты — погружение в мир атомов и соединений.',active:false,levels:8},
+  {key:'ai',  img:'screenshots/na.png',  name:'Нейро Академия',subject:'Искусственный интеллект',desc:'Нейросети, промпты, BIPO-роботы и декодеры — 9 уровней реального погружения в ИИ.',active:true,levels:9,src:'https://luxuryeva7-ai.github.io/na-prod/'},
+  {key:'chem',img:'screenshots/chem.png',name:'Хемо Лаб',subject:'Химия',desc:'Реакции, молекулы, взрывные опыты — погружение в мир атомов и соединений.',active:true,levels:3,src:'https://luxuryeva7-ai.github.io/kosmobaza/chemistry.html'},
   {key:'bio', img:'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=700&q=85&fit=crop',name:'БиоМир',subject:'Биология',desc:'Клетки, ДНК, экосистемы — живой мир через игровые эксперименты.',active:false,levels:8},
   {key:'geo', img:'https://images.unsplash.com/photo-1446776858070-70c3d5ed6758?w=700&q=85&fit=crop',name:'ГеоАтлас',subject:'География',desc:'Материки, климаты, страны — исследование Земли через квесты и карты.',active:false,levels:7},
   {key:'math',img:'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=700&q=85&fit=crop',name:'МатрицаX',subject:'Математика',desc:'Числа, геометрия, логика — задачи реального мира в игровом формате.',active:false,levels:10},
-  {key:'phys',img:'https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=700&q=85&fit=crop',name:'КвантУм',subject:'Физика',desc:'Силы, энергия, свет — законы Вселенной через симуляции и эксперименты.',active:false,levels:9}
+  {key:'phys',img:'screenshots/phys.png',name:'КвантУм',subject:'Физика',desc:'Силы, энергия, свет — законы Вселенной через симуляции и эксперименты.',active:true,levels:3,src:'https://luxuryeva7-ai.github.io/kosmobaza/physics.html'}
 ];
 const pg=document.getElementById('planetsGrid');
 PL.forEach(p=>{
