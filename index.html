@@ -214,19 +214,36 @@ footer{border-top:2px solid #F3F4F6;padding:32px 0;background:#fff}
   .hero{padding:48px 20px 40px}
   .steps,.planets{grid-template-columns:1fr}
   .p-img-wrap{height:220px}
-  .reviews{grid-template-columns:1fr}
   .pricing-grid{grid-template-columns:1fr}
   .sec,.pricing-sec,.cta-wrap{padding-left:20px;padding-right:20px}
-  .planets-bg,.reviews-wrap{padding-left:20px;padding-right:20px}
-  .planets-inner,.reviews-inner{margin:0}
+  .planets-bg{padding-left:20px;padding-right:20px}
+  .planets-inner{margin:0}
   .ft{padding:0 20px}
 }
 @media(max-width:580px){
-  h1{letter-spacing:-2px}
-  .subjects-row{gap:8px}
-  .subj-tag{font-size:13px;padding:8px 14px}
-  .hero-ctas{flex-direction:column;align-items:center}
-  .cta-main,.cta-sec{width:100%;text-align:center}
+  /* header */
+  .btn-ghost{display:none}
+  .btn-dark{padding:9px 16px;font-size:13px}
+  /* hero */
+  .hero{padding:24px 16px 28px;overflow:hidden}
+  .deco{display:none}
+  .hero-badge{font-size:11px;padding:6px 14px;white-space:nowrap}
+  h1{font-size:clamp(34px,9vw,52px);letter-spacing:-2px}
+  .hero-sub{font-size:15px}
+  /* subjects */
+  .subjects-row{gap:6px}
+  .subj-tag{font-size:12px;padding:7px 12px;gap:5px}
+  /* ctas */
+  .hero-ctas{flex-direction:column;align-items:stretch;gap:10px}
+  .cta-main,.cta-sec{width:100%;text-align:center;padding:16px 20px;font-size:16px}
+  /* cards */
+  .p-img-wrap{height:200px}
+  .p-img{width:92%}
+  /* stats */
+  .stats-bar{padding:20px 16px}
+  .stats-title{font-size:22px}
+  /* pricing */
+  .price-box{padding:28px 20px}
 }
 </style>
 </head>
