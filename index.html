@@ -118,6 +118,8 @@ h1 .line-coral{color:var(--coral);display:block}
 .p-chip.open{background:rgba(255,255,255,.92);color:#111118}
 .p-chip.soon{background:rgba(0,0,0,.52);color:rgba(255,255,255,.88)}
 .p-chip.soon-dark{background:rgba(0,0,0,.45);color:rgba(255,255,255,.82)}
+.p-img-dim{position:absolute;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:flex-end;padding:10px 14px}
+.p-img-dim-label{font-size:11px;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:.4px}
 .p-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:10px}
 .pl-ai .p-body{background:#7B2FFF;color:#fff}
 .pl-chem .p-body{background:#111118;color:#fff}
@@ -459,6 +461,7 @@ PL.forEach(p=>{
   d.innerHTML=`
     <div class="p-img-wrap">
       <img class="p-img" src="${p.img}" alt="${p.name}" loading="lazy">
+      ${!p.active?'<div class="p-img-dim"><span class="p-img-dim-label">В разработке</span></div>':''}
       <span class="p-chip ${c.chipClass}">${chipLabel}</span>
     </div>
     <div class="p-body">
